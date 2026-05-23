@@ -1,0 +1,5 @@
+bricks:
+  flutter_app_template:
+    git:
+      url: https://github.com/fat7i-alghareeb/flutter_starter_template.git
+      ref: with_jwt
