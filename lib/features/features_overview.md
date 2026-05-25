@@ -22,8 +22,58 @@ The **Root** feature is the most critical module in the application, serving as 
 
 - **Centralized Navigation**: It hosts the main navigation controllers and the `BottomNavBar`, managing the transitions and state persistence between the primary application tabs.
 - **Global UI Shell**: It provides the persistent interface elements — such as the `AppScaffold`, `EndDrawer`, and specialized overlays — that must remain consistent regardless of which functional module is currently visible.
+- **Dual-Role Mode Switching**: Users with both Admin and Driver roles land on the admin dashboard by default and can switch into the full driver workspace through the root mode switch overlay.
+- **Forced Password Reset Lock**: Authenticated users with `requiresPasswordReset` are routed to the dedicated password reset screen until the backend clears the flag and the app refreshes the stored profile.
+- **Self-Assignment Mode Handoff**: Admin users with linked driver profiles can self-assign compatible pending trips from the dashboard assignment sheet, then the shared root-mode service switches the shell into Driver Mode after assignment succeeds.
 - **App-Level Side Effects**: It handles global state changes like theme switching (Light/Dark mode) and localization updates that affect the entire application context simultaneously.
 - **Unified Entry Point**: After authentication, the Root feature is the landing zone that initializes the core application environment and establishes the navigation scope for all subsequent user interactions.
+
+---
+
+## 🚕 The Trip Feature: Driver Execution Lifecycle
+
+The **Trip** feature owns the dashboard driver's active ride execution loop. It maps backend trip DTOs into clean domain entities, listens to SignalR trip lifecycle events, and exposes one isolated `BlocStatus<void>` per driver action.
+
+### Current Responsibilities
+
+- Fetch active trip details from `/api/v1/trips/{id}` and admin trip lists from `/api/v1/trips/admin`.
+- Execute driver lifecycle commands: en route, arrived, start trip, and complete trip.
+- React to `DriverAssigned`, `DriverEnRoute`, `DriverArrived`, `TripStarted`, `TripCompleted`, and `TripCancelled` realtime events.
+- Render assignment, execution, navigation, loading, and completion summary widgets as separate presentation files.
+- Integrate into `DriverHomeBody` so the map remains persistent while the lower panel switches between idle controls and active-trip execution.
+
+---
+
+## 📊 The Dashboard Feature: Admin Operations Overview
+
+The **Dashboard** feature is the admin-facing operational surface for the taxi platform. It replaces the original placeholder body with a real overview backed by the production API.
+
+### Current Responsibilities
+
+- Fetch admin drivers from `/api/v1/drivers`, admin trips from `/api/v1/trips/admin`, audit logs from `/api/v1/audit-logs`, and the vehicle-type catalog from `/api/v1/vehicle-types`.
+- Map API payloads into clean dashboard entities before presentation.
+- Provide a dedicated trip management route that lists admin trips from `/api/v1/trips/admin` and loads full details from `/api/v1/trips/{id}/details`, including passenger, driver, vehicle type, fare, route labels, and lifecycle timestamps.
+- Show trip totals, active/completed trip counts, online driver count, pending KYC count, and total driver count.
+- Surface pending dispatch trips and assign an online approved driver through `/api/v1/trips/{id}/assign`.
+- Surface fleet capability with vehicle-type capacity/pricing rows. The product model does not manage physical vehicles or cars; each driver carries one `vehicleTypeId`.
+- Provide a full-screen live fleet map route backed by `/api/v1/drivers/status` for initial driver coordinates and `DriverLocationUpdated` realtime events for ongoing marker movement; the map also renders pending trip pickup pins from admin trip stop coordinates and opens the dispatch sheet from a selected pickup with nearest drivers ranked by haversine distance.
+- Provide an Admin Operations route that combines driver management, vehicle-type management, user visibility, audit-log review, and system configuration quick actions through the production admin endpoints.
+- Surface pending driver review rows with license and approval status context.
+- Open a KYC review sheet for pending drivers, fetch their uploaded documents, approve/reject individual documents, and approve the driver once all documents are approved.
+- Surface recent trips with reference code, fare, status, and formatted creation time.
+- Surface recent audit activity with actor fallback and formatted creation time.
+- Use `StatusBuilder<DashboardEntity>` with a dedicated shimmer for loading and platform empty/error states.
+
+## 🚘 The Driver Feature: Driver Profile & Earnings
+
+The **Driver** feature owns driver-specific REST contracts that are shared by the driver home and dashboard driver mode.
+
+### Current Responsibilities
+
+- Update online/offline status through `/api/v1/drivers/me/status`.
+- Update live fallback GPS coordinates through `/api/v1/drivers/me/location`.
+- Fetch earnings from `/api/v1/drivers/me/earnings` and map totals plus per-trip earning rows into domain entities.
+- Feed Driver Home idle metrics with real trip and earning totals while active trip execution remains owned by the Trip feature.
 
 ---
 

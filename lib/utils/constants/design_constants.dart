@@ -50,6 +50,9 @@ class AppRadii {
 
   /// 16
   static const double lg = 16;
+
+  /// 24
+  static const double xl = 24;
 }
 
 /// Global animation durations used throughout the app.

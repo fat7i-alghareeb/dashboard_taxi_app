@@ -1,6 +1,6 @@
-import '../../../../../common/imports/imports.dart';
-import '../../../../../common/widgets/custom_scaffold/app_scaffold.dart';
+import 'package:dashboardtaxi/common/imports/imports.dart';
 import '../widgets/root_body.dart';
+import '../widgets/root_drawer_content.dart';
 
 /// Root screen that hosts the main app screen body.
 class RootScreen extends StatelessWidget {
@@ -11,6 +11,14 @@ class RootScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold.body(child: const RootBody());
+    return AppScaffold.appBar(
+      appBarConfig: const AppScaffoldAppBarConfig(
+        title: 'Dashboard',
+        enableDrawer: true,
+        showLeading: false, // Don't show leading back button on root screen
+      ),
+      endDrawer: const RootDrawerContent(),
+      child: const RootBody(),
+    );
   }
 }

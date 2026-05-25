@@ -1,5 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../network/dio_client.dart';
 import '../network/interceptors/custom_dio_interceptor.dart';
@@ -14,6 +16,12 @@ import '../services/storage/storage_service.dart';
 abstract class RegisterModule {
   @preResolve
   Future<StorageService> get storageService => StorageService.createDefault();
+
+  @singleton
+  FirebaseAuth get firebaseAuth => FirebaseAuth.instance;
+
+  @singleton
+  FirebaseMessaging get firebaseMessaging => FirebaseMessaging.instance;
 
   @singleton
   Dio dio(

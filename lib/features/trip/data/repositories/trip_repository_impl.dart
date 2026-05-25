@@ -1,0 +1,76 @@
+import 'package:injectable/injectable.dart';
+
+import '../../../../core/error/global_error_handler.dart';
+import '../../../../core/utils/result.dart';
+import '../../domain/entities/trip_entity.dart';
+import '../../domain/repositories/trip_repository.dart';
+import '../datasources/trip_remote_datasource.dart';
+import '../mappers/trip_model_mapper.dart';
+
+@LazySingleton(as: TripRepository)
+class TripRepositoryImpl implements TripRepository {
+  const TripRepositoryImpl(this._remote);
+
+  final TripRemoteDataSource _remote;
+
+  @override
+  Future<Result<List<TripEntity>>> getAllTrips() {
+    return runAsResult(() async {
+      final models = await _remote.getAllTrips();
+      return models.map((e) => e.toEntity).toList();
+    });
+  }
+
+  @override
+  Future<Result<TripEntity>> getTripById(String tripId) {
+    return runAsResult(() async {
+      final model = await _remote.getTripById(tripId);
+      return model.toEntity;
+    });
+  }
+
+  @override
+  Future<Result<void>> markEnRoute(String tripId) {
+    return runAsResult(() => _remote.markEnRoute(tripId));
+  }
+
+  @override
+  Future<Result<void>> markArrived(String tripId) {
+    return runAsResult(() => _remote.markArrived(tripId));
+  }
+
+  @override
+  Future<Result<void>> startTrip(String tripId) {
+    return runAsResult(() => _remote.startTrip(tripId));
+  }
+
+  @override
+  Future<Result<void>> completeTrip(String tripId) {
+    return runAsResult(() => _remote.completeTrip(tripId));
+  }
+
+  @override
+  Future<Result<void>> driverCancelTrip(
+    String tripId,
+    String reason,
+    String? note,
+  ) {
+    return runAsResult(() => _remote.driverCancelTrip(tripId, reason, note));
+  }
+
+  @override
+  Future<Result<TripWaitingSessionEntity>> startWaiting(String tripId) {
+    return runAsResult(() async {
+      final model = await _remote.startWaiting(tripId);
+      return model.toEntity;
+    });
+  }
+
+  @override
+  Future<Result<TripWaitingSessionEntity>> stopWaiting(String tripId) {
+    return runAsResult(() async {
+      final model = await _remote.stopWaiting(tripId);
+      return model.toEntity;
+    });
+  }
+}

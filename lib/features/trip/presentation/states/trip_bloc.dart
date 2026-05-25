@@ -1,0 +1,368 @@
+import 'dart:async';
+
+import 'package:bloc/bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:injectable/injectable.dart';
+
+import '../../../../core/services/realtime/realtime_event.dart';
+import '../../../../core/services/realtime/realtime_service.dart';
+import '../../../../core/utils/bloc_status.dart';
+import '../../../../core/utils/result.dart';
+import '../../../../utils/helpers/colored_print.dart';
+import '../../domain/entities/trip_entity.dart';
+import '../../domain/facade/trip_facade.dart';
+
+part 'trip_event.dart';
+part 'trip_state.dart';
+part 'trip_bloc.freezed.dart';
+
+@injectable
+class TripBloc extends Bloc<TripEvent, TripState> {
+  TripBloc(this._facade, this._realtimeService) : super(const TripState()) {
+    on<_Started>(_onStarted);
+    on<_GetAllRequested>(_onGetAllRequested);
+    on<_RealtimeEventReceived>(_onRealtimeEventReceived);
+    on<_FetchActiveRequested>(_onFetchActiveRequested);
+    on<_MarkEnRouteRequested>(_onMarkEnRouteRequested);
+    on<_MarkArrivedRequested>(_onMarkArrivedRequested);
+    on<_StartTripRequested>(_onStartTripRequested);
+    on<_CompleteTripRequested>(_onCompleteTripRequested);
+    on<_ClearCompletedSummaryRequested>(_onClearCompletedSummaryRequested);
+    on<_DriverCancelRequested>(_onDriverCancelRequested);
+    on<_StartWaitingRequested>(_onStartWaitingRequested);
+    on<_StopWaitingRequested>(_onStopWaitingRequested);
+
+    _eventsSub = _realtimeService.events.listen((event) {
+      add(TripEvent.realtimeEventReceived(event));
+    });
+  }
+
+  final TripFacade _facade;
+  final RealtimeService _realtimeService;
+  StreamSubscription<RealtimeEvent>? _eventsSub;
+
+  Future<void> _onStarted(_Started event, Emitter<TripState> emit) {
+    return _onGetAllRequested(const _GetAllRequested(), emit);
+  }
+
+  Future<void> _onGetAllRequested(
+    _GetAllRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] get all trips requested');
+    emit(state.copyWith(getAllState: const BlocStatus.loading()));
+
+    final result = await _facade.getAllTrips();
+    result.when(
+      success: (data) {
+        printG('[TripBloc] get all trips success count=${data.length}');
+        emit(state.copyWith(getAllState: BlocStatus.success(data)));
+      },
+      failure: (message) {
+        printY('[TripBloc] get all trips failed: $message');
+        emit(state.copyWith(getAllState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _onRealtimeEventReceived(
+    _RealtimeEventReceived event,
+    Emitter<TripState> emit,
+  ) async {
+    switch (event.event) {
+      case RealtimeDriverAssigned(:final tripId):
+        printC('[TripBloc] realtime DriverAssigned trip=$tripId');
+        await _loadActiveTrip(tripId, emit, joinGroup: true);
+      case RealtimeDriverEnRoute(:final tripId):
+        printC('[TripBloc] realtime DriverEnRoute trip=$tripId');
+        await _refreshOrAdvance(tripId, TripStatus.driverEnRoute, emit);
+      case RealtimeDriverArrived(:final tripId):
+        printC('[TripBloc] realtime DriverArrived trip=$tripId');
+        await _refreshOrAdvance(tripId, TripStatus.driverArrived, emit);
+      case RealtimeTripStarted(:final tripId):
+        printC('[TripBloc] realtime TripStarted trip=$tripId');
+        await _refreshOrAdvance(tripId, TripStatus.inProgress, emit);
+      case RealtimeTripCompleted(:final tripId):
+        printC('[TripBloc] realtime TripCompleted trip=$tripId');
+        await _refreshOrAdvance(tripId, TripStatus.completed, emit);
+      case RealtimeTripCancelled(:final tripId):
+        printC('[TripBloc] realtime TripCancelled trip=$tripId');
+        await _refreshOrAdvance(tripId, TripStatus.cancelled, emit);
+      case RealtimeDriverLocationUpdated():
+      case RealtimeTripRequested():
+      case RealtimePaymentConfirmed():
+      case RealtimePaymentFailed():
+      case RealtimeTripRefunded():
+        break;
+    }
+  }
+
+  Future<void> _onFetchActiveRequested(
+    _FetchActiveRequested event,
+    Emitter<TripState> emit,
+  ) {
+    return _loadActiveTrip(event.tripId, emit, joinGroup: true);
+  }
+
+  Future<void> _onMarkEnRouteRequested(
+    _MarkEnRouteRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] mark en-route requested trip=${event.tripId}');
+    emit(state.copyWith(markEnRouteState: const BlocStatus.loading()));
+    final result = await _facade.markEnRoute(event.tripId);
+    await result.when(
+      success: (_) async {
+        printG('[TripBloc] mark en-route success trip=${event.tripId}');
+        await _realtimeService.joinTripGroup(event.tripId);
+        emit(
+          state.copyWith(
+            markEnRouteState: const BlocStatus.success(null),
+            activeTrip: state.activeTrip?.copyWithStatus(
+              TripStatus.driverEnRoute,
+            ),
+          ),
+        );
+        await _loadActiveTrip(event.tripId, emit);
+      },
+      failure: (message) async {
+        printY(
+          '[TripBloc] mark en-route failed trip=${event.tripId}: $message',
+        );
+        emit(state.copyWith(markEnRouteState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _onMarkArrivedRequested(
+    _MarkArrivedRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] mark arrived requested trip=${event.tripId}');
+    emit(state.copyWith(markArrivedState: const BlocStatus.loading()));
+    final result = await _facade.markArrived(event.tripId);
+    await result.when(
+      success: (_) async {
+        printG('[TripBloc] mark arrived success trip=${event.tripId}');
+        emit(
+          state.copyWith(
+            markArrivedState: const BlocStatus.success(null),
+            arrivedAt: DateTime.now(),
+            activeTrip: state.activeTrip?.copyWithStatus(
+              TripStatus.driverArrived,
+            ),
+          ),
+        );
+        await _loadActiveTrip(event.tripId, emit);
+      },
+      failure: (message) async {
+        printY('[TripBloc] mark arrived failed trip=${event.tripId}: $message');
+        emit(state.copyWith(markArrivedState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _onStartTripRequested(
+    _StartTripRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] start trip requested trip=${event.tripId}');
+    emit(state.copyWith(startTripState: const BlocStatus.loading()));
+    final result = await _facade.startTrip(event.tripId);
+    await result.when(
+      success: (_) async {
+        printG('[TripBloc] start trip success trip=${event.tripId}');
+        emit(
+          state.copyWith(
+            startTripState: const BlocStatus.success(null),
+            activeTrip: state.activeTrip?.copyWithStatus(TripStatus.inProgress),
+          ),
+        );
+        await _loadActiveTrip(event.tripId, emit);
+      },
+      failure: (message) async {
+        printY('[TripBloc] start trip failed trip=${event.tripId}: $message');
+        emit(state.copyWith(startTripState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _onCompleteTripRequested(
+    _CompleteTripRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] complete trip requested trip=${event.tripId}');
+    emit(state.copyWith(completeTripState: const BlocStatus.loading()));
+    final result = await _facade.completeTrip(event.tripId);
+    await result.when(
+      success: (_) async {
+        printG('[TripBloc] complete trip success trip=${event.tripId}');
+        final completedTrip = state.activeTrip?.copyWithStatus(
+          TripStatus.completed,
+        );
+        await _realtimeService.leaveTripGroup(event.tripId);
+        emit(
+          state.copyWith(
+            completeTripState: const BlocStatus.success(null),
+            activeTrip: null,
+            completedTrip: completedTrip,
+            arrivedAt: null,
+          ),
+        );
+      },
+      failure: (message) async {
+        printY(
+          '[TripBloc] complete trip failed trip=${event.tripId}: $message',
+        );
+        emit(state.copyWith(completeTripState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  void _onClearCompletedSummaryRequested(
+    _ClearCompletedSummaryRequested event,
+    Emitter<TripState> emit,
+  ) {
+    printM('[TripBloc] clear completed summary');
+    emit(state.copyWith(completedTrip: null));
+  }
+
+  Future<void> _onDriverCancelRequested(
+    _DriverCancelRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] driver cancel requested trip=${event.tripId} reason=${event.reason}');
+    emit(state.copyWith(driverCancelState: const BlocStatus.loading()));
+    final result = await _facade.driverCancelTrip(
+      event.tripId,
+      event.reason,
+      event.note,
+    );
+    await result.when(
+      success: (_) async {
+        printG('[TripBloc] driver cancel success trip=${event.tripId}');
+        final cancelledTrip = state.activeTrip?.copyWithStatus(TripStatus.cancelled);
+        await _realtimeService.leaveTripGroup(event.tripId);
+        emit(
+          state.copyWith(
+            driverCancelState: const BlocStatus.success(null),
+            activeTrip: null,
+            completedTrip: cancelledTrip,
+            arrivedAt: null,
+          ),
+        );
+      },
+      failure: (message) async {
+        printY('[TripBloc] driver cancel failed trip=${event.tripId}: $message');
+        emit(state.copyWith(driverCancelState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _onStartWaitingRequested(
+    _StartWaitingRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] start waiting requested trip=${event.tripId}');
+    emit(state.copyWith(startWaitingState: const BlocStatus.loading()));
+    final result = await _facade.startWaiting(event.tripId);
+    result.when(
+      success: (session) {
+        printG('[TripBloc] start waiting success trip=${event.tripId}');
+        emit(
+          state.copyWith(
+            startWaitingState: const BlocStatus.success(null),
+            activeTrip: state.activeTrip?.copyWithWaitingSession(session),
+          ),
+        );
+      },
+      failure: (message) {
+        printY('[TripBloc] start waiting failed trip=${event.tripId}: $message');
+        emit(state.copyWith(startWaitingState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _onStopWaitingRequested(
+    _StopWaitingRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] stop waiting requested trip=${event.tripId}');
+    emit(state.copyWith(stopWaitingState: const BlocStatus.loading()));
+    final result = await _facade.stopWaiting(event.tripId);
+    result.when(
+      success: (session) {
+        printG('[TripBloc] stop waiting success trip=${event.tripId}');
+        emit(
+          state.copyWith(
+            stopWaitingState: const BlocStatus.success(null),
+            activeTrip: state.activeTrip?.copyWithWaitingSession(session),
+          ),
+        );
+      },
+      failure: (message) {
+        printY('[TripBloc] stop waiting failed trip=${event.tripId}: $message');
+        emit(state.copyWith(stopWaitingState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _refreshOrAdvance(
+    String tripId,
+    TripStatus nextStatus,
+    Emitter<TripState> emit,
+  ) async {
+    final active = state.activeTrip;
+    if (active == null || active.id != tripId) {
+      printC(
+        '[TripBloc] ignore realtime advance trip=$tripId status=$nextStatus',
+      );
+      return;
+    }
+
+    if (nextStatus == TripStatus.completed || nextStatus.isTerminal) {
+      await _realtimeService.leaveTripGroup(tripId);
+    }
+
+    emit(state.copyWith(activeTrip: active.copyWithStatus(nextStatus)));
+    await _loadActiveTrip(tripId, emit);
+  }
+
+  Future<void> _loadActiveTrip(
+    String tripId,
+    Emitter<TripState> emit, {
+    bool joinGroup = false,
+  }) async {
+    printM('[TripBloc] load active trip=$tripId joinGroup=$joinGroup');
+    emit(state.copyWith(activeTripState: const BlocStatus.loading()));
+    if (joinGroup) await _realtimeService.joinTripGroup(tripId);
+
+    final result = await _facade.getTripById(tripId);
+    result.when(
+      success: (trip) {
+        printG(
+          '[TripBloc] active trip loaded trip=$tripId status=${trip.status}',
+        );
+        emit(
+          state.copyWith(
+            activeTripState: BlocStatus.success(trip),
+            activeTrip: trip.status.isTerminal ? null : trip,
+            completedTrip: trip.status == TripStatus.completed
+                ? trip
+                : state.completedTrip,
+          ),
+        );
+      },
+      failure: (message) {
+        printY('[TripBloc] active trip failed trip=$tripId: $message');
+        emit(state.copyWith(activeTripState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  @override
+  Future<void> close() {
+    _eventsSub?.cancel();
+    return super.close();
+  }
+}

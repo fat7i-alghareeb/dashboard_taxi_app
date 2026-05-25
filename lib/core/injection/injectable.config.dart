@@ -10,6 +10,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
+import 'package:firebase_auth/firebase_auth.dart' as _i59;
+import 'package:firebase_messaging/firebase_messaging.dart' as _i892;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:dashboardtaxi/core/injection/register_module.dart' as _i959;
@@ -34,8 +36,20 @@ import 'package:dashboardtaxi/core/notification/notification_timezone_service.da
 import 'package:dashboardtaxi/core/router/router_config.dart' as _i328;
 import 'package:dashboardtaxi/core/services/localization/locale_service.dart'
     as _i1039;
+import 'package:dashboardtaxi/core/services/location/driver_location_streamer.dart'
+    as _i650;
+import 'package:dashboardtaxi/core/services/location/location_service.dart'
+    as _i113;
+import 'package:dashboardtaxi/core/services/location/startup_map_warmup_coordinator.dart'
+    as _i190;
 import 'package:dashboardtaxi/core/services/onboarding/onboarding_service.dart'
     as _i565;
+import 'package:dashboardtaxi/core/services/realtime/realtime_lifecycle_coordinator.dart'
+    as _i1066;
+import 'package:dashboardtaxi/core/services/realtime/realtime_service.dart'
+    as _i868;
+import 'package:dashboardtaxi/core/services/realtime/signalr_realtime_service.dart'
+    as _i562;
 import 'package:dashboardtaxi/core/services/session/auth_manager.dart'
     as _i322;
 import 'package:dashboardtaxi/core/services/session/auth_state_notifier.dart'
@@ -45,6 +59,8 @@ import 'package:dashboardtaxi/core/services/session/jwt_token_storage.dart'
 import 'package:dashboardtaxi/core/services/storage/storage_service.dart'
     as _i76;
 import 'package:dashboardtaxi/core/theme/theme_controller.dart' as _i548;
+import 'package:dashboardtaxi/features/auth/data/datasources/auth_firebase_datasource.dart'
+    as _i538;
 import 'package:dashboardtaxi/features/auth/data/datasources/auth_remote_datasource.dart'
     as _i1012;
 import 'package:dashboardtaxi/features/auth/data/repositories/auth_repository_impl.dart'
@@ -55,6 +71,38 @@ import 'package:dashboardtaxi/features/auth/domain/repositories/auth_repository.
     as _i706;
 import 'package:dashboardtaxi/features/auth/presentation/states/auth_bloc.dart'
     as _i100;
+import 'package:dashboardtaxi/features/dashboard/data/datasources/dashboard_remote_datasource.dart'
+    as _i505;
+import 'package:dashboardtaxi/features/dashboard/data/repositories/dashboard_repository_impl.dart'
+    as _i150;
+import 'package:dashboardtaxi/features/dashboard/domain/facade/dashboard_facade.dart'
+    as _i969;
+import 'package:dashboardtaxi/features/dashboard/domain/repositories/dashboard_repository.dart'
+    as _i574;
+import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart'
+    as _i508;
+import 'package:dashboardtaxi/features/driver/data/datasources/driver_remote_datasource.dart'
+    as _i506;
+import 'package:dashboardtaxi/features/driver/data/repositories/driver_repository_impl.dart'
+    as _i11;
+import 'package:dashboardtaxi/features/driver/domain/facade/driver_facade.dart'
+    as _i461;
+import 'package:dashboardtaxi/features/driver/domain/repositories/driver_repository.dart'
+    as _i336;
+import 'package:dashboardtaxi/features/driver/presentation/states/driver_bloc.dart'
+    as _i698;
+import 'package:dashboardtaxi/features/driver_home/presentation/states/driver_home_bloc.dart'
+    as _i170;
+import 'package:dashboardtaxi/features/kyc/data/datasources/kyc_remote_datasource.dart'
+    as _i221;
+import 'package:dashboardtaxi/features/kyc/data/repositories/kyc_repository_impl.dart'
+    as _i220;
+import 'package:dashboardtaxi/features/kyc/domain/facade/kyc_facade.dart'
+    as _i724;
+import 'package:dashboardtaxi/features/kyc/domain/repositories/kyc_repository.dart'
+    as _i986;
+import 'package:dashboardtaxi/features/kyc/presentation/states/kyc_bloc.dart'
+    as _i141;
 import 'package:dashboardtaxi/features/root/data/datasources/root_remote_datasource.dart'
     as _i1064;
 import 'package:dashboardtaxi/features/root/data/repositories/root_repository_impl.dart'
@@ -63,8 +111,20 @@ import 'package:dashboardtaxi/features/root/domain/facade/root_facade.dart'
     as _i397;
 import 'package:dashboardtaxi/features/root/domain/repositories/root_repository.dart'
     as _i825;
+import 'package:dashboardtaxi/features/root/domain/services/root_mode_service.dart'
+    as _i885;
 import 'package:dashboardtaxi/features/root/presentation/states/root_bloc.dart'
     as _i554;
+import 'package:dashboardtaxi/features/trip/data/datasources/trip_remote_datasource.dart'
+    as _i642;
+import 'package:dashboardtaxi/features/trip/data/repositories/trip_repository_impl.dart'
+    as _i10;
+import 'package:dashboardtaxi/features/trip/domain/facade/trip_facade.dart'
+    as _i931;
+import 'package:dashboardtaxi/features/trip/domain/repositories/trip_repository.dart'
+    as _i217;
+import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart'
+    as _i540;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -77,6 +137,10 @@ extension GetItInjectableX on _i174.GetIt {
     await gh.factoryAsync<_i76.StorageService>(
       () => registerModule.storageService,
       preResolve: true,
+    );
+    gh.singleton<_i59.FirebaseAuth>(() => registerModule.firebaseAuth);
+    gh.singleton<_i892.FirebaseMessaging>(
+      () => registerModule.firebaseMessaging,
     );
     gh.lazySingleton<_i1024.CustomDioInterceptor>(
       () => _i1024.CustomDioInterceptor(),
@@ -100,8 +164,27 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i328.AppRouteRegistry>(
       () => const _i328.AppRouteRegistry(),
     );
+    gh.lazySingleton<_i113.LocationService>(
+      () => const _i113.LocationService(),
+    );
+    gh.lazySingleton<_i190.StartupMapWarmupCoordinator>(
+      () => _i190.StartupMapWarmupCoordinator(),
+    );
     gh.lazySingleton<_i1021.AuthStateNotifier>(
       () => _i1021.AuthStateNotifier(),
+    );
+    gh.lazySingleton<_i885.RootModeService>(() => _i885.RootModeService());
+    gh.lazySingleton<_i328.AppRouterConfig>(
+      () => _i328.AppRouterConfig(
+        gh<_i1021.AuthStateNotifier>(),
+        gh<_i328.AppRouteRegistry>(),
+      ),
+    );
+    gh.lazySingleton<_i538.AuthFirebaseDataSource>(
+      () => _i538.AuthFirebaseDataSource(
+        gh<_i59.FirebaseAuth>(),
+        gh<_i892.FirebaseMessaging>(),
+      ),
     );
     gh.lazySingleton<_i1039.LocaleService>(
       () => _i1039.LocaleService(gh<_i76.StorageService>()),
@@ -123,6 +206,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i282.NotificationFcmService>(),
       ),
     );
+    gh.lazySingleton<_i868.RealtimeService>(
+      () => _i562.SignalRRealtimeService(gh<_i1043.JwtTokenStorage>()),
+    );
     gh.lazySingleton<_i322.AuthManager>(
       () => _i322.AuthManager(
         storage: gh<_i76.StorageService>(),
@@ -130,15 +216,14 @@ extension GetItInjectableX on _i174.GetIt {
         tokenStorage: gh<_i1043.JwtTokenStorage>(),
       ),
     );
+    gh.lazySingleton<_i1066.RealtimeLifecycleCoordinator>(
+      () => _i1066.RealtimeLifecycleCoordinator(
+        gh<_i868.RealtimeService>(),
+        gh<_i322.AuthManager>(),
+      ),
+    );
     gh.lazySingleton<_i758.LocalizationInterceptor>(
       () => _i758.LocalizationInterceptor(gh<_i1039.LocaleService>()),
-    );
-    gh.lazySingleton<_i328.AppRouterConfig>(
-      () => _i328.AppRouterConfig(
-        gh<_i1021.AuthStateNotifier>(),
-        gh<_i565.OnboardingService>(),
-        gh<_i328.AppRouteRegistry>(),
-      ),
     );
     gh.singleton<_i361.Dio>(
       () => registerModule.dio(
@@ -153,14 +238,34 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1012.AuthRemoteDataSource>(
       () => _i1012.AuthRemoteDataSource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i505.DashboardRemoteDataSource>(
+      () => _i505.DashboardRemoteDataSource(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i506.DriverRemoteDataSource>(
+      () => _i506.DriverRemoteDataSource(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i221.KycRemoteDataSource>(
+      () => _i221.KycRemoteDataSource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i1064.RootRemoteDataSource>(
       () => _i1064.RootRemoteDataSource(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i642.TripRemoteDataSource>(
+      () => _i642.TripRemoteDataSource(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i574.DashboardRepository>(
+      () =>
+          _i150.DashboardRepositoryImpl(gh<_i505.DashboardRemoteDataSource>()),
     );
     gh.lazySingleton<_i825.RootRepository>(
       () => _i349.RootRepositoryImpl(gh<_i1064.RootRemoteDataSource>()),
     );
     gh.lazySingleton<_i706.AuthRepository>(
-      () => _i174.AuthRepositoryImpl(gh<_i1012.AuthRemoteDataSource>()),
+      () => _i174.AuthRepositoryImpl(
+        gh<_i538.AuthFirebaseDataSource>(),
+        gh<_i1012.AuthRemoteDataSource>(),
+        gh<_i322.AuthManager>(),
+      ),
     );
     gh.lazySingleton<_i471.AuthFacade>(
       () => _i471.AuthFacade(gh<_i706.AuthRepository>()),
@@ -168,8 +273,59 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i397.RootFacade>(
       () => _i397.RootFacade(gh<_i825.RootRepository>()),
     );
+    gh.lazySingleton<_i986.KycRepository>(
+      () => _i220.KycRepositoryImpl(gh<_i221.KycRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i724.KycFacade>(
+      () => _i724.KycFacade(gh<_i986.KycRepository>()),
+    );
+    gh.lazySingleton<_i336.DriverRepository>(
+      () => _i11.DriverRepositoryImpl(gh<_i506.DriverRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i217.TripRepository>(
+      () => _i10.TripRepositoryImpl(gh<_i642.TripRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i969.DashboardFacade>(
+      () => _i969.DashboardFacade(gh<_i574.DashboardRepository>()),
+    );
     gh.factory<_i554.RootBloc>(() => _i554.RootBloc(gh<_i397.RootFacade>()));
     gh.factory<_i100.AuthBloc>(() => _i100.AuthBloc(gh<_i471.AuthFacade>()));
+    gh.lazySingleton<_i461.DriverFacade>(
+      () => _i461.DriverFacade(gh<_i336.DriverRepository>()),
+    );
+    gh.factory<_i141.KycBloc>(
+      () => _i141.KycBloc(gh<_i724.KycFacade>(), gh<_i322.AuthManager>()),
+    );
+    gh.lazySingleton<_i931.TripFacade>(
+      () => _i931.TripFacade(gh<_i217.TripRepository>()),
+    );
+    gh.factory<_i508.DashboardBloc>(
+      () => _i508.DashboardBloc(
+        gh<_i969.DashboardFacade>(),
+        gh<_i868.RealtimeService>(),
+        gh<_i885.RootModeService>(),
+      ),
+    );
+    gh.factory<_i540.TripBloc>(
+      () => _i540.TripBloc(gh<_i931.TripFacade>(), gh<_i868.RealtimeService>()),
+    );
+    gh.lazySingleton<_i650.DriverLocationStreamer>(
+      () => _i650.DriverLocationStreamer(
+        gh<_i113.LocationService>(),
+        gh<_i1043.JwtTokenStorage>(),
+        gh<_i461.DriverFacade>(),
+      ),
+    );
+    gh.factory<_i698.DriverBloc>(
+      () => _i698.DriverBloc(gh<_i461.DriverFacade>()),
+    );
+    gh.factory<_i170.DriverHomeBloc>(
+      () => _i170.DriverHomeBloc(
+        gh<_i461.DriverFacade>(),
+        gh<_i650.DriverLocationStreamer>(),
+        gh<_i868.RealtimeService>(),
+      ),
+    );
     return this;
   }
 }

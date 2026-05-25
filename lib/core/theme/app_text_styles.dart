@@ -44,6 +44,11 @@ class AppTextStyles {
     return _withWeight(base, FontWeight.w700);
   }
 
+  static TextStyle get s32w700 {
+    final base = AppTypography.textTheme?.displayMedium;
+    return _withWeight(base, FontWeight.w700).copyWith(fontSize: 32);
+  }
+
   static TextStyle get s28w700 {
     final base = AppTypography.textTheme?.displaySmall;
     return _withWeight(base, FontWeight.w700);

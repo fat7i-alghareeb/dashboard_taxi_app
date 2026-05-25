@@ -1,12 +1,18 @@
+import java.util.Properties
+import java.io.File
+
 plugins {
     id("com.android.application")
+    // START: FlutterFire Configuration
+    id("com.google.gms.google-services")
+    // END: FlutterFire Configuration
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
-    namespace = "com.example.dashboardtaxi"
+    namespace = "dev.fat7i.dashboardtaxi"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -22,13 +28,36 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.dashboardtaxi"
+        applicationId = "dev.fat7i.dashboardtaxi"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // Load API Key from .env file
+        val flutterRootDir = rootProject.projectDir.parentFile
+        val envFile = File(flutterRootDir, ".env")
+        val envProperties = Properties()
+        if (envFile.exists()) {
+            envFile.inputStream().use { envProperties.load(it) }
+            println("[MapsConfig] Loaded env file from: ${envFile.absolutePath}")
+        } else {
+            println("[MapsConfig] .env not found at: ${envFile.absolutePath}")
+        }
+        val envApiKey = envProperties.getProperty("GOOGLE_MAPS_API_KEY")
+        val gradleApiKey = project.findProperty("GOOGLE_MAPS_API_KEY") as String?
+        val apiKey = envApiKey ?: gradleApiKey ?: ""
+
+        if (apiKey.isBlank() || apiKey == "{apiKey}") {
+            println("[MapsConfig] WARNING: GOOGLE_MAPS_API_KEY is missing or placeholder. Map tiles will not load.")
+        } else {
+            val maskedSuffix = if (apiKey.length > 6) apiKey.takeLast(6) else "short"
+            println("[MapsConfig] Google Maps key loaded (***$maskedSuffix)")
+        }
+
+        manifestPlaceholders["googleMapsApiKey"] = apiKey
     }
 
     buildTypes {

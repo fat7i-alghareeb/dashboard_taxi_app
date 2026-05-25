@@ -19,24 +19,54 @@ class AppRouteRegistry {
           AppPageTransitions.build(state: state, child: const SplashScreen()),
     ),
     GoRoute(
-      path: OnboardingScreen.pagePath,
-      name: OnboardingScreen.pageName,
-      pageBuilder: (context, state) => AppPageTransitions.build(
-        state: state,
-        child: const OnboardingScreen(),
-      ),
-    ),
-    GoRoute(
       path: LoginScreen.pagePath,
       name: LoginScreen.pageName,
       pageBuilder: (context, state) =>
           AppPageTransitions.build(state: state, child: const LoginScreen()),
     ),
     GoRoute(
+      path: ForcePasswordResetScreen.pagePath,
+      name: ForcePasswordResetScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const ForcePasswordResetScreen(),
+      ),
+    ),
+    GoRoute(
       path: RootScreen.pagePath,
       name: RootScreen.pageName,
       pageBuilder: (context, state) =>
           AppPageTransitions.build(state: state, child: const RootScreen()),
+    ),
+    GoRoute(
+      path: DashboardLiveMapScreen.pagePath,
+      name: DashboardLiveMapScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const DashboardLiveMapScreen(),
+      ),
+    ),
+    GoRoute(
+      path: DashboardTripsScreen.pagePath,
+      name: DashboardTripsScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const DashboardTripsScreen(),
+      ),
+    ),
+    GoRoute(
+      path: DashboardAdminOperationsScreen.pagePath,
+      name: DashboardAdminOperationsScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const DashboardAdminOperationsScreen(),
+      ),
+    ),
+    GoRoute(
+      path: KycScreen.pagePath,
+      name: KycScreen.pageName,
+      pageBuilder: (context, state) =>
+          AppPageTransitions.build(state: state, child: const KycScreen()),
     ),
   ];
 }

@@ -1,0 +1,3 @@
+class DashboardParams {
+  const DashboardParams();
+}

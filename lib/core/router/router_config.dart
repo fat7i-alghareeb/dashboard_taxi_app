@@ -6,32 +6,31 @@ import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/router/app_page_transitions.dart';
+import '../../features/auth/presentation/ui/screens/force_password_reset_screen.dart';
 import '../../features/auth/presentation/ui/screens/login_screen.dart';
-import '../../features/onboarding/presentation/ui/screens/onboarding_screen.dart';
+import '../../features/dashboard/presentation/ui/screens/dashboard_admin_operations_screen.dart';
+import '../../features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
+import '../../features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
 import '../../features/root/presentation/ui/screens/root_screen.dart';
+import '../../features/kyc/presentation/ui/screens/kyc_screen.dart';
 import '../../features/splash/presentation/ui/screens/splash_screen.dart';
 import '../../utils/constants/app_flow_constants.dart';
 import '../../utils/helpers/colored_print.dart';
-import '../services/onboarding/onboarding_service.dart';
 import '../services/session/auth_state_notifier.dart';
 
 part 'app_routes.dart';
 
 /// * RouterRefreshListenable
 ///
-/// Bridges authentication status, onboarding state, and an internal
+/// Bridges authentication status and an internal
 /// splash delay into a single [Listenable] used by GoRouter.
 class RouterRefreshListenable extends ChangeNotifier {
-  RouterRefreshListenable({
-    required this.authState,
-    required this.onboardingService,
-  }) {
+  RouterRefreshListenable({required this.authState}) {
     // * Listen to all reactive sources that affect routing.
     authState.addListener(_onSourceChanged);
-    onboardingService.addListener(_onSourceChanged);
 
     // * Ensure the splash is visible for at least [SplashConfig.initialDelay]
-    //   even if auth/onboarding resolve instantly.
+    //   even if auth resolves instantly.
     Future<void>.delayed(SplashConfig.initialDelay, () {
       _splashDelayElapsed = true;
       printC('${RouterLogTags.router} splash delay elapsed ⏱');
@@ -40,7 +39,6 @@ class RouterRefreshListenable extends ChangeNotifier {
   }
 
   final AuthStateNotifier authState;
-  final OnboardingService onboardingService;
 
   bool _splashDelayElapsed = false;
 
@@ -53,7 +51,6 @@ class RouterRefreshListenable extends ChangeNotifier {
   @override
   void dispose() {
     authState.removeListener(_onSourceChanged);
-    onboardingService.removeListener(_onSourceChanged);
     super.dispose();
   }
 }
@@ -67,22 +64,14 @@ class RouterRefreshListenable extends ChangeNotifier {
 /// - [AppRouteGuard]
 @lazySingleton
 class AppRouterConfig {
-  AppRouterConfig(
-    this._authState,
-    this._onboardingService,
-    this._routeRegistry,
-  ) {
-    _refresh = RouterRefreshListenable(
-      authState: _authState,
-      onboardingService: _onboardingService,
-    );
+  AppRouterConfig(this._authState, this._routeRegistry) {
+    _refresh = RouterRefreshListenable(authState: _authState);
 
     _guard = AppRouteGuard(
       authState: _authState,
-      onboardingService: _onboardingService,
       splashPath: SplashScreen.pagePath,
-      onboardingPath: OnboardingScreen.pagePath,
       loginPath: LoginScreen.pagePath,
+      forceResetPath: ForcePasswordResetScreen.pagePath,
       rootPath: RootScreen.pagePath,
     );
 
@@ -99,7 +88,6 @@ class AppRouterConfig {
   }
 
   final AuthStateNotifier _authState;
-  final OnboardingService _onboardingService;
   final AppRouteRegistry _routeRegistry;
 
   late final RouterRefreshListenable _refresh;
@@ -117,18 +105,16 @@ class AppRouterConfig {
 class AppRouteGuard {
   AppRouteGuard({
     required this.authState,
-    required this.onboardingService,
     required this.splashPath,
-    required this.onboardingPath,
     required this.loginPath,
+    required this.forceResetPath,
     required this.rootPath,
   });
 
   final AuthStateNotifier authState;
-  final OnboardingService onboardingService;
   final String splashPath;
-  final String onboardingPath;
   final String loginPath;
+  final String forceResetPath;
   final String rootPath;
 
   /// * Central route-guard / redirect logic.
@@ -173,11 +159,7 @@ class AppRouteGuard {
       return null;
     }
 
-    // 2) Onboarding.
-    final onboardingRedirect = await _handleOnboarding(currentPath);
-    if (onboardingRedirect != null) return onboardingRedirect;
-
-    // 3) Auth.
+    // 2) Auth.
     final authRedirect = _handleAuth(
       currentPath: currentPath,
       canEnterApp: canEnterApp,
@@ -197,25 +179,6 @@ class AppRouteGuard {
       }
       return null;
     }
-    return null;
-  }
-
-  Future<String?> _handleOnboarding(String currentPath) async {
-    if (!AppFlowConfig.onboardingEnabled) {
-      return null;
-    }
-
-    final finished = await onboardingService.isOnboardingFinished();
-    if (!finished) {
-      if (currentPath != onboardingPath) {
-        printC('${RouterLogTags.redirect} → onboarding (not finished)');
-        return onboardingPath;
-      }
-      return null;
-    }
-
-    // Onboarding is finished but user is still on the onboarding page.
-    // Fall through to auth redirects so the router moves them forward.
     return null;
   }
 
@@ -239,9 +202,44 @@ class AppRouteGuard {
       return null;
     }
 
-    if (currentPath == splashPath ||
-        currentPath == loginPath ||
-        currentPath == onboardingPath) {
+    final user = authState.user;
+    final requiresPasswordReset = user?.requiresPasswordReset == true;
+
+    if (requiresPasswordReset) {
+      if (currentPath != forceResetPath) {
+        printY('${RouterLogTags.redirect} password reset required');
+        return forceResetPath;
+      }
+      return null;
+    }
+
+    if (currentPath == forceResetPath) {
+      printG('${RouterLogTags.redirect} password reset complete → root');
+      return rootPath;
+    }
+
+    // KYC Status Guards
+    final isDriver = user?.role == 'Driver';
+    final isKycApproved = user?.approvalStatus == 'Approved';
+    final isAdmin = user?.role == 'Admin';
+
+    if (isDriver && !isKycApproved && !isAdmin) {
+      if (currentPath != KycScreen.pagePath) {
+        printY(
+          '${RouterLogTags.redirect} KYC Not Approved (${user?.approvalStatus}) → KycScreen',
+        );
+        return KycScreen.pagePath;
+      }
+      return null;
+    }
+
+    // Prevent verified users/admins from staying on KycScreen
+    if (currentPath == KycScreen.pagePath && (isKycApproved || isAdmin)) {
+      printG('${RouterLogTags.redirect} KYC Approved/Admin → root');
+      return rootPath;
+    }
+
+    if (currentPath == splashPath || currentPath == loginPath) {
       printG('${RouterLogTags.redirect} authenticated → root');
       return rootPath;
     }

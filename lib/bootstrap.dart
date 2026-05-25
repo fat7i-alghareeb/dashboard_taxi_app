@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart'
     show SystemChrome, SystemUiMode, appFlavor;
+import 'firebase_options.dart';
 import 'core/config/localization_config.dart';
 import 'core/injection/injectable.dart';
 import 'core/notification/notification_config.dart';
@@ -15,6 +17,7 @@ import 'core/notification/notification_payload.dart';
 import 'core/router/router_config.dart';
 import 'core/services/localization/locale_service.dart';
 import 'core/services/session/auth_manager.dart';
+import 'package:dashboardtaxi/core/services/realtime/realtime_lifecycle_coordinator.dart';
 import 'core/theme/theme_controller.dart';
 import 'common/widgets/stage_tools/stage_device_preview_controller.dart';
 import 'flavors.dart' show F, Flavor;
@@ -46,6 +49,10 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       F.appFlavor = Flavor.values.firstWhere(
         (element) => element.name == appFlavor,
         orElse: () => Flavor.stage,
+      );
+
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
       );
 
       //    Configure the dependency injection container and register
@@ -137,6 +144,7 @@ Future<void> _handleNotificationNavigation(
 Future<void> _initializeAuthAndNetwork() async {
   final authManager = getIt<AuthManager>();
   await authManager.initialize();
+  getIt<RealtimeLifecycleCoordinator>().start();
 }
 
 /// Runs the application inside a guarded zone and wraps it with

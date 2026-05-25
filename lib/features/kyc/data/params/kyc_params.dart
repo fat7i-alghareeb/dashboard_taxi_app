@@ -1,0 +1,3 @@
+class KycParams {
+  const KycParams();
+}

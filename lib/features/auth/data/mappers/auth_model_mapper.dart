@@ -4,7 +4,7 @@ import '../models/auth_login_response_model.dart';
 
 extension AuthLoginResponseModelMapper on AuthLoginResponseModel {
   UserEntity toUserEntity() {
-    return UserEntity(id: id);
+    return user;
   }
 
   AuthTokenModel toAuthTokenModel() {

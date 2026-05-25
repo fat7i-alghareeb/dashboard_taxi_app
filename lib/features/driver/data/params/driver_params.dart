@@ -1,0 +1,3 @@
+class DriverParams {
+  const DriverParams();
+}

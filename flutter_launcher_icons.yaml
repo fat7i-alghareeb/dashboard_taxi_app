@@ -18,4 +18,4 @@ flutter_launcher_icons:
   # desaturate_tinted_to_grayscale_ios: true
   # background_color_ios: "#ffffff"
   android_12:
-    image: "assets/images/logo_lanuncher.png"
+    image: "assets/images/logo_launcher.png"

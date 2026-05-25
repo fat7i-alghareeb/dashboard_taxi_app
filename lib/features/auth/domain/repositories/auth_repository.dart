@@ -2,5 +2,24 @@ import '../../../../core/domain/user_entity.dart';
 import '../../../../core/utils/result.dart';
 
 abstract class AuthRepository {
-  Future<Result<UserEntity>> loginDummy();
+  /// Triggers Firebase Phone Auth and returns the verificationId on success.
+  Future<Result<String>> requestSmsCode(String phone);
+
+  /// Verifies the SMS code with Firebase, exchanges the resulting Firebase
+  /// ID token for the system JWT via the backend `/auth/login` endpoint,
+  /// and persists the session via [AuthManager].
+  Future<Result<UserEntity>> verifyAndLogin({
+    required String phone,
+    required String verificationId,
+    required String smsCode,
+  });
+
+  /// Updates the FCM device token on the backend.
+  Future<Result<void>> updateFcmToken(String token);
+
+  /// Updates the user's preferred language on the backend.
+  Future<Result<void>> updatePreferredLanguage(String languageCode);
+
+  /// Completes the mandatory password reset flow and refreshes the session.
+  Future<Result<void>> forceResetPassword(String newPassword);
 }

@@ -9,7 +9,20 @@ class AuthFacade {
 
   final AuthRepository _repository;
 
-  Future<Result<UserEntity>> loginDummy() {
-    return _repository.loginDummy();
+  Future<Result<String>> requestSmsCode(String phone) =>
+      _repository.requestSmsCode(phone);
+
+  Future<Result<UserEntity>> verifyAndLogin({
+    required String phone,
+    required String verificationId,
+    required String smsCode,
+  }) => _repository.verifyAndLogin(
+    phone: phone,
+    verificationId: verificationId,
+    smsCode: smsCode,
+  );
+
+  Future<Result<void>> forceResetPassword(String newPassword) {
+    return _repository.forceResetPassword(newPassword);
   }
 }

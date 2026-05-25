@@ -1,0 +1,3 @@
+class TripParams {
+  const TripParams();
+}

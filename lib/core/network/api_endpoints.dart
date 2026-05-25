@@ -1,5 +1,56 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String refreshToken = '';
+  // Auth
+  static const String login = '/api/v1.0/auth/login';
+  static const String forceResetPassword = '/api/v1/auth/force-reset-password';
+  static const String refreshToken = '/api/v1/identity/tokens/refresh';
+
+  // Users
+  static const String currentUser = '/api/v1/users/me';
+  static const String updateFcmToken = '/api/v1/users/me/fcm-token';
+  static const String updatePreferredLanguage = '/api/v1/users/me/language';
+
+  // Trips
+  static const String trips = '/api/v1/trips';
+  static const String adminTrips = '/api/v1/trips/admin';
+  static String adminTripDetails(String tripId) =>
+      '/api/v1/trips/$tripId/details';
+
+  // Admin dashboard
+  static const String drivers = '/api/v1/drivers';
+  static const String driversStatus = '/api/v1/drivers/status';
+  static const String auditLogs = '/api/v1/audit-logs';
+  static const String vehicleTypes = '/api/v1/vehicle-types';
+  static const String users = '/api/v1/users';
+  static const String tripDiscount = '/api/v1/app-config/trip-discount';
+  static const String currency = '/api/v1/app-config/currency';
+  static const String clientConfig = '/api/v1/app-config/client';
+
+  static String driverDocuments(String driverId) =>
+      '/api/v1/drivers/$driverId/documents';
+
+  static String reviewDriverDocument(String driverId, String documentId) =>
+      '/api/v1/drivers/$driverId/documents/$documentId/review';
+
+  static String approveDriver(String driverId) =>
+      '/api/v1/drivers/$driverId/approve';
+
+  static String suspendDriver(String driverId) =>
+      '/api/v1/drivers/$driverId/suspend';
+
+  static String assignDriverVehicleType(String driverId) =>
+      '/api/v1/drivers/$driverId/vehicle-type';
+
+  static String vehicleType(String vehicleTypeId) =>
+      '/api/v1/vehicle-types/$vehicleTypeId';
+
+  static String assignTrip(String tripId) => '/api/v1/trips/$tripId/assign';
+  static String driverCancelTrip(String tripId) =>
+      '/api/v1/trips/$tripId/driver-cancellations';
+  static String startWaiting(String tripId) => '/api/v1/trips/$tripId/waiting/start';
+  static String stopWaiting(String tripId) => '/api/v1/trips/$tripId/waiting/stop';
+  static const String compensationClaims = '/api/v1/trips/compensation-claims';
+  static String reviewCompensationClaim(String claimId) =>
+      '/api/v1/trips/compensation-claims/$claimId/review';
 }

@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:dio_refresh_bot/dio_refresh_bot.dart';
 import 'package:injectable/injectable.dart';
+import 'package:dashboardtaxi/core/network/api_endpoints.dart';
 
 import '../../../utils/constants/auth_constants.dart';
 import '../../../utils/helpers/colored_print.dart';
@@ -10,6 +12,7 @@ import '../../domain/user_entity.dart';
 import '../storage/storage_service.dart';
 import 'auth_state_notifier.dart';
 import 'auth_token_model.dart';
+import 'package:dashboardtaxi/core/injection/injectable.dart';
 import 'jwt_token_storage.dart';
 
 /// Central service responsible only for authentication concerns.
@@ -121,6 +124,14 @@ class AuthManager {
   /// Updates the persisted user data and notifies listeners.
   Future<void> updateUser(UserEntity user) async {
     await _persistUser(user);
+  }
+
+  /// Fetches the latest profile from the backend and synchronizes with storage.
+  Future<void> refreshCurrentUserProfile() async {
+    printC('${AuthLogTags.authManager} refreshCurrentUserProfile 🔄');
+    final response = await getIt<Dio>().get(ApiEndpoints.currentUser);
+    final user = UserEntity.fromJson(response.data as Map<String, dynamic>);
+    await updateUser(user);
   }
 
   /// Updates the stored JWT token when JWT mode is active.

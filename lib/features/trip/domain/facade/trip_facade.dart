@@ -1,0 +1,52 @@
+import 'package:injectable/injectable.dart';
+
+import '../../../../core/utils/result.dart';
+import '../entities/trip_entity.dart';
+import '../repositories/trip_repository.dart';
+
+@lazySingleton
+class TripFacade {
+  const TripFacade(this._repository);
+
+  final TripRepository _repository;
+
+  Future<Result<List<TripEntity>>> getAllTrips() {
+    return _repository.getAllTrips();
+  }
+
+  Future<Result<TripEntity>> getTripById(String tripId) {
+    return _repository.getTripById(tripId);
+  }
+
+  Future<Result<void>> markEnRoute(String tripId) {
+    return _repository.markEnRoute(tripId);
+  }
+
+  Future<Result<void>> markArrived(String tripId) {
+    return _repository.markArrived(tripId);
+  }
+
+  Future<Result<void>> startTrip(String tripId) {
+    return _repository.startTrip(tripId);
+  }
+
+  Future<Result<void>> completeTrip(String tripId) {
+    return _repository.completeTrip(tripId);
+  }
+
+  Future<Result<void>> driverCancelTrip(
+    String tripId,
+    String reason,
+    String? note,
+  ) {
+    return _repository.driverCancelTrip(tripId, reason, note);
+  }
+
+  Future<Result<TripWaitingSessionEntity>> startWaiting(String tripId) {
+    return _repository.startWaiting(tripId);
+  }
+
+  Future<Result<TripWaitingSessionEntity>> stopWaiting(String tripId) {
+    return _repository.stopWaiting(tripId);
+  }
+}

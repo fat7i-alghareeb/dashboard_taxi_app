@@ -60,11 +60,21 @@ dependencies:
   flutter_local_notifications: ^19.5.0
   firebase_messaging: ^16.1.1
   firebase_core: ^4.4.0
+  firebase_auth: ^6.1.1
+  pinput: ^6.0.2
   timezone: ^0.10.1
   objectbox: ^5.2.0
   objectbox_flutter_libs: ^5.2.0
   path_provider: ^2.1.5
   device_preview_plus: ^2.6.1
+
+  # Maps & Location
+  google_maps_flutter: ^2.10.0
+  geolocator: ^14.0.2
+  flutter_polyline_points: ^3.1.0
+  image_picker: ^1.2.2
+  signalr_netcore: ^1.4.4
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -106,9 +116,9 @@ flavorizr:
     stage:
       app:
         name: "dashboardtaxi Stage"
-        package_name: "dev.fat7i.dashboardtaxi.stage"
+        package_name: "dev.fat7i.dashboardtaxi"
       android:
-        applicationId: "dev.fat7i.dashboardtaxi.stage"
+        applicationId: "dev.fat7i.dashboardtaxi"
     production:
       app:
         name: "dashboardtaxi"

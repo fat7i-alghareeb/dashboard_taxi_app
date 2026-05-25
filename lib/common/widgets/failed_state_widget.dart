@@ -1,5 +1,4 @@
 import '../imports/imports.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 /// FailedStateWidget
 /// ---------------
