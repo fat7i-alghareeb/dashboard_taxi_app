@@ -18,6 +18,7 @@ import 'core/router/router_config.dart';
 import 'core/services/localization/locale_service.dart';
 import 'core/services/session/auth_manager.dart';
 import 'package:dashboardtaxi/core/services/realtime/realtime_lifecycle_coordinator.dart';
+import 'package:dashboardtaxi/core/utils/result.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/root/presentation/ui/screens/root_screen.dart';
 import 'features/trip/presentation/states/trip_bloc.dart';
@@ -222,21 +223,29 @@ Future<void> _initializeAuthAndNetwork() async {
       final coordinator = getIt<NotificationCoordinator>();
       final token = await coordinator.getDeviceToken();
       if (token != null && token.isNotEmpty) {
-        await getIt<AuthRepository>().updateFcmToken(token);
-        printG('[Bootstrap] Startup FCM token backup synced');
+        final result = await getIt<AuthRepository>().updateFcmToken(token);
+        result.when(
+          success: (_) => printG('[Bootstrap] Startup FCM token backup synced'),
+          failure: (msg) => printY('[Bootstrap] Startup FCM token backup failed: $msg'),
+        );
       }
     } catch (e) {
       printY('[Bootstrap] Startup FCM token backup failed: $e');
     }
 
-    // Sync preferred language to backend on startup
-    try {
-      final localeService = getIt<LocaleService>();
-      final code = await localeService.currentLanguageCode();
-      await getIt<AuthRepository>().updatePreferredLanguage(code);
-      printG('[Bootstrap] Startup language backup synced: $code');
-    } catch (e) {
-      printY('[Bootstrap] Startup language backup failed: $e');
+    // Re-verify if still authenticated (FCM sync or token refresh could have triggered logout)
+    if (authManager.isAuthenticated) {
+      try {
+        final localeService = getIt<LocaleService>();
+        final code = await localeService.currentLanguageCode();
+        final result = await getIt<AuthRepository>().updatePreferredLanguage(code);
+        result.when(
+          success: (_) => printG('[Bootstrap] Startup language backup synced: $code'),
+          failure: (msg) => printY('[Bootstrap] Startup language backup failed: $msg'),
+        );
+      } catch (e) {
+        printY('[Bootstrap] Startup language backup failed: $e');
+      }
     }
   }
 }
