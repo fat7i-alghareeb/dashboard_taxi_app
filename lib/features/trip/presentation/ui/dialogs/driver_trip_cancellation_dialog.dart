@@ -1,8 +1,7 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
+import 'package:dashboardtaxi/features/trip/presentation/ui/dialogs/trip_cancel_reason_row_widget.dart';
 
-/// Shows a reason-selection dialog for driver cancellation (passenger no-show).
-/// Dispatches [TripEvent.driverCancelRequested] on confirmation.
 class DriverTripCancellationDialog extends StatefulWidget {
   const DriverTripCancellationDialog({super.key, required this.tripId});
 
@@ -40,11 +39,11 @@ class _DriverTripCancellationDialogState
   }
 
   String _reasonLabel(String reason) => switch (reason) {
-        'PassengerLate' => AppStrings.passengerLateReason,
-        'PassengerNoShow' => AppStrings.passengerNoShowReason,
-        'PassengerUnreachable' => AppStrings.passengerUnreachableReason,
-        _ => reason,
-      };
+    'PassengerLate' => AppStrings.passengerLateReason,
+    'PassengerNoShow' => AppStrings.passengerNoShowReason,
+    'PassengerUnreachable' => AppStrings.passengerUnreachableReason,
+    _ => reason,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -54,41 +53,26 @@ class _DriverTripCancellationDialogState
       children: [
         Text(
           AppStrings.passengerLateNoShowTitle,
+          textAlign: TextAlign.start,
           style: AppTextStyles.s20w700.copyWith(color: context.onSurface),
-          textAlign: TextAlign.center,
-        ),
-        AppSpacing.md.verticalSpace,
-        Text(
-          AppStrings.cancelReasonLabel,
-          style: AppTextStyles.s14w400.copyWith(
-            color: context.onSurface.withValues(alpha: 0.7),
-          ),
         ),
         AppSpacing.xs.verticalSpace,
-        ..._reasons.map(
-          (reason) => InkWell(
-            onTap: () => setState(() => _selectedReason = reason),
-            borderRadius: BorderRadius.circular(6.r),
-            child: Row(
-              children: [
-                Radio<String>(
-                  value: reason,
-                  groupValue: _selectedReason,
-                  onChanged: (v) => setState(() => _selectedReason = v!),
-                ),
-                Expanded(
-                  child: Text(
-                    _reasonLabel(reason),
-                    style: AppTextStyles.s14w400.copyWith(
-                      color: context.onSurface,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+        Text(
+          AppStrings.cancelReasonLabel,
+          style: AppTextStyles.s12w400.copyWith(
+            color: context.onSurface.withValues(alpha: 0.60),
           ),
         ),
-        AppSpacing.sm.verticalSpace,
+        AppSpacing.lg.verticalSpace,
+        for (int i = 0; i < _reasons.length; i++) ...[
+          if (i != 0) AppSpacing.sm.verticalSpace,
+          TripCancelReasonRowWidget(
+            label: _reasonLabel(_reasons[i]),
+            isSelected: _selectedReason == _reasons[i],
+            onTap: () => setState(() => _selectedReason = _reasons[i]),
+          ),
+        ],
+        AppSpacing.lg.verticalSpace,
         TextField(
           controller: _noteController,
           maxLines: 2,
@@ -98,32 +82,59 @@ class _DriverTripCancellationDialogState
             hintStyle: AppTextStyles.s14w400.copyWith(
               color: context.onSurface.withValues(alpha: 0.45),
             ),
+            filled: true,
+            fillColor: context.onSurface.withValues(alpha: 0.03),
+            contentPadding: REdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.md,
+            ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(AppRadii.sm.r),
+              borderSide: BorderSide(
+                color: context.onSurface.withValues(alpha: 0.10),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadii.sm.r),
+              borderSide: BorderSide(
+                color: context.onSurface.withValues(alpha: 0.10),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadii.sm.r),
+              borderSide: BorderSide(color: context.primary, width: 1.5),
             ),
           ),
         ),
         AppSpacing.md.verticalSpace,
         Text(
           AppStrings.cancelNoShowPolicyNote,
+          textAlign: TextAlign.start,
           style: AppTextStyles.s12w400.copyWith(
             color: context.onSurface.withValues(alpha: 0.55),
           ),
-          textAlign: TextAlign.center,
         ),
         AppSpacing.lg.verticalSpace,
-        AppButton.variant(
-          variant: AppButtonVariant.error,
-          fill: AppButtonFill.solid,
-          onTap: _confirm,
-          child: AppButtonChild.label(AppStrings.cancelConfirmButton),
-        ),
-        AppSpacing.sm.verticalSpace,
-        AppButton.variant(
-          variant: AppButtonVariant.grey,
-          fill: AppButtonFill.solid,
-          onTap: () => Navigator.of(context).pop(),
-          child: AppButtonChild.label(AppStrings.cancel),
+        Row(
+          children: [
+            Expanded(
+              child: AppButton.outline(
+                layout: const AppButtonLayout(height: 44),
+                onTap: () => Navigator.of(context).pop(),
+                child: AppButtonChild.label(AppStrings.cancel),
+              ),
+            ),
+            AppSpacing.md.horizontalSpace,
+            Expanded(
+              child: AppButton.variant(
+                variant: AppButtonVariant.error,
+                fill: AppButtonFill.solid,
+                layout: const AppButtonLayout(height: 44),
+                onTap: _confirm,
+                child: AppButtonChild.label(AppStrings.cancelConfirmButton),
+              ),
+            ),
+          ],
         ),
       ],
     );

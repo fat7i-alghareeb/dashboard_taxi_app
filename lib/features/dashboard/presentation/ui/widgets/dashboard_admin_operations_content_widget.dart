@@ -5,6 +5,7 @@ import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboa
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_admin_full_audit_section.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_admin_users_section.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_admin_vehicle_types_section.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_admin_profile_section.dart';
 
 class DashboardAdminOperationsContentWidget extends StatelessWidget {
   const DashboardAdminOperationsContentWidget({
@@ -21,24 +22,26 @@ class DashboardAdminOperationsContentWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        DashboardAdminProfileSection(profile: operations.adminProfile),
+        if (operations.adminProfile != null) AppSpacing.xl.verticalSpace,
         DashboardAdminConfigSection(
           config: operations.config,
           isActionLoading: isActionLoading,
         ),
-        AppSpacing.lg.verticalSpace,
+        AppSpacing.xl.verticalSpace,
         DashboardAdminDriversSection(
           drivers: operations.drivers,
           vehicleTypes: operations.vehicleTypes,
           isActionLoading: isActionLoading,
         ),
-        AppSpacing.lg.verticalSpace,
+        AppSpacing.xl.verticalSpace,
         DashboardAdminVehicleTypesSection(
           vehicleTypes: operations.vehicleTypes,
           isActionLoading: isActionLoading,
         ),
-        AppSpacing.lg.verticalSpace,
+        AppSpacing.xl.verticalSpace,
         DashboardAdminUsersSection(users: operations.users),
-        AppSpacing.lg.verticalSpace,
+        AppSpacing.xl.verticalSpace,
         DashboardAdminFullAuditSection(logs: operations.auditLogs),
       ],
     );

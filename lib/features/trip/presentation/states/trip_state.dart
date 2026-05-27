@@ -14,8 +14,12 @@ abstract class TripState with _$TripState {
     @Default(BlocStatus<void>.initial()) BlocStatus<void> driverCancelState,
     @Default(BlocStatus<void>.initial()) BlocStatus<void> startWaitingState,
     @Default(BlocStatus<void>.initial()) BlocStatus<void> stopWaitingState,
+    @Default(BlocStatus<void>.initial()) BlocStatus<void> completeStopState,
     TripEntity? activeTrip,
     TripEntity? completedTrip,
+    TripEntity? pendingTrip,
     DateTime? arrivedAt,
+    @Default(<int>{}) Set<int> completedStops,
+    @Default(BlocStatus<void>.initial()) BlocStatus<void> adminSelfAssignState,
   }) = _TripState;
 }

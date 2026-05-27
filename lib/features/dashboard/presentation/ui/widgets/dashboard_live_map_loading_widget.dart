@@ -9,7 +9,7 @@ class DashboardLiveMapLoadingWidget extends StatelessWidget {
       children: [
         Positioned.fill(
           child: ColoredBox(
-            color: context.surface,
+            color: context.onSurface.withValues(alpha: 0.04),
             child: const AppShimmer(child: SizedBox.expand()),
           ),
         ),
@@ -17,13 +17,21 @@ class DashboardLiveMapLoadingWidget extends StatelessWidget {
           top: AppSpacing.xxl.h,
           left: AppSpacing.xl.w,
           right: AppSpacing.xl.w,
-          child: AppShimmer.box(width: double.infinity, height: 96),
+          child: AppShimmer.box(
+            width: double.infinity,
+            height: 64,
+            borderRadius: AppRadii.lg,
+          ),
         ),
         Positioned(
           bottom: AppSpacing.xxl.h,
           left: AppSpacing.xl.w,
           right: AppSpacing.xl.w,
-          child: AppShimmer.box(width: double.infinity, height: 132),
+          child: AppShimmer.box(
+            width: double.infinity,
+            height: 120,
+            borderRadius: AppRadii.lg,
+          ),
         ),
       ],
     );

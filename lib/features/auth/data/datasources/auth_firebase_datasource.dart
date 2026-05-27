@@ -7,6 +7,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/global_error_handler.dart';
 import '../../../../common/imports/imports.dart' show AppStrings;
+import '../../../../utils/helpers/colored_print.dart';
 
 @lazySingleton
 class AuthFirebaseDataSource {
@@ -19,24 +20,36 @@ class AuthFirebaseDataSource {
   /// that the verify step must echo back along with the SMS code.
   Future<String> requestSmsCode(String phone, {int? resendToken}) {
     return rethrowAsAppException(() async {
+      printY(
+        '[AuthFirebaseDataSource] requestSmsCode phone=$phone '
+        'resend=${resendToken != null}',
+      );
       final completer = Completer<String>();
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phone,
         forceResendingToken: resendToken,
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential _) {
+          printC('[AuthFirebaseDataSource] instant verification completed');
           // Android instant verification: not used in v1; user types the code.
         },
         verificationFailed: (FirebaseAuthException e) {
+          printR(
+            '[AuthFirebaseDataSource] verification failed code=${e.code} '
+            'message=${e.message}',
+          );
           if (!completer.isCompleted) {
             completer.completeError(_mapFirebaseError(e));
           }
         },
         codeSent: (String verificationId, int? _) {
+          printG(
+            '[AuthFirebaseDataSource] code sent verificationId=$verificationId',
+          );
           if (!completer.isCompleted) completer.complete(verificationId);
         },
         codeAutoRetrievalTimeout: (_) {
-          /* no-op */
+          printY('[AuthFirebaseDataSource] auto retrieval timeout');
         },
       );
       return completer.future;
@@ -50,6 +63,10 @@ class AuthFirebaseDataSource {
     required String smsCode,
   }) {
     return rethrowAsAppException(() async {
+      printY(
+        '[AuthFirebaseDataSource] signInAndGetIdToken '
+        'verificationId=$verificationId',
+      );
       final credential = PhoneAuthProvider.credential(
         verificationId: verificationId,
         smsCode: smsCode,
@@ -59,8 +76,13 @@ class AuthFirebaseDataSource {
       );
       final idToken = await userCredential.user?.getIdToken(true);
       if (idToken == null || idToken.isEmpty) {
+        printR('[AuthFirebaseDataSource] id token missing after sign in');
         throw const AppException('Could not retrieve Firebase ID token');
       }
+      printG(
+        '[AuthFirebaseDataSource] signInAndGetIdToken success '
+        'uid=${userCredential.user?.uid}',
+      );
       return idToken;
     });
   }
@@ -69,8 +91,15 @@ class AuthFirebaseDataSource {
   /// endpoint accepts a missing token).
   Future<String?> getFcmToken() async {
     try {
-      return await _firebaseMessaging.getToken();
-    } catch (_) {
+      printY('[AuthFirebaseDataSource] getFcmToken requested');
+      final token = await _firebaseMessaging.getToken();
+      printG(
+        '[AuthFirebaseDataSource] getFcmToken '
+        '${token == null ? 'empty' : 'success'}',
+      );
+      return token;
+    } catch (error) {
+      printY('[AuthFirebaseDataSource] getFcmToken failed: $error');
       return null;
     }
   }

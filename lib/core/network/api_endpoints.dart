@@ -3,6 +3,7 @@ class ApiEndpoints {
 
   // Auth
   static const String login = '/api/v1.0/auth/login';
+  static const String adminLogin = '/api/v1.0/auth/admin/login';
   static const String forceResetPassword = '/api/v1/auth/force-reset-password';
   static const String refreshToken = '/api/v1/identity/tokens/refresh';
 
@@ -10,6 +11,8 @@ class ApiEndpoints {
   static const String currentUser = '/api/v1/users/me';
   static const String updateFcmToken = '/api/v1/users/me/fcm-token';
   static const String updatePreferredLanguage = '/api/v1/users/me/language';
+  static const String currentAdminProfile = '/api/v1/admins/me';
+  static const String currentDriverProfile = '/api/v1/drivers/me';
 
   // Trips
   static const String trips = '/api/v1/trips';
@@ -46,10 +49,16 @@ class ApiEndpoints {
       '/api/v1/vehicle-types/$vehicleTypeId';
 
   static String assignTrip(String tripId) => '/api/v1/trips/$tripId/assign';
+  static String adminTakeTrip(String tripId) =>
+      '/api/v1/trips/$tripId/admin-take';
+  static String completeTripStop(String tripId, int sequence) =>
+      '/api/v1/trips/$tripId/stops/$sequence/complete';
   static String driverCancelTrip(String tripId) =>
       '/api/v1/trips/$tripId/driver-cancellations';
-  static String startWaiting(String tripId) => '/api/v1/trips/$tripId/waiting/start';
-  static String stopWaiting(String tripId) => '/api/v1/trips/$tripId/waiting/stop';
+  static String startWaiting(String tripId) =>
+      '/api/v1/trips/$tripId/waiting/start';
+  static String stopWaiting(String tripId) =>
+      '/api/v1/trips/$tripId/waiting/stop';
   static const String compensationClaims = '/api/v1/trips/compensation-claims';
   static String reviewCompensationClaim(String claimId) =>
       '/api/v1/trips/compensation-claims/$claimId/review';

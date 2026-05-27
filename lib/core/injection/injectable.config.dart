@@ -44,6 +44,10 @@ import 'package:dashboardtaxi/core/services/location/startup_map_warmup_coordina
     as _i190;
 import 'package:dashboardtaxi/core/services/onboarding/onboarding_service.dart'
     as _i565;
+import 'package:dashboardtaxi/core/services/permissions/location_permission_service.dart'
+    as _i88;
+import 'package:dashboardtaxi/core/services/permissions/permissions_coordinator.dart'
+    as _i403;
 import 'package:dashboardtaxi/core/services/realtime/realtime_lifecycle_coordinator.dart'
     as _i1066;
 import 'package:dashboardtaxi/core/services/realtime/realtime_service.dart'
@@ -103,6 +107,16 @@ import 'package:dashboardtaxi/features/kyc/domain/repositories/kyc_repository.da
     as _i986;
 import 'package:dashboardtaxi/features/kyc/presentation/states/kyc_bloc.dart'
     as _i141;
+import 'package:dashboardtaxi/features/profile/data/datasources/profile_remote_datasource.dart'
+    as _i508;
+import 'package:dashboardtaxi/features/profile/data/repositories/profile_repository_impl.dart'
+    as _i309;
+import 'package:dashboardtaxi/features/profile/domain/facade/profile_facade.dart'
+    as _i512;
+import 'package:dashboardtaxi/features/profile/domain/repositories/profile_repository.dart'
+    as _i670;
+import 'package:dashboardtaxi/features/profile/presentation/states/profile_bloc.dart'
+    as _i356;
 import 'package:dashboardtaxi/features/root/data/datasources/root_remote_datasource.dart'
     as _i1064;
 import 'package:dashboardtaxi/features/root/data/repositories/root_repository_impl.dart'
@@ -170,16 +184,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i190.StartupMapWarmupCoordinator>(
       () => _i190.StartupMapWarmupCoordinator(),
     );
+    gh.lazySingleton<_i88.LocationPermissionService>(
+      () => const _i88.LocationPermissionService(),
+    );
     gh.lazySingleton<_i1021.AuthStateNotifier>(
       () => _i1021.AuthStateNotifier(),
     );
     gh.lazySingleton<_i885.RootModeService>(() => _i885.RootModeService());
-    gh.lazySingleton<_i328.AppRouterConfig>(
-      () => _i328.AppRouterConfig(
-        gh<_i1021.AuthStateNotifier>(),
-        gh<_i328.AppRouteRegistry>(),
-      ),
-    );
     gh.lazySingleton<_i538.AuthFirebaseDataSource>(
       () => _i538.AuthFirebaseDataSource(
         gh<_i59.FirebaseAuth>(),
@@ -206,6 +217,19 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i282.NotificationFcmService>(),
       ),
     );
+    gh.lazySingleton<_i403.PermissionsCoordinator>(
+      () => _i403.PermissionsCoordinator(
+        gh<_i17.NotificationCoordinator>(),
+        gh<_i88.LocationPermissionService>(),
+        gh<_i113.LocationService>(),
+      ),
+    );
+    gh.factory<_i554.RootBloc>(
+      () => _i554.RootBloc(
+        gh<_i403.PermissionsCoordinator>(),
+        gh<_i113.LocationService>(),
+      ),
+    );
     gh.lazySingleton<_i868.RealtimeService>(
       () => _i562.SignalRRealtimeService(gh<_i1043.JwtTokenStorage>()),
     );
@@ -224,6 +248,13 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i758.LocalizationInterceptor>(
       () => _i758.LocalizationInterceptor(gh<_i1039.LocaleService>()),
+    );
+    gh.lazySingleton<_i328.AppRouterConfig>(
+      () => _i328.AppRouterConfig(
+        gh<_i1021.AuthStateNotifier>(),
+        gh<_i403.PermissionsCoordinator>(),
+        gh<_i328.AppRouteRegistry>(),
+      ),
     );
     gh.singleton<_i361.Dio>(
       () => registerModule.dio(
@@ -247,11 +278,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i221.KycRemoteDataSource>(
       () => _i221.KycRemoteDataSource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i508.ProfileRemoteDataSource>(
+      () => _i508.ProfileRemoteDataSource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i1064.RootRemoteDataSource>(
       () => _i1064.RootRemoteDataSource(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i642.TripRemoteDataSource>(
       () => _i642.TripRemoteDataSource(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i670.ProfileRepository>(
+      () => _i309.ProfileRepositoryImpl(gh<_i508.ProfileRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i512.ProfileFacade>(
+      () => _i512.ProfileFacade(gh<_i670.ProfileRepository>()),
     );
     gh.lazySingleton<_i574.DashboardRepository>(
       () =>
@@ -266,6 +306,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1012.AuthRemoteDataSource>(),
         gh<_i322.AuthManager>(),
       ),
+    );
+    gh.factory<_i356.ProfileBloc>(
+      () => _i356.ProfileBloc(gh<_i512.ProfileFacade>()),
     );
     gh.lazySingleton<_i471.AuthFacade>(
       () => _i471.AuthFacade(gh<_i706.AuthRepository>()),
@@ -288,7 +331,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i969.DashboardFacade>(
       () => _i969.DashboardFacade(gh<_i574.DashboardRepository>()),
     );
-    gh.factory<_i554.RootBloc>(() => _i554.RootBloc(gh<_i397.RootFacade>()));
     gh.factory<_i100.AuthBloc>(() => _i100.AuthBloc(gh<_i471.AuthFacade>()));
     gh.lazySingleton<_i461.DriverFacade>(
       () => _i461.DriverFacade(gh<_i336.DriverRepository>()),
@@ -306,9 +348,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i885.RootModeService>(),
       ),
     );
-    gh.factory<_i540.TripBloc>(
-      () => _i540.TripBloc(gh<_i931.TripFacade>(), gh<_i868.RealtimeService>()),
-    );
     gh.lazySingleton<_i650.DriverLocationStreamer>(
       () => _i650.DriverLocationStreamer(
         gh<_i113.LocationService>(),
@@ -318,6 +357,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i698.DriverBloc>(
       () => _i698.DriverBloc(gh<_i461.DriverFacade>()),
+    );
+    gh.lazySingleton<_i540.TripBloc>(
+      () => _i540.TripBloc(
+        gh<_i931.TripFacade>(),
+        gh<_i868.RealtimeService>(),
+        gh<_i322.AuthManager>(),
+        gh<_i17.NotificationCoordinator>(),
+      ),
     );
     gh.factory<_i170.DriverHomeBloc>(
       () => _i170.DriverHomeBloc(

@@ -50,6 +50,32 @@ class TripRemoteDataSource {
     return _postAction(tripId, 'complete');
   }
 
+  Future<void> completeStop(String tripId, int sequence) {
+    return rethrowAsAppException(() async {
+      printY('[TripRemoteDataSource] completeStop trip=$tripId seq=$sequence');
+      await _dio.post<dynamic>(
+        ApiEndpoints.completeTripStop(tripId, sequence),
+      );
+    });
+  }
+
+  Future<void> assignToDriver(String tripId, String driverId) {
+    return rethrowAsAppException(() async {
+      printY('[TripRemoteDataSource] assignToDriver trip=$tripId driver=$driverId');
+      await _dio.post<dynamic>(
+        ApiEndpoints.assignTrip(tripId),
+        data: {'driverId': driverId},
+      );
+    });
+  }
+
+  Future<void> adminTakeTrip(String tripId) {
+    return rethrowAsAppException(() async {
+      printY('[TripRemoteDataSource] adminTakeTrip trip=$tripId');
+      await _dio.post<dynamic>(ApiEndpoints.adminTakeTrip(tripId));
+    });
+  }
+
   Future<void> driverCancelTrip(
     String tripId,
     String reason,

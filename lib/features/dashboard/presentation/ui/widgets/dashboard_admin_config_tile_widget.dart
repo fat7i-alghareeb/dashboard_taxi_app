@@ -20,39 +20,45 @@ class DashboardAdminConfigTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 220.w,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: context.onSurface.withValues(alpha: 0.035),
-          borderRadius: BorderRadius.circular(AppRadii.sm.r),
-        ),
-        child: Padding(
-          padding: REdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                label,
-                style: AppTextStyles.s12w400.copyWith(
-                  color: context.onSurface.withValues(alpha: 0.62),
-                ),
-              ),
-              AppSpacing.xs.verticalSpace,
-              Text(
-                value,
-                style: AppTextStyles.s18w600.copyWith(color: context.onSurface),
-              ),
-              AppSpacing.md.verticalSpace,
-              AppButton.outline(
-                onTap: onTap,
-                isActive: isActive,
-                isLoading: isLoading,
-                child: AppButtonChild.label(actionLabel),
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg.r),
+        border: Border.all(color: context.onSurface.withValues(alpha: 0.08)),
+      ),
+      padding: REdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: AppTextStyles.s11w500.copyWith(
+              color: context.onSurface.withValues(alpha: 0.50),
+              letterSpacing: 1.1,
+            ),
           ),
-        ),
+          AppSpacing.sm.verticalSpace,
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.s20w700.copyWith(color: context.onSurface),
+          ),
+          AppSpacing.md.verticalSpace,
+          AppButton.outline(
+            onTap: onTap,
+            isActive: isActive,
+            isLoading: isLoading,
+            layout: AppButtonLayout(
+              height: 36,
+              contentPadding: REdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.xs,
+              ),
+            ),
+            child: AppButtonChild.label(actionLabel, maxLines: 1),
+          ),
+        ],
       ),
     );
   }

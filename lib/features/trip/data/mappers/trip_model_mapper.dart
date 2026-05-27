@@ -25,6 +25,8 @@ extension TripModelMapper on TripModel {
     cancellation: cancellation?.toEntity,
     compensationClaim: compensationClaim?.toEntity,
     activeWaitingSession: activeWaitingSession?.toEntity,
+    passengerName: passengerName,
+    passengerPhone: passengerPhone,
   );
 }
 

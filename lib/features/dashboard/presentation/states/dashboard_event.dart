@@ -44,6 +44,18 @@ class DashboardEvent with _$DashboardEvent {
   const factory DashboardEvent.vehicleTypeRemovalRequested(
     String vehicleTypeId,
   ) = _VehicleTypeRemovalRequested;
+  const factory DashboardEvent.vehicleTypeCreateRequested({
+    required String code,
+    required String name,
+    required int capacity,
+    required num ratePerKm,
+    required num ratePerMin,
+    required num minFare,
+    required int sortOrder,
+  }) = _VehicleTypeCreateRequested;
+  const factory DashboardEvent.vehicleTypeUpdateRequested(
+    DashboardVehicleTypeEntity vehicleType,
+  ) = _VehicleTypeUpdateRequested;
   const factory DashboardEvent.tripDiscountUpdateRequested(
     num discountPercent,
   ) = _TripDiscountUpdateRequested;

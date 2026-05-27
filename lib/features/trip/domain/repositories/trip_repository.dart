@@ -8,6 +8,9 @@ abstract class TripRepository {
   Future<Result<void>> markArrived(String tripId);
   Future<Result<void>> startTrip(String tripId);
   Future<Result<void>> completeTrip(String tripId);
+  Future<Result<void>> completeStop(String tripId, int sequence);
+  Future<Result<void>> assignToDriver(String tripId, String driverId);
+  Future<Result<void>> adminTakeTrip(String tripId);
   Future<Result<void>> driverCancelTrip(
     String tripId,
     String reason,

@@ -106,8 +106,27 @@ class DashboardSystemConfigEntity {
   final String stripePublishableKey;
 }
 
+class DashboardAdminProfileEntity {
+  const DashboardAdminProfileEntity({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phone1,
+    required this.phone2,
+    required this.isActive,
+  });
+
+  final String id;
+  final String name;
+  final String email;
+  final String? phone1;
+  final String? phone2;
+  final bool isActive;
+}
+
 class DashboardAdminOperationsEntity {
   const DashboardAdminOperationsEntity({
+    required this.adminProfile,
     required this.drivers,
     required this.vehicleTypes,
     required this.users,
@@ -115,6 +134,7 @@ class DashboardAdminOperationsEntity {
     required this.config,
   });
 
+  final DashboardAdminProfileEntity? adminProfile;
   final List<DashboardDriverEntity> drivers;
   final List<DashboardVehicleTypeEntity> vehicleTypes;
   final List<DashboardUserEntity> users;
@@ -189,8 +209,7 @@ class DashboardTripDetailsEntity {
   final List<DashboardTripStopEntity> stops;
 
   DashboardTripStopEntity? get pickup => stops.firstOrNull;
-  DashboardTripStopEntity? get dropoff =>
-      stops.length > 1 ? stops.last : null;
+  DashboardTripStopEntity? get dropoff => stops.length > 1 ? stops.last : null;
 }
 
 class DashboardTripStopEntity {

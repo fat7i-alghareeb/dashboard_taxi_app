@@ -25,6 +25,16 @@ abstract class DashboardRepository {
 
   Future<Result<void>> updateVehicleType(DashboardVehicleTypeEntity vehicleType);
 
+  Future<Result<void>> createVehicleType({
+    required String code,
+    required String name,
+    required int capacity,
+    required num ratePerKm,
+    required num ratePerMin,
+    required num minFare,
+    required int sortOrder,
+  });
+
   Future<Result<void>> removeVehicleType(String vehicleTypeId);
 
   Future<Result<void>> updateTripDiscount(num discountPercent);

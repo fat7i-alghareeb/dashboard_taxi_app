@@ -46,6 +46,10 @@ class JwtTokenStorage extends BotMemoryTokenStorage<AuthTokenModel>
 
       final token = AuthTokenModel.fromMap(jsonMap);
       final expiry = _readOrDeriveExpiry(jsonMap, token);
+      printC(
+        '${AuthLogTags.jwtTokenStorage} restored raw token '
+        'expiry=$expiry expired=${_isExpired(expiry)}',
+      );
 
       if (_isExpired(expiry)) {
         printY('${AuthLogTags.jwtTokenStorage} stored token is expired');
@@ -86,6 +90,11 @@ class JwtTokenStorage extends BotMemoryTokenStorage<AuthTokenModel>
     _cachedToken = token;
     final expiry = _deriveExpiry(token);
     _cachedExpiry = expiry;
+    final remaining = expiry.difference(DateTime.now());
+    printC(
+      '${AuthLogTags.jwtTokenStorage} write token expiry=$expiry '
+      'remaining=${remaining.inMinutes}m',
+    );
 
     final map = <String, dynamic>{
       ...token.toMap(),
@@ -117,8 +126,15 @@ class JwtTokenStorage extends BotMemoryTokenStorage<AuthTokenModel>
   /// Returns `true` when a non-expired token exists in storage.
   Future<bool> hasValidTokens() async {
     final expiry = _cachedExpiry ?? await _loadExpiryFromStorage();
-    if (expiry == null) return false;
-    return !_isExpired(expiry);
+    if (expiry == null) {
+      printY('${AuthLogTags.jwtTokenStorage} hasValidTokens=false no expiry');
+      return false;
+    }
+    final valid = !_isExpired(expiry);
+    printC(
+      '${AuthLogTags.jwtTokenStorage} hasValidTokens=$valid expiry=$expiry',
+    );
+    return valid;
   }
 
   Future<DateTime?> loadExpiry() async {
@@ -146,8 +162,13 @@ class JwtTokenStorage extends BotMemoryTokenStorage<AuthTokenModel>
       final Map<String, dynamic> jsonMap =
           json.decode(raw) as Map<String, dynamic>;
       final rawExpiry = jsonMap[AuthTokenJsonFields.expiry] as String?;
-      if (rawExpiry == null) return null;
-      return DateTime.parse(rawExpiry);
+      if (rawExpiry == null) {
+        printY('${AuthLogTags.jwtTokenStorage} stored token has no expiry');
+        return null;
+      }
+      final expiry = DateTime.parse(rawExpiry);
+      printC('${AuthLogTags.jwtTokenStorage} loaded expiry=$expiry');
+      return expiry;
     } catch (e) {
       printR('${AuthLogTags.jwtTokenStorage} loadExpiry error: $e');
       return null;
@@ -158,12 +179,21 @@ class JwtTokenStorage extends BotMemoryTokenStorage<AuthTokenModel>
     // Prefer absolute expiry derived from JWT. If it fails, fall back to
     // expiresIn when provided, otherwise use a short default.
     try {
-      return JwtDecoder.getExpirationDate(token.accessToken);
-    } catch (_) {
+      final expiry = JwtDecoder.getExpirationDate(token.accessToken);
+      printC('${AuthLogTags.jwtTokenStorage} derived JWT expiry=$expiry');
+      return expiry;
+    } catch (error) {
       if (token.expiresIn != null) {
-        return DateTime.now().add(Duration(seconds: token.expiresIn!));
+        final expiry = DateTime.now().add(Duration(seconds: token.expiresIn!));
+        printY(
+          '${AuthLogTags.jwtTokenStorage} JWT expiry decode failed: $error; '
+          'using expiresIn expiry=$expiry',
+        );
+        return expiry;
       }
-      printY('${AuthLogTags.jwtTokenStorage} expiry decode failed, using 1h');
+      printY(
+        '${AuthLogTags.jwtTokenStorage} expiry decode failed: $error, using 1h',
+      );
       return DateTime.now().add(const Duration(hours: 1));
     }
   }
@@ -171,8 +201,13 @@ class JwtTokenStorage extends BotMemoryTokenStorage<AuthTokenModel>
   DateTime _readOrDeriveExpiry(Map<String, dynamic> map, AuthTokenModel token) {
     final rawExpiry = map[AuthTokenJsonFields.expiry] as String?;
     if (rawExpiry != null) {
-      return DateTime.parse(rawExpiry);
+      final expiry = DateTime.parse(rawExpiry);
+      printC('${AuthLogTags.jwtTokenStorage} read stored expiry=$expiry');
+      return expiry;
     }
+    printY(
+      '${AuthLogTags.jwtTokenStorage} expiry missing, deriving from token',
+    );
     return _deriveExpiry(token);
   }
 

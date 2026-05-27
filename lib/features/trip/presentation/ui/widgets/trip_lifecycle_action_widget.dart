@@ -2,6 +2,7 @@ import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/dialogs/driver_trip_cancellation_dialog.dart';
+import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_waiting_indicator_widget.dart';
 
 class TripLifecycleActionWidget extends StatefulWidget {
   const TripLifecycleActionWidget({
@@ -24,9 +25,7 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
     if (widget.trip.status == TripStatus.driverArrived) {
       return _buildArrivedActions(context);
     }
-
-    final config = _config;
-    return _buildPrimaryAction(context, config);
+    return _buildPrimaryAction(context, _config);
   }
 
   Widget _buildPrimaryAction(BuildContext context, _LifecycleConfig config) {
@@ -35,20 +34,19 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
       children: [
         Text(
           config.hint,
-          style: AppTextStyles.s14w400.copyWith(
-            color: context.onSurface.withValues(alpha: 0.68),
+          style: AppTextStyles.s12w400.copyWith(
+            color: context.onSurface.withValues(alpha: 0.60),
           ),
         ),
         AppSpacing.md.verticalSpace,
-        AppButton.primaryGradient(
+        AppButton.primary(
           isLoading: config.isLoading,
+          layout: const AppButtonLayout(height: 52),
           onTap: () => context.read<TripBloc>().add(config.event),
           child: AppButtonChild.labelIcon(
             label: config.label,
-            icon: IconSource.widget(FaIcon(config.icon, size: 16.r), size: 16),
-            textStyle: AppTextStyles.s14w400.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+            icon: IconSource.widget(FaIcon(config.icon, size: 14.r), size: 14),
+            textStyle: AppTextStyles.s14w600,
           ),
         ),
       ],
@@ -58,7 +56,8 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
   Widget _buildArrivedActions(BuildContext context) {
     final session = widget.trip.activeWaitingSession;
     final arrivedAt = widget.state.arrivedAt;
-    final tenMinPassed = arrivedAt != null &&
+    final tenMinPassed =
+        arrivedAt != null &&
         DateTime.now().difference(arrivedAt) >= const Duration(minutes: 10);
 
     return Column(
@@ -66,135 +65,94 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
       children: [
         Text(
           AppStrings.tripArrivedHint,
-          style: AppTextStyles.s14w400.copyWith(
-            color: context.onSurface.withValues(alpha: 0.68),
+          style: AppTextStyles.s12w400.copyWith(
+            color: context.onSurface.withValues(alpha: 0.60),
           ),
         ),
         AppSpacing.md.verticalSpace,
-        // Primary: start trip
-        AppButton.primaryGradient(
+        AppButton.primary(
           isLoading: widget.state.startTripState.isLoading,
-          onTap: () => context
-              .read<TripBloc>()
-              .add(TripEvent.startTripRequested(widget.trip.id)),
+          layout: const AppButtonLayout(height: 52),
+          onTap: () => context.read<TripBloc>().add(
+            TripEvent.startTripRequested(widget.trip.id),
+          ),
           child: AppButtonChild.labelIcon(
             label: AppStrings.tripStartRide,
             icon: IconSource.widget(
-              FaIcon(FontAwesomeIcons.play, size: 16.r),
-              size: 16,
+              FaIcon(FontAwesomeIcons.play, size: 14.r),
+              size: 14,
             ),
-            textStyle:
-                AppTextStyles.s14w400.copyWith(fontWeight: FontWeight.w700),
+            textStyle: AppTextStyles.s14w600,
           ),
         ),
         AppSpacing.sm.verticalSpace,
-        // Waiting: start or stop
-        if (session == null || !session.isActive) ...[
-          AppButton.variant(
-            variant: AppButtonVariant.grey,
-            fill: AppButtonFill.solid,
+        if (session == null || !session.isActive)
+          AppButton.outline(
             isLoading: widget.state.startWaitingState.isLoading,
-            onTap: () => context
-                .read<TripBloc>()
-                .add(TripEvent.startWaitingRequested(widget.trip.id)),
+            layout: const AppButtonLayout(height: 44),
+            onTap: () => context.read<TripBloc>().add(
+              TripEvent.startWaitingRequested(widget.trip.id),
+            ),
             child: AppButtonChild.labelIcon(
               label: AppStrings.startWaiting,
               icon: IconSource.widget(
-                FaIcon(FontAwesomeIcons.clock, size: 16.r),
-                size: 16,
+                FaIcon(FontAwesomeIcons.clock, size: 14.r),
+                size: 14,
               ),
+              textStyle: AppTextStyles.s14w500,
             ),
-          ),
-        ] else ...[
-          Container(
-            padding: REdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            decoration: BoxDecoration(
-              color: context.onSurface.withValues(alpha: 0.06),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FaIcon(
-                  FontAwesomeIcons.clock,
-                  size: 14.r,
-                  color: context.onSurface.withValues(alpha: 0.6),
-                ),
-                AppSpacing.xs.horizontalSpace,
-                if (session.minutes != null)
-                  Text(
-                    AppStrings.waitingMinutes
-                        .replaceAll('{minutes}', '${session.minutes}'),
-                    style: AppTextStyles.s14w400.copyWith(
-                      color: context.onSurface.withValues(alpha: 0.7),
-                    ),
-                  ),
-                if (session.estimatedFee != null) ...[
-                  AppSpacing.xs.horizontalSpace,
-                  Text(
-                    AppStrings.waitingEstimatedFee.replaceAll(
-                      '{fee}',
-                      session.estimatedFee!.toStringAsFixed(2),
-                    ),
-                    style: AppTextStyles.s14w400.copyWith(
-                      color: context.onSurface.withValues(alpha: 0.7),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          AppSpacing.xs.verticalSpace,
-          AppButton.variant(
-            variant: AppButtonVariant.grey,
-            fill: AppButtonFill.solid,
+          )
+        else ...[
+          TripWaitingIndicatorWidget(session: session),
+          AppSpacing.sm.verticalSpace,
+          AppButton.outline(
             isLoading: widget.state.stopWaitingState.isLoading,
-            onTap: () => context
-                .read<TripBloc>()
-                .add(TripEvent.stopWaitingRequested(widget.trip.id)),
+            layout: const AppButtonLayout(height: 44),
+            onTap: () => context.read<TripBloc>().add(
+              TripEvent.stopWaitingRequested(widget.trip.id),
+            ),
             child: AppButtonChild.labelIcon(
               label: AppStrings.stopWaiting,
               icon: IconSource.widget(
-                FaIcon(FontAwesomeIcons.stopCircle, size: 16.r),
-                size: 16,
+                FaIcon(FontAwesomeIcons.circleStop, size: 14.r),
+                size: 14,
               ),
+              textStyle: AppTextStyles.s14w500,
             ),
           ),
           AppSpacing.xs.verticalSpace,
           Text(
             AppStrings.waitingPolicyNote,
-            style: AppTextStyles.s12w400.copyWith(
-              color: context.onSurface.withValues(alpha: 0.5),
-            ),
             textAlign: TextAlign.center,
+            style: AppTextStyles.s12w400.copyWith(
+              color: context.onSurface.withValues(alpha: 0.45),
+            ),
           ),
         ],
-        // Cancel (no-show) — only after 10 minutes
         if (tenMinPassed) ...[
-          AppSpacing.sm.verticalSpace,
-          AppButton.variant(
+          AppSpacing.md.verticalSpace,
+          AppButton.outline(
             variant: AppButtonVariant.error,
-            fill: AppButtonFill.solid,
             isLoading: widget.state.driverCancelState.isLoading,
-            onTap: () => DriverTripCancellationDialog.show(
-              context,
-              widget.trip.id,
-            ),
+            layout: const AppButtonLayout(height: 44),
+            onTap: () =>
+                DriverTripCancellationDialog.show(context, widget.trip.id),
             child: AppButtonChild.labelIcon(
               label: AppStrings.passengerLateNoShowTitle,
               icon: IconSource.widget(
-                FaIcon(FontAwesomeIcons.userSlash, size: 16.r),
-                size: 16,
+                FaIcon(FontAwesomeIcons.userSlash, size: 14.r),
+                size: 14,
               ),
+              textStyle: AppTextStyles.s14w500,
             ),
           ),
           AppSpacing.xs.verticalSpace,
           Text(
             AppStrings.cancelNoShowPolicyNote,
-            style: AppTextStyles.s12w400.copyWith(
-              color: context.onSurface.withValues(alpha: 0.5),
-            ),
             textAlign: TextAlign.center,
+            style: AppTextStyles.s12w400.copyWith(
+              color: context.onSurface.withValues(alpha: 0.45),
+            ),
           ),
         ],
       ],

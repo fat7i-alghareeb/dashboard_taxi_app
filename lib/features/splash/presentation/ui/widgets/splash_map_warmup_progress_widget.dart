@@ -15,21 +15,29 @@ class SplashMapWarmupProgressWidget extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: Padding(
             padding: REdgeInsets.only(
-              left: AppSpacing.lg,
-              right: AppSpacing.lg,
-              bottom: AppSpacing.lg,
+              left: AppSpacing.xxl,
+              right: AppSpacing.xxl,
+              bottom: AppSpacing.xxl,
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadii.sm.r),
-              child: LinearProgressIndicator(
-                minHeight: 4.h,
-                value: warmupCoordinator.progress,
-                backgroundColor: context.surface.withValues(alpha: 0.28),
-                valueColor: AlwaysStoppedAnimation<Color>(context.surface),
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(AppRadii.xs.r),
+                  child: LinearProgressIndicator(
+                    minHeight: 2.h,
+                    value: warmupCoordinator.progress,
+                    backgroundColor: context.onPrimary.withValues(alpha: 0.18),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      context.onPrimary,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ).animate().fadeIn(duration: AppDurations.normal);
+        ).animate().fadeIn(duration: 400.ms, delay: 600.ms);
       },
     );
   }

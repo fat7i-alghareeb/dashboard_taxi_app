@@ -1,6 +1,7 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_admin_driver_row_widget.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_divider_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_section_shell_widget.dart';
 
 class DashboardAdminDriversSection extends StatelessWidget {
@@ -20,21 +21,20 @@ class DashboardAdminDriversSection extends StatelessWidget {
     return DashboardSectionShellWidget(
       title: AppStrings.dashboardDriverManagement,
       icon: FontAwesomeIcons.idCardClip,
+      itemCount: drivers.isEmpty ? null : drivers.length,
       child: drivers.isEmpty
           ? EmptyStateWidget(text: AppStrings.dashboardNoDrivers)
           : Column(
-              children: drivers
-                  .map(
-                    (driver) => Padding(
-                      padding: REdgeInsets.only(bottom: AppSpacing.sm),
-                      child: DashboardAdminDriverRowWidget(
-                        driver: driver,
-                        vehicleTypes: vehicleTypes,
-                        isActionLoading: isActionLoading,
-                      ),
-                    ),
-                  )
-                  .toList(),
+              children: [
+                for (int i = 0; i < drivers.length; i++) ...[
+                  DashboardAdminDriverRowWidget(
+                    driver: drivers[i],
+                    vehicleTypes: vehicleTypes,
+                    isActionLoading: isActionLoading,
+                  ),
+                  if (i != drivers.length - 1) const DashboardDividerWidget(),
+                ],
+              ],
             ),
     );
   }

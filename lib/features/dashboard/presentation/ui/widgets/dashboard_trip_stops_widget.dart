@@ -13,17 +13,19 @@ class DashboardTripStopsWidget extends StatelessWidget {
     final dropoff = details.dropoff;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         DashboardTripStopLineWidget(
           label: AppStrings.tripPickup,
           value: pickup?.label ?? AppStrings.tripUnknownAddress,
-          icon: FontAwesomeIcons.locationDot,
+          isPickup: true,
+          isLast: false,
         ),
-        AppSpacing.md.verticalSpace,
         DashboardTripStopLineWidget(
           label: AppStrings.tripDropoff,
           value: dropoff?.label ?? AppStrings.tripUnknownAddress,
-          icon: FontAwesomeIcons.flagCheckered,
+          isPickup: false,
+          isLast: true,
         ),
       ],
     );

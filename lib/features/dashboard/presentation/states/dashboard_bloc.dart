@@ -38,6 +38,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     );
     on<_VehicleTypeStatusToggleRequested>(_onVehicleTypeStatusToggleRequested);
     on<_VehicleTypeRemovalRequested>(_onVehicleTypeRemovalRequested);
+    on<_VehicleTypeCreateRequested>(_onVehicleTypeCreateRequested);
+    on<_VehicleTypeUpdateRequested>(_onVehicleTypeUpdateRequested);
     on<_TripDiscountUpdateRequested>(_onTripDiscountUpdateRequested);
     on<_CurrencyUpdateRequested>(_onCurrencyUpdateRequested);
 
@@ -421,6 +423,36 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit,
       'removeVehicleType:${event.vehicleTypeId}',
       () => _facade.removeVehicleType(event.vehicleTypeId),
+    );
+  }
+
+  Future<void> _onVehicleTypeCreateRequested(
+    _VehicleTypeCreateRequested event,
+    Emitter<DashboardState> emit,
+  ) {
+    return _runAdminAction(
+      emit,
+      'createVehicleType:${event.code}',
+      () => _facade.createVehicleType(
+        code: event.code,
+        name: event.name,
+        capacity: event.capacity,
+        ratePerKm: event.ratePerKm,
+        ratePerMin: event.ratePerMin,
+        minFare: event.minFare,
+        sortOrder: event.sortOrder,
+      ),
+    );
+  }
+
+  Future<void> _onVehicleTypeUpdateRequested(
+    _VehicleTypeUpdateRequested event,
+    Emitter<DashboardState> emit,
+  ) {
+    return _runAdminAction(
+      emit,
+      'updateVehicleType:${event.vehicleType.id}',
+      () => _facade.updateVehicleType(event.vehicleType),
     );
   }
 

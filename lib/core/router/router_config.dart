@@ -6,17 +6,22 @@ import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/router/app_page_transitions.dart';
+import '../../features/admin_settings/presentation/ui/screens/admin_settings_screen.dart';
+import '../../features/auth/presentation/ui/screens/admin_login_screen.dart';
 import '../../features/auth/presentation/ui/screens/force_password_reset_screen.dart';
 import '../../features/auth/presentation/ui/screens/login_screen.dart';
 import '../../features/dashboard/presentation/ui/screens/dashboard_admin_operations_screen.dart';
 import '../../features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
+import '../../features/dashboard/presentation/ui/screens/dashboard_screen.dart';
 import '../../features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
+import '../../features/permissions/presentation/ui/screens/permission_gate_screen.dart';
 import '../../features/root/presentation/ui/screens/root_screen.dart';
 import '../../features/kyc/presentation/ui/screens/kyc_screen.dart';
 import '../../features/splash/presentation/ui/screens/splash_screen.dart';
 import '../../utils/constants/app_flow_constants.dart';
 import '../../utils/helpers/colored_print.dart';
 import '../services/session/auth_state_notifier.dart';
+import '../services/permissions/permissions_coordinator.dart';
 
 part 'app_routes.dart';
 
@@ -25,9 +30,13 @@ part 'app_routes.dart';
 /// Bridges authentication status and an internal
 /// splash delay into a single [Listenable] used by GoRouter.
 class RouterRefreshListenable extends ChangeNotifier {
-  RouterRefreshListenable({required this.authState}) {
+  RouterRefreshListenable({
+    required this.authState,
+    required this.permissionsCoordinator,
+  }) {
     // * Listen to all reactive sources that affect routing.
     authState.addListener(_onSourceChanged);
+    permissionsCoordinator.addListener(_onSourceChanged);
 
     // * Ensure the splash is visible for at least [SplashConfig.initialDelay]
     //   even if auth resolves instantly.
@@ -39,6 +48,7 @@ class RouterRefreshListenable extends ChangeNotifier {
   }
 
   final AuthStateNotifier authState;
+  final PermissionsCoordinator permissionsCoordinator;
 
   bool _splashDelayElapsed = false;
 
@@ -51,6 +61,7 @@ class RouterRefreshListenable extends ChangeNotifier {
   @override
   void dispose() {
     authState.removeListener(_onSourceChanged);
+    permissionsCoordinator.removeListener(_onSourceChanged);
     super.dispose();
   }
 }
@@ -64,14 +75,23 @@ class RouterRefreshListenable extends ChangeNotifier {
 /// - [AppRouteGuard]
 @lazySingleton
 class AppRouterConfig {
-  AppRouterConfig(this._authState, this._routeRegistry) {
-    _refresh = RouterRefreshListenable(authState: _authState);
+  AppRouterConfig(
+    this._authState,
+    this._permissionsCoordinator,
+    this._routeRegistry,
+  ) {
+    _refresh = RouterRefreshListenable(
+      authState: _authState,
+      permissionsCoordinator: _permissionsCoordinator,
+    );
 
     _guard = AppRouteGuard(
       authState: _authState,
+      permissionsCoordinator: _permissionsCoordinator,
       splashPath: SplashScreen.pagePath,
-      loginPath: LoginScreen.pagePath,
+      loginPath: AdminLoginScreen.pagePath,
       forceResetPath: ForcePasswordResetScreen.pagePath,
+      permissionGatePath: PermissionGateScreen.pagePath,
       rootPath: RootScreen.pagePath,
     );
 
@@ -88,6 +108,7 @@ class AppRouterConfig {
   }
 
   final AuthStateNotifier _authState;
+  final PermissionsCoordinator _permissionsCoordinator;
   final AppRouteRegistry _routeRegistry;
 
   late final RouterRefreshListenable _refresh;
@@ -105,16 +126,20 @@ class AppRouterConfig {
 class AppRouteGuard {
   AppRouteGuard({
     required this.authState,
+    required this.permissionsCoordinator,
     required this.splashPath,
     required this.loginPath,
     required this.forceResetPath,
+    required this.permissionGatePath,
     required this.rootPath,
   });
 
   final AuthStateNotifier authState;
+  final PermissionsCoordinator permissionsCoordinator;
   final String splashPath;
   final String loginPath;
   final String forceResetPath;
+  final String permissionGatePath;
   final String rootPath;
 
   /// * Central route-guard / redirect logic.
@@ -164,7 +189,15 @@ class AppRouteGuard {
       currentPath: currentPath,
       canEnterApp: canEnterApp,
     );
-    return authRedirect;
+    if (authRedirect != null) return authRedirect;
+
+    // 3) Permission Gate.
+    final permissionRedirect = await _handlePermissionGate(
+      currentPath: currentPath,
+    );
+    if (permissionRedirect != null) return permissionRedirect;
+
+    return null;
   }
 
   String? _handleSplash({
@@ -179,6 +212,33 @@ class AppRouteGuard {
       }
       return null;
     }
+    return null;
+  }
+
+  Future<String?> _handlePermissionGate({
+    required String currentPath,
+  }) async {
+    if (!AppFlowConfig.permissionGateEnabled) {
+      return null;
+    }
+
+    final hasForeground = await permissionsCoordinator.isForegroundLocationGranted();
+    if (!hasForeground) {
+      if (currentPath != permissionGatePath &&
+          currentPath != splashPath &&
+          currentPath != loginPath) {
+        printC('${RouterLogTags.redirect} → permission gate (location required)');
+        return permissionGatePath;
+      }
+      return null;
+    }
+
+    // If they have the permission and are trying to enter the permission gate, redirect to root
+    if (currentPath == permissionGatePath) {
+      printG('${RouterLogTags.redirect} permission already granted → root');
+      return rootPath;
+    }
+
     return null;
   }
 
@@ -239,9 +299,14 @@ class AppRouteGuard {
       return rootPath;
     }
 
+    // Let the permission gate live — it navigates to root itself on grant.
+    if (currentPath == permissionGatePath) {
+      return null;
+    }
+
     if (currentPath == splashPath || currentPath == loginPath) {
-      printG('${RouterLogTags.redirect} authenticated → root');
-      return rootPath;
+      printG('${RouterLogTags.redirect} authenticated → permission gate');
+      return permissionGatePath;
     }
 
     return null;

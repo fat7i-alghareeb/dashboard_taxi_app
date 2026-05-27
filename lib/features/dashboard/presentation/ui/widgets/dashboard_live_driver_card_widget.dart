@@ -1,5 +1,6 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_status_chip_widget.dart';
 
 class DashboardLiveDriverCardWidget extends StatelessWidget {
   const DashboardLiveDriverCardWidget({super.key, required this.driver});
@@ -21,71 +22,81 @@ class DashboardLiveDriverCardWidget extends StatelessWidget {
             '{time}',
             driver.locationUpdatedAt!.toSmartDateTime(),
           );
-    final color = driver.isBusy ? AppColors.error : AppColors.success;
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: context.surface.withValues(alpha: 0.92),
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg.r),
-        border: Border.all(color: color.withValues(alpha: 0.18)),
-        boxShadow: context.shadows.grey,
+        border: Border.all(color: context.onSurface.withValues(alpha: 0.08)),
       ),
       child: Padding(
         padding: REdgeInsets.all(AppSpacing.lg),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(AppRadii.sm.r),
-              ),
-              child: Padding(
-                padding: REdgeInsets.all(AppSpacing.md),
-                child: FaIcon(FontAwesomeIcons.taxi, size: 18.r, color: color),
-              ),
+            Row(
+              children: [
+                Container(
+                  height: 40.r,
+                  width: 40.r,
+                  decoration: BoxDecoration(
+                    color: context.primary.withValues(alpha: 0.10),
+                    borderRadius: BorderRadius.circular(AppRadii.sm.r),
+                  ),
+                  child: Center(
+                    child: FaIcon(
+                      FontAwesomeIcons.taxi,
+                      size: 14.r,
+                      color: context.primary,
+                    ),
+                  ),
+                ),
+                AppSpacing.md.horizontalSpace,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.s14w600.copyWith(
+                          color: context.onSurface,
+                        ),
+                      ),
+                      AppSpacing.xs.verticalSpace,
+                      Text(
+                        vehicleType,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.s12w400.copyWith(
+                          color: context.onSurface.withValues(alpha: 0.60),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AppSpacing.sm.horizontalSpace,
+                DashboardStatusChipWidget(
+                  label: driver.status,
+                  tone: dashboardToneFromDriverStatus(driver.status),
+                  dense: true,
+                ),
+              ],
             ),
-            AppSpacing.md.horizontalSpace,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.s16w600.copyWith(
-                      color: context.onSurface,
-                    ),
-                  ),
-                  AppSpacing.xs.verticalSpace,
-                  Text(
-                    vehicleType,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.s12w400.copyWith(
-                      color: context.onSurface.withValues(alpha: 0.62),
-                    ),
-                  ),
-                  AppSpacing.xs.verticalSpace,
-                  Text(
-                    lastSeen,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.s12w400.copyWith(
-                      color: context.onSurface.withValues(alpha: 0.62),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            AppSpacing.md.horizontalSpace,
+            AppSpacing.sm.verticalSpace,
             Text(
-              driver.status,
-              style: AppTextStyles.s12w400.copyWith(color: color),
+              lastSeen,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.s12w400.copyWith(
+                color: context.onSurface.withValues(alpha: 0.45),
+              ),
             ),
           ],
         ),
       ),
-    ).animate().fadeIn(duration: AppDurations.normal).slideY(begin: 0.08);
+    ).animate().fadeIn(duration: 280.ms).slideY(begin: 0.05, end: 0);
   }
 }

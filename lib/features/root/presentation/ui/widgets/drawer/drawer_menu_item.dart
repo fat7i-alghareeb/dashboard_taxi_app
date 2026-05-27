@@ -16,40 +16,37 @@ class DrawerMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: REdgeInsets.symmetric(
-        horizontal: AppSpacing.xl,
-        vertical: AppSpacing.sm,
-      ),
-      decoration: BoxDecoration(
-        color: context.onSurface.withValues(alpha: 0.03),
-        borderRadius: BorderRadius.circular(AppRadii.lg.r),
-        border: Border.all(
-          color: context.onSurface.withValues(alpha: 0.05),
-          width: 1.r,
-        ),
-      ),
+    return Material(
+      color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadii.lg.r),
         child: Padding(
           padding: REdgeInsets.symmetric(
-            horizontal: AppSpacing.lg,
-            vertical: AppSpacing.lg,
+            horizontal: AppSpacing.xl,
+            vertical: AppSpacing.md,
           ),
           child: Row(
             children: [
-              SizedBox(
-                width: 24.sp,
+              Container(
+                height: 32.r,
+                width: 32.r,
+                decoration: BoxDecoration(
+                  color: context.onSurface.withValues(alpha: 0.04),
+                  borderRadius: BorderRadius.circular(AppRadii.sm.r),
+                ),
                 child: Center(
-                  child: FaIcon(icon, size: 18.r, color: context.primary),
+                  child: FaIcon(
+                    icon,
+                    size: 13.r,
+                    color: context.onSurface.withValues(alpha: 0.78),
+                  ),
                 ),
               ),
               AppSpacing.md.horizontalSpace,
               Expanded(
                 child: Text(
                   label,
-                  style: AppTextStyles.s16w600.copyWith(
+                  style: AppTextStyles.s14w500.copyWith(
                     color: context.onSurface,
                   ),
                 ),
@@ -57,21 +54,21 @@ class DrawerMenuItem extends StatelessWidget {
               if (value != null) ...[
                 Text(
                   value!,
-                  style: AppTextStyles.s14w400.copyWith(
-                    color: context.onSurface.withValues(alpha: 0.6),
+                  style: AppTextStyles.s12w400.copyWith(
+                    color: context.onSurface.withValues(alpha: 0.55),
                   ),
                 ),
                 AppSpacing.sm.horizontalSpace,
               ],
               FaIcon(
-                FontAwesomeIcons.chevronRight,
-                size: 12.r,
-                color: context.primary,
+                context.chevronEnd,
+                size: 10.r,
+                color: context.onSurface.withValues(alpha: 0.35),
               ),
             ],
           ),
         ),
       ),
-    ).animate().fadeIn().slideX(begin: 0.05, duration: AppDurations.normal);
+    ).animate().fadeIn().slideX(begin: 0.04, duration: 240.ms);
   }
 }

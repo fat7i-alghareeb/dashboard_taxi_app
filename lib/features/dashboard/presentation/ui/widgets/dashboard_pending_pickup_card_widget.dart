@@ -1,6 +1,7 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_assign_driver_sheet.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_status_chip_widget.dart';
 
 class DashboardPendingPickupCardWidget extends StatelessWidget {
   const DashboardPendingPickupCardWidget({
@@ -18,18 +19,14 @@ class DashboardPendingPickupCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final pickup = trip.pickupLabel == null || trip.pickupLabel!.isEmpty
         ? AppStrings.dashboardNoPickupLocation
-        : AppStrings.dashboardPickupAddress.replaceAll(
-            '{address}',
-            trip.pickupLabel!,
-          );
+        : trip.pickupLabel!;
     final distances = _driverDistancesById();
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: context.surface.withValues(alpha: 0.92),
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg.r),
-        border: Border.all(color: AppColors.warning.withValues(alpha: 0.2)),
-        boxShadow: context.shadows.grey,
+        border: Border.all(color: context.onSurface.withValues(alpha: 0.08)),
       ),
       child: Padding(
         padding: REdgeInsets.all(AppSpacing.lg),
@@ -39,10 +36,20 @@ class DashboardPendingPickupCardWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                FaIcon(
-                  FontAwesomeIcons.locationDot,
-                  size: 18.r,
-                  color: AppColors.warning,
+                Container(
+                  height: 40.r,
+                  width: 40.r,
+                  decoration: BoxDecoration(
+                    color: AppColors.warning.withValues(alpha: 0.10),
+                    borderRadius: BorderRadius.circular(AppRadii.sm.r),
+                  ),
+                  child: Center(
+                    child: FaIcon(
+                      FontAwesomeIcons.locationDot,
+                      size: 14.r,
+                      color: AppColors.warning,
+                    ),
+                  ),
                 ),
                 AppSpacing.md.horizontalSpace,
                 Expanded(
@@ -53,30 +60,40 @@ class DashboardPendingPickupCardWidget extends StatelessWidget {
                         trip.referenceCode,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.s16w600.copyWith(
+                        style: AppTextStyles.s14w600.copyWith(
                           color: context.onSurface,
                         ),
                       ),
                       AppSpacing.xs.verticalSpace,
-                      Text(
-                        pickup,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.s12w400.copyWith(
-                          color: context.onSurface.withValues(alpha: 0.62),
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            trip.fareLabel,
+                            style: AppTextStyles.s12w500.copyWith(
+                              color: context.onSurface.withValues(alpha: 0.78),
+                            ),
+                          ),
+                          AppSpacing.sm.horizontalSpace,
+                          DashboardStatusChipWidget(
+                            label: trip.status,
+                            tone: DashboardStatusTone.warning,
+                            dense: true,
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                AppSpacing.md.horizontalSpace,
-                Text(
-                  trip.fareLabel,
-                  style: AppTextStyles.s14w600.copyWith(
-                    color: context.onSurface,
-                  ),
-                ),
               ],
+            ),
+            AppSpacing.md.verticalSpace,
+            Text(
+              pickup,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.s12w400.copyWith(
+                color: context.onSurface.withValues(alpha: 0.60),
+              ),
             ),
             AppSpacing.lg.verticalSpace,
             AppButton.primary(
@@ -86,12 +103,13 @@ class DashboardPendingPickupCardWidget extends StatelessWidget {
                 drivers: drivers,
                 driverDistances: distances,
               ),
+              layout: const AppButtonLayout(height: 40),
               child: AppButtonChild.label(AppStrings.dashboardAssignDriver),
             ),
           ],
         ),
       ),
-    ).animate().fadeIn(duration: AppDurations.normal).slideY(begin: 0.08);
+    ).animate().fadeIn(duration: 280.ms).slideY(begin: 0.05, end: 0);
   }
 
   Map<String, double> _driverDistancesById() {

@@ -23,13 +23,15 @@ class LoginPhoneSection extends StatelessWidget {
           builder: (context, form, child) {
             return BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
-                return AppButton.primaryGradient(
+                return AppButton.primary(
                   child: AppButtonChild.label(AppStrings.sendOtp),
                   isActive: form.control(AuthForms.phoneField).valid,
                   isLoading: state.phoneStatus.isLoading,
+                  layout: const AppButtonLayout(height: 52),
                   onTap: () {
                     final phone =
                         form.control(AuthForms.phoneField).value as String;
+                    printB('[LoginPhoneSection] send otp tapped phone=$phone');
                     context.read<AuthBloc>().add(
                       AuthEvent.sendOtpRequested(phone),
                     );

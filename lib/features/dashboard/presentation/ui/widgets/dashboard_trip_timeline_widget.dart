@@ -9,28 +9,23 @@ class DashboardTripTimelineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rows = [
+      (AppStrings.tripCreatedAt, details.createdAt?.toSmartDateTime()),
+      (AppStrings.dashboardAssignedAt, details.assignedAt?.toSmartDateTime()),
+      (AppStrings.dashboardArrivedAt, details.arrivedAt?.toSmartDateTime()),
+      (AppStrings.dashboardStartedAt, details.startedAt?.toSmartDateTime()),
+      (AppStrings.dashboardCompletedAt, details.completedAt?.toSmartDateTime()),
+    ];
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DashboardTripTimelineRowWidget(
-          label: AppStrings.tripCreatedAt,
-          value: details.createdAt?.toSmartDateTime(),
-        ),
-        DashboardTripTimelineRowWidget(
-          label: AppStrings.dashboardAssignedAt,
-          value: details.assignedAt?.toSmartDateTime(),
-        ),
-        DashboardTripTimelineRowWidget(
-          label: AppStrings.dashboardArrivedAt,
-          value: details.arrivedAt?.toSmartDateTime(),
-        ),
-        DashboardTripTimelineRowWidget(
-          label: AppStrings.dashboardStartedAt,
-          value: details.startedAt?.toSmartDateTime(),
-        ),
-        DashboardTripTimelineRowWidget(
-          label: AppStrings.dashboardCompletedAt,
-          value: details.completedAt?.toSmartDateTime(),
-        ),
+        for (int i = 0; i < rows.length; i++)
+          DashboardTripTimelineRowWidget(
+            label: rows[i].$1,
+            value: rows[i].$2,
+            isLast: i == rows.length - 1,
+          ),
       ],
     );
   }

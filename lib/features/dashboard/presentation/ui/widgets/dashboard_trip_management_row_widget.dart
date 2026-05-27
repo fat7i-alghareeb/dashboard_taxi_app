@@ -1,6 +1,7 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_status_chip_widget.dart';
 
 class DashboardTripManagementRowWidget extends StatelessWidget {
   const DashboardTripManagementRowWidget({
@@ -14,83 +15,138 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: isSelected
-            ? context.primary.withValues(alpha: 0.08)
-            : context.surface,
-        borderRadius: BorderRadius.circular(AppRadii.sm.r),
-        border: Border.all(
-          color: isSelected
-              ? context.primary.withValues(alpha: 0.35)
-              : context.onSurface.withValues(alpha: 0.08),
+    final pickup = trip.pickupLabel ?? AppStrings.tripUnknownAddress;
+    final dropoff = trip.dropoffLabel ?? AppStrings.tripUnknownAddress;
+
+    return Material(
+      color: isSelected
+          ? context.primary.withValues(alpha: 0.06)
+          : Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          context.read<DashboardBloc>().add(
+            DashboardEvent.tripDetailsRequested(trip.id),
+          );
+        },
+        child: Padding(
+          padding: REdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.md,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: REdgeInsets.only(top: AppSpacing.xs),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 8.r,
+                      height: 8.r,
+                      decoration: BoxDecoration(
+                        color: context.primary,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    Container(
+                      width: 1.5.r,
+                      height: 16.h,
+                      color: context.onSurface.withValues(alpha: 0.18),
+                    ),
+                    Container(
+                      width: 8.r,
+                      height: 8.r,
+                      decoration: BoxDecoration(
+                        color: context.onSurface.withValues(alpha: 0.45),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              AppSpacing.md.horizontalSpace,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            trip.referenceCode,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.s14w600.copyWith(
+                              color: context.onSurface,
+                            ),
+                          ),
+                        ),
+                        AppSpacing.sm.horizontalSpace,
+                        Text(
+                          trip.fareLabel,
+                          style: AppTextStyles.s14w600.copyWith(
+                            color: context.onSurface,
+                          ),
+                        ),
+                      ],
+                    ),
+                    AppSpacing.xs.verticalSpace,
+                    Text(
+                      pickup,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.s12w400.copyWith(
+                        color: context.onSurface.withValues(alpha: 0.70),
+                      ),
+                    ),
+                    AppSpacing.xs.verticalSpace,
+                    Text(
+                      dropoff,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.s12w400.copyWith(
+                        color: context.onSurface.withValues(alpha: 0.55),
+                      ),
+                    ),
+                    AppSpacing.sm.verticalSpace,
+                    Row(
+                      children: [
+                        DashboardStatusChipWidget(
+                          label: trip.status,
+                          tone: dashboardToneFromTripStatus(trip.status),
+                          dense: true,
+                        ),
+                        AppSpacing.sm.horizontalSpace,
+                        if (trip.createdAt != null)
+                          Expanded(
+                            child: Text(
+                              trip.createdAt!.toSmartDateTime(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.s12w400.copyWith(
+                                color: context.onSurface.withValues(alpha: 0.45),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              AppSpacing.sm.horizontalSpace,
+              Padding(
+                padding: REdgeInsets.only(top: AppSpacing.sm),
+                child: FaIcon(
+                  context.chevronEnd,
+                  size: 12.r,
+                  color: context.onSurface.withValues(alpha: 0.35),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      child: Padding(
-        padding: REdgeInsets.all(AppSpacing.md),
-        child: Row(
-          children: [
-            FaIcon(FontAwesomeIcons.taxi, size: 18.r, color: context.primary),
-            AppSpacing.md.horizontalSpace,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    trip.referenceCode,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.s14w600.copyWith(
-                      color: context.onSurface,
-                    ),
-                  ),
-                  AppSpacing.xs.verticalSpace,
-                  Text(
-                    trip.pickupLabel ?? AppStrings.tripUnknownAddress,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.s12w400.copyWith(
-                      color: context.onSurface.withValues(alpha: 0.62),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            AppSpacing.sm.horizontalSpace,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  trip.fareLabel,
-                  style: AppTextStyles.s14w600.copyWith(
-                    color: context.onSurface,
-                  ),
-                ),
-                AppSpacing.xs.verticalSpace,
-                Text(
-                  trip.status,
-                  style: AppTextStyles.s12w400.copyWith(
-                    color: context.onSurface.withValues(alpha: 0.62),
-                  ),
-                ),
-              ],
-            ),
-            AppSpacing.md.horizontalSpace,
-            AppButton.outline(
-              onTap: () {
-                context.read<DashboardBloc>().add(
-                  DashboardEvent.tripDetailsRequested(trip.id),
-                );
-              },
-              child: AppButtonChild.labelIcon(
-                label: AppStrings.dashboardDetails,
-                icon: IconSource.icon(FontAwesomeIcons.circleInfo),
-                iconSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ).animate().fadeIn(duration: AppDurations.normal).slideY(begin: 0.04);
+    );
   }
 }

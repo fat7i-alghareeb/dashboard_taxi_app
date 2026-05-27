@@ -1,73 +1,63 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 
-/// A premium, multi-phase animated logo for the unified splash screen.
+/// Clean, modern splash logo with a single restrained entrance + breath cycle.
 ///
-/// Enhanced with blur clearing, shadow pulsing, and cinematic expansion.
+/// Uses the brand surface (white) as the logo tint so the wordmark reads as a
+/// solid mark on the primary background, matching the native splash.
 class PremiumSplashLogo extends StatelessWidget {
   const PremiumSplashLogo({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Increased size for more visual impact as requested.
-    final logoSize = 300.sp;
+    final logoSize = 180.sp;
 
-    return Stack(
-      alignment: Alignment.center,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        // Layer 1: Shadow Pulse (Heartbeat background)
         Assets.images.oranjeLogo
             .image(
-              width: logoSize * 1.1,
-              height: logoSize * 1.1,
+              width: logoSize,
+              height: logoSize,
               fit: BoxFit.contain,
-              color: context.primary.withValues(alpha: 0.2),
+              color: context.onPrimary,
             )
-            .animate(onPlay: (controller) => controller.repeat())
-            .scale(
-              begin: const Offset(1, 1),
-              end: const Offset(1.2, 1.2),
-              duration: 2000.ms,
-              curve: Curves.easeInOut,
-            )
-            .fadeOut(begin: 0.2, duration: 2000.ms)
-            .blur(begin: const Offset(10, 10), end: const Offset(20, 20)),
-
-        // Layer 2: Main Logo with Multi-Phase Animation
-        Assets.images.oranjeLogo
-            .image(width: logoSize, height: logoSize, fit: BoxFit.contain)
             .animate()
-            // Phase 1: Blur Reveal (Entrance)
-            .blur(
-              begin: const Offset(15, 15),
-              end: const Offset(0, 0),
-              duration: 800.ms,
+            .fadeIn(duration: 600.ms, curve: Curves.easeOutCubic)
+            .scale(
+              begin: const Offset(0.92, 0.92),
+              end: const Offset(1, 1),
+              duration: 600.ms,
               curve: Curves.easeOutCubic,
             )
-            .fadeIn(duration: 600.ms)
-            // Phase 2: Engagement (Heartbeat & Light Sweep)
-            .animate(onPlay: (controller) => controller.repeat(reverse: true))
-            .shimmer(
-              delay: 800.ms,
-              duration: 1500.ms,
-              color: context.primary.withValues(alpha: 0.3),
-            )
+            .then()
+            .animate(onPlay: (c) => c.repeat(reverse: true))
             .scale(
               begin: const Offset(1, 1),
-              end: const Offset(1.04, 1.04),
-              duration: 1000.ms,
+              end: const Offset(1.03, 1.03),
+              duration: 1400.ms,
               curve: Curves.easeInOut,
+            ),
+        AppSpacing.lg.verticalSpace,
+        Text(
+              AppStrings.appName,
+              style: AppTextStyles.s20w700.copyWith(
+                color: context.onPrimary,
+                letterSpacing: 1.2,
+              ),
             )
-            // Phase 3: Expansion Reveal (Transition)
-            // This animation starts when the global splash delay hits its end.
             .animate()
-            .scale(
-              delay: 2600.ms,
-              begin: const Offset(1, 1),
-              end: const Offset(20, 20),
-              duration: 400.ms,
-              curve: Curves.easeInExpo,
+            .fadeIn(delay: 200.ms, duration: 600.ms)
+            .slideY(begin: 0.2, end: 0, duration: 600.ms),
+        AppSpacing.xs.verticalSpace,
+        Text(
+              AppStrings.appTagline.toUpperCase(),
+              style: AppTextStyles.s12w500.copyWith(
+                color: context.onPrimary.withValues(alpha: 0.70),
+                letterSpacing: 2.4,
+              ),
             )
-            .fadeOut(delay: 2600.ms, duration: 300.ms, curve: Curves.easeOut),
+            .animate()
+            .fadeIn(delay: 400.ms, duration: 600.ms),
       ],
     );
   }

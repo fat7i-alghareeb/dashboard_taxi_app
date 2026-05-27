@@ -20,6 +20,12 @@ abstract class AuthRepository {
   /// Updates the user's preferred language on the backend.
   Future<Result<void>> updatePreferredLanguage(String languageCode);
 
+  /// Authenticates an admin using username + password and persists the session.
+  Future<Result<UserEntity>> adminLogin({
+    required String userName,
+    required String password,
+  });
+
   /// Completes the mandatory password reset flow and refreshes the session.
   Future<Result<void>> forceResetPassword(String newPassword);
 }

@@ -66,27 +66,39 @@ class DashboardAssignDriverSheet extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              trip.referenceCode,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.s18w600.copyWith(color: context.onSurface),
-            ),
-            AppSpacing.xs.verticalSpace,
-            Text(
-              trip.fareLabel,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.s14w400.copyWith(
-                color: context.onSurface.withValues(alpha: 0.64),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        trip.referenceCode,
+                        style: AppTextStyles.s16w600.copyWith(
+                          color: context.onSurface,
+                        ),
+                      ),
+                      AppSpacing.xs.verticalSpace,
+                      Text(
+                        trip.fareLabel,
+                        style: AppTextStyles.s12w400.copyWith(
+                          color: context.onSurface.withValues(alpha: 0.55),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (driverDistances.isNotEmpty)
+                  Text(
+                    AppStrings.dashboardNearestDrivers,
+                    style: AppTextStyles.s11w500.copyWith(
+                      color: context.onSurface.withValues(alpha: 0.45),
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+              ],
             ),
             AppSpacing.lg.verticalSpace,
-            if (driverDistances.isNotEmpty) ...[
-              Text(
-                AppStrings.dashboardNearestDrivers,
-                style: AppTextStyles.s14w600.copyWith(color: context.onSurface),
-              ),
-              AppSpacing.md.verticalSpace,
-            ],
             if (compatibleDrivers.isEmpty)
               EmptyStateWidget(text: AppStrings.dashboardNoAssignableDrivers)
             else ...[
@@ -98,24 +110,21 @@ class DashboardAssignDriverSheet extends StatelessWidget {
                   isLoading: state.tripAssignmentState.isLoading,
                   isSelfAssignment: true,
                 ),
-                AppSpacing.md.verticalSpace,
+                AppSpacing.sm.verticalSpace,
               ],
-              Column(
-                children: rankedDrivers
-                    .where((driver) => driver.id != selfDriver?.id)
-                    .map(
-                      (driver) => Padding(
-                        padding: REdgeInsets.only(bottom: AppSpacing.sm),
-                        child: DashboardAssignDriverOptionWidget(
-                          trip: trip,
-                          driver: driver,
-                          distanceKm: driverDistances[driver.id],
-                          isLoading: state.tripAssignmentState.isLoading,
-                        ),
+              ...rankedDrivers
+                  .where((driver) => driver.id != selfDriver?.id)
+                  .map(
+                    (driver) => Padding(
+                      padding: REdgeInsets.only(bottom: AppSpacing.sm),
+                      child: DashboardAssignDriverOptionWidget(
+                        trip: trip,
+                        driver: driver,
+                        distanceKm: driverDistances[driver.id],
+                        isLoading: state.tripAssignmentState.isLoading,
                       ),
-                    )
-                    .toList(),
-              ),
+                    ),
+                  ),
             ],
           ],
         );

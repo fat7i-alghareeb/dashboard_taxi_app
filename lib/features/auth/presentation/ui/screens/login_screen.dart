@@ -1,8 +1,8 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
-
 import 'package:dashboardtaxi/features/auth/constants/forms/auth_forms.dart';
 import 'package:dashboardtaxi/features/auth/presentation/states/auth_bloc.dart';
+import 'package:dashboardtaxi/features/auth/presentation/ui/widgets/auth_header_widget.dart';
 import 'package:dashboardtaxi/features/auth/presentation/ui/widgets/login/login_otp_section.dart';
 import 'package:dashboardtaxi/features/auth/presentation/ui/widgets/login/login_phone_section.dart';
 
@@ -44,10 +44,14 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
           (!previous.phoneStatus.isFailed && current.phoneStatus.isFailed),
       listener: (context, state) {
         if (!state.isOtpSent) {
+          printC('[LoginScreen] OTP flow reset; clearing OTP field');
           _form.control(AuthForms.otpField).reset();
         }
-
         if (state.phoneStatus.isFailed) {
+          printY(
+            '[LoginScreen] phone status failed '
+            'message=${state.phoneStatus.errorMessage}',
+          );
           showErrorOverlay(
             context,
             state.phoneStatus.errorMessage ?? AppStrings.somethingWentWrong,
@@ -60,6 +64,7 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
           onPopInvokedWithResult: (didPop, result) {
             if (didPop) return;
             if (state.isOtpSent) {
+              printC('[LoginScreen] back intercepted; resetting OTP flow');
               context.read<AuthBloc>().add(const AuthEvent.resetRequested());
             }
           },
@@ -68,7 +73,6 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
             child: AppScaffold.body(
               scaffoldConfig: AppScaffoldConfig(
                 backgroundColor: context.surface,
-                safeArea: [],
               ),
               child: CustomScrollView(
                 slivers: [
@@ -77,120 +81,51 @@ class _LoginScreenBodyState extends State<_LoginScreenBody> {
                     child: Padding(
                       padding: REdgeInsets.symmetric(
                         horizontal: AppSpacing.xl,
-                        vertical: AppSpacing.xxl,
+                        vertical: AppSpacing.xl,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          if (state.isOtpSent)
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: IconButton(
-                                onPressed: () {
-                                  context.read<AuthBloc>().add(
-                                    const AuthEvent.resetRequested(),
-                                  );
-                                },
-                                icon: FaIcon(
-                                  FontAwesomeIcons.chevronLeft,
-                                  size: 20.r,
-                                  color: context.onSurface,
-                                ),
-                              ),
-                            ).animate().fadeIn().slideX(begin: -0.2),
-
-                          (state.isOtpSent ? AppSpacing.xl : AppSpacing.xxl * 2)
-                              .verticalSpace,
-
-                          // Logo
-                          Center(
-                                child: Assets.images.oranjeLogo.image(
-                                  height: 140.h,
-                                  fit: BoxFit.contain,
-                                ),
-                              )
-                              .animate()
-                              .fadeIn(duration: 600.ms)
-                              .scale(
-                                begin: const Offset(0.8, 0.8),
-                                curve: Curves.easeOutBack,
-                              ),
-
+                          AuthHeaderWidget(
+                            title: state.isOtpSent
+                                ? AppStrings.authOtpTitle
+                                : AppStrings.authDriverWelcomeTitle,
+                            subtitle: state.isOtpSent
+                                ? AppStrings.authOtpSubtitle
+                                : AppStrings.authDriverWelcomeSubtitle,
+                            onBack: state.isOtpSent
+                                ? () {
+                                    context.read<AuthBloc>().add(
+                                      const AuthEvent.resetRequested(),
+                                    );
+                                  }
+                                : null,
+                          ),
                           AppSpacing.xxl.verticalSpace,
-
-                          // Welcome Text
-                          Column(
-                            children: [
-                              Text(
-                                state.isOtpSent
-                                    ? AppStrings.otp
-                                    : AppStrings.login,
-                                style: AppTextStyles.s40w700.copyWith(
-                                  color: context.onSurface,
-                                  height: 1.1,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              AppSpacing.sm.verticalSpace,
-                              Text(
-                                state.isOtpSent
-                                    ? AppStrings.enterOtp
-                                    : AppStrings.enterPhone,
-                                style: AppTextStyles.s16w400.copyWith(
-                                  color: context.onSurfaceVariant,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2),
-
-                          (AppSpacing.xxl * 1.5).verticalSpace,
-
-                          // Input Section
-                          Container(
-                                padding: REdgeInsets.all(AppSpacing.xl),
-                                decoration: BoxDecoration(
-                                  color: context.surface,
-                                  borderRadius: BorderRadius.circular(
-                                    AppRadii.xl.r,
-                                  ),
-                                  boxShadow: context.shadows.primary,
-                                  border: Border.all(
-                                    color: context.primary.withValues(
-                                      alpha: 0.1,
-                                    ),
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 320),
+                            transitionBuilder: (child, animation) =>
+                                FadeTransition(
+                                  opacity: animation,
+                                  child: SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(0, 0.06),
+                                      end: Offset.zero,
+                                    ).animate(animation),
+                                    child: child,
                                   ),
                                 ),
-                                child: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 400),
-                                  transitionBuilder: (child, animation) =>
-                                      FadeTransition(
-                                        opacity: animation,
-                                        child: SlideTransition(
-                                          position: Tween<Offset>(
-                                            begin: const Offset(0, 0.1),
-                                            end: Offset.zero,
-                                          ).animate(animation),
-                                          child: child,
-                                        ),
-                                      ),
-                                  child: !state.isOtpSent
-                                      ? LoginPhoneSection(
-                                          key: const ValueKey('phone'),
-                                          form: _form,
-                                        )
-                                      : LoginOtpSection(
-                                          key: const ValueKey('otp'),
-                                          form: _form,
-                                        ),
-                                ),
-                              )
-                              .animate()
-                              .fadeIn(delay: 400.ms)
-                              .scale(
-                                begin: const Offset(0.95, 0.95),
-                                curve: Curves.easeOut,
-                              ),
+                            child: !state.isOtpSent
+                                ? LoginPhoneSection(
+                                    key: const ValueKey('phone'),
+                                    form: _form,
+                                  )
+                                : LoginOtpSection(
+                                    key: const ValueKey('otp'),
+                                    form: _form,
+                                  ),
+                          ),
+                          const Spacer(),
                         ],
                       ),
                     ),

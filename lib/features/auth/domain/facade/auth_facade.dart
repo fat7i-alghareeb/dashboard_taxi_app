@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import '../../../../core/domain/user_entity.dart';
 import '../../../../core/utils/result.dart';
+import '../../../../utils/helpers/colored_print.dart';
 import '../repositories/auth_repository.dart';
 
 @lazySingleton
@@ -9,20 +10,37 @@ class AuthFacade {
 
   final AuthRepository _repository;
 
-  Future<Result<String>> requestSmsCode(String phone) =>
-      _repository.requestSmsCode(phone);
+  Future<Result<String>> requestSmsCode(String phone) {
+    printC('[AuthFacade] requestSmsCode phone=$phone');
+    return _repository.requestSmsCode(phone);
+  }
 
   Future<Result<UserEntity>> verifyAndLogin({
     required String phone,
     required String verificationId,
     required String smsCode,
-  }) => _repository.verifyAndLogin(
-    phone: phone,
-    verificationId: verificationId,
-    smsCode: smsCode,
-  );
+  }) {
+    printC(
+      '[AuthFacade] verifyAndLogin phone=$phone '
+      'verificationId=$verificationId',
+    );
+    return _repository.verifyAndLogin(
+      phone: phone,
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
+  }
+
+  Future<Result<UserEntity>> adminLogin({
+    required String userName,
+    required String password,
+  }) {
+    printC('[AuthFacade] adminLogin userName="$userName"');
+    return _repository.adminLogin(userName: userName, password: password);
+  }
 
   Future<Result<void>> forceResetPassword(String newPassword) {
+    printC('[AuthFacade] forceResetPassword');
     return _repository.forceResetPassword(newPassword);
   }
 }

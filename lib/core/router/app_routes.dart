@@ -25,6 +25,14 @@ class AppRouteRegistry {
           AppPageTransitions.build(state: state, child: const LoginScreen()),
     ),
     GoRoute(
+      path: AdminLoginScreen.pagePath,
+      name: AdminLoginScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const AdminLoginScreen(),
+      ),
+    ),
+    GoRoute(
       path: ForcePasswordResetScreen.pagePath,
       name: ForcePasswordResetScreen.pageName,
       pageBuilder: (context, state) => AppPageTransitions.build(
@@ -33,10 +41,26 @@ class AppRouteRegistry {
       ),
     ),
     GoRoute(
+      path: PermissionGateScreen.pagePath,
+      name: PermissionGateScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const PermissionGateScreen(),
+      ),
+    ),
+    GoRoute(
       path: RootScreen.pagePath,
       name: RootScreen.pageName,
       pageBuilder: (context, state) =>
           AppPageTransitions.build(state: state, child: const RootScreen()),
+    ),
+    GoRoute(
+      path: DashboardScreen.pagePath,
+      name: DashboardScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const DashboardScreen(),
+      ),
     ),
     GoRoute(
       path: DashboardLiveMapScreen.pagePath,
@@ -67,6 +91,14 @@ class AppRouteRegistry {
       name: KycScreen.pageName,
       pageBuilder: (context, state) =>
           AppPageTransitions.build(state: state, child: const KycScreen()),
+    ),
+    GoRoute(
+      path: AdminSettingsScreen.pagePath,
+      name: AdminSettingsScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const AdminSettingsScreen(),
+      ),
     ),
   ];
 }

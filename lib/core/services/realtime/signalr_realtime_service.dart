@@ -159,6 +159,7 @@ class SignalRRealtimeService implements RealtimeService {
     hub.on(RealtimeMethodNames.driverEnRoute, _onDriverEnRoute);
     hub.on(RealtimeMethodNames.driverArrived, _onDriverArrived);
     hub.on(RealtimeMethodNames.driverLocationUpdated, _onDriverLocationUpdated);
+    hub.on(RealtimeMethodNames.tripStopCompleted, _onTripStopCompleted);
 
     hub.onclose(({Exception? error}) {
       printY('$_logTag connection closed (error=$error)');
@@ -328,6 +329,21 @@ class SignalRRealtimeService implements RealtimeService {
       driverId: _readString(p, 'driverId'),
       latitude: _readDouble(p, 'latitude'),
       longitude: _readDouble(p, 'longitude'),
+    ));
+  }
+
+  void _onTripStopCompleted(List<Object?>? args) {
+    final p = _payload(args);
+    if (p == null) return;
+    final rawSequence = p['sequence'] ?? p['Sequence'];
+    final sequence = rawSequence is num
+        ? rawSequence.toInt()
+        : int.tryParse(rawSequence?.toString() ?? '') ?? 0;
+    _eventsController.add(RealtimeEvent.tripStopCompleted(
+      tripId: _readString(p, 'tripId'),
+      passengerId: _readString(p, 'passengerId'),
+      driverId: _readString(p, 'driverId'),
+      sequence: sequence,
     ));
   }
 }

@@ -104,6 +104,29 @@ class DashboardRepositoryImpl implements DashboardRepository {
   }
 
   @override
+  Future<Result<void>> createVehicleType({
+    required String code,
+    required String name,
+    required int capacity,
+    required num ratePerKm,
+    required num ratePerMin,
+    required num minFare,
+    required int sortOrder,
+  }) {
+    return runAsResult(
+      () => _remote.createVehicleType(
+        code: code,
+        name: name,
+        capacity: capacity,
+        ratePerKm: ratePerKm,
+        ratePerMin: ratePerMin,
+        minFare: minFare,
+        sortOrder: sortOrder,
+      ),
+    );
+  }
+
+  @override
   Future<Result<void>> removeVehicleType(String vehicleTypeId) {
     return runAsResult(() => _remote.removeVehicleType(vehicleTypeId));
   }

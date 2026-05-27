@@ -16,7 +16,7 @@ class AppTypography {
   /// weights in this method as needed.
   static TextTheme get baseTextTheme {
     // final textTheme = context.textTheme;
-    return GoogleFonts.reemKufiTextTheme();
+    return GoogleFonts.outfitTextTheme();
   }
 
   static TextTheme? _cachedTextTheme;

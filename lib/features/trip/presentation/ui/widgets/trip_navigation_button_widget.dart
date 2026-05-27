@@ -13,6 +13,7 @@ class TripNavigationButtonWidget extends StatelessWidget {
     return AppButton.outline(
       variant: AppButtonVariant.success,
       isActive: stop != null,
+      layout: const AppButtonLayout(height: 44),
       onTap: () => _openNavigation(context),
       onTapWhenInactive: () {
         showErrorOverlay(context, AppStrings.tripUnknownAddress);
@@ -20,10 +21,10 @@ class TripNavigationButtonWidget extends StatelessWidget {
       child: AppButtonChild.labelIcon(
         label: AppStrings.tripNavigate,
         icon: IconSource.widget(
-          FaIcon(FontAwesomeIcons.diamondTurnRight, size: 16.r),
-          size: 16,
+          FaIcon(FontAwesomeIcons.diamondTurnRight, size: 14.r),
+          size: 14,
         ),
-        textStyle: AppTextStyles.s14w400.copyWith(fontWeight: FontWeight.w600),
+        textStyle: AppTextStyles.s14w500,
       ),
     );
   }

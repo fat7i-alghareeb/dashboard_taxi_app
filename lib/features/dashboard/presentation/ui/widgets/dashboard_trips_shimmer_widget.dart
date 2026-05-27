@@ -10,13 +10,57 @@ class DashboardTripsShimmerWidget extends StatelessWidget {
       title: AppStrings.dashboardAllTrips,
       icon: FontAwesomeIcons.route,
       child: Column(
-        children: List.generate(
-          6,
-          (index) => Padding(
-            padding: REdgeInsets.only(bottom: AppSpacing.sm),
-            child: AppShimmer.box(width: double.infinity, height: 72),
-          ),
-        ),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: List.generate(5, (i) {
+          return Padding(
+            padding: REdgeInsets.symmetric(vertical: AppSpacing.sm),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  children: [
+                    AppShimmer.circle(size: 8),
+                    AppSpacing.xs.verticalSpace,
+                    AppShimmer.box(width: 2, height: 16, borderRadius: 1),
+                    AppSpacing.xs.verticalSpace,
+                    AppShimmer.circle(size: 8),
+                  ],
+                ),
+                AppSpacing.md.horizontalSpace,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppShimmer.box(
+                        width: 120,
+                        height: 14,
+                        borderRadius: AppRadii.sm,
+                      ),
+                      AppSpacing.xs.verticalSpace,
+                      AppShimmer.box(
+                        width: double.infinity,
+                        height: 12,
+                        borderRadius: AppRadii.sm,
+                      ),
+                      AppSpacing.xs.verticalSpace,
+                      AppShimmer.box(
+                        width: 180,
+                        height: 12,
+                        borderRadius: AppRadii.sm,
+                      ),
+                      AppSpacing.sm.verticalSpace,
+                      AppShimmer.box(
+                        width: 70,
+                        height: 18,
+                        borderRadius: AppRadii.xl,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }

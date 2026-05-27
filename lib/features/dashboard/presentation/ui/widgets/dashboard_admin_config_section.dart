@@ -19,43 +19,52 @@ class DashboardAdminConfigSection extends StatelessWidget {
     return DashboardSectionShellWidget(
       title: AppStrings.dashboardSystemConfig,
       icon: FontAwesomeIcons.sliders,
-      child: Wrap(
-        spacing: AppSpacing.md.w,
-        runSpacing: AppSpacing.md.h,
-        children: [
-          DashboardAdminConfigTileWidget(
-            label: AppStrings.dashboardTripDiscount,
-            value: '${config.tripDiscountPercent}%',
-            actionLabel: AppStrings.dashboardSetFivePercent,
-            isLoading: isActionLoading,
-            onTap: () {
-              context.read<DashboardBloc>().add(
-                const DashboardEvent.tripDiscountUpdateRequested(5),
-              );
-            },
-          ),
-          DashboardAdminConfigTileWidget(
-            label: AppStrings.dashboardCurrency,
-            value: config.currencyCode,
-            actionLabel: AppStrings.dashboardSetEuro,
-            isLoading: isActionLoading,
-            onTap: () {
-              context.read<DashboardBloc>().add(
-                const DashboardEvent.currencyUpdateRequested('EUR'),
-              );
-            },
-          ),
-          DashboardAdminConfigTileWidget(
-            label: AppStrings.dashboardStripe,
-            value: config.stripeEnabled
-                ? AppStrings.dashboardEnabled
-                : AppStrings.dashboardDisabled,
-            actionLabel: AppStrings.dashboardReadOnly,
-            isLoading: false,
-            onTap: () {},
-            isActive: false,
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const spacing = AppSpacing.md;
+          final tileWidth = (constraints.maxWidth - spacing.w) / 2;
+          final tiles = <Widget>[
+            DashboardAdminConfigTileWidget(
+              label: AppStrings.dashboardTripDiscount,
+              value: '${config.tripDiscountPercent}%',
+              actionLabel: AppStrings.dashboardSetFivePercent,
+              isLoading: isActionLoading,
+              onTap: () {
+                context.read<DashboardBloc>().add(
+                  const DashboardEvent.tripDiscountUpdateRequested(5),
+                );
+              },
+            ),
+            DashboardAdminConfigTileWidget(
+              label: AppStrings.dashboardCurrency,
+              value: config.currencyCode,
+              actionLabel: AppStrings.dashboardSetEuro,
+              isLoading: isActionLoading,
+              onTap: () {
+                context.read<DashboardBloc>().add(
+                  const DashboardEvent.currencyUpdateRequested('EUR'),
+                );
+              },
+            ),
+            DashboardAdminConfigTileWidget(
+              label: AppStrings.dashboardStripe,
+              value: config.stripeEnabled
+                  ? AppStrings.dashboardEnabled
+                  : AppStrings.dashboardDisabled,
+              actionLabel: AppStrings.dashboardReadOnly,
+              isLoading: false,
+              onTap: () {},
+              isActive: false,
+            ),
+          ];
+          return Wrap(
+            spacing: spacing.w,
+            runSpacing: spacing.h,
+            children: [
+              for (final t in tiles) SizedBox(width: tileWidth, child: t),
+            ],
+          );
+        },
       ),
     );
   }

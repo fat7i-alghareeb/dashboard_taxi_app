@@ -31,6 +31,9 @@ class AppFlowConfig {
 
   /// * Enable or disable authentication-based routing.
   static const bool authEnabled = true;
+
+  /// * Enable or disable the permission gate flow.
+  static const bool permissionGateEnabled = true;
 }
 
 /// Map related configuration and defaults.

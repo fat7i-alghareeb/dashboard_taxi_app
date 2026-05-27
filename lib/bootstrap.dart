@@ -18,6 +18,9 @@ import 'core/router/router_config.dart';
 import 'core/services/localization/locale_service.dart';
 import 'core/services/session/auth_manager.dart';
 import 'package:dashboardtaxi/core/services/realtime/realtime_lifecycle_coordinator.dart';
+import 'features/auth/domain/repositories/auth_repository.dart';
+import 'features/root/presentation/ui/screens/root_screen.dart';
+import 'features/trip/presentation/states/trip_bloc.dart';
 import 'core/theme/theme_controller.dart';
 import 'common/widgets/stage_tools/stage_device_preview_controller.dart';
 import 'flavors.dart' show F, Flavor;
@@ -100,12 +103,18 @@ Future<void> _initializeNotifications() async {
 
     await coordinator.initialize(
       config: AppNotificationConfig.defaults(),
-      options: const NotificationInitOptions(
-        initializeFirebase: false,
-        enableFcm: false,
-      ),
+      // Firebase is already initialized by bootstrap above, so we skip the
+      // duplicate Firebase init that this module would otherwise perform.
+      // FCM is on by default.
+      options: const NotificationInitOptions(initializeFirebase: false),
       onNotificationTap: (payload) async {
-        await _handleNotificationNavigation(payload);
+        await _handleNotificationTap(payload);
+      },
+      onForegroundNotification: (payload) async {
+        _routeTripPayloadToBloc(payload);
+      },
+      onTokenRefresh: (token) async {
+        await _syncFcmTokenToBackend(token);
       },
     );
 
@@ -115,12 +124,27 @@ Future<void> _initializeNotifications() async {
   }
 }
 
-Future<void> _handleNotificationNavigation(
-  AppNotificationPayload payload,
-) async {
-  final location = payload.toGoRouterLocation;
-  if (location == null || location.isEmpty) {
-    printC('[Notifications] Tap ignored (no route/deepLink)');
+/// Handles a notification tap (cold-start, background, or foreground).
+///
+/// Order matters:
+/// 1) If the payload references a trip, hand it to [TripBloc] so the active
+///    trip is fetched and the staged sheet opens at the right stage.
+/// 2) Navigate to the route/deep-link if provided, falling back to the
+///    root screen when the payload only carries a trip id.
+Future<void> _handleNotificationTap(AppNotificationPayload payload) async {
+  final tripId = _tripIdFromPayload(payload);
+  if (tripId != null) {
+    _routeTripPayloadToBloc(payload);
+  }
+
+  final explicitLocation = payload.toGoRouterLocation;
+  final location =
+      (explicitLocation != null && explicitLocation.isNotEmpty)
+          ? explicitLocation
+          : (tripId != null ? RootScreen.pagePath : null);
+
+  if (location == null) {
+    printC('[Notifications] Tap ignored (no route/deepLink/tripId)');
     return;
   }
 
@@ -130,6 +154,46 @@ Future<void> _handleNotificationNavigation(
     printG('[Notifications] Navigated to $location');
   } catch (e) {
     printY('[Notifications] Navigation failed: $e (location=$location)');
+  }
+}
+
+/// If the payload contains a `tripId`, ask the singleton [TripBloc] to fetch
+/// it so the staged sheet renders in the correct stage. Called from both the
+/// tap handler and the foreground push handler.
+void _routeTripPayloadToBloc(AppNotificationPayload payload) {
+  final tripId = _tripIdFromPayload(payload);
+  if (tripId == null) return;
+  try {
+    getIt<TripBloc>().add(TripEvent.fetchActiveRequested(tripId));
+    printG('[Notifications] Trip arrival routed to bloc tripId=$tripId');
+  } catch (e) {
+    printY('[Notifications] Trip routing failed: $e');
+  }
+}
+
+String? _tripIdFromPayload(AppNotificationPayload payload) {
+  final raw =
+      payload.data['tripId'] ?? payload.data['TripId'] ?? payload.data['trip_id'];
+  if (raw is String && raw.trim().isNotEmpty) return raw;
+  if (raw != null) {
+    final asString = raw.toString();
+    if (asString.trim().isNotEmpty) return asString;
+  }
+  return null;
+}
+
+/// Sends the FCM device token to the backend. No-op when unauthenticated —
+/// the next login will repush the token via the login handshake.
+Future<void> _syncFcmTokenToBackend(String token) async {
+  if (!getIt<AuthManager>().isAuthenticated) {
+    printC('[Notifications] FCM token refreshed; deferred (not authenticated)');
+    return;
+  }
+  try {
+    await getIt<AuthRepository>().updateFcmToken(token);
+    printG('[Notifications] FCM token synced to backend');
+  } catch (e) {
+    printY('[Notifications] FCM token sync failed: $e');
   }
 }
 
@@ -145,6 +209,36 @@ Future<void> _initializeAuthAndNetwork() async {
   final authManager = getIt<AuthManager>();
   await authManager.initialize();
   getIt<RealtimeLifecycleCoordinator>().start();
+
+  // Startup FCM token backup: if the user is already authenticated when the
+  // app launches, push the currently cached token to the backend. This covers
+  // two real cases:
+  //   - The OS rotated the token while the app was closed (no onTokenRefresh
+  //     callback fired in that window).
+  //   - A prior on-login submission silently failed.
+  // The runtime onTokenRefresh callback still handles in-session rotations.
+  if (authManager.isAuthenticated) {
+    try {
+      final coordinator = getIt<NotificationCoordinator>();
+      final token = await coordinator.getDeviceToken();
+      if (token != null && token.isNotEmpty) {
+        await getIt<AuthRepository>().updateFcmToken(token);
+        printG('[Bootstrap] Startup FCM token backup synced');
+      }
+    } catch (e) {
+      printY('[Bootstrap] Startup FCM token backup failed: $e');
+    }
+
+    // Sync preferred language to backend on startup
+    try {
+      final localeService = getIt<LocaleService>();
+      final code = await localeService.currentLanguageCode();
+      await getIt<AuthRepository>().updatePreferredLanguage(code);
+      printG('[Bootstrap] Startup language backup synced: $code');
+    } catch (e) {
+      printY('[Bootstrap] Startup language backup failed: $e');
+    }
+  }
 }
 
 /// Runs the application inside a guarded zone and wraps it with

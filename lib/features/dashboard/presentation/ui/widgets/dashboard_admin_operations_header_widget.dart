@@ -1,5 +1,6 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_icon_action_widget.dart';
 
 class DashboardAdminOperationsHeaderWidget extends StatelessWidget {
   const DashboardAdminOperationsHeaderWidget({super.key});
@@ -7,14 +8,12 @@ class DashboardAdminOperationsHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppButton.outline(
+        DashboardIconActionWidget(
+          icon: context.chevronStart,
+          tooltip: AppStrings.back,
           onTap: () => context.pop(),
-          layout: const AppButtonLayout(shape: AppButtonShape.circle),
-          child: AppButtonChild.icon(
-            IconSource.icon(FontAwesomeIcons.arrowLeft),
-            size: 18,
-          ),
         ),
         AppSpacing.md.horizontalSpace,
         Expanded(
@@ -23,32 +22,32 @@ class DashboardAdminOperationsHeaderWidget extends StatelessWidget {
             children: [
               Text(
                 AppStrings.dashboardAdminOperations,
-                style: AppTextStyles.s24w700.copyWith(color: context.onSurface),
+                style: AppTextStyles.s24w700.copyWith(
+                  color: context.onSurface,
+                  height: 1.15,
+                ),
               ),
               AppSpacing.xs.verticalSpace,
               Text(
                 AppStrings.dashboardAdminOperationsSubtitle,
-                style: AppTextStyles.s14w400.copyWith(
-                  color: context.onSurface.withValues(alpha: 0.62),
+                style: AppTextStyles.s12w400.copyWith(
+                  color: context.onSurface.withValues(alpha: 0.55),
                 ),
               ),
             ],
           ),
         ),
         AppSpacing.md.horizontalSpace,
-        AppButton.primary(
+        DashboardIconActionWidget(
+          icon: FontAwesomeIcons.arrowsRotate,
+          tooltip: AppStrings.dashboardRefresh,
           onTap: () {
             context.read<DashboardBloc>().add(
               const DashboardEvent.adminOperationsRequested(),
             );
           },
-          layout: const AppButtonLayout(shape: AppButtonShape.circle),
-          child: AppButtonChild.icon(
-            IconSource.icon(FontAwesomeIcons.arrowsRotate),
-            size: 18,
-          ),
         ),
       ],
-    ).animate().fadeIn(duration: AppDurations.normal).slideY(begin: 0.05);
+    ).animate().fadeIn(duration: 280.ms).slideY(begin: 0.04, end: 0);
   }
 }

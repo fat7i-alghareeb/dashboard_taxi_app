@@ -86,7 +86,7 @@ extension RealtimeEventPatterns on RealtimeEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RealtimeTripRequested value)?  tripRequested,TResult Function( RealtimeDriverAssigned value)?  driverAssigned,TResult Function( RealtimeTripStarted value)?  tripStarted,TResult Function( RealtimeTripCompleted value)?  tripCompleted,TResult Function( RealtimeTripCancelled value)?  tripCancelled,TResult Function( RealtimePaymentConfirmed value)?  paymentConfirmed,TResult Function( RealtimePaymentFailed value)?  paymentFailed,TResult Function( RealtimeTripRefunded value)?  tripRefunded,TResult Function( RealtimeDriverEnRoute value)?  driverEnRoute,TResult Function( RealtimeDriverArrived value)?  driverArrived,TResult Function( RealtimeDriverLocationUpdated value)?  driverLocationUpdated,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RealtimeTripRequested value)?  tripRequested,TResult Function( RealtimeDriverAssigned value)?  driverAssigned,TResult Function( RealtimeTripStarted value)?  tripStarted,TResult Function( RealtimeTripCompleted value)?  tripCompleted,TResult Function( RealtimeTripCancelled value)?  tripCancelled,TResult Function( RealtimePaymentConfirmed value)?  paymentConfirmed,TResult Function( RealtimePaymentFailed value)?  paymentFailed,TResult Function( RealtimeTripRefunded value)?  tripRefunded,TResult Function( RealtimeDriverEnRoute value)?  driverEnRoute,TResult Function( RealtimeDriverArrived value)?  driverArrived,TResult Function( RealtimeDriverLocationUpdated value)?  driverLocationUpdated,TResult Function( RealtimeTripStopCompleted value)?  tripStopCompleted,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case RealtimeTripRequested() when tripRequested != null:
@@ -100,7 +100,8 @@ return paymentFailed(_that);case RealtimeTripRefunded() when tripRefunded != nul
 return tripRefunded(_that);case RealtimeDriverEnRoute() when driverEnRoute != null:
 return driverEnRoute(_that);case RealtimeDriverArrived() when driverArrived != null:
 return driverArrived(_that);case RealtimeDriverLocationUpdated() when driverLocationUpdated != null:
-return driverLocationUpdated(_that);case _:
+return driverLocationUpdated(_that);case RealtimeTripStopCompleted() when tripStopCompleted != null:
+return tripStopCompleted(_that);case _:
   return orElse();
 
 }
@@ -118,7 +119,7 @@ return driverLocationUpdated(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RealtimeTripRequested value)  tripRequested,required TResult Function( RealtimeDriverAssigned value)  driverAssigned,required TResult Function( RealtimeTripStarted value)  tripStarted,required TResult Function( RealtimeTripCompleted value)  tripCompleted,required TResult Function( RealtimeTripCancelled value)  tripCancelled,required TResult Function( RealtimePaymentConfirmed value)  paymentConfirmed,required TResult Function( RealtimePaymentFailed value)  paymentFailed,required TResult Function( RealtimeTripRefunded value)  tripRefunded,required TResult Function( RealtimeDriverEnRoute value)  driverEnRoute,required TResult Function( RealtimeDriverArrived value)  driverArrived,required TResult Function( RealtimeDriverLocationUpdated value)  driverLocationUpdated,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RealtimeTripRequested value)  tripRequested,required TResult Function( RealtimeDriverAssigned value)  driverAssigned,required TResult Function( RealtimeTripStarted value)  tripStarted,required TResult Function( RealtimeTripCompleted value)  tripCompleted,required TResult Function( RealtimeTripCancelled value)  tripCancelled,required TResult Function( RealtimePaymentConfirmed value)  paymentConfirmed,required TResult Function( RealtimePaymentFailed value)  paymentFailed,required TResult Function( RealtimeTripRefunded value)  tripRefunded,required TResult Function( RealtimeDriverEnRoute value)  driverEnRoute,required TResult Function( RealtimeDriverArrived value)  driverArrived,required TResult Function( RealtimeDriverLocationUpdated value)  driverLocationUpdated,required TResult Function( RealtimeTripStopCompleted value)  tripStopCompleted,}){
 final _that = this;
 switch (_that) {
 case RealtimeTripRequested():
@@ -132,7 +133,8 @@ return paymentFailed(_that);case RealtimeTripRefunded():
 return tripRefunded(_that);case RealtimeDriverEnRoute():
 return driverEnRoute(_that);case RealtimeDriverArrived():
 return driverArrived(_that);case RealtimeDriverLocationUpdated():
-return driverLocationUpdated(_that);}
+return driverLocationUpdated(_that);case RealtimeTripStopCompleted():
+return tripStopCompleted(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -146,7 +148,7 @@ return driverLocationUpdated(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RealtimeTripRequested value)?  tripRequested,TResult? Function( RealtimeDriverAssigned value)?  driverAssigned,TResult? Function( RealtimeTripStarted value)?  tripStarted,TResult? Function( RealtimeTripCompleted value)?  tripCompleted,TResult? Function( RealtimeTripCancelled value)?  tripCancelled,TResult? Function( RealtimePaymentConfirmed value)?  paymentConfirmed,TResult? Function( RealtimePaymentFailed value)?  paymentFailed,TResult? Function( RealtimeTripRefunded value)?  tripRefunded,TResult? Function( RealtimeDriverEnRoute value)?  driverEnRoute,TResult? Function( RealtimeDriverArrived value)?  driverArrived,TResult? Function( RealtimeDriverLocationUpdated value)?  driverLocationUpdated,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RealtimeTripRequested value)?  tripRequested,TResult? Function( RealtimeDriverAssigned value)?  driverAssigned,TResult? Function( RealtimeTripStarted value)?  tripStarted,TResult? Function( RealtimeTripCompleted value)?  tripCompleted,TResult? Function( RealtimeTripCancelled value)?  tripCancelled,TResult? Function( RealtimePaymentConfirmed value)?  paymentConfirmed,TResult? Function( RealtimePaymentFailed value)?  paymentFailed,TResult? Function( RealtimeTripRefunded value)?  tripRefunded,TResult? Function( RealtimeDriverEnRoute value)?  driverEnRoute,TResult? Function( RealtimeDriverArrived value)?  driverArrived,TResult? Function( RealtimeDriverLocationUpdated value)?  driverLocationUpdated,TResult? Function( RealtimeTripStopCompleted value)?  tripStopCompleted,}){
 final _that = this;
 switch (_that) {
 case RealtimeTripRequested() when tripRequested != null:
@@ -160,7 +162,8 @@ return paymentFailed(_that);case RealtimeTripRefunded() when tripRefunded != nul
 return tripRefunded(_that);case RealtimeDriverEnRoute() when driverEnRoute != null:
 return driverEnRoute(_that);case RealtimeDriverArrived() when driverArrived != null:
 return driverArrived(_that);case RealtimeDriverLocationUpdated() when driverLocationUpdated != null:
-return driverLocationUpdated(_that);case _:
+return driverLocationUpdated(_that);case RealtimeTripStopCompleted() when tripStopCompleted != null:
+return tripStopCompleted(_that);case _:
   return null;
 
 }
@@ -177,7 +180,7 @@ return driverLocationUpdated(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String tripId,  String vehicleTypeId,  String passengerId)?  tripRequested,TResult Function( String tripId,  String passengerId,  String driverId)?  driverAssigned,TResult Function( String tripId,  String passengerId)?  tripStarted,TResult Function( String tripId,  String passengerId)?  tripCompleted,TResult Function( String tripId,  String passengerId)?  tripCancelled,TResult Function( String tripId,  String passengerId)?  paymentConfirmed,TResult Function( String tripId,  String passengerId,  String reason)?  paymentFailed,TResult Function( String tripId,  String passengerId,  double amount)?  tripRefunded,TResult Function( String tripId,  String passengerId,  String driverId)?  driverEnRoute,TResult Function( String tripId,  String passengerId,  String driverId)?  driverArrived,TResult Function( String tripId,  String driverId,  double latitude,  double longitude)?  driverLocationUpdated,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String tripId,  String vehicleTypeId,  String passengerId)?  tripRequested,TResult Function( String tripId,  String passengerId,  String driverId)?  driverAssigned,TResult Function( String tripId,  String passengerId)?  tripStarted,TResult Function( String tripId,  String passengerId)?  tripCompleted,TResult Function( String tripId,  String passengerId)?  tripCancelled,TResult Function( String tripId,  String passengerId)?  paymentConfirmed,TResult Function( String tripId,  String passengerId,  String reason)?  paymentFailed,TResult Function( String tripId,  String passengerId,  double amount)?  tripRefunded,TResult Function( String tripId,  String passengerId,  String driverId)?  driverEnRoute,TResult Function( String tripId,  String passengerId,  String driverId)?  driverArrived,TResult Function( String tripId,  String driverId,  double latitude,  double longitude)?  driverLocationUpdated,TResult Function( String tripId,  String passengerId,  String driverId,  int sequence)?  tripStopCompleted,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case RealtimeTripRequested() when tripRequested != null:
 return tripRequested(_that.tripId,_that.vehicleTypeId,_that.passengerId);case RealtimeDriverAssigned() when driverAssigned != null:
@@ -190,7 +193,8 @@ return paymentFailed(_that.tripId,_that.passengerId,_that.reason);case RealtimeT
 return tripRefunded(_that.tripId,_that.passengerId,_that.amount);case RealtimeDriverEnRoute() when driverEnRoute != null:
 return driverEnRoute(_that.tripId,_that.passengerId,_that.driverId);case RealtimeDriverArrived() when driverArrived != null:
 return driverArrived(_that.tripId,_that.passengerId,_that.driverId);case RealtimeDriverLocationUpdated() when driverLocationUpdated != null:
-return driverLocationUpdated(_that.tripId,_that.driverId,_that.latitude,_that.longitude);case _:
+return driverLocationUpdated(_that.tripId,_that.driverId,_that.latitude,_that.longitude);case RealtimeTripStopCompleted() when tripStopCompleted != null:
+return tripStopCompleted(_that.tripId,_that.passengerId,_that.driverId,_that.sequence);case _:
   return orElse();
 
 }
@@ -208,7 +212,7 @@ return driverLocationUpdated(_that.tripId,_that.driverId,_that.latitude,_that.lo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String tripId,  String vehicleTypeId,  String passengerId)  tripRequested,required TResult Function( String tripId,  String passengerId,  String driverId)  driverAssigned,required TResult Function( String tripId,  String passengerId)  tripStarted,required TResult Function( String tripId,  String passengerId)  tripCompleted,required TResult Function( String tripId,  String passengerId)  tripCancelled,required TResult Function( String tripId,  String passengerId)  paymentConfirmed,required TResult Function( String tripId,  String passengerId,  String reason)  paymentFailed,required TResult Function( String tripId,  String passengerId,  double amount)  tripRefunded,required TResult Function( String tripId,  String passengerId,  String driverId)  driverEnRoute,required TResult Function( String tripId,  String passengerId,  String driverId)  driverArrived,required TResult Function( String tripId,  String driverId,  double latitude,  double longitude)  driverLocationUpdated,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String tripId,  String vehicleTypeId,  String passengerId)  tripRequested,required TResult Function( String tripId,  String passengerId,  String driverId)  driverAssigned,required TResult Function( String tripId,  String passengerId)  tripStarted,required TResult Function( String tripId,  String passengerId)  tripCompleted,required TResult Function( String tripId,  String passengerId)  tripCancelled,required TResult Function( String tripId,  String passengerId)  paymentConfirmed,required TResult Function( String tripId,  String passengerId,  String reason)  paymentFailed,required TResult Function( String tripId,  String passengerId,  double amount)  tripRefunded,required TResult Function( String tripId,  String passengerId,  String driverId)  driverEnRoute,required TResult Function( String tripId,  String passengerId,  String driverId)  driverArrived,required TResult Function( String tripId,  String driverId,  double latitude,  double longitude)  driverLocationUpdated,required TResult Function( String tripId,  String passengerId,  String driverId,  int sequence)  tripStopCompleted,}) {final _that = this;
 switch (_that) {
 case RealtimeTripRequested():
 return tripRequested(_that.tripId,_that.vehicleTypeId,_that.passengerId);case RealtimeDriverAssigned():
@@ -221,7 +225,8 @@ return paymentFailed(_that.tripId,_that.passengerId,_that.reason);case RealtimeT
 return tripRefunded(_that.tripId,_that.passengerId,_that.amount);case RealtimeDriverEnRoute():
 return driverEnRoute(_that.tripId,_that.passengerId,_that.driverId);case RealtimeDriverArrived():
 return driverArrived(_that.tripId,_that.passengerId,_that.driverId);case RealtimeDriverLocationUpdated():
-return driverLocationUpdated(_that.tripId,_that.driverId,_that.latitude,_that.longitude);}
+return driverLocationUpdated(_that.tripId,_that.driverId,_that.latitude,_that.longitude);case RealtimeTripStopCompleted():
+return tripStopCompleted(_that.tripId,_that.passengerId,_that.driverId,_that.sequence);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -235,7 +240,7 @@ return driverLocationUpdated(_that.tripId,_that.driverId,_that.latitude,_that.lo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String tripId,  String vehicleTypeId,  String passengerId)?  tripRequested,TResult? Function( String tripId,  String passengerId,  String driverId)?  driverAssigned,TResult? Function( String tripId,  String passengerId)?  tripStarted,TResult? Function( String tripId,  String passengerId)?  tripCompleted,TResult? Function( String tripId,  String passengerId)?  tripCancelled,TResult? Function( String tripId,  String passengerId)?  paymentConfirmed,TResult? Function( String tripId,  String passengerId,  String reason)?  paymentFailed,TResult? Function( String tripId,  String passengerId,  double amount)?  tripRefunded,TResult? Function( String tripId,  String passengerId,  String driverId)?  driverEnRoute,TResult? Function( String tripId,  String passengerId,  String driverId)?  driverArrived,TResult? Function( String tripId,  String driverId,  double latitude,  double longitude)?  driverLocationUpdated,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String tripId,  String vehicleTypeId,  String passengerId)?  tripRequested,TResult? Function( String tripId,  String passengerId,  String driverId)?  driverAssigned,TResult? Function( String tripId,  String passengerId)?  tripStarted,TResult? Function( String tripId,  String passengerId)?  tripCompleted,TResult? Function( String tripId,  String passengerId)?  tripCancelled,TResult? Function( String tripId,  String passengerId)?  paymentConfirmed,TResult? Function( String tripId,  String passengerId,  String reason)?  paymentFailed,TResult? Function( String tripId,  String passengerId,  double amount)?  tripRefunded,TResult? Function( String tripId,  String passengerId,  String driverId)?  driverEnRoute,TResult? Function( String tripId,  String passengerId,  String driverId)?  driverArrived,TResult? Function( String tripId,  String driverId,  double latitude,  double longitude)?  driverLocationUpdated,TResult? Function( String tripId,  String passengerId,  String driverId,  int sequence)?  tripStopCompleted,}) {final _that = this;
 switch (_that) {
 case RealtimeTripRequested() when tripRequested != null:
 return tripRequested(_that.tripId,_that.vehicleTypeId,_that.passengerId);case RealtimeDriverAssigned() when driverAssigned != null:
@@ -248,7 +253,8 @@ return paymentFailed(_that.tripId,_that.passengerId,_that.reason);case RealtimeT
 return tripRefunded(_that.tripId,_that.passengerId,_that.amount);case RealtimeDriverEnRoute() when driverEnRoute != null:
 return driverEnRoute(_that.tripId,_that.passengerId,_that.driverId);case RealtimeDriverArrived() when driverArrived != null:
 return driverArrived(_that.tripId,_that.passengerId,_that.driverId);case RealtimeDriverLocationUpdated() when driverLocationUpdated != null:
-return driverLocationUpdated(_that.tripId,_that.driverId,_that.latitude,_that.longitude);case _:
+return driverLocationUpdated(_that.tripId,_that.driverId,_that.latitude,_that.longitude);case RealtimeTripStopCompleted() when tripStopCompleted != null:
+return tripStopCompleted(_that.tripId,_that.passengerId,_that.driverId,_that.sequence);case _:
   return null;
 
 }
@@ -1014,6 +1020,78 @@ as String,driverId: null == driverId ? _self.driverId : driverId // ignore: cast
 as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class RealtimeTripStopCompleted implements RealtimeEvent {
+  const RealtimeTripStopCompleted({required this.tripId, required this.passengerId, required this.driverId, required this.sequence});
+  
+
+@override final  String tripId;
+ final  String passengerId;
+ final  String driverId;
+ final  int sequence;
+
+/// Create a copy of RealtimeEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RealtimeTripStopCompletedCopyWith<RealtimeTripStopCompleted> get copyWith => _$RealtimeTripStopCompletedCopyWithImpl<RealtimeTripStopCompleted>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeTripStopCompleted&&(identical(other.tripId, tripId) || other.tripId == tripId)&&(identical(other.passengerId, passengerId) || other.passengerId == passengerId)&&(identical(other.driverId, driverId) || other.driverId == driverId)&&(identical(other.sequence, sequence) || other.sequence == sequence));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,tripId,passengerId,driverId,sequence);
+
+@override
+String toString() {
+  return 'RealtimeEvent.tripStopCompleted(tripId: $tripId, passengerId: $passengerId, driverId: $driverId, sequence: $sequence)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RealtimeTripStopCompletedCopyWith<$Res> implements $RealtimeEventCopyWith<$Res> {
+  factory $RealtimeTripStopCompletedCopyWith(RealtimeTripStopCompleted value, $Res Function(RealtimeTripStopCompleted) _then) = _$RealtimeTripStopCompletedCopyWithImpl;
+@override @useResult
+$Res call({
+ String tripId, String passengerId, String driverId, int sequence
+});
+
+
+
+
+}
+/// @nodoc
+class _$RealtimeTripStopCompletedCopyWithImpl<$Res>
+    implements $RealtimeTripStopCompletedCopyWith<$Res> {
+  _$RealtimeTripStopCompletedCopyWithImpl(this._self, this._then);
+
+  final RealtimeTripStopCompleted _self;
+  final $Res Function(RealtimeTripStopCompleted) _then;
+
+/// Create a copy of RealtimeEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? tripId = null,Object? passengerId = null,Object? driverId = null,Object? sequence = null,}) {
+  return _then(RealtimeTripStopCompleted(
+tripId: null == tripId ? _self.tripId : tripId // ignore: cast_nullable_to_non_nullable
+as String,passengerId: null == passengerId ? _self.passengerId : passengerId // ignore: cast_nullable_to_non_nullable
+as String,driverId: null == driverId ? _self.driverId : driverId // ignore: cast_nullable_to_non_nullable
+as String,sequence: null == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

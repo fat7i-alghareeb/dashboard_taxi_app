@@ -21,63 +21,56 @@ class DashboardVehicleTypeRowWidget extends StatelessWidget {
       vehicleType.minFare.toStringAsFixed(2),
     );
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: context.primary.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(AppRadii.sm.r),
-        border: Border.all(color: context.primary.withValues(alpha: 0.12)),
-      ),
-      child: Padding(
-        padding: REdgeInsets.all(AppSpacing.md),
-        child: Row(
-          children: [
-            FaIcon(FontAwesomeIcons.taxi, size: 16.r, color: context.primary),
-            AppSpacing.md.horizontalSpace,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    vehicleType.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.s14w600.copyWith(
-                      color: context.onSurface,
-                    ),
-                  ),
-                  AppSpacing.xs.verticalSpace,
-                  Text(
-                    capacity,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.s12w400.copyWith(
-                      color: context.onSurface.withValues(alpha: 0.62),
-                    ),
-                  ),
-                ],
+    return Padding(
+      padding: REdgeInsets.symmetric(vertical: AppSpacing.sm),
+      child: Row(
+        children: [
+          Container(
+            height: 36.r,
+            width: 36.r,
+            decoration: BoxDecoration(
+              color: context.primary.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(AppRadii.sm.r),
+            ),
+            child: Center(
+              child: FaIcon(
+                FontAwesomeIcons.taxi,
+                size: 14.r,
+                color: context.primary,
               ),
             ),
-            AppSpacing.sm.horizontalSpace,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+          ),
+          AppSpacing.md.horizontalSpace,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  rate,
+                  vehicleType.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.s14w600.copyWith(
                     color: context.onSurface,
                   ),
                 ),
                 AppSpacing.xs.verticalSpace,
                 Text(
-                  minFare,
+                  '$capacity · $minFare',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.s12w400.copyWith(
-                    color: context.onSurface.withValues(alpha: 0.62),
+                    color: context.onSurface.withValues(alpha: 0.60),
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          AppSpacing.sm.horizontalSpace,
+          Text(
+            rate,
+            style: AppTextStyles.s14w600.copyWith(color: context.primary),
+          ),
+        ],
       ),
     );
   }

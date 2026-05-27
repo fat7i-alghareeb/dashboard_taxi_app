@@ -15,42 +15,41 @@ class DashboardLiveMapStatsWidget extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: context.surface.withValues(alpha: 0.9),
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg.r),
         border: Border.all(color: context.onSurface.withValues(alpha: 0.08)),
-        boxShadow: context.shadows.grey,
       ),
       child: Padding(
         padding: REdgeInsets.all(AppSpacing.lg),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: DashboardLiveMapStatTileWidget(
                 label: AppStrings.dashboardMappedDrivers,
                 value: mapped.toString(),
-                icon: FontAwesomeIcons.locationDot,
                 color: context.primary,
               ),
             ),
+            AppSpacing.md.horizontalSpace,
             Expanded(
               child: DashboardLiveMapStatTileWidget(
                 label: AppStrings.dashboardIdleDrivers,
                 value: idle.toString(),
-                icon: FontAwesomeIcons.carSide,
                 color: AppColors.success,
               ),
             ),
+            AppSpacing.md.horizontalSpace,
             Expanded(
               child: DashboardLiveMapStatTileWidget(
                 label: AppStrings.dashboardBusyDrivers,
                 value: busy.toString(),
-                icon: FontAwesomeIcons.route,
-                color: AppColors.error,
+                color: AppColors.warning,
               ),
             ),
           ],
         ),
       ),
-    ).animate().fadeIn(duration: AppDurations.normal).slideY(begin: 0.08);
+    ).animate().fadeIn(duration: 280.ms).slideY(begin: 0.05, end: 0);
   }
 }

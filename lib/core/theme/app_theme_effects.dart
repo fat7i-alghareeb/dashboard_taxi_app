@@ -138,6 +138,24 @@ class AppThemeGradients {
     darkEndAlpha: 0.6,
   );
 
+  static const AppGradientSpec _auroraSpec = AppGradientSpec(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    lightStartAlpha: 0.95,
+    lightEndAlpha: 0.85,
+    darkStartAlpha: 0.86,
+    darkEndAlpha: 0.74,
+  );
+
+  static const AppGradientSpec _auroraSoftSpec = AppGradientSpec(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    lightStartAlpha: 0.34,
+    lightEndAlpha: 0.24,
+    darkStartAlpha: 0.26,
+    darkEndAlpha: 0.16,
+  );
+
   LinearGradient get primary =>
       _twoTone(colorScheme.primary, spec: _primarySpec);
 
@@ -148,6 +166,30 @@ class AppThemeGradients {
   LinearGradient get warning => _twoTone(AppColors.warning, spec: _warningSpec);
 
   LinearGradient get grey => _twoTone(colorScheme.outline, spec: _greySpec);
+
+  LinearGradient get aurora => LinearGradient(
+    begin: _auroraSpec.begin,
+    end: _auroraSpec.end,
+    colors: <Color>[
+      colorScheme.primary.withValues(alpha: _auroraSpec.lightStartAlpha),
+      colorScheme.tertiary.withValues(alpha: _auroraSpec.lightEndAlpha),
+      AppColors.warning.withValues(alpha: 0.45),
+    ],
+  );
+
+  LinearGradient get auroraSoft => LinearGradient(
+    begin: _auroraSoftSpec.begin,
+    end: _auroraSoftSpec.end,
+    colors: <Color>[
+      colorScheme.primaryContainer.withValues(
+        alpha: _auroraSoftSpec.lightStartAlpha,
+      ),
+      colorScheme.secondaryContainer.withValues(
+        alpha: _auroraSoftSpec.lightEndAlpha,
+      ),
+      colorScheme.tertiaryContainer.withValues(alpha: 0.18),
+    ],
+  );
 
   static const LinearGradient fixed = LinearGradient(
     begin: Alignment.topLeft,
@@ -184,8 +226,8 @@ class AppThemeShadows {
   static const AppShadowSpec _primarySpec = AppShadowSpec(
     blurRadius: 22,
     offset: Offset(0, 12),
-    lightOpacity: 0.65,
-    darkOpacity: 0.45,
+    lightOpacity: 0.4,
+    darkOpacity: 0.3,
   );
 
   static const AppShadowSpec _successSpec = AppShadowSpec(
@@ -211,13 +253,20 @@ class AppThemeShadows {
 
   static const AppShadowSpec _greySpec = AppShadowSpec(
     blurRadius: 14,
-    offset: Offset(0, 8),
-    lightOpacity: 0.8,
-    darkOpacity: 0.6,
+    offset: Offset(0, 6),
+    lightOpacity: 0.42,
+    darkOpacity: 0.15,
+  );
+
+  static const AppShadowSpec _auroraSpec = AppShadowSpec(
+    blurRadius: 24,
+    offset: Offset(0, 12),
+    lightOpacity: 0.24,
+    darkOpacity: 0.30,
   );
 
   List<BoxShadow> get primary =>
-      _colored(colorScheme.primary, spec: _primarySpec);
+      _colored(colorScheme.outline, spec: _primarySpec);
 
   List<BoxShadow> get success =>
       _colored(AppColors.success, spec: _successSpec);
@@ -228,6 +277,25 @@ class AppThemeShadows {
       _colored(AppColors.warning, spec: _warningSpec);
 
   List<BoxShadow> get grey => _colored(colorScheme.outline, spec: _greySpec);
+
+  List<BoxShadow> get auroraGlow {
+    final primaryAlpha = brightness == Brightness.dark ? 0.28 : 0.18;
+    final tertiaryAlpha = brightness == Brightness.dark ? 0.22 : 0.14;
+
+    return <BoxShadow>[
+      ..._colored(colorScheme.primary, spec: _auroraSpec),
+      BoxShadow(
+        color: colorScheme.tertiary.withValues(alpha: tertiaryAlpha),
+        blurRadius: 30,
+        offset: const Offset(0, 16),
+      ),
+      BoxShadow(
+        color: colorScheme.primary.withValues(alpha: primaryAlpha),
+        blurRadius: 12,
+        offset: const Offset(0, 3),
+      ),
+    ];
+  }
 
   static const List<BoxShadow> fixed = <BoxShadow>[
     BoxShadow(color: Color(0x33000000), blurRadius: 16, offset: Offset(0, 8)),

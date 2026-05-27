@@ -56,6 +56,26 @@ class DashboardFacade {
     return _repository.updateVehicleType(vehicleType);
   }
 
+  Future<Result<void>> createVehicleType({
+    required String code,
+    required String name,
+    required int capacity,
+    required num ratePerKm,
+    required num ratePerMin,
+    required num minFare,
+    required int sortOrder,
+  }) {
+    return _repository.createVehicleType(
+      code: code,
+      name: name,
+      capacity: capacity,
+      ratePerKm: ratePerKm,
+      ratePerMin: ratePerMin,
+      minFare: minFare,
+      sortOrder: sortOrder,
+    );
+  }
+
   Future<Result<void>> removeVehicleType(String vehicleTypeId) {
     return _repository.removeVehicleType(vehicleTypeId);
   }

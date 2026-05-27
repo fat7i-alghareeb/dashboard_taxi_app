@@ -27,4 +27,12 @@ class TripEvent with _$TripEvent {
       _StartWaitingRequested;
   const factory TripEvent.stopWaitingRequested(String tripId) =
       _StopWaitingRequested;
+  const factory TripEvent.completeStopRequested({
+    required String tripId,
+    required int sequence,
+  }) = _CompleteStopRequested;
+  const factory TripEvent.adminSelfAssignRequested(String tripId) =
+      _AdminSelfAssignRequested;
+  const factory TripEvent.dismissPendingTripRequested() =
+      _DismissPendingTripRequested;
 }

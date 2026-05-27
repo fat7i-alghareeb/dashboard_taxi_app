@@ -1,6 +1,7 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_status_chip_widget.dart';
 
 class DashboardAdminVehicleTypeRowWidget extends StatelessWidget {
   const DashboardAdminVehicleTypeRowWidget({
@@ -22,72 +23,107 @@ class DashboardAdminVehicleTypeRowWidget extends StatelessWidget {
       '{value}',
       vehicleType.minFare.toStringAsFixed(2),
     );
-    final pricingSummary = AppStrings.dashboardVehicleTypePricingSummary
-        .replaceAll('{capacity}', capacity)
-        .replaceAll('{minFare}', minFare);
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: context.onSurface.withValues(alpha: 0.035),
-        borderRadius: BorderRadius.circular(AppRadii.sm.r),
-      ),
-      child: Padding(
-        padding: REdgeInsets.all(AppSpacing.md),
-        child: Row(
-          children: [
-            FaIcon(FontAwesomeIcons.carSide, size: 16.r, color: context.primary),
-            AppSpacing.md.horizontalSpace,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    vehicleType.name,
-                    style: AppTextStyles.s14w600.copyWith(
-                      color: context.onSurface,
-                    ),
+    return Padding(
+      padding: REdgeInsets.symmetric(vertical: AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 40.r,
+                width: 40.r,
+                decoration: BoxDecoration(
+                  color: context.primary.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(AppRadii.sm.r),
+                ),
+                child: Center(
+                  child: FaIcon(
+                    FontAwesomeIcons.carSide,
+                    size: 14.r,
+                    color: context.primary,
                   ),
-                  AppSpacing.xs.verticalSpace,
-                  Text(
-                    pricingSummary,
-                    style: AppTextStyles.s12w400.copyWith(
-                      color: context.onSurface.withValues(alpha: 0.62),
+                ),
+              ),
+              AppSpacing.md.horizontalSpace,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      vehicleType.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.s14w600.copyWith(
+                        color: context.onSurface,
+                      ),
                     ),
+                    AppSpacing.xs.verticalSpace,
+                    Text(
+                      '$capacity · $minFare',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.s12w400.copyWith(
+                        color: context.onSurface.withValues(alpha: 0.60),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              AppSpacing.sm.horizontalSpace,
+              DashboardStatusChipWidget(
+                label: vehicleType.isActive
+                    ? AppStrings.dashboardEnabled
+                    : AppStrings.dashboardDisabled,
+                tone: vehicleType.isActive
+                    ? DashboardStatusTone.success
+                    : DashboardStatusTone.error,
+                dense: true,
+              ),
+            ],
+          ),
+          AppSpacing.md.verticalSpace,
+          Row(
+            children: [
+              Expanded(
+                child: AppButton.outline(
+                  onTap: () {
+                    context.read<DashboardBloc>().add(
+                      DashboardEvent.vehicleTypeStatusToggleRequested(
+                        vehicleType,
+                      ),
+                    );
+                  },
+                  isLoading: isActionLoading,
+                  layout: const AppButtonLayout(height: 36),
+                  child: AppButtonChild.label(
+                    AppStrings.dashboardToggle,
+                    maxLines: 1,
                   ),
-                ],
+                ),
               ),
-            ),
-            AppSpacing.sm.horizontalSpace,
-            Text(
-              vehicleType.isActive
-                  ? AppStrings.dashboardEnabled
-                  : AppStrings.dashboardDisabled,
-              style: AppTextStyles.s12w500.copyWith(
-                color: vehicleType.isActive ? AppColors.success : AppColors.error,
+              AppSpacing.sm.horizontalSpace,
+              Expanded(
+                child: AppButton.error(
+                  onTap: () {
+                    context.read<DashboardBloc>().add(
+                      DashboardEvent.vehicleTypeRemovalRequested(
+                        vehicleType.id,
+                      ),
+                    );
+                  },
+                  isLoading: isActionLoading,
+                  layout: const AppButtonLayout(height: 36),
+                  child: AppButtonChild.label(
+                    AppStrings.dashboardRemove,
+                    maxLines: 1,
+                  ),
+                ),
               ),
-            ),
-            AppSpacing.md.horizontalSpace,
-            AppButton.outline(
-              onTap: () {
-                context.read<DashboardBloc>().add(
-                  DashboardEvent.vehicleTypeStatusToggleRequested(vehicleType),
-                );
-              },
-              isLoading: isActionLoading,
-              child: AppButtonChild.label(AppStrings.dashboardToggle),
-            ),
-            AppSpacing.sm.horizontalSpace,
-            AppButton.error(
-              onTap: () {
-                context.read<DashboardBloc>().add(
-                  DashboardEvent.vehicleTypeRemovalRequested(vehicleType.id),
-                );
-              },
-              isLoading: isActionLoading,
-              child: AppButtonChild.label(AppStrings.dashboardRemove),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

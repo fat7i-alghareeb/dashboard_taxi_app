@@ -72,6 +72,13 @@ sealed class RealtimeEvent with _$RealtimeEvent {
     required double latitude,
     required double longitude,
   }) = RealtimeDriverLocationUpdated;
+
+  const factory RealtimeEvent.tripStopCompleted({
+    required String tripId,
+    required String passengerId,
+    required String driverId,
+    required int sequence,
+  }) = RealtimeTripStopCompleted;
 }
 
 /// Stable list of every SignalR method name the hub will push to clients.
@@ -88,6 +95,7 @@ abstract final class RealtimeMethodNames {
   static const driverEnRoute = 'DriverEnRoute';
   static const driverArrived = 'DriverArrived';
   static const driverLocationUpdated = 'DriverLocationUpdated';
+  static const tripStopCompleted = 'TripStopCompleted';
 
   static const all = <String>[
     tripRequested,
@@ -101,6 +109,7 @@ abstract final class RealtimeMethodNames {
     driverEnRoute,
     driverArrived,
     driverLocationUpdated,
+    tripStopCompleted,
   ];
 }
 
@@ -118,5 +127,6 @@ extension RealtimeEventTripId on RealtimeEvent {
     RealtimeDriverEnRoute(:final tripId) => tripId,
     RealtimeDriverArrived(:final tripId) => tripId,
     RealtimeDriverLocationUpdated(:final tripId) => tripId,
+    RealtimeTripStopCompleted(:final tripId) => tripId,
   };
 }

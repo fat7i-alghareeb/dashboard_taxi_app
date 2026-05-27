@@ -11,8 +11,8 @@ class TripStatusChipWidget extends StatelessWidget {
     final color = switch (status) {
       TripStatus.driverAssigned => context.primary,
       TripStatus.driverEnRoute => AppColors.warning,
-      TripStatus.driverArrived => AppColors.success,
-      TripStatus.inProgress => AppColors.success,
+      TripStatus.driverArrived ||
+      TripStatus.inProgress ||
       TripStatus.completed => AppColors.success,
       TripStatus.cancelled ||
       TripStatus.paymentFailed ||
@@ -22,9 +22,8 @@ class TripStatusChipWidget extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(AppRadii.lg.r),
-        border: Border.all(color: color.withValues(alpha: 0.42)),
+        color: color.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(AppRadii.sm.r),
       ),
       child: Padding(
         padding: REdgeInsets.symmetric(
@@ -33,10 +32,7 @@ class TripStatusChipWidget extends StatelessWidget {
         ),
         child: Text(
           _label,
-          style: AppTextStyles.s14w400.copyWith(
-            color: color,
-            fontWeight: FontWeight.w600,
-          ),
+          style: AppTextStyles.s12w500.copyWith(color: color),
         ),
       ),
     );

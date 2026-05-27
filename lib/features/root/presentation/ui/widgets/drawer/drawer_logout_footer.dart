@@ -14,16 +14,16 @@ class DrawerLogoutFooter extends StatelessWidget {
         AppSpacing.xl,
         context.bottomPadding + AppSpacing.xl,
       ),
-      child: AppButton.primaryGradient(
-        layout: const AppButtonLayout(height: 52, borderRadius: AppRadii.lg),
+      child: AppButton.outline(
+        layout: const AppButtonLayout(height: 48, borderRadius: AppRadii.lg),
         child: AppButtonChild.labelIcon(
           label: AppStrings.logout,
           icon: IconSource.icon(FontAwesomeIcons.rightFromBracket),
-          iconSize: 18.r,
-          textStyle: AppTextStyles.s16w600,
+          iconSize: 14.r,
+          textStyle: AppTextStyles.s14w600.copyWith(color: AppColors.error),
         ),
         onTap: onLogoutTap,
       ),
-    ).animate().fadeIn().slideY(begin: 0.2, duration: AppDurations.normal);
+    ).animate().fadeIn().slideY(begin: 0.15, duration: 240.ms);
   }
 }

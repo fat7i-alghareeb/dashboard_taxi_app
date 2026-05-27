@@ -37,6 +37,8 @@ class TripModel {
     this.cancellation,
     this.compensationClaim,
     this.activeWaitingSession,
+    this.passengerName,
+    this.passengerPhone,
   });
 
   final String id;
@@ -56,6 +58,8 @@ class TripModel {
   final TripCancellationModel? cancellation;
   final TripCompensationClaimModel? compensationClaim;
   final TripWaitingSessionModel? activeWaitingSession;
+  final String? passengerName;
+  final String? passengerPhone;
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
     final stopsJson =
@@ -92,6 +96,8 @@ class TripModel {
           : TripWaitingSessionModel.fromJson(
               _readObject(json, 'activeWaitingSession')!,
             ),
+      passengerName: _readNullableString(json, 'passengerName'),
+      passengerPhone: _readNullableString(json, 'passengerPhone'),
     );
   }
 }

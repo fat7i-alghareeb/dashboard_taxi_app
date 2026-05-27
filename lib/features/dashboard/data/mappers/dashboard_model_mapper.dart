@@ -113,9 +113,23 @@ extension DashboardSystemConfigModelMapper on DashboardSystemConfigModel {
   }
 }
 
+extension DashboardAdminProfileModelMapper on DashboardAdminProfileModel {
+  DashboardAdminProfileEntity get toEntity {
+    return DashboardAdminProfileEntity(
+      id: id,
+      name: name,
+      email: email,
+      phone1: phone1,
+      phone2: phone2,
+      isActive: isActive,
+    );
+  }
+}
+
 extension DashboardAdminOperationsModelMapper on DashboardAdminOperationsModel {
   DashboardAdminOperationsEntity get toEntity {
     return DashboardAdminOperationsEntity(
+      adminProfile: adminProfile?.toEntity,
       drivers: drivers.map((driver) => driver.toEntity).toList(),
       vehicleTypes: vehicleTypes.map((type) => type.toEntity).toList(),
       users: users.map((user) => user.toEntity).toList(),

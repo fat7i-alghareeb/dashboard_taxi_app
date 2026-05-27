@@ -1,9 +1,8 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 
-/// A premium, animated status switcher representing Driver Online/Offline toggles.
-///
-/// Follows strict typography (§4), scaling suffixes (§5), semantic colors (§6),
-/// padding tokens (§7), FontAwesome icons (§8) and theme effects (§9).
+/// A clean, flat online/offline toggle. The track is a tinted pill and the
+/// knob is a solid colored disc that slides between the two ends. No
+/// gradients, no shadows.
 class DriverStatusSwitchWidget extends StatelessWidget {
   const DriverStatusSwitchWidget({
     super.key,
@@ -18,67 +17,66 @@ class DriverStatusSwitchWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = 260.w;
-    final height = 60.h;
-    final innerPadding = AppSpacing.sm.r;
-    final knobSize = height - (innerPadding * 2);
+    const double height = 56;
+    final innerPadding = AppSpacing.xs.r;
+    final knobSize = height.h - (innerPadding * 2);
 
     final activeColor = AppColors.success;
-    final inactiveColor = context.onSurface.withValues(alpha: 0.3);
+    final trackColor = isOnline
+        ? activeColor.withValues(alpha: 0.10)
+        : context.onSurface.withValues(alpha: 0.06);
+    final borderColor = isOnline
+        ? activeColor.withValues(alpha: 0.40)
+        : context.onSurface.withValues(alpha: 0.10);
+    final knobColor = isOnline
+        ? activeColor
+        : context.onSurface.withValues(alpha: 0.55);
 
     return GestureDetector(
       onTap: isLoading ? null : () => onToggle(!isOnline),
       child: AnimatedContainer(
         duration: AppDurations.normal,
-        width: width,
-        height: height,
+        height: height.h,
         decoration: BoxDecoration(
+          color: trackColor,
           borderRadius: BorderRadius.circular(AppRadii.xl.r),
-          color: isOnline
-              ? activeColor.withValues(alpha: 0.15)
-              : context.surface.withValues(alpha: 0.4),
-          border: Border.all(
-            color: isOnline ? activeColor : inactiveColor,
-            width: 1.5.w,
-          ),
-          boxShadow: isOnline ? context.shadows.primary : context.shadows.grey,
+          border: Border.all(color: borderColor),
         ),
-        padding: REdgeInsets.all(innerPadding),
+        padding: REdgeInsets.all(innerPadding / 4),
         child: Stack(
           children: [
-            // Slide Track Status Label
             AnimatedAlign(
               duration: AppDurations.normal,
-              alignment: isOnline ? Alignment.centerLeft : Alignment.centerRight,
+              alignment: isOnline
+                  ? AlignmentDirectional.centerStart
+                  : AlignmentDirectional.centerEnd,
               child: Padding(
-                padding: REdgeInsets.symmetric(horizontal: AppSpacing.lg.w),
+                padding: REdgeInsets.symmetric(horizontal: AppSpacing.xl),
                 child: Text(
                   isOnline
                       ? AppStrings.driverOnline.toUpperCase()
                       : AppStrings.driverOffline.toUpperCase(),
-                  style: AppTextStyles.s14w400.copyWith(
-                    color: isOnline ? activeColor : context.onSurface,
-                    letterSpacing: 1.2,
-                    fontWeight: FontWeight.bold,
+                  style: AppTextStyles.s12w500.copyWith(
+                    color: isOnline
+                        ? activeColor
+                        : context.onSurface.withValues(alpha: 0.78),
+                    letterSpacing: 1.4,
                   ),
                 ),
               ),
             ),
-            
-            // Sliding knob indicator
             AnimatedAlign(
               duration: AppDurations.normal,
-              alignment: isOnline ? Alignment.centerRight : Alignment.centerLeft,
+              alignment: isOnline
+                  ? AlignmentDirectional.centerEnd
+                  : AlignmentDirectional.centerStart,
               child: AnimatedContainer(
                 duration: AppDurations.normal,
                 width: knobSize,
                 height: knobSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: isOnline
-                      ? context.gradients.success
-                      : context.gradients.grey,
-                  boxShadow: isOnline ? context.shadows.primary : context.shadows.grey,
+                  color: knobColor,
                 ),
                 child: Center(
                   child: isLoading
@@ -87,13 +85,17 @@ class DriverStatusSwitchWidget extends StatelessWidget {
                           height: 18.r,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.r,
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              context.onPrimary,
+                            ),
                           ),
                         )
                       : FaIcon(
-                          isOnline ? FontAwesomeIcons.bolt : FontAwesomeIcons.powerOff,
+                          isOnline
+                              ? FontAwesomeIcons.bolt
+                              : FontAwesomeIcons.powerOff,
                           size: 16.r,
-                          color: Colors.white,
+                          color: context.onPrimary,
                         ),
                 ),
               ),

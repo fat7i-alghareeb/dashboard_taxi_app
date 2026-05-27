@@ -5,6 +5,8 @@ abstract class AuthForms {
   static const String otpField = 'otp';
   static const String newPasswordField = 'newPassword';
   static const String confirmPasswordField = 'confirmPassword';
+  static const String userNameField = 'userName';
+  static const String passwordField = 'password';
 
   static FormGroup loginFormGroup() => FormGroup({
     phoneField: FormControl<String>(validators: [Validators.required]),
@@ -24,5 +26,10 @@ abstract class AuthForms {
     confirmPasswordField: FormControl<String>(
       validators: [Validators.required, Validators.minLength(8)],
     ),
+  });
+
+  static FormGroup adminLoginFormGroup() => FormGroup({
+    userNameField: FormControl<String>(validators: [Validators.required]),
+    passwordField: FormControl<String>(validators: [Validators.required]),
   });
 }

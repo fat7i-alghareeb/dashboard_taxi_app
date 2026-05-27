@@ -1,9 +1,16 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/common/widgets/sheets/selection_list_sheet.dart';
 import 'package:dashboardtaxi/core/config/localization_config.dart';
+import 'package:dashboardtaxi/core/domain/extensions/user_role_extensions.dart';
 import 'package:dashboardtaxi/core/services/localization/locale_service.dart';
 import 'package:dashboardtaxi/core/services/session/auth_manager.dart';
+import 'package:dashboardtaxi/core/services/session/auth_state_notifier.dart';
 import 'package:dashboardtaxi/core/theme/theme_controller.dart';
+import 'package:dashboardtaxi/features/admin_settings/presentation/ui/screens/admin_settings_screen.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_admin_operations_screen.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_screen.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
 
 import 'drawer/drawer_header_section.dart';
 import 'drawer/drawer_logout_footer.dart';
@@ -14,36 +21,102 @@ class RootDrawerContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final authState = getIt<AuthStateNotifier>();
+
+    return ColoredBox(
       color: context.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            child: ListView(
-              padding: REdgeInsets.only(
-                top: AppSpacing.sm.h,
-                bottom: AppSpacing.xl.h,
-              ),
-              children: [
-                const DrawerHeaderSection(),
-                AppSpacing.md.verticalSpace,
-
-                // Global Settings & Configurations (Design with only essential core options)
-                _buildLanguageSelector(context),
-                _buildThemeSelector(context),
-                DrawerMenuItem(
-                  icon: FontAwesomeIcons.gear,
-                  label: AppStrings.settings,
-                  onTap: () {
-                    // Placeholder for future settings screen, keeping it visually present and active
-                  },
-                ),
-              ],
+            child: ListenableBuilder(
+              listenable: authState,
+              builder: (context, _) {
+                final isAdmin = authState.user.isAdmin;
+                return ListView(
+                  padding: REdgeInsets.only(bottom: AppSpacing.xl.h),
+                  children: [
+                    const DrawerHeaderSection(),
+                    if (isAdmin) ..._buildAdminSection(context),
+                    _buildSectionHeader(
+                      context,
+                      AppStrings.drawerSectionSettings,
+                    ),
+                    _buildLanguageSelector(context),
+                    _buildThemeSelector(context),
+                  ],
+                );
+              },
             ),
+          ),
+          Container(
+            height: 1,
+            color: context.onSurface.withValues(alpha: 0.06),
           ),
           DrawerLogoutFooter(onLogoutTap: () => _handleLogout(context)),
         ],
+      ),
+    );
+  }
+
+  List<Widget> _buildAdminSection(BuildContext context) {
+    return [
+      _buildSectionHeader(context, AppStrings.drawerSectionAdmin),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.gaugeHigh,
+        label: AppStrings.drawerAdminDashboard,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(DashboardScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.route,
+        label: AppStrings.drawerAdminTrips,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(DashboardTripsScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.locationDot,
+        label: AppStrings.drawerAdminLiveFleet,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(DashboardLiveMapScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.userGear,
+        label: AppStrings.drawerAdminOperations,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(DashboardAdminOperationsScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.sliders,
+        label: AppStrings.drawerAdminSystemSettings,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(AdminSettingsScreen.pageName);
+        },
+      ),
+    ];
+  }
+
+  Widget _buildSectionHeader(BuildContext context, String label) {
+    return Padding(
+      padding: REdgeInsets.symmetric(
+        horizontal: AppSpacing.xl,
+        vertical: AppSpacing.sm,
+      ),
+      child: Text(
+        label,
+        style: AppTextStyles.s11w500.copyWith(
+          color: context.onSurface.withValues(alpha: 0.40),
+          letterSpacing: 1.1,
+        ),
       ),
     );
   }
@@ -172,24 +245,19 @@ class RootDrawerContent extends StatelessWidget {
   }
 
   Future<void> _handleLogout(BuildContext context) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppStrings.logout),
-        content: Text(AppStrings.logout),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(AppStrings.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(
-              AppStrings.logout,
-              style: TextStyle(color: context.error),
-            ),
-          ),
-        ],
+    final confirm = await AppDialog.show<bool>(
+      context,
+      dialog: AppDialog.basic(
+        title: AppStrings.logout,
+        message: AppStrings.logoutConfirmMessage,
+        secondaryAction: AppDialogAction.secondary(
+          label: AppStrings.cancel,
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        primaryAction: AppDialogAction.danger(
+          label: AppStrings.logout,
+          onPressed: () => Navigator.pop(context, true),
+        ),
       ),
     );
 

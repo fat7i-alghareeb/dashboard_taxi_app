@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';
+import 'package:dashboardtaxi/core/injection/injectable.dart';
+import 'package:dashboardtaxi/core/services/session/auth_state_notifier.dart';
+import 'package:dashboardtaxi/features/auth/domain/repositories/auth_repository.dart';
 
 import '../../../utils/constants/localization_constants.dart';
 import '../../config/localization_config.dart';
@@ -58,6 +62,17 @@ class LocaleService {
 
     await _storage.writeString(LocalizationStorageKeys.localeCode, code);
     if (context.mounted) await context.setLocale(Locale(code));
+
+    // Implicit background call to update language on backend if authenticated
+    try {
+      final authState = getIt<AuthStateNotifier>();
+      if (authState.isAuthenticated) {
+        final authRepo = getIt<AuthRepository>();
+        unawaited(authRepo.updatePreferredLanguage(code));
+      }
+    } catch (_) {
+      // Fail silently in background
+    }
   }
 
   /// Returns the currently saved language code, or the fallback if none.

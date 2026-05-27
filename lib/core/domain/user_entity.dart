@@ -50,7 +50,8 @@ class UserEntity {
       profilePhotoUrl: profilePhotoUrl ?? this.profilePhotoUrl,
       role: role ?? this.role,
       roles: roles ?? this.roles,
-      requiresPasswordReset: requiresPasswordReset ?? this.requiresPasswordReset,
+      requiresPasswordReset:
+          requiresPasswordReset ?? this.requiresPasswordReset,
       preferredLanguage: preferredLanguage ?? this.preferredLanguage,
       driverId: driverId ?? this.driverId,
       approvalStatus: approvalStatus ?? this.approvalStatus,
@@ -58,30 +59,33 @@ class UserEntity {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'name': name,
-        'email': email,
-        'phone': phone,
-        'profilePhotoUrl': profilePhotoUrl,
-        'role': role,
-        'roles': roles,
-        'requiresPasswordReset': requiresPasswordReset,
-        'preferredLanguage': preferredLanguage,
-        'driverId': driverId,
-        'approvalStatus': approvalStatus,
-      };
+    'id': id,
+    'name': name,
+    'email': email,
+    'phone': phone,
+    'profilePhotoUrl': profilePhotoUrl,
+    'role': role,
+    'roles': roles,
+    'requiresPasswordReset': requiresPasswordReset,
+    'preferredLanguage': preferredLanguage,
+    'driverId': driverId,
+    'approvalStatus': approvalStatus,
+  };
 
   factory UserEntity.fromJson(Map<String, dynamic> json) => UserEntity(
-        id: json['id'] as String?,
-        name: json['name'] as String?,
-        email: json['email'] as String?,
-        phone: json['phone'] as String?,
-        profilePhotoUrl: json['profilePhotoUrl'] as String?,
-        role: json['role'] as String?,
-        roles: (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
-        requiresPasswordReset: json['requiresPasswordReset'] as bool?,
-        preferredLanguage: json['preferredLanguage'] as String?,
-        driverId: json['driverId'] as String?,
-        approvalStatus: json['approvalStatus'] as String?,
-      );
+    id: json['id'] as String?,
+    name: json['name'] as String?,
+    email: json['email'] as String?,
+    phone: json['phone'] as String?,
+    profilePhotoUrl: json['profilePhotoUrl'] as String?,
+    role: json['role'] as String?,
+    roles: (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    requiresPasswordReset:
+        json['requiresPasswordReset'] as bool? ??
+        json['RequiresPasswordReset'] as bool? ??
+        json['requires_password_reset'] as bool?,
+    preferredLanguage: json['preferredLanguage'] as String?,
+    driverId: json['driverId'] as String?,
+    approvalStatus: json['approvalStatus'] as String?,
+  );
 }

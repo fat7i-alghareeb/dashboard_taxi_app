@@ -37,7 +37,7 @@ class AppTheme {
     final base = ThemeData(
       useMaterial3: useMaterial3,
       colorScheme: colorScheme,
-      fontFamily: GoogleFonts.reemKufi().fontFamily,
+      fontFamily: GoogleFonts.outfit().fontFamily,
     );
 
     return base.copyWith(

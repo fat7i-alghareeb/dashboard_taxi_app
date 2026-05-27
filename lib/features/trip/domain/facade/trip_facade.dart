@@ -34,6 +34,18 @@ class TripFacade {
     return _repository.completeTrip(tripId);
   }
 
+  Future<Result<void>> completeStop(String tripId, int sequence) {
+    return _repository.completeStop(tripId, sequence);
+  }
+
+  Future<Result<void>> assignToDriver(String tripId, String driverId) {
+    return _repository.assignToDriver(tripId, driverId);
+  }
+
+  Future<Result<void>> adminTakeTrip(String tripId) {
+    return _repository.adminTakeTrip(tripId);
+  }
+
   Future<Result<void>> driverCancelTrip(
     String tripId,
     String reason,

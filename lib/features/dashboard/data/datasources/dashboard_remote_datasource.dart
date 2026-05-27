@@ -21,10 +21,6 @@ class DashboardRemoteDataSource {
           ApiEndpoints.adminTrips,
           queryParameters: {'page': 1, 'pageSize': 50},
         ),
-        _dio.get<dynamic>(
-          ApiEndpoints.auditLogs,
-          queryParameters: {'page': 1, 'pageSize': 6},
-        ),
         _dio.get<dynamic>(ApiEndpoints.vehicleTypes),
       ]);
 
@@ -36,11 +32,9 @@ class DashboardRemoteDataSource {
         trips: _asList(
           responses[1].data,
         ).map((e) => DashboardTripModel.fromJson(e)).toList(),
-        auditLogs: _asList(
-          responses[2].data,
-        ).map((e) => DashboardAuditLogModel.fromJson(e)).toList(),
+        auditLogs: const [],
         vehicleTypes: _asList(
-          responses[3].data,
+          responses[2].data,
         ).map((e) => DashboardVehicleTypeModel.fromJson(e)).toList(),
       );
     });
@@ -100,6 +94,7 @@ class DashboardRemoteDataSource {
     return rethrowAsAppException(() async {
       printY('[DashboardRemoteDataSource] getAdminOperations');
       final responses = await Future.wait([
+        _dio.get<dynamic>(ApiEndpoints.currentAdminProfile),
         _dio.get<dynamic>(ApiEndpoints.drivers),
         _dio.get<dynamic>(ApiEndpoints.vehicleTypes),
         _dio.get<dynamic>(
@@ -115,23 +110,41 @@ class DashboardRemoteDataSource {
         _dio.get<dynamic>(ApiEndpoints.clientConfig),
       ]);
 
+      final adminProfilePayload = _asNullableMap(responses[0].data);
+      printC(
+        '[DashboardRemoteDataSource] admin profile loaded='
+        '${adminProfilePayload != null}',
+      );
+      final drivers = _asList(
+        responses[1].data,
+      ).map((e) => DashboardDriverModel.fromJson(e)).toList();
+      final vehicleTypes = _asList(
+        responses[2].data,
+      ).map((e) => DashboardVehicleTypeModel.fromJson(e)).toList();
+      final users = _asList(
+        responses[3].data,
+      ).map((e) => DashboardUserModel.fromJson(e)).toList();
+      final auditLogs = _asList(
+        responses[4].data,
+      ).map((e) => DashboardAuditLogModel.fromJson(e)).toList();
+      printG(
+        '[DashboardRemoteDataSource] getAdminOperations success '
+        'drivers=${drivers.length} vehicleTypes=${vehicleTypes.length} '
+        'users=${users.length} auditLogs=${auditLogs.length}',
+      );
+
       return DashboardAdminOperationsModel(
-        drivers: _asList(
-          responses[0].data,
-        ).map((e) => DashboardDriverModel.fromJson(e)).toList(),
-        vehicleTypes: _asList(
-          responses[1].data,
-        ).map((e) => DashboardVehicleTypeModel.fromJson(e)).toList(),
-        users: _asList(
-          responses[2].data,
-        ).map((e) => DashboardUserModel.fromJson(e)).toList(),
-        auditLogs: _asList(
-          responses[3].data,
-        ).map((e) => DashboardAuditLogModel.fromJson(e)).toList(),
+        adminProfile: adminProfilePayload == null
+            ? null
+            : DashboardAdminProfileModel.fromJson(adminProfilePayload),
+        drivers: drivers,
+        vehicleTypes: vehicleTypes,
+        users: users,
+        auditLogs: auditLogs,
         config: DashboardSystemConfigModel.fromPayloads(
-          discount: _asMap(responses[4].data),
-          currency: _asMap(responses[5].data),
-          client: _asMap(responses[6].data),
+          discount: _asMap(responses[5].data),
+          currency: _asMap(responses[6].data),
+          client: _asMap(responses[7].data),
         ),
       );
     });
@@ -172,6 +185,44 @@ class DashboardRemoteDataSource {
           'minFare': vehicleType.minFare,
           'isActive': vehicleType.isActive,
           'sortOrder': vehicleType.sortOrder,
+        },
+      );
+    });
+  }
+
+  Future<void> createVehicleType({
+    required String code,
+    required String name,
+    required int capacity,
+    required num ratePerKm,
+    required num ratePerMin,
+    required num minFare,
+    required int sortOrder,
+  }) {
+    return rethrowAsAppException(() async {
+      printY(
+        '[DashboardRemoteDataSource] createVehicleType code=$code name=$name',
+      );
+      // Backend requires names in every supported locale — repeat `name`
+      // across all of them so the form can stay single-field on the UI.
+      await _dio.post<dynamic>(
+        ApiEndpoints.vehicleTypes,
+        data: {
+          'code': code,
+          'nameEn': name,
+          'nameAr': name,
+          'nameNl': name,
+          'nameDe': name,
+          'namePl': name,
+          'nameUk': name,
+          'nameFr': name,
+          'nameEs': name,
+          'nameRo': name,
+          'capacity': capacity,
+          'ratePerKm': ratePerKm,
+          'ratePerMin': ratePerMin,
+          'minFare': minFare,
+          'sortOrder': sortOrder,
         },
       );
     });
@@ -292,5 +343,10 @@ class DashboardRemoteDataSource {
   Map<String, dynamic> _asMap(dynamic payload) {
     if (payload is Map<String, dynamic>) return payload;
     return const <String, dynamic>{};
+  }
+
+  Map<String, dynamic>? _asNullableMap(dynamic payload) {
+    if (payload is Map<String, dynamic>) return payload;
+    return null;
   }
 }

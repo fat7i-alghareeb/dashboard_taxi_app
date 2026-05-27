@@ -7,8 +7,11 @@ class DrawerHeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUser = getIt<AuthManager>().currentUser;
-    final nameText = currentUser?.name ?? 'Adam';
-    final phoneText = currentUser?.phone ?? '+31 6 12345678';
+    final nameText =
+        currentUser?.name?.trim().isNotEmpty == true
+        ? currentUser!.name!
+        : AppStrings.dashboardUnknownDriver;
+    final phoneText = currentUser?.phone ?? '';
 
     return Padding(
       padding: REdgeInsets.fromLTRB(
@@ -17,69 +20,59 @@ class DrawerHeaderSection extends StatelessWidget {
         AppSpacing.xl,
         AppSpacing.lg,
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Profile Image wrapped in circular primary-colored border
           Container(
-            padding: REdgeInsets.all(AppSpacing.xs.r),
+            width: 64.r,
+            height: 64.r,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: context.primary, width: 1.5.r),
+              color: context.primary.withValues(alpha: 0.10),
+              border: Border.all(
+                color: context.onSurface.withValues(alpha: 0.08),
+              ),
             ),
             child: currentUser?.profilePhotoUrl != null
                 ? ClipOval(
                     child: AppImageViewer.network(
                       currentUser!.profilePhotoUrl!,
-                      width: 72.r,
-                      height: 72.r,
+                      width: 64.r,
+                      height: 64.r,
                       borderRadius: 0,
                     ),
                   )
-                : Container(
-                    width: 72.r,
-                    height: 72.r,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: context.primary.withValues(alpha: 0.1),
-                    ),
-                    child: Center(
-                      child: FaIcon(
-                        FontAwesomeIcons.solidUser,
-                        size: 28.r,
-                        color: context.primary,
-                      ),
+                : Center(
+                    child: FaIcon(
+                      FontAwesomeIcons.solidUser,
+                      size: 22.r,
+                      color: context.primary,
                     ),
                   ),
           ),
-          AppSpacing.md.horizontalSpace,
-          // User Info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      nameText,
-                      style: AppTextStyles.s24w700.copyWith(
-                        color: context.onSurface,
-                      ),
-                    ),
-                  ],
-                ),
-                AppSpacing.xs.verticalSpace,
-                Text(
-                  phoneText,
-                  style: AppTextStyles.s16w400.copyWith(
-                    color: context.onSurface.withValues(alpha: 0.6),
-                  ),
-                ),
-              ],
+          AppSpacing.md.verticalSpace,
+          Text(
+            nameText,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.s20w700.copyWith(color: context.onSurface),
+          ),
+          if (phoneText.isNotEmpty) ...[
+            AppSpacing.xs.verticalSpace,
+            Text(
+              phoneText,
+              style: AppTextStyles.s12w400.copyWith(
+                color: context.onSurface.withValues(alpha: 0.55),
+              ),
             ),
+          ],
+          AppSpacing.lg.verticalSpace,
+          Container(
+            height: 1,
+            color: context.onSurface.withValues(alpha: 0.06),
           ),
         ],
       ),
-    ).animate().fadeIn().slideX(begin: -0.1);
+    ).animate().fadeIn().slideX(begin: -0.05, duration: 280.ms);
   }
 }

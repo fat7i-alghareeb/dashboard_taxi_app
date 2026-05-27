@@ -2,7 +2,7 @@ import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/features/auth/constants/forms/auth_forms.dart';
 import 'package:dashboardtaxi/features/auth/presentation/states/auth_bloc.dart';
-import 'package:dashboardtaxi/features/root/presentation/ui/screens/root_screen.dart';
+import 'package:dashboardtaxi/features/auth/presentation/ui/widgets/auth_header_widget.dart';
 
 class ForcePasswordResetBody extends StatefulWidget {
   const ForcePasswordResetBody({super.key});
@@ -28,10 +28,11 @@ class _ForcePasswordResetBodyState extends State<ForcePasswordResetBody> {
       listener: (context, state) {
         state.forceResetStatus.maybeWhen(
           success: (_) {
+            printG('[ForcePasswordResetBody] reset success observed');
             showSuccessOverlay(context, AppStrings.passwordResetSuccess);
-            context.go(RootScreen.pagePath);
           },
           failure: (message) {
+            printY('[ForcePasswordResetBody] reset failed: $message');
             showErrorOverlay(context, message);
           },
           orElse: () {},
@@ -41,141 +42,86 @@ class _ForcePasswordResetBodyState extends State<ForcePasswordResetBody> {
         return ReactiveForm(
           formGroup: _form,
           child: AppScaffold.body(
-            scaffoldConfig: AppScaffoldConfig(
-              backgroundColor: context.surface,
-              safeArea: [],
-            ),
-            child: SafeArea(
-              child: CustomScrollView(
-                slivers: [
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Padding(
-                      padding: REdgeInsets.all(AppSpacing.xl),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.shieldHalved,
-                            size: 48.r,
-                            color: context.primary,
-                          ).animate().fadeIn().scale(
-                            begin: const Offset(0.9, 0.9),
-                          ),
-                          AppSpacing.xl.verticalSpace,
-                          Text(
-                            AppStrings.forcePasswordReset,
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.s24w700.copyWith(
-                              color: context.onSurface,
-                            ),
-                          ).animate().fadeIn(delay: AppDurations.fast),
-                          AppSpacing.sm.verticalSpace,
-                          Text(
-                            AppStrings.forcePasswordResetSubtitle,
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.s14w400.copyWith(
-                              color: context.onSurface.withValues(alpha: 0.64),
-                            ),
-                          ).animate().fadeIn(delay: AppDurations.normal),
-                          AppSpacing.xxl.verticalSpace,
-                          DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: context.surface,
-                                  borderRadius: BorderRadius.circular(
-                                    AppRadii.xl.r,
-                                  ),
-                                  border: Border.all(
-                                    color: context.primary.withValues(
-                                      alpha: 0.10,
-                                    ),
-                                  ),
-                                  boxShadow: context.shadows.primary,
-                                ),
-                                child: Padding(
-                                  padding: REdgeInsets.all(AppSpacing.xl),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      AppReactiveTextField.password(
-                                        formControlName:
-                                            AuthForms.newPasswordField,
-                                        title: AppStrings.newPassword,
-                                        hintText: AppStrings.newPassword,
-                                      ),
-                                      AppSpacing.lg.verticalSpace,
-                                      AppReactiveTextField.password(
-                                        formControlName:
-                                            AuthForms.confirmPasswordField,
-                                        title: AppStrings.confirmPassword,
-                                        hintText: AppStrings.confirmPassword,
-                                      ),
-                                      AppSpacing.xl.verticalSpace,
-                                      ReactiveFormConsumer(
-                                        builder: (context, form, child) {
-                                          final newPassword =
-                                              form
-                                                      .control(
-                                                        AuthForms
-                                                            .newPasswordField,
-                                                      )
-                                                      .value
-                                                  as String?;
-                                          final confirmPassword =
-                                              form
-                                                      .control(
-                                                        AuthForms
-                                                            .confirmPasswordField,
-                                                      )
-                                                      .value
-                                                  as String?;
-                                          final passwordsMatch =
-                                              newPassword == confirmPassword;
-                                          final canSubmit =
-                                              form.valid && passwordsMatch;
+            scaffoldConfig: AppScaffoldConfig(backgroundColor: context.surface),
+            child: CustomScrollView(
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Padding(
+                    padding: REdgeInsets.symmetric(
+                      horizontal: AppSpacing.xl,
+                      vertical: AppSpacing.xl,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        AuthHeaderWidget(
+                          title: AppStrings.forcePasswordReset,
+                          subtitle: AppStrings.forcePasswordResetSubtitle,
+                        ),
+                        AppSpacing.xxl.verticalSpace,
+                        AppReactiveTextField.password(
+                          formControlName: AuthForms.newPasswordField,
+                          title: AppStrings.newPassword,
+                          hintText: AppStrings.newPassword,
+                        ),
+                        AppSpacing.lg.verticalSpace,
+                        AppReactiveTextField.password(
+                          formControlName: AuthForms.confirmPasswordField,
+                          title: AppStrings.confirmPassword,
+                          hintText: AppStrings.confirmPassword,
+                        ),
+                        AppSpacing.xl.verticalSpace,
+                        ReactiveFormConsumer(
+                          builder: (context, form, child) {
+                            final newPassword =
+                                form.control(AuthForms.newPasswordField).value
+                                    as String?;
+                            final confirmPassword =
+                                form
+                                        .control(AuthForms.confirmPasswordField)
+                                        .value
+                                    as String?;
+                            final passwordsMatch =
+                                newPassword == confirmPassword;
+                            final canSubmit = form.valid && passwordsMatch;
 
-                                          return AppButton.primaryGradient(
-                                            isActive: canSubmit,
-                                            isLoading: state
-                                                .forceResetStatus
-                                                .isLoading,
-                                            onTapWhenInactive: () {
-                                              if (!passwordsMatch) {
-                                                showErrorOverlay(
-                                                  context,
-                                                  AppStrings
-                                                      .passwordsDoNotMatch,
-                                                );
-                                              }
-                                            },
-                                            onTap: () {
-                                              context.read<AuthBloc>().add(
-                                                AuthEvent.forceResetPasswordRequested(
-                                                  newPassword ?? '',
-                                                ),
-                                              );
-                                            },
-                                            child: AppButtonChild.label(
-                                              AppStrings.resetPassword,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
+                            return AppButton.primary(
+                              isActive: canSubmit,
+                              isLoading: state.forceResetStatus.isLoading,
+                              layout: const AppButtonLayout(height: 52),
+                              onTapWhenInactive: () {
+                                if (!passwordsMatch) {
+                                  printY(
+                                    '[ForcePasswordResetBody] submit blocked '
+                                    'passwords do not match',
+                                  );
+                                  showErrorOverlay(
+                                    context,
+                                    AppStrings.passwordsDoNotMatch,
+                                  );
+                                }
+                              },
+                              onTap: () {
+                                printC('[ForcePasswordResetBody] submit reset');
+                                context.read<AuthBloc>().add(
+                                  AuthEvent.forceResetPasswordRequested(
+                                    newPassword ?? '',
                                   ),
-                                ),
-                              )
-                              .animate()
-                              .fadeIn(delay: AppDurations.normal)
-                              .slideY(begin: 0.08),
-                        ],
-                      ),
+                                );
+                              },
+                              child: AppButtonChild.label(
+                                AppStrings.resetPassword,
+                              ),
+                            );
+                          },
+                        ),
+                        const Spacer(),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );

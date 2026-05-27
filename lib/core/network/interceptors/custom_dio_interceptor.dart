@@ -17,15 +17,52 @@ class CustomDioInterceptor extends Interceptor {
   final bool logResponseBody = true;
   final bool logErrors = true;
   final int maxBodyChars = 2000;
-  final List<String> redactedHeaders = const ['authorization', 'cookie'];
+  final Set<String> redactedKeys = const {
+    'access_token',
+    'accesstoken',
+    'authorization',
+    'cookie',
+    'id_token',
+    'idtoken',
+    'newpassword',
+    'password',
+    'refreshtoken',
+    'refresh_token',
+    'set-cookie',
+    'token',
+  };
   final BoxStyle boxStyle = BoxStyle.ascii; // change this if you want unicode
 
   static final _jsonEncoder = const JsonEncoder.withIndent('  ');
 
+  bool _isSensitiveKey(String key) {
+    final normalized = key.replaceAll(RegExp(r'[\s_\-]'), '').toLowerCase();
+    return redactedKeys.contains(key.toLowerCase()) ||
+        redactedKeys.contains(normalized);
+  }
+
+  Object? _redactValue(Object? value) {
+    if (value is Map) {
+      return value.map((key, value) {
+        final keyText = key.toString();
+        return MapEntry(
+          key,
+          _isSensitiveKey(keyText) ? '<redacted>' : _redactValue(value),
+        );
+      });
+    }
+
+    if (value is List) {
+      return value.map(_redactValue).toList();
+    }
+
+    return value;
+  }
+
   String _redactHeaders(Map<String, dynamic> headers) {
     final Map<String, dynamic> copy = {};
     headers.forEach((k, v) {
-      copy[k] = v;
+      copy[k] = _isSensitiveKey(k) ? '<redacted>' : _redactValue(v);
     });
     return copy.toString();
   }
@@ -41,7 +78,8 @@ class CustomDioInterceptor extends Interceptor {
       if (data is FormData) {
         final buf = StringBuffer();
         for (final f in data.fields) {
-          buf.writeln('${f.key}: ${f.value}');
+          final value = _isSensitiveKey(f.key) ? '<redacted>' : f.value;
+          buf.writeln('${f.key}: $value');
         }
         for (final f in data.files) {
           final filename = f.value.filename ?? '<file>';
@@ -61,7 +99,7 @@ class CustomDioInterceptor extends Interceptor {
       }
       // If it's a Map/List or encodable, pretty print JSON
       if (data is Map || data is List) {
-        return _jsonEncoder.convert(data);
+        return _jsonEncoder.convert(_redactValue(data));
       }
 
       // Fallback to toString()
@@ -111,17 +149,21 @@ class CustomDioInterceptor extends Interceptor {
 
     // headers
     options.headers.forEach((k, v) {
-      final kl = k.toLowerCase();
-      if (redactedHeaders.contains(kl)) return;
       // If header value is multiple entries, join with ", "
-      buffer.write(' -H "$k: ${v is List ? v.join(', ') : v}"');
+      final value = _isSensitiveKey(k)
+          ? '<redacted>'
+          : v is List
+          ? v.map(_redactValue).join(', ')
+          : _redactValue(v);
+      buffer.write(' -H "$k: $value"');
     });
 
     if (options.data != null && options.data is! FormData) {
       try {
-        final bodyStr = options.data is String
-            ? options.data
-            : json.encode(options.data);
+        final redactedBody = _redactValue(options.data);
+        final bodyStr = redactedBody is String
+            ? redactedBody
+            : json.encode(redactedBody);
         buffer.write(" -d '${bodyStr.replaceAll("'", "\\'")}'");
       } catch (_) {
         // ignore

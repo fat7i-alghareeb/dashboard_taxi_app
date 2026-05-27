@@ -12,12 +12,13 @@ class LoginOtpSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
-      width: 56.w,
+      width: 48.w,
       height: 56.h,
-      textStyle: AppTextStyles.s24w700.copyWith(color: context.onSurface),
+      textStyle: AppTextStyles.s20w700.copyWith(color: context.onSurface),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadii.md.r),
-        border: Border.all(color: context.grey),
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppRadii.sm.r),
+        border: Border.all(color: context.onSurface.withValues(alpha: 0.12)),
       ),
     );
 
@@ -34,7 +35,7 @@ class LoginOtpSection extends StatelessWidget {
                     defaultPinTheme: defaultPinTheme,
                     focusedPinTheme: defaultPinTheme.copyWith(
                       decoration: defaultPinTheme.decoration!.copyWith(
-                        border: Border.all(color: context.primary),
+                        border: Border.all(color: context.primary, width: 1.5),
                       ),
                     ),
                     errorPinTheme: defaultPinTheme.copyWith(
@@ -45,6 +46,9 @@ class LoginOtpSection extends StatelessWidget {
                     forceErrorState: state.otpStatus.isFailed,
                     onCompleted: (pin) {
                       form.control(AuthForms.otpField).value = pin;
+                      printB(
+                        '[LoginOtpSection] otp completed length=${pin.length}',
+                      );
                       context.read<AuthBloc>().add(
                         AuthEvent.verifyOtpRequested(pin),
                       );
@@ -54,10 +58,10 @@ class LoginOtpSection extends StatelessWidget {
                     },
                   ),
                   if (state.otpStatus.isFailed) ...[
-                    AppSpacing.sm.verticalSpace,
+                    AppSpacing.md.verticalSpace,
                     Text(
                       AppStrings.invalidOtp,
-                      style: AppTextStyles.s14w400.copyWith(
+                      style: AppTextStyles.s12w500.copyWith(
                         color: context.error,
                       ),
                     ),
@@ -72,13 +76,17 @@ class LoginOtpSection extends StatelessWidget {
           builder: (context, form, child) {
             return BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
-                return AppButton.primaryGradient(
+                return AppButton.primary(
                   child: AppButtonChild.label(AppStrings.verifyOtp),
                   isActive: form.control(AuthForms.otpField).valid,
                   isLoading: state.otpStatus.isLoading,
+                  layout: const AppButtonLayout(height: 52),
                   onTap: () {
                     final otp =
                         form.control(AuthForms.otpField).value as String;
+                    printB(
+                      '[LoginOtpSection] verify otp tapped length=${otp.length}',
+                    );
                     context.read<AuthBloc>().add(
                       AuthEvent.verifyOtpRequested(otp),
                     );

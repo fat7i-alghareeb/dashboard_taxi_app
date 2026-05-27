@@ -50,6 +50,21 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
+  Future<Result<void>> completeStop(String tripId, int sequence) {
+    return runAsResult(() => _remote.completeStop(tripId, sequence));
+  }
+
+  @override
+  Future<Result<void>> assignToDriver(String tripId, String driverId) {
+    return runAsResult(() => _remote.assignToDriver(tripId, driverId));
+  }
+
+  @override
+  Future<Result<void>> adminTakeTrip(String tripId) {
+    return runAsResult(() => _remote.adminTakeTrip(tripId));
+  }
+
+  @override
   Future<Result<void>> driverCancelTrip(
     String tripId,
     String reason,

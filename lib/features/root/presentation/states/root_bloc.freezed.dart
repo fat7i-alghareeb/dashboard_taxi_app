@@ -55,12 +55,14 @@ extension RootEventPatterns on RootEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _GetAllRequested value)?  getAllRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _MapBootstrapRequested value)?  mapBootstrapRequested,TResult Function( _RecenterRequested value)?  recenterRequested,TResult Function( _AccurateLocationResolved value)?  accurateLocationResolved,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started(_that);case _GetAllRequested() when getAllRequested != null:
-return getAllRequested(_that);case _:
+return started(_that);case _MapBootstrapRequested() when mapBootstrapRequested != null:
+return mapBootstrapRequested(_that);case _RecenterRequested() when recenterRequested != null:
+return recenterRequested(_that);case _AccurateLocationResolved() when accurateLocationResolved != null:
+return accurateLocationResolved(_that);case _:
   return orElse();
 
 }
@@ -78,12 +80,14 @@ return getAllRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _GetAllRequested value)  getAllRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _MapBootstrapRequested value)  mapBootstrapRequested,required TResult Function( _RecenterRequested value)  recenterRequested,required TResult Function( _AccurateLocationResolved value)  accurateLocationResolved,}){
 final _that = this;
 switch (_that) {
 case _Started():
-return started(_that);case _GetAllRequested():
-return getAllRequested(_that);case _:
+return started(_that);case _MapBootstrapRequested():
+return mapBootstrapRequested(_that);case _RecenterRequested():
+return recenterRequested(_that);case _AccurateLocationResolved():
+return accurateLocationResolved(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -100,12 +104,14 @@ return getAllRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _GetAllRequested value)?  getAllRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _MapBootstrapRequested value)?  mapBootstrapRequested,TResult? Function( _RecenterRequested value)?  recenterRequested,TResult? Function( _AccurateLocationResolved value)?  accurateLocationResolved,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started(_that);case _GetAllRequested() when getAllRequested != null:
-return getAllRequested(_that);case _:
+return started(_that);case _MapBootstrapRequested() when mapBootstrapRequested != null:
+return mapBootstrapRequested(_that);case _RecenterRequested() when recenterRequested != null:
+return recenterRequested(_that);case _AccurateLocationResolved() when accurateLocationResolved != null:
+return accurateLocationResolved(_that);case _:
   return null;
 
 }
@@ -122,11 +128,13 @@ return getAllRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  getAllRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  mapBootstrapRequested,TResult Function()?  recenterRequested,TResult Function( RootMapLocationEntity location)?  accurateLocationResolved,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started();case _GetAllRequested() when getAllRequested != null:
-return getAllRequested();case _:
+return started();case _MapBootstrapRequested() when mapBootstrapRequested != null:
+return mapBootstrapRequested();case _RecenterRequested() when recenterRequested != null:
+return recenterRequested();case _AccurateLocationResolved() when accurateLocationResolved != null:
+return accurateLocationResolved(_that.location);case _:
   return orElse();
 
 }
@@ -144,11 +152,13 @@ return getAllRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  getAllRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  mapBootstrapRequested,required TResult Function()  recenterRequested,required TResult Function( RootMapLocationEntity location)  accurateLocationResolved,}) {final _that = this;
 switch (_that) {
 case _Started():
-return started();case _GetAllRequested():
-return getAllRequested();case _:
+return started();case _MapBootstrapRequested():
+return mapBootstrapRequested();case _RecenterRequested():
+return recenterRequested();case _AccurateLocationResolved():
+return accurateLocationResolved(_that.location);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -165,11 +175,13 @@ return getAllRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  getAllRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  mapBootstrapRequested,TResult? Function()?  recenterRequested,TResult? Function( RootMapLocationEntity location)?  accurateLocationResolved,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
-return started();case _GetAllRequested() when getAllRequested != null:
-return getAllRequested();case _:
+return started();case _MapBootstrapRequested() when mapBootstrapRequested != null:
+return mapBootstrapRequested();case _RecenterRequested() when recenterRequested != null:
+return recenterRequested();case _AccurateLocationResolved() when accurateLocationResolved != null:
+return accurateLocationResolved(_that.location);case _:
   return null;
 
 }
@@ -212,8 +224,8 @@ String toString() {
 /// @nodoc
 
 
-class _GetAllRequested implements RootEvent {
-  const _GetAllRequested();
+class _MapBootstrapRequested implements RootEvent {
+  const _MapBootstrapRequested();
   
 
 
@@ -223,7 +235,7 @@ class _GetAllRequested implements RootEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GetAllRequested);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapBootstrapRequested);
 }
 
 
@@ -232,7 +244,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'RootEvent.getAllRequested()';
+  return 'RootEvent.mapBootstrapRequested()';
 }
 
 
@@ -242,9 +254,107 @@ String toString() {
 
 
 /// @nodoc
+
+
+class _RecenterRequested implements RootEvent {
+  const _RecenterRequested();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecenterRequested);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'RootEvent.recenterRequested()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _AccurateLocationResolved implements RootEvent {
+  const _AccurateLocationResolved(this.location);
+  
+
+ final  RootMapLocationEntity location;
+
+/// Create a copy of RootEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AccurateLocationResolvedCopyWith<_AccurateLocationResolved> get copyWith => __$AccurateLocationResolvedCopyWithImpl<_AccurateLocationResolved>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccurateLocationResolved&&(identical(other.location, location) || other.location == location));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,location);
+
+@override
+String toString() {
+  return 'RootEvent.accurateLocationResolved(location: $location)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AccurateLocationResolvedCopyWith<$Res> implements $RootEventCopyWith<$Res> {
+  factory _$AccurateLocationResolvedCopyWith(_AccurateLocationResolved value, $Res Function(_AccurateLocationResolved) _then) = __$AccurateLocationResolvedCopyWithImpl;
+@useResult
+$Res call({
+ RootMapLocationEntity location
+});
+
+
+
+
+}
+/// @nodoc
+class __$AccurateLocationResolvedCopyWithImpl<$Res>
+    implements _$AccurateLocationResolvedCopyWith<$Res> {
+  __$AccurateLocationResolvedCopyWithImpl(this._self, this._then);
+
+  final _AccurateLocationResolved _self;
+  final $Res Function(_AccurateLocationResolved) _then;
+
+/// Create a copy of RootEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? location = null,}) {
+  return _then(_AccurateLocationResolved(
+null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as RootMapLocationEntity,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$RootState {
 
- BlocStatus<List<RootEntity>> get getAllState;
+ BlocStatus<RootMapLocationEntity> get mapBootstrapState; BlocStatus<RootMapLocationEntity> get recenterState;
 /// Create a copy of RootState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -255,16 +365,16 @@ $RootStateCopyWith<RootState> get copyWith => _$RootStateCopyWithImpl<RootState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RootState&&(identical(other.getAllState, getAllState) || other.getAllState == getAllState));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RootState&&(identical(other.mapBootstrapState, mapBootstrapState) || other.mapBootstrapState == mapBootstrapState)&&(identical(other.recenterState, recenterState) || other.recenterState == recenterState));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,getAllState);
+int get hashCode => Object.hash(runtimeType,mapBootstrapState,recenterState);
 
 @override
 String toString() {
-  return 'RootState(getAllState: $getAllState)';
+  return 'RootState(mapBootstrapState: $mapBootstrapState, recenterState: $recenterState)';
 }
 
 
@@ -275,11 +385,11 @@ abstract mixin class $RootStateCopyWith<$Res>  {
   factory $RootStateCopyWith(RootState value, $Res Function(RootState) _then) = _$RootStateCopyWithImpl;
 @useResult
 $Res call({
- BlocStatus<List<RootEntity>> getAllState
+ BlocStatus<RootMapLocationEntity> mapBootstrapState, BlocStatus<RootMapLocationEntity> recenterState
 });
 
 
-$BlocStatusCopyWith<List<RootEntity>, $Res> get getAllState;
+$BlocStatusCopyWith<RootMapLocationEntity, $Res> get mapBootstrapState;$BlocStatusCopyWith<RootMapLocationEntity, $Res> get recenterState;
 
 }
 /// @nodoc
@@ -292,20 +402,30 @@ class _$RootStateCopyWithImpl<$Res>
 
 /// Create a copy of RootState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? getAllState = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? mapBootstrapState = null,Object? recenterState = null,}) {
   return _then(_self.copyWith(
-getAllState: null == getAllState ? _self.getAllState : getAllState // ignore: cast_nullable_to_non_nullable
-as BlocStatus<List<RootEntity>>,
+mapBootstrapState: null == mapBootstrapState ? _self.mapBootstrapState : mapBootstrapState // ignore: cast_nullable_to_non_nullable
+as BlocStatus<RootMapLocationEntity>,recenterState: null == recenterState ? _self.recenterState : recenterState // ignore: cast_nullable_to_non_nullable
+as BlocStatus<RootMapLocationEntity>,
   ));
 }
 /// Create a copy of RootState
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$BlocStatusCopyWith<List<RootEntity>, $Res> get getAllState {
+$BlocStatusCopyWith<RootMapLocationEntity, $Res> get mapBootstrapState {
   
-  return $BlocStatusCopyWith<List<RootEntity>, $Res>(_self.getAllState, (value) {
-    return _then(_self.copyWith(getAllState: value));
+  return $BlocStatusCopyWith<RootMapLocationEntity, $Res>(_self.mapBootstrapState, (value) {
+    return _then(_self.copyWith(mapBootstrapState: value));
+  });
+}/// Create a copy of RootState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BlocStatusCopyWith<RootMapLocationEntity, $Res> get recenterState {
+  
+  return $BlocStatusCopyWith<RootMapLocationEntity, $Res>(_self.recenterState, (value) {
+    return _then(_self.copyWith(recenterState: value));
   });
 }
 }
@@ -389,10 +509,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BlocStatus<List<RootEntity>> getAllState)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BlocStatus<RootMapLocationEntity> mapBootstrapState,  BlocStatus<RootMapLocationEntity> recenterState)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RootState() when $default != null:
-return $default(_that.getAllState);case _:
+return $default(_that.mapBootstrapState,_that.recenterState);case _:
   return orElse();
 
 }
@@ -410,10 +530,10 @@ return $default(_that.getAllState);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BlocStatus<List<RootEntity>> getAllState)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BlocStatus<RootMapLocationEntity> mapBootstrapState,  BlocStatus<RootMapLocationEntity> recenterState)  $default,) {final _that = this;
 switch (_that) {
 case _RootState():
-return $default(_that.getAllState);case _:
+return $default(_that.mapBootstrapState,_that.recenterState);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -430,10 +550,10 @@ return $default(_that.getAllState);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BlocStatus<List<RootEntity>> getAllState)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BlocStatus<RootMapLocationEntity> mapBootstrapState,  BlocStatus<RootMapLocationEntity> recenterState)?  $default,) {final _that = this;
 switch (_that) {
 case _RootState() when $default != null:
-return $default(_that.getAllState);case _:
+return $default(_that.mapBootstrapState,_that.recenterState);case _:
   return null;
 
 }
@@ -445,10 +565,11 @@ return $default(_that.getAllState);case _:
 
 
 class _RootState implements RootState {
-  const _RootState({this.getAllState = const BlocStatus<List<RootEntity>>.initial()});
+  const _RootState({this.mapBootstrapState = const BlocStatus<RootMapLocationEntity>.initial(), this.recenterState = const BlocStatus<RootMapLocationEntity>.initial()});
   
 
-@override@JsonKey() final  BlocStatus<List<RootEntity>> getAllState;
+@override@JsonKey() final  BlocStatus<RootMapLocationEntity> mapBootstrapState;
+@override@JsonKey() final  BlocStatus<RootMapLocationEntity> recenterState;
 
 /// Create a copy of RootState
 /// with the given fields replaced by the non-null parameter values.
@@ -460,16 +581,16 @@ _$RootStateCopyWith<_RootState> get copyWith => __$RootStateCopyWithImpl<_RootSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RootState&&(identical(other.getAllState, getAllState) || other.getAllState == getAllState));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RootState&&(identical(other.mapBootstrapState, mapBootstrapState) || other.mapBootstrapState == mapBootstrapState)&&(identical(other.recenterState, recenterState) || other.recenterState == recenterState));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,getAllState);
+int get hashCode => Object.hash(runtimeType,mapBootstrapState,recenterState);
 
 @override
 String toString() {
-  return 'RootState(getAllState: $getAllState)';
+  return 'RootState(mapBootstrapState: $mapBootstrapState, recenterState: $recenterState)';
 }
 
 
@@ -480,11 +601,11 @@ abstract mixin class _$RootStateCopyWith<$Res> implements $RootStateCopyWith<$Re
   factory _$RootStateCopyWith(_RootState value, $Res Function(_RootState) _then) = __$RootStateCopyWithImpl;
 @override @useResult
 $Res call({
- BlocStatus<List<RootEntity>> getAllState
+ BlocStatus<RootMapLocationEntity> mapBootstrapState, BlocStatus<RootMapLocationEntity> recenterState
 });
 
 
-@override $BlocStatusCopyWith<List<RootEntity>, $Res> get getAllState;
+@override $BlocStatusCopyWith<RootMapLocationEntity, $Res> get mapBootstrapState;@override $BlocStatusCopyWith<RootMapLocationEntity, $Res> get recenterState;
 
 }
 /// @nodoc
@@ -497,10 +618,11 @@ class __$RootStateCopyWithImpl<$Res>
 
 /// Create a copy of RootState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? getAllState = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? mapBootstrapState = null,Object? recenterState = null,}) {
   return _then(_RootState(
-getAllState: null == getAllState ? _self.getAllState : getAllState // ignore: cast_nullable_to_non_nullable
-as BlocStatus<List<RootEntity>>,
+mapBootstrapState: null == mapBootstrapState ? _self.mapBootstrapState : mapBootstrapState // ignore: cast_nullable_to_non_nullable
+as BlocStatus<RootMapLocationEntity>,recenterState: null == recenterState ? _self.recenterState : recenterState // ignore: cast_nullable_to_non_nullable
+as BlocStatus<RootMapLocationEntity>,
   ));
 }
 
@@ -508,10 +630,19 @@ as BlocStatus<List<RootEntity>>,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$BlocStatusCopyWith<List<RootEntity>, $Res> get getAllState {
+$BlocStatusCopyWith<RootMapLocationEntity, $Res> get mapBootstrapState {
   
-  return $BlocStatusCopyWith<List<RootEntity>, $Res>(_self.getAllState, (value) {
-    return _then(_self.copyWith(getAllState: value));
+  return $BlocStatusCopyWith<RootMapLocationEntity, $Res>(_self.mapBootstrapState, (value) {
+    return _then(_self.copyWith(mapBootstrapState: value));
+  });
+}/// Create a copy of RootState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BlocStatusCopyWith<RootMapLocationEntity, $Res> get recenterState {
+  
+  return $BlocStatusCopyWith<RootMapLocationEntity, $Res>(_self.recenterState, (value) {
+    return _then(_self.copyWith(recenterState: value));
   });
 }
 }

@@ -3,77 +3,116 @@ import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_b
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_admin_operations_screen.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_header_quick_link_widget.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_icon_action_widget.dart';
 
 class DashboardHeaderSection extends StatelessWidget {
   const DashboardHeaderSection({super.key});
 
+  String _greetingFor(BuildContext context) {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return AppStrings.dashboardGreetingMorning;
+    if (hour < 18) return AppStrings.dashboardGreetingAfternoon;
+    return AppStrings.dashboardGreetingEvening;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final now = DateTime.now();
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppStrings.dashboardTitle,
-                style: AppTextStyles.s24w700.copyWith(color: context.onSurface),
-              ),
-              AppSpacing.xs.verticalSpace,
-              Text(
-                AppStrings.dashboardSubtitle,
-                style: AppTextStyles.s14w400.copyWith(
-                  color: context.onSurface.withValues(alpha: 0.62),
-                ),
-              ),
-            ],
+        Text(
+          _greetingFor(context),
+          style: AppTextStyles.s12w500.copyWith(
+            color: context.primary,
+            letterSpacing: 0.6,
           ),
         ),
+        AppSpacing.xs.verticalSpace,
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppButton.primary(
-              onTap: () => context.push(DashboardAdminOperationsScreen.pagePath),
-              layout: const AppButtonLayout(shape: AppButtonShape.circle),
-              child: AppButtonChild.icon(
-                IconSource.icon(FontAwesomeIcons.gears),
-                size: 18,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppStrings.dashboardTitle,
+                    style: AppTextStyles.s28w700.copyWith(
+                      color: context.onSurface,
+                      height: 1.15,
+                    ),
+                  ),
+                  AppSpacing.xs.verticalSpace,
+                  Row(
+                    children: [
+                      Container(
+                        width: 6.r,
+                        height: 6.r,
+                        decoration: const BoxDecoration(
+                          color: AppColors.success,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      AppSpacing.sm.horizontalSpace,
+                      Flexible(
+                        child: Text(
+                          '${AppStrings.dashboardOperationsLiveOverview} · ${now.toYmd()}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.s12w400.copyWith(
+                            color: context.onSurface.withValues(alpha: 0.55),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            AppSpacing.sm.horizontalSpace,
-            AppButton.primary(
-              onTap: () => context.push(DashboardTripsScreen.pagePath),
-              layout: const AppButtonLayout(shape: AppButtonShape.circle),
-              child: AppButtonChild.icon(
-                IconSource.icon(FontAwesomeIcons.listCheck),
-                size: 18,
-              ),
-            ),
-            AppSpacing.sm.horizontalSpace,
-            AppButton.primary(
-              onTap: () => context.push(DashboardLiveMapScreen.pagePath),
-              layout: const AppButtonLayout(shape: AppButtonShape.circle),
-              child: AppButtonChild.icon(
-                IconSource.icon(FontAwesomeIcons.mapLocationDot),
-                size: 18,
-              ),
-            ),
-            AppSpacing.sm.horizontalSpace,
-            AppButton.primary(
+            DashboardIconActionWidget(
+              icon: FontAwesomeIcons.arrowsRotate,
+              tooltip: AppStrings.dashboardRefresh,
               onTap: () {
                 context.read<DashboardBloc>().add(
                   const DashboardEvent.overviewRequested(),
                 );
               },
-              layout: const AppButtonLayout(shape: AppButtonShape.circle),
-              child: AppButtonChild.icon(
-                IconSource.icon(FontAwesomeIcons.arrowsRotate),
-                size: 18,
+            ),
+          ],
+        ),
+        AppSpacing.lg.verticalSpace,
+        Row(
+          children: [
+            Expanded(
+              child: DashboardHeaderQuickLinkWidget(
+                icon: FontAwesomeIcons.listCheck,
+                label: AppStrings.dashboardOpenTrips,
+                onTap: () => context.push(DashboardTripsScreen.pagePath),
+              ),
+            ),
+            AppSpacing.sm.horizontalSpace,
+            Expanded(
+              child: DashboardHeaderQuickLinkWidget(
+                icon: FontAwesomeIcons.mapLocationDot,
+                label: AppStrings.dashboardOpenLiveMap,
+                onTap: () => context.push(DashboardLiveMapScreen.pagePath),
+              ),
+            ),
+            AppSpacing.sm.horizontalSpace,
+            Expanded(
+              child: DashboardHeaderQuickLinkWidget(
+                icon: FontAwesomeIcons.gears,
+                label: AppStrings.dashboardOpenAdminOps,
+                onTap: () =>
+                    context.push(DashboardAdminOperationsScreen.pagePath),
               ),
             ),
           ],
         ),
       ],
-    ).animate().fadeIn(duration: AppDurations.normal).slideY(begin: 0.05);
+    ).animate().fadeIn(duration: 320.ms).slideY(begin: 0.04, end: 0);
   }
 }

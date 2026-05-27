@@ -5,39 +5,29 @@ class DashboardTripDetailInfoRowWidget extends StatelessWidget {
     super.key,
     required this.label,
     required this.value,
-    required this.icon,
   });
 
   final String label;
   final String value;
-  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FaIcon(icon, size: 15.r, color: context.primary),
-        AppSpacing.sm.horizontalSpace,
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: AppTextStyles.s12w400.copyWith(
-                  color: context.onSurface.withValues(alpha: 0.62),
-                ),
-              ),
-              AppSpacing.xs.verticalSpace,
-              Text(
-                value.isEmpty ? AppStrings.tripUnknownAddress : value,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.s14w600.copyWith(color: context.onSurface),
-              ),
-            ],
+        Text(
+          label.toUpperCase(),
+          style: AppTextStyles.s11w500.copyWith(
+            color: context.onSurface.withValues(alpha: 0.50),
+            letterSpacing: 1.1,
           ),
+        ),
+        AppSpacing.xs.verticalSpace,
+        Text(
+          value.isEmpty ? AppStrings.tripUnknownAddress : value,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.s14w500.copyWith(color: context.onSurface),
         ),
       ],
     );

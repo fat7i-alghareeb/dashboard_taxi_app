@@ -1,7 +1,7 @@
 import 'package:image_picker/image_picker.dart';
-
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/kyc/presentation/states/kyc_bloc.dart';
+import 'package:dashboardtaxi/features/kyc/presentation/ui/widgets/kyc_image_source_sheet.dart';
 
 class KycUploadSlotWidget extends StatefulWidget {
   const KycUploadSlotWidget({
@@ -12,10 +12,10 @@ class KycUploadSlotWidget extends StatefulWidget {
     required this.isUploading,
   });
 
-  final String type; // DriversLicense, NationalId, VehicleRegistration, Insurance
-  final String label; // Localized label
-  final String? fileUrl; // Current uploaded image URL
-  final bool isUploading; // Whether this specific slot is uploading
+  final String type;
+  final String label;
+  final String? fileUrl;
+  final bool isUploading;
 
   @override
   State<KycUploadSlotWidget> createState() => _KycUploadSlotWidgetState();
@@ -27,61 +27,13 @@ class _KycUploadSlotWidgetState extends State<KycUploadSlotWidget> {
   Future<void> _pickImage(BuildContext context) async {
     final KycBloc bloc = context.read<KycBloc>();
 
-    // Show beautiful premium choice dialog
-    final source = await showModalBottomSheet<ImageSource>(
-      context: context,
-      backgroundColor: context.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg.r)),
-      ),
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: REdgeInsets.all(AppSpacing.lg),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                widget.label,
-                style: AppTextStyles.s16w600.copyWith(color: context.onSurface),
-              ),
-              AppSpacing.md.verticalSpace,
-              ListTile(
-                leading: FaIcon(
-                  FontAwesomeIcons.camera,
-                  color: context.primary,
-                  size: 20.r,
-                ),
-                title: Text(
-                  'Camera',
-                  style: AppTextStyles.s14w600.copyWith(color: context.onSurface),
-                ),
-                onTap: () => Navigator.pop(context, ImageSource.camera),
-              ),
-              const Divider(),
-              ListTile(
-                leading: FaIcon(
-                  FontAwesomeIcons.image,
-                  color: context.primary,
-                  size: 20.r,
-                ),
-                title: Text(
-                  'Gallery',
-                  style: AppTextStyles.s14w600.copyWith(color: context.onSurface),
-                ),
-                onTap: () => Navigator.pop(context, ImageSource.gallery),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    if (source == null) return;
+    final source = await KycImageSourceSheet.show(context, title: widget.label);
+    if (source == null || !mounted) return;
 
     try {
       final pickedFile = await _picker.pickImage(
         source: source,
-        imageQuality: 70, // Compress to ensure light payloads
+        imageQuality: 70,
       );
       if (pickedFile != null) {
         bloc.add(
@@ -92,103 +44,113 @@ class _KycUploadSlotWidgetState extends State<KycUploadSlotWidget> {
         );
       }
     } catch (e) {
-      assert(() {
-        debugPrint('Image pick error: $e');
-        return true;
-      }());
+      printC('KycUploadSlot: image pick error $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final hasImage = widget.fileUrl != null && widget.fileUrl!.isNotEmpty;
+    final borderColor = hasImage
+        ? AppColors.success.withValues(alpha: 0.40)
+        : context.onSurface.withValues(alpha: 0.10);
 
     return GestureDetector(
       onTap: widget.isUploading ? null : () => _pickImage(context),
       child: Stack(
         children: [
           Container(
-            height: 110.h,
+            height: 120.h,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: context.primary.withValues(alpha: 0.03),
-              borderRadius: BorderRadius.circular(AppRadii.md.r),
-              border: Border.all(
-                color: hasImage
-                    ? AppColors.success.withValues(alpha: 0.3)
-                    : context.primary.withValues(alpha: 0.15),
-                width: 1.2,
-              ),
+              color: context.surface,
+              borderRadius: BorderRadius.circular(AppRadii.lg.r),
+              border: Border.all(color: borderColor),
             ),
             child: hasImage
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(AppRadii.md.r),
+                    borderRadius: BorderRadius.circular(AppRadii.lg.r),
                     child: AppImageViewer.network(
                       widget.fileUrl!,
-                      height: 110.h,
+                      height: 120.h,
                     ),
                   )
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FaIcon(
-                        FontAwesomeIcons.cloudArrowUp,
-                        size: 24.r,
-                        color: context.primary.withValues(alpha: 0.6),
+                      Container(
+                        height: 32.r,
+                        width: 32.r,
+                        decoration: BoxDecoration(
+                          color: context.primary.withValues(alpha: 0.10),
+                          borderRadius: BorderRadius.circular(AppRadii.sm.r),
+                        ),
+                        child: Center(
+                          child: FaIcon(
+                            FontAwesomeIcons.cloudArrowUp,
+                            size: 14.r,
+                            color: context.primary,
+                          ),
+                        ),
                       ),
                       AppSpacing.sm.verticalSpace,
-                      Text(
-                        widget.label,
-                        style: AppTextStyles.s14w600.copyWith(
-                          color: context.onSurface.withValues(alpha: 0.8),
+                      Padding(
+                        padding: REdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
                         ),
-                        textAlign: TextAlign.center,
+                        child: Text(
+                          widget.label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.s12w500.copyWith(
+                            color: context.onSurface,
+                          ),
+                        ),
                       ),
                       AppSpacing.xs.verticalSpace,
                       Text(
                         AppStrings.tapToUpload,
-                        style: AppTextStyles.s12w400.copyWith(
-                          color: context.onSurface.withValues(alpha: 0.4),
+                        style: AppTextStyles.s11w500.copyWith(
+                          color: context.onSurface.withValues(alpha: 0.45),
+                          letterSpacing: 0.8,
                         ),
                       ),
                     ],
                   ),
           ),
-
-          // Uploading overlay indicator
           if (widget.isUploading)
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(AppRadii.md.r),
+                  color: context.surface.withValues(alpha: 0.78),
+                  borderRadius: BorderRadius.circular(AppRadii.lg.r),
                 ),
-                child: const Center(
-                  child: LoadingDots(color: Colors.white),
-                ),
+                child: Center(child: LoadingDots(color: context.primary)),
               ),
             ),
-
-          // Success checkmark overlay
           if (hasImage && !widget.isUploading)
             Positioned(
               top: 8.r,
               right: 8.r,
               child: Container(
                 padding: REdgeInsets.all(AppSpacing.xs),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                decoration: BoxDecoration(
+                  color: context.surface,
                   shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.success.withValues(alpha: 0.40),
+                  ),
                 ),
                 child: FaIcon(
-                  FontAwesomeIcons.circleCheck,
+                  FontAwesomeIcons.check,
                   color: AppColors.success,
-                  size: 18.r,
+                  size: 10.r,
                 ),
               ),
             ),
         ],
-      ).animate().fadeIn(duration: AppDurations.normal),
+      ).animate().fadeIn(duration: 240.ms),
     );
   }
 }

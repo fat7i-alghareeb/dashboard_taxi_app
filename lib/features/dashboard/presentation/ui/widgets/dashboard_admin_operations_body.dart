@@ -11,32 +11,35 @@ class DashboardAdminOperationsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          getIt<DashboardBloc>()
-            ..add(const DashboardEvent.adminOperationsRequested()),
+      create: (context) => getIt<DashboardBloc>()
+        ..add(const DashboardEvent.adminOperationsRequested()),
       child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
-          return SingleChildScrollView(
-            padding: REdgeInsets.all(AppSpacing.xl),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<DashboardBloc>().add(
+                const DashboardEvent.adminOperationsRequested(),
+              );
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: REdgeInsets.symmetric(
+                horizontal: AppSpacing.xl,
+                vertical: AppSpacing.lg,
+              ),
               children: [
                 const DashboardAdminOperationsHeaderWidget(),
                 AppSpacing.xl.verticalSpace,
                 StatusBuilder<DashboardAdminOperationsEntity>(
                   state: state.adminOperationsState,
                   loading: () => const DashboardShimmerWidget(),
-                  onRefresh: () async {
-                    context.read<DashboardBloc>().add(
-                      const DashboardEvent.adminOperationsRequested(),
-                    );
-                  },
                   success: (operations) =>
                       DashboardAdminOperationsContentWidget(
                         operations: operations,
                         isActionLoading: state.adminActionState.isLoading,
                       ),
                 ),
+                AppSpacing.xxl.verticalSpace,
               ],
             ),
           );

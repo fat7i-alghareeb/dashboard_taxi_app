@@ -77,6 +77,8 @@ class TripEntity {
     this.cancellation,
     this.compensationClaim,
     this.activeWaitingSession,
+    this.passengerName,
+    this.passengerPhone,
   });
 
   final String id;
@@ -96,6 +98,8 @@ class TripEntity {
   final TripCancellationEntity? cancellation;
   final TripCompensationClaimEntity? compensationClaim;
   final TripWaitingSessionEntity? activeWaitingSession;
+  final String? passengerName;
+  final String? passengerPhone;
 
   TripStopEntity? get pickup => stops.isEmpty ? null : stops.first;
   TripStopEntity? get dropoff => stops.length < 2 ? null : stops.last;
@@ -125,6 +129,8 @@ class TripEntity {
       cancellation: cancellation,
       compensationClaim: compensationClaim,
       activeWaitingSession: activeWaitingSession,
+      passengerName: passengerName,
+      passengerPhone: passengerPhone,
     );
   }
 
@@ -147,6 +153,8 @@ class TripEntity {
       cancellation: cancellation,
       compensationClaim: compensationClaim,
       activeWaitingSession: session,
+      passengerName: passengerName,
+      passengerPhone: passengerPhone,
     );
   }
 }

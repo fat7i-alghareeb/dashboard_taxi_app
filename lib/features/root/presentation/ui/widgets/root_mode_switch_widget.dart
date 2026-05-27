@@ -17,42 +17,49 @@ class RootModeSwitchWidget extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: Padding(
           padding: REdgeInsets.only(top: AppSpacing.md),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: context.surface.withValues(alpha: 0.90),
+          child: Material(
+            color: context.surface,
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppRadii.xl.r),
-              border: Border.all(
-                color: context.onSurface.withValues(alpha: 0.08),
+              side: BorderSide(
+                color: context.onSurface.withValues(alpha: 0.10),
               ),
-              boxShadow: context.shadows.grey,
             ),
-            child: Padding(
-              padding: REdgeInsets.all(AppSpacing.xs),
-              child: AppButton.primary(
-                onTap: onTap,
-                noShadow: true,
-                layout: AppButtonLayout(
-                  height: 40,
-                  contentPadding: REdgeInsets.symmetric(
-                    horizontal: AppSpacing.lg,
-                    vertical: AppSpacing.sm,
-                  ),
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(AppRadii.xl.r),
+              child: Padding(
+                padding: REdgeInsets.symmetric(
+                  horizontal: AppSpacing.lg,
+                  vertical: AppSpacing.sm,
                 ),
-                child: AppButtonChild.labelIcon(
-                  label: isDriverMode
-                      ? AppStrings.rootAdminMode
-                      : AppStrings.rootDriverMode,
-                  icon: IconSource.icon(
-                    isDriverMode
-                        ? FontAwesomeIcons.chartLine
-                        : FontAwesomeIcons.carSide,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FaIcon(
+                      isDriverMode
+                          ? FontAwesomeIcons.chartLine
+                          : FontAwesomeIcons.carSide,
+                      size: 12.r,
+                      color: context.primary,
+                    ),
+                    AppSpacing.sm.horizontalSpace,
+                    Text(
+                      isDriverMode
+                          ? AppStrings.rootAdminMode
+                          : AppStrings.rootDriverMode,
+                      style: AppTextStyles.s12w500.copyWith(
+                        color: context.onSurface,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
         ),
       ),
-    ).animate().fadeIn(duration: AppDurations.normal).slideY(begin: -0.20);
+    ).animate().fadeIn(duration: 280.ms).slideY(begin: -0.15, end: 0);
   }
 }

@@ -55,7 +55,7 @@ extension DashboardEventPatterns on DashboardEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _OverviewRequested value)?  overviewRequested,TResult Function( _DriverDocumentsRequested value)?  driverDocumentsRequested,TResult Function( _DocumentReviewRequested value)?  documentReviewRequested,TResult Function( _DriverApprovalRequested value)?  driverApprovalRequested,TResult Function( _TripAssignmentRequested value)?  tripAssignmentRequested,TResult Function( _DriverLocationsRequested value)?  driverLocationsRequested,TResult Function( _DriverLocationReceived value)?  driverLocationReceived,TResult Function( _AdminTripsRequested value)?  adminTripsRequested,TResult Function( _TripDetailsRequested value)?  tripDetailsRequested,TResult Function( _AdminOperationsRequested value)?  adminOperationsRequested,TResult Function( _DriverSuspensionRequested value)?  driverSuspensionRequested,TResult Function( _DriverVehicleTypeAssignmentRequested value)?  driverVehicleTypeAssignmentRequested,TResult Function( _VehicleTypeStatusToggleRequested value)?  vehicleTypeStatusToggleRequested,TResult Function( _VehicleTypeRemovalRequested value)?  vehicleTypeRemovalRequested,TResult Function( _TripDiscountUpdateRequested value)?  tripDiscountUpdateRequested,TResult Function( _CurrencyUpdateRequested value)?  currencyUpdateRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _OverviewRequested value)?  overviewRequested,TResult Function( _DriverDocumentsRequested value)?  driverDocumentsRequested,TResult Function( _DocumentReviewRequested value)?  documentReviewRequested,TResult Function( _DriverApprovalRequested value)?  driverApprovalRequested,TResult Function( _TripAssignmentRequested value)?  tripAssignmentRequested,TResult Function( _DriverLocationsRequested value)?  driverLocationsRequested,TResult Function( _DriverLocationReceived value)?  driverLocationReceived,TResult Function( _AdminTripsRequested value)?  adminTripsRequested,TResult Function( _TripDetailsRequested value)?  tripDetailsRequested,TResult Function( _AdminOperationsRequested value)?  adminOperationsRequested,TResult Function( _DriverSuspensionRequested value)?  driverSuspensionRequested,TResult Function( _DriverVehicleTypeAssignmentRequested value)?  driverVehicleTypeAssignmentRequested,TResult Function( _VehicleTypeStatusToggleRequested value)?  vehicleTypeStatusToggleRequested,TResult Function( _VehicleTypeRemovalRequested value)?  vehicleTypeRemovalRequested,TResult Function( _VehicleTypeCreateRequested value)?  vehicleTypeCreateRequested,TResult Function( _VehicleTypeUpdateRequested value)?  vehicleTypeUpdateRequested,TResult Function( _TripDiscountUpdateRequested value)?  tripDiscountUpdateRequested,TResult Function( _CurrencyUpdateRequested value)?  currencyUpdateRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
@@ -73,7 +73,9 @@ return adminOperationsRequested(_that);case _DriverSuspensionRequested() when dr
 return driverSuspensionRequested(_that);case _DriverVehicleTypeAssignmentRequested() when driverVehicleTypeAssignmentRequested != null:
 return driverVehicleTypeAssignmentRequested(_that);case _VehicleTypeStatusToggleRequested() when vehicleTypeStatusToggleRequested != null:
 return vehicleTypeStatusToggleRequested(_that);case _VehicleTypeRemovalRequested() when vehicleTypeRemovalRequested != null:
-return vehicleTypeRemovalRequested(_that);case _TripDiscountUpdateRequested() when tripDiscountUpdateRequested != null:
+return vehicleTypeRemovalRequested(_that);case _VehicleTypeCreateRequested() when vehicleTypeCreateRequested != null:
+return vehicleTypeCreateRequested(_that);case _VehicleTypeUpdateRequested() when vehicleTypeUpdateRequested != null:
+return vehicleTypeUpdateRequested(_that);case _TripDiscountUpdateRequested() when tripDiscountUpdateRequested != null:
 return tripDiscountUpdateRequested(_that);case _CurrencyUpdateRequested() when currencyUpdateRequested != null:
 return currencyUpdateRequested(_that);case _:
   return orElse();
@@ -93,7 +95,7 @@ return currencyUpdateRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _OverviewRequested value)  overviewRequested,required TResult Function( _DriverDocumentsRequested value)  driverDocumentsRequested,required TResult Function( _DocumentReviewRequested value)  documentReviewRequested,required TResult Function( _DriverApprovalRequested value)  driverApprovalRequested,required TResult Function( _TripAssignmentRequested value)  tripAssignmentRequested,required TResult Function( _DriverLocationsRequested value)  driverLocationsRequested,required TResult Function( _DriverLocationReceived value)  driverLocationReceived,required TResult Function( _AdminTripsRequested value)  adminTripsRequested,required TResult Function( _TripDetailsRequested value)  tripDetailsRequested,required TResult Function( _AdminOperationsRequested value)  adminOperationsRequested,required TResult Function( _DriverSuspensionRequested value)  driverSuspensionRequested,required TResult Function( _DriverVehicleTypeAssignmentRequested value)  driverVehicleTypeAssignmentRequested,required TResult Function( _VehicleTypeStatusToggleRequested value)  vehicleTypeStatusToggleRequested,required TResult Function( _VehicleTypeRemovalRequested value)  vehicleTypeRemovalRequested,required TResult Function( _TripDiscountUpdateRequested value)  tripDiscountUpdateRequested,required TResult Function( _CurrencyUpdateRequested value)  currencyUpdateRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _OverviewRequested value)  overviewRequested,required TResult Function( _DriverDocumentsRequested value)  driverDocumentsRequested,required TResult Function( _DocumentReviewRequested value)  documentReviewRequested,required TResult Function( _DriverApprovalRequested value)  driverApprovalRequested,required TResult Function( _TripAssignmentRequested value)  tripAssignmentRequested,required TResult Function( _DriverLocationsRequested value)  driverLocationsRequested,required TResult Function( _DriverLocationReceived value)  driverLocationReceived,required TResult Function( _AdminTripsRequested value)  adminTripsRequested,required TResult Function( _TripDetailsRequested value)  tripDetailsRequested,required TResult Function( _AdminOperationsRequested value)  adminOperationsRequested,required TResult Function( _DriverSuspensionRequested value)  driverSuspensionRequested,required TResult Function( _DriverVehicleTypeAssignmentRequested value)  driverVehicleTypeAssignmentRequested,required TResult Function( _VehicleTypeStatusToggleRequested value)  vehicleTypeStatusToggleRequested,required TResult Function( _VehicleTypeRemovalRequested value)  vehicleTypeRemovalRequested,required TResult Function( _VehicleTypeCreateRequested value)  vehicleTypeCreateRequested,required TResult Function( _VehicleTypeUpdateRequested value)  vehicleTypeUpdateRequested,required TResult Function( _TripDiscountUpdateRequested value)  tripDiscountUpdateRequested,required TResult Function( _CurrencyUpdateRequested value)  currencyUpdateRequested,}){
 final _that = this;
 switch (_that) {
 case _Started():
@@ -111,7 +113,9 @@ return adminOperationsRequested(_that);case _DriverSuspensionRequested():
 return driverSuspensionRequested(_that);case _DriverVehicleTypeAssignmentRequested():
 return driverVehicleTypeAssignmentRequested(_that);case _VehicleTypeStatusToggleRequested():
 return vehicleTypeStatusToggleRequested(_that);case _VehicleTypeRemovalRequested():
-return vehicleTypeRemovalRequested(_that);case _TripDiscountUpdateRequested():
+return vehicleTypeRemovalRequested(_that);case _VehicleTypeCreateRequested():
+return vehicleTypeCreateRequested(_that);case _VehicleTypeUpdateRequested():
+return vehicleTypeUpdateRequested(_that);case _TripDiscountUpdateRequested():
 return tripDiscountUpdateRequested(_that);case _CurrencyUpdateRequested():
 return currencyUpdateRequested(_that);case _:
   throw StateError('Unexpected subclass');
@@ -130,7 +134,7 @@ return currencyUpdateRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _OverviewRequested value)?  overviewRequested,TResult? Function( _DriverDocumentsRequested value)?  driverDocumentsRequested,TResult? Function( _DocumentReviewRequested value)?  documentReviewRequested,TResult? Function( _DriverApprovalRequested value)?  driverApprovalRequested,TResult? Function( _TripAssignmentRequested value)?  tripAssignmentRequested,TResult? Function( _DriverLocationsRequested value)?  driverLocationsRequested,TResult? Function( _DriverLocationReceived value)?  driverLocationReceived,TResult? Function( _AdminTripsRequested value)?  adminTripsRequested,TResult? Function( _TripDetailsRequested value)?  tripDetailsRequested,TResult? Function( _AdminOperationsRequested value)?  adminOperationsRequested,TResult? Function( _DriverSuspensionRequested value)?  driverSuspensionRequested,TResult? Function( _DriverVehicleTypeAssignmentRequested value)?  driverVehicleTypeAssignmentRequested,TResult? Function( _VehicleTypeStatusToggleRequested value)?  vehicleTypeStatusToggleRequested,TResult? Function( _VehicleTypeRemovalRequested value)?  vehicleTypeRemovalRequested,TResult? Function( _TripDiscountUpdateRequested value)?  tripDiscountUpdateRequested,TResult? Function( _CurrencyUpdateRequested value)?  currencyUpdateRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _OverviewRequested value)?  overviewRequested,TResult? Function( _DriverDocumentsRequested value)?  driverDocumentsRequested,TResult? Function( _DocumentReviewRequested value)?  documentReviewRequested,TResult? Function( _DriverApprovalRequested value)?  driverApprovalRequested,TResult? Function( _TripAssignmentRequested value)?  tripAssignmentRequested,TResult? Function( _DriverLocationsRequested value)?  driverLocationsRequested,TResult? Function( _DriverLocationReceived value)?  driverLocationReceived,TResult? Function( _AdminTripsRequested value)?  adminTripsRequested,TResult? Function( _TripDetailsRequested value)?  tripDetailsRequested,TResult? Function( _AdminOperationsRequested value)?  adminOperationsRequested,TResult? Function( _DriverSuspensionRequested value)?  driverSuspensionRequested,TResult? Function( _DriverVehicleTypeAssignmentRequested value)?  driverVehicleTypeAssignmentRequested,TResult? Function( _VehicleTypeStatusToggleRequested value)?  vehicleTypeStatusToggleRequested,TResult? Function( _VehicleTypeRemovalRequested value)?  vehicleTypeRemovalRequested,TResult? Function( _VehicleTypeCreateRequested value)?  vehicleTypeCreateRequested,TResult? Function( _VehicleTypeUpdateRequested value)?  vehicleTypeUpdateRequested,TResult? Function( _TripDiscountUpdateRequested value)?  tripDiscountUpdateRequested,TResult? Function( _CurrencyUpdateRequested value)?  currencyUpdateRequested,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
@@ -148,7 +152,9 @@ return adminOperationsRequested(_that);case _DriverSuspensionRequested() when dr
 return driverSuspensionRequested(_that);case _DriverVehicleTypeAssignmentRequested() when driverVehicleTypeAssignmentRequested != null:
 return driverVehicleTypeAssignmentRequested(_that);case _VehicleTypeStatusToggleRequested() when vehicleTypeStatusToggleRequested != null:
 return vehicleTypeStatusToggleRequested(_that);case _VehicleTypeRemovalRequested() when vehicleTypeRemovalRequested != null:
-return vehicleTypeRemovalRequested(_that);case _TripDiscountUpdateRequested() when tripDiscountUpdateRequested != null:
+return vehicleTypeRemovalRequested(_that);case _VehicleTypeCreateRequested() when vehicleTypeCreateRequested != null:
+return vehicleTypeCreateRequested(_that);case _VehicleTypeUpdateRequested() when vehicleTypeUpdateRequested != null:
+return vehicleTypeUpdateRequested(_that);case _TripDiscountUpdateRequested() when tripDiscountUpdateRequested != null:
 return tripDiscountUpdateRequested(_that);case _CurrencyUpdateRequested() when currencyUpdateRequested != null:
 return currencyUpdateRequested(_that);case _:
   return null;
@@ -167,7 +173,7 @@ return currencyUpdateRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  overviewRequested,TResult Function( String driverId)?  driverDocumentsRequested,TResult Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult Function( String driverId)?  driverApprovalRequested,TResult Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult Function()?  driverLocationsRequested,TResult Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult Function( String? status)?  adminTripsRequested,TResult Function( String tripId)?  tripDetailsRequested,TResult Function()?  adminOperationsRequested,TResult Function( String driverId)?  driverSuspensionRequested,TResult Function( String driverId,  String vehicleTypeId)?  driverVehicleTypeAssignmentRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult Function( num discountPercent)?  tripDiscountUpdateRequested,TResult Function( String currencyCode)?  currencyUpdateRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  overviewRequested,TResult Function( String driverId)?  driverDocumentsRequested,TResult Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult Function( String driverId)?  driverApprovalRequested,TResult Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult Function()?  driverLocationsRequested,TResult Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult Function( String? status)?  adminTripsRequested,TResult Function( String tripId)?  tripDetailsRequested,TResult Function()?  adminOperationsRequested,TResult Function( String driverId)?  driverSuspensionRequested,TResult Function( String driverId,  String vehicleTypeId)?  driverVehicleTypeAssignmentRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)?  vehicleTypeCreateRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeUpdateRequested,TResult Function( num discountPercent)?  tripDiscountUpdateRequested,TResult Function( String currencyCode)?  currencyUpdateRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _OverviewRequested() when overviewRequested != null:
@@ -184,7 +190,9 @@ return adminOperationsRequested();case _DriverSuspensionRequested() when driverS
 return driverSuspensionRequested(_that.driverId);case _DriverVehicleTypeAssignmentRequested() when driverVehicleTypeAssignmentRequested != null:
 return driverVehicleTypeAssignmentRequested(_that.driverId,_that.vehicleTypeId);case _VehicleTypeStatusToggleRequested() when vehicleTypeStatusToggleRequested != null:
 return vehicleTypeStatusToggleRequested(_that.vehicleType);case _VehicleTypeRemovalRequested() when vehicleTypeRemovalRequested != null:
-return vehicleTypeRemovalRequested(_that.vehicleTypeId);case _TripDiscountUpdateRequested() when tripDiscountUpdateRequested != null:
+return vehicleTypeRemovalRequested(_that.vehicleTypeId);case _VehicleTypeCreateRequested() when vehicleTypeCreateRequested != null:
+return vehicleTypeCreateRequested(_that.code,_that.name,_that.capacity,_that.ratePerKm,_that.ratePerMin,_that.minFare,_that.sortOrder);case _VehicleTypeUpdateRequested() when vehicleTypeUpdateRequested != null:
+return vehicleTypeUpdateRequested(_that.vehicleType);case _TripDiscountUpdateRequested() when tripDiscountUpdateRequested != null:
 return tripDiscountUpdateRequested(_that.discountPercent);case _CurrencyUpdateRequested() when currencyUpdateRequested != null:
 return currencyUpdateRequested(_that.currencyCode);case _:
   return orElse();
@@ -204,7 +212,7 @@ return currencyUpdateRequested(_that.currencyCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  overviewRequested,required TResult Function( String driverId)  driverDocumentsRequested,required TResult Function( String driverId,  String documentId,  bool approved,  String? notes)  documentReviewRequested,required TResult Function( String driverId)  driverApprovalRequested,required TResult Function( String tripId,  String driverId,  bool enterDriverMode)  tripAssignmentRequested,required TResult Function()  driverLocationsRequested,required TResult Function( String driverId,  double latitude,  double longitude)  driverLocationReceived,required TResult Function( String? status)  adminTripsRequested,required TResult Function( String tripId)  tripDetailsRequested,required TResult Function()  adminOperationsRequested,required TResult Function( String driverId)  driverSuspensionRequested,required TResult Function( String driverId,  String vehicleTypeId)  driverVehicleTypeAssignmentRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeStatusToggleRequested,required TResult Function( String vehicleTypeId)  vehicleTypeRemovalRequested,required TResult Function( num discountPercent)  tripDiscountUpdateRequested,required TResult Function( String currencyCode)  currencyUpdateRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  overviewRequested,required TResult Function( String driverId)  driverDocumentsRequested,required TResult Function( String driverId,  String documentId,  bool approved,  String? notes)  documentReviewRequested,required TResult Function( String driverId)  driverApprovalRequested,required TResult Function( String tripId,  String driverId,  bool enterDriverMode)  tripAssignmentRequested,required TResult Function()  driverLocationsRequested,required TResult Function( String driverId,  double latitude,  double longitude)  driverLocationReceived,required TResult Function( String? status)  adminTripsRequested,required TResult Function( String tripId)  tripDetailsRequested,required TResult Function()  adminOperationsRequested,required TResult Function( String driverId)  driverSuspensionRequested,required TResult Function( String driverId,  String vehicleTypeId)  driverVehicleTypeAssignmentRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeStatusToggleRequested,required TResult Function( String vehicleTypeId)  vehicleTypeRemovalRequested,required TResult Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)  vehicleTypeCreateRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeUpdateRequested,required TResult Function( num discountPercent)  tripDiscountUpdateRequested,required TResult Function( String currencyCode)  currencyUpdateRequested,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case _OverviewRequested():
@@ -221,7 +229,9 @@ return adminOperationsRequested();case _DriverSuspensionRequested():
 return driverSuspensionRequested(_that.driverId);case _DriverVehicleTypeAssignmentRequested():
 return driverVehicleTypeAssignmentRequested(_that.driverId,_that.vehicleTypeId);case _VehicleTypeStatusToggleRequested():
 return vehicleTypeStatusToggleRequested(_that.vehicleType);case _VehicleTypeRemovalRequested():
-return vehicleTypeRemovalRequested(_that.vehicleTypeId);case _TripDiscountUpdateRequested():
+return vehicleTypeRemovalRequested(_that.vehicleTypeId);case _VehicleTypeCreateRequested():
+return vehicleTypeCreateRequested(_that.code,_that.name,_that.capacity,_that.ratePerKm,_that.ratePerMin,_that.minFare,_that.sortOrder);case _VehicleTypeUpdateRequested():
+return vehicleTypeUpdateRequested(_that.vehicleType);case _TripDiscountUpdateRequested():
 return tripDiscountUpdateRequested(_that.discountPercent);case _CurrencyUpdateRequested():
 return currencyUpdateRequested(_that.currencyCode);case _:
   throw StateError('Unexpected subclass');
@@ -240,7 +250,7 @@ return currencyUpdateRequested(_that.currencyCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  overviewRequested,TResult? Function( String driverId)?  driverDocumentsRequested,TResult? Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult? Function( String driverId)?  driverApprovalRequested,TResult? Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult? Function()?  driverLocationsRequested,TResult? Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult? Function( String? status)?  adminTripsRequested,TResult? Function( String tripId)?  tripDetailsRequested,TResult? Function()?  adminOperationsRequested,TResult? Function( String driverId)?  driverSuspensionRequested,TResult? Function( String driverId,  String vehicleTypeId)?  driverVehicleTypeAssignmentRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult? Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult? Function( num discountPercent)?  tripDiscountUpdateRequested,TResult? Function( String currencyCode)?  currencyUpdateRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  overviewRequested,TResult? Function( String driverId)?  driverDocumentsRequested,TResult? Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult? Function( String driverId)?  driverApprovalRequested,TResult? Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult? Function()?  driverLocationsRequested,TResult? Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult? Function( String? status)?  adminTripsRequested,TResult? Function( String tripId)?  tripDetailsRequested,TResult? Function()?  adminOperationsRequested,TResult? Function( String driverId)?  driverSuspensionRequested,TResult? Function( String driverId,  String vehicleTypeId)?  driverVehicleTypeAssignmentRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult? Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult? Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)?  vehicleTypeCreateRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeUpdateRequested,TResult? Function( num discountPercent)?  tripDiscountUpdateRequested,TResult? Function( String currencyCode)?  currencyUpdateRequested,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _OverviewRequested() when overviewRequested != null:
@@ -257,7 +267,9 @@ return adminOperationsRequested();case _DriverSuspensionRequested() when driverS
 return driverSuspensionRequested(_that.driverId);case _DriverVehicleTypeAssignmentRequested() when driverVehicleTypeAssignmentRequested != null:
 return driverVehicleTypeAssignmentRequested(_that.driverId,_that.vehicleTypeId);case _VehicleTypeStatusToggleRequested() when vehicleTypeStatusToggleRequested != null:
 return vehicleTypeStatusToggleRequested(_that.vehicleType);case _VehicleTypeRemovalRequested() when vehicleTypeRemovalRequested != null:
-return vehicleTypeRemovalRequested(_that.vehicleTypeId);case _TripDiscountUpdateRequested() when tripDiscountUpdateRequested != null:
+return vehicleTypeRemovalRequested(_that.vehicleTypeId);case _VehicleTypeCreateRequested() when vehicleTypeCreateRequested != null:
+return vehicleTypeCreateRequested(_that.code,_that.name,_that.capacity,_that.ratePerKm,_that.ratePerMin,_that.minFare,_that.sortOrder);case _VehicleTypeUpdateRequested() when vehicleTypeUpdateRequested != null:
+return vehicleTypeUpdateRequested(_that.vehicleType);case _TripDiscountUpdateRequested() when tripDiscountUpdateRequested != null:
 return tripDiscountUpdateRequested(_that.discountPercent);case _CurrencyUpdateRequested() when currencyUpdateRequested != null:
 return currencyUpdateRequested(_that.currencyCode);case _:
   return null;
@@ -1131,6 +1143,150 @@ class __$VehicleTypeRemovalRequestedCopyWithImpl<$Res>
   return _then(_VehicleTypeRemovalRequested(
 null == vehicleTypeId ? _self.vehicleTypeId : vehicleTypeId // ignore: cast_nullable_to_non_nullable
 as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _VehicleTypeCreateRequested implements DashboardEvent {
+  const _VehicleTypeCreateRequested({required this.code, required this.name, required this.capacity, required this.ratePerKm, required this.ratePerMin, required this.minFare, required this.sortOrder});
+  
+
+ final  String code;
+ final  String name;
+ final  int capacity;
+ final  num ratePerKm;
+ final  num ratePerMin;
+ final  num minFare;
+ final  int sortOrder;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$VehicleTypeCreateRequestedCopyWith<_VehicleTypeCreateRequested> get copyWith => __$VehicleTypeCreateRequestedCopyWithImpl<_VehicleTypeCreateRequested>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VehicleTypeCreateRequested&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.capacity, capacity) || other.capacity == capacity)&&(identical(other.ratePerKm, ratePerKm) || other.ratePerKm == ratePerKm)&&(identical(other.ratePerMin, ratePerMin) || other.ratePerMin == ratePerMin)&&(identical(other.minFare, minFare) || other.minFare == minFare)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,code,name,capacity,ratePerKm,ratePerMin,minFare,sortOrder);
+
+@override
+String toString() {
+  return 'DashboardEvent.vehicleTypeCreateRequested(code: $code, name: $name, capacity: $capacity, ratePerKm: $ratePerKm, ratePerMin: $ratePerMin, minFare: $minFare, sortOrder: $sortOrder)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$VehicleTypeCreateRequestedCopyWith<$Res> implements $DashboardEventCopyWith<$Res> {
+  factory _$VehicleTypeCreateRequestedCopyWith(_VehicleTypeCreateRequested value, $Res Function(_VehicleTypeCreateRequested) _then) = __$VehicleTypeCreateRequestedCopyWithImpl;
+@useResult
+$Res call({
+ String code, String name, int capacity, num ratePerKm, num ratePerMin, num minFare, int sortOrder
+});
+
+
+
+
+}
+/// @nodoc
+class __$VehicleTypeCreateRequestedCopyWithImpl<$Res>
+    implements _$VehicleTypeCreateRequestedCopyWith<$Res> {
+  __$VehicleTypeCreateRequestedCopyWithImpl(this._self, this._then);
+
+  final _VehicleTypeCreateRequested _self;
+  final $Res Function(_VehicleTypeCreateRequested) _then;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? capacity = null,Object? ratePerKm = null,Object? ratePerMin = null,Object? minFare = null,Object? sortOrder = null,}) {
+  return _then(_VehicleTypeCreateRequested(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,capacity: null == capacity ? _self.capacity : capacity // ignore: cast_nullable_to_non_nullable
+as int,ratePerKm: null == ratePerKm ? _self.ratePerKm : ratePerKm // ignore: cast_nullable_to_non_nullable
+as num,ratePerMin: null == ratePerMin ? _self.ratePerMin : ratePerMin // ignore: cast_nullable_to_non_nullable
+as num,minFare: null == minFare ? _self.minFare : minFare // ignore: cast_nullable_to_non_nullable
+as num,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _VehicleTypeUpdateRequested implements DashboardEvent {
+  const _VehicleTypeUpdateRequested(this.vehicleType);
+  
+
+ final  DashboardVehicleTypeEntity vehicleType;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$VehicleTypeUpdateRequestedCopyWith<_VehicleTypeUpdateRequested> get copyWith => __$VehicleTypeUpdateRequestedCopyWithImpl<_VehicleTypeUpdateRequested>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VehicleTypeUpdateRequested&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,vehicleType);
+
+@override
+String toString() {
+  return 'DashboardEvent.vehicleTypeUpdateRequested(vehicleType: $vehicleType)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$VehicleTypeUpdateRequestedCopyWith<$Res> implements $DashboardEventCopyWith<$Res> {
+  factory _$VehicleTypeUpdateRequestedCopyWith(_VehicleTypeUpdateRequested value, $Res Function(_VehicleTypeUpdateRequested) _then) = __$VehicleTypeUpdateRequestedCopyWithImpl;
+@useResult
+$Res call({
+ DashboardVehicleTypeEntity vehicleType
+});
+
+
+
+
+}
+/// @nodoc
+class __$VehicleTypeUpdateRequestedCopyWithImpl<$Res>
+    implements _$VehicleTypeUpdateRequestedCopyWith<$Res> {
+  __$VehicleTypeUpdateRequestedCopyWithImpl(this._self, this._then);
+
+  final _VehicleTypeUpdateRequested _self;
+  final $Res Function(_VehicleTypeUpdateRequested) _then;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? vehicleType = null,}) {
+  return _then(_VehicleTypeUpdateRequested(
+null == vehicleType ? _self.vehicleType : vehicleType // ignore: cast_nullable_to_non_nullable
+as DashboardVehicleTypeEntity,
   ));
 }
 

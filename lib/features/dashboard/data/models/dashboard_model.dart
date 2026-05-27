@@ -347,6 +347,35 @@ class DashboardUserModel {
   }
 }
 
+class DashboardAdminProfileModel {
+  const DashboardAdminProfileModel({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phone1,
+    required this.phone2,
+    required this.isActive,
+  });
+
+  final String id;
+  final String name;
+  final String email;
+  final String? phone1;
+  final String? phone2;
+  final bool isActive;
+
+  factory DashboardAdminProfileModel.fromJson(Map<String, dynamic> json) {
+    return DashboardAdminProfileModel(
+      id: _readString(json, 'id'),
+      name: _readString(json, 'name'),
+      email: _readString(json, 'email'),
+      phone1: _readNullableString(json, 'phone1'),
+      phone2: _readNullableString(json, 'phone2'),
+      isActive: json['isActive'] as bool? ?? json['IsActive'] as bool? ?? true,
+    );
+  }
+}
+
 class DashboardSystemConfigModel {
   const DashboardSystemConfigModel({
     required this.tripDiscountPercent,
@@ -382,6 +411,7 @@ class DashboardSystemConfigModel {
 
 class DashboardAdminOperationsModel {
   const DashboardAdminOperationsModel({
+    required this.adminProfile,
     required this.drivers,
     required this.vehicleTypes,
     required this.users,
@@ -389,6 +419,7 @@ class DashboardAdminOperationsModel {
     required this.config,
   });
 
+  final DashboardAdminProfileModel? adminProfile;
   final List<DashboardDriverModel> drivers;
   final List<DashboardVehicleTypeModel> vehicleTypes;
   final List<DashboardUserModel> users;

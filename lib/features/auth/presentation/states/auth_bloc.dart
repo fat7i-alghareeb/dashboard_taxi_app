@@ -53,7 +53,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _SendOtpRequested event,
     Emitter<AuthState> emit,
   ) async {
-    if (state.phoneStatus.isLoading) return;
+    if (state.phoneStatus.isLoading) {
+      printY('[AuthBloc] send otp ignored because request is already loading');
+      return;
+    }
     printM('[AuthBloc] send otp requested phone=${event.phone}');
     emit(state.copyWith(phoneStatus: const BlocStatus.loading()));
 
@@ -82,8 +85,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _VerifyOtpRequested event,
     Emitter<AuthState> emit,
   ) async {
-    if (state.otpStatus.isLoading) return;
-    if (_pendingPhone == null || state.verificationId == null) return;
+    if (state.otpStatus.isLoading) {
+      printY(
+        '[AuthBloc] verify otp ignored because request is already loading',
+      );
+      return;
+    }
+    if (_pendingPhone == null || state.verificationId == null) {
+      printY(
+        '[AuthBloc] verify otp ignored missing pendingPhone=$_pendingPhone '
+        'verificationId=${state.verificationId}',
+      );
+      return;
+    }
 
     printM('[AuthBloc] verify otp requested phone=$_pendingPhone');
     emit(state.copyWith(otpStatus: const BlocStatus.loading()));
@@ -110,7 +124,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _ForceResetPasswordRequested event,
     Emitter<AuthState> emit,
   ) async {
-    if (state.forceResetStatus.isLoading) return;
+    if (state.forceResetStatus.isLoading) {
+      printY(
+        '[AuthBloc] force reset ignored because request is already loading',
+      );
+      return;
+    }
 
     printM('[AuthBloc] force reset password requested');
     emit(state.copyWith(forceResetStatus: const BlocStatus.loading()));

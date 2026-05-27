@@ -1,23 +1,35 @@
-import 'package:dashboardtaxi/common/imports/imports.dart';
-import '../widgets/root_body.dart';
-import '../widgets/root_drawer_content.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dashboardtaxi/core/injection/injectable.dart';
+import 'package:dashboardtaxi/features/root/presentation/states/root_bloc.dart';
+import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
+import 'package:dashboardtaxi/utils/helpers/colored_print.dart';
 
-/// Root screen that hosts the main app screen body.
-class RootScreen extends StatelessWidget {
+import '../widgets/root_body.dart';
+
+class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
 
   static const String pagePath = '/root_screen';
   static const String pageName = 'RootScreen';
 
   @override
+  State<RootScreen> createState() => _RootScreenState();
+}
+
+class _RootScreenState extends State<RootScreen> {
+  @override
   Widget build(BuildContext context) {
-    return AppScaffold.appBar(
-      appBarConfig: const AppScaffoldAppBarConfig(
-        title: 'Dashboard',
-        enableDrawer: true,
-        showLeading: false, // Don't show leading back button on root screen
-      ),
-      endDrawer: const RootDrawerContent(),
+    printM('[RootScreen] build');
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => getIt<RootBloc>()..add(const RootEvent.started()),
+        ),
+        BlocProvider<TripBloc>.value(
+          value: getIt<TripBloc>()..add(const TripEvent.started()),
+        ),
+      ],
       child: const RootBody(),
     );
   }

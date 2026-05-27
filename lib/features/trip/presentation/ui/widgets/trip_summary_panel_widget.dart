@@ -9,65 +9,71 @@ class TripSummaryPanelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadii.lg.r),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: context.surface.withValues(alpha: 0.92),
-          borderRadius: BorderRadius.circular(AppRadii.lg.r),
-          border: Border.all(color: AppColors.success.withValues(alpha: 0.24)),
-        ),
-        child: Padding(
-          padding: REdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              FaIcon(
-                FontAwesomeIcons.circleCheck,
-                size: 32.r,
-                color: AppColors.success,
-              ),
-              AppSpacing.md.verticalSpace,
-              Text(
-                AppStrings.tripSummaryTitle,
-                style: AppTextStyles.s24w700.copyWith(color: context.onSurface),
-              ),
-              AppSpacing.xs.verticalSpace,
-              Text(
-                AppStrings.tripSummarySubtitle,
-                style: AppTextStyles.s14w400.copyWith(
-                  color: context.onSurface.withValues(alpha: 0.66),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg.r),
+        border: Border.all(color: AppColors.success.withValues(alpha: 0.24)),
+      ),
+      child: Padding(
+        padding: REdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 8.r,
+                  height: 8.r,
+                  decoration: const BoxDecoration(
+                    color: AppColors.success,
+                    shape: BoxShape.circle,
+                  ),
                 ),
-              ),
-              AppSpacing.lg.verticalSpace,
-              Text(
-                AppStrings.tripReferenceCode.replaceAll(
-                  '{code}',
-                  trip.referenceCode,
+                AppSpacing.sm.horizontalSpace,
+                Text(
+                  AppStrings.tripSummaryTitle.toUpperCase(),
+                  style: AppTextStyles.s11w500.copyWith(
+                    color: AppColors.success,
+                    letterSpacing: 1.4,
+                  ),
                 ),
-                style: AppTextStyles.s16w600.copyWith(color: context.onSurface),
+              ],
+            ),
+            AppSpacing.md.verticalSpace,
+            Text(
+              AppStrings.tripSummarySubtitle,
+              style: AppTextStyles.s14w400.copyWith(
+                color: context.onSurface.withValues(alpha: 0.60),
               ),
-              AppSpacing.xs.verticalSpace,
-              Text(
-                AppStrings.tripFare
-                    .replaceAll('{fare}', trip.quotedFare.toStringAsFixed(2))
-                    .replaceAll('{currency}', trip.currencyCode),
-                style: AppTextStyles.s24w700.copyWith(color: AppColors.success),
-              ),
-              AppSpacing.xl.verticalSpace,
-              AppButton.success(
-                onTap: () {
-                  context.read<TripBloc>().add(
-                    const TripEvent.clearCompletedSummaryRequested(),
-                  );
-                },
-                child: AppButtonChild.label(AppStrings.tripReturnOnline),
-              ),
-            ],
-          ),
+            ),
+            AppSpacing.lg.verticalSpace,
+            Text(
+              trip.referenceCode,
+              style: AppTextStyles.s16w600.copyWith(color: context.onSurface),
+            ),
+            AppSpacing.xs.verticalSpace,
+            Text(
+              AppStrings.tripFare
+                  .replaceAll('{fare}', trip.quotedFare.toStringAsFixed(2))
+                  .replaceAll('{currency}', trip.currencyCode),
+              style: AppTextStyles.s28w700.copyWith(color: AppColors.success),
+            ),
+            AppSpacing.xl.verticalSpace,
+            AppButton.outline(
+              variant: AppButtonVariant.success,
+              layout: const AppButtonLayout(height: 48),
+              onTap: () {
+                context.read<TripBloc>().add(
+                  const TripEvent.clearCompletedSummaryRequested(),
+                );
+              },
+              child: AppButtonChild.label(AppStrings.tripReturnOnline),
+            ),
+          ],
         ),
       ),
-    ).animate().fadeIn(duration: AppDurations.normal).slideY(begin: 0.08);
+    ).animate().fadeIn(duration: 320.ms).slideY(begin: 0.05, end: 0);
   }
 }
