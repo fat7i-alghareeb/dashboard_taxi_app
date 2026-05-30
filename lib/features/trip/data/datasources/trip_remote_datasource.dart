@@ -42,6 +42,13 @@ class TripRemoteDataSource {
     return _postAction(tripId, 'arrive');
   }
 
+  Future<void> resendArrived(String tripId) {
+    return rethrowAsAppException(() async {
+      printY('[TripRemoteDataSource] resendArrived trip=$tripId');
+      await _dio.post<dynamic>(ApiEndpoints.arriveResend(tripId));
+    });
+  }
+
   Future<void> startTrip(String tripId) {
     return _postAction(tripId, 'start');
   }
@@ -96,30 +103,6 @@ class TripRemoteDataSource {
       await _dio.post<dynamic>(
         ApiEndpoints.cancelTrip(tripId),
         data: {'note': note},
-      );
-    });
-  }
-
-  Future<TripWaitingSessionModel> startWaiting(String tripId) {
-    return rethrowAsAppException(() async {
-      printY('[TripRemoteDataSource] startWaiting trip=$tripId');
-      final response = await _dio.post<dynamic>(
-        ApiEndpoints.startWaiting(tripId),
-      );
-      return TripWaitingSessionModel.fromJson(
-        Map<String, dynamic>.from(response.data as Map),
-      );
-    });
-  }
-
-  Future<TripWaitingSessionModel> stopWaiting(String tripId) {
-    return rethrowAsAppException(() async {
-      printY('[TripRemoteDataSource] stopWaiting trip=$tripId');
-      final response = await _dio.post<dynamic>(
-        ApiEndpoints.stopWaiting(tripId),
-      );
-      return TripWaitingSessionModel.fromJson(
-        Map<String, dynamic>.from(response.data as Map),
       );
     });
   }

@@ -134,29 +134,6 @@ class TripEntity {
     );
   }
 
-  TripEntity copyWithWaitingSession(TripWaitingSessionEntity? session) {
-    return TripEntity(
-      id: id,
-      referenceCode: referenceCode,
-      passengerId: passengerId,
-      driverId: driverId,
-      vehicleTypeId: vehicleTypeId,
-      status: status,
-      quotedFare: quotedFare,
-      currencyCode: currencyCode,
-      createdAtUtc: createdAtUtc,
-      scheduledAtUtc: scheduledAtUtc,
-      stops: stops,
-      driverLatitude: driverLatitude,
-      driverLongitude: driverLongitude,
-      vehicleTypeName: vehicleTypeName,
-      cancellation: cancellation,
-      compensationClaim: compensationClaim,
-      activeWaitingSession: session,
-      passengerName: passengerName,
-      passengerPhone: passengerPhone,
-    );
-  }
 }
 
 class TripCancellationEntity {

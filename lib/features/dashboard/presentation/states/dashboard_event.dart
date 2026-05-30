@@ -28,6 +28,10 @@ class DashboardEvent with _$DashboardEvent {
   }) = _DriverLocationReceived;
   const factory DashboardEvent.adminTripsRequested({String? status}) =
       _AdminTripsRequested;
+  const factory DashboardEvent.adminTripStatusPatched({
+    required String tripId,
+    required String newStatus,
+  }) = _AdminTripStatusPatched;
   const factory DashboardEvent.tripDetailsRequested(String tripId) =
       _TripDetailsRequested;
   // --- Control Center admin fetch events ---

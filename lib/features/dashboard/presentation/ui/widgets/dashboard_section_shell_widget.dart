@@ -11,6 +11,7 @@ class DashboardSectionShellWidget extends StatelessWidget {
     this.trailingLabel,
     this.onTrailingTap,
     this.itemCount,
+    this.decorate = true,
   });
 
   final String title;
@@ -20,6 +21,10 @@ class DashboardSectionShellWidget extends StatelessWidget {
   final String? trailingLabel;
   final VoidCallback? onTrailingTap;
   final int? itemCount;
+
+  /// When `false`, skips the outer bordered card so children can be a list of
+  /// independently decorated cards (e.g. one card per trip).
+  final bool decorate;
 
   @override
   Widget build(BuildContext context) {
@@ -93,19 +98,22 @@ class DashboardSectionShellWidget extends StatelessWidget {
           ),
         ),
         AppSpacing.md.verticalSpace,
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: context.surface,
-            borderRadius: BorderRadius.circular(AppRadii.lg.r),
-            border: Border.all(
-              color: context.onSurface.withValues(alpha: 0.08),
+        if (decorate)
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: context.surface,
+              borderRadius: BorderRadius.circular(AppRadii.lg.r),
+              border: Border.all(
+                color: context.onSurface.withValues(alpha: 0.08),
+              ),
             ),
-          ),
-          child: Padding(
-            padding: REdgeInsets.all(AppSpacing.lg),
-            child: child,
-          ),
-        ),
+            child: Padding(
+              padding: REdgeInsets.all(AppSpacing.lg),
+              child: child,
+            ),
+          )
+        else
+          child,
       ],
     ).animate().fadeIn(duration: 300.ms).slideY(begin: 0.04, end: 0);
   }

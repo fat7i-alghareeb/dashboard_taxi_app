@@ -162,6 +162,26 @@ class DashboardTripEntity {
 
   bool get hasPickupLocation =>
       pickupLatitude != null && pickupLongitude != null;
+
+  DashboardTripEntity copyWithStatus(String newStatus) {
+    return DashboardTripEntity(
+      id: id,
+      referenceCode: referenceCode,
+      status: newStatus,
+      vehicleTypeId: vehicleTypeId,
+      fareLabel: fareLabel,
+      createdAt: createdAt,
+      pickupLatitude: pickupLatitude,
+      pickupLongitude: pickupLongitude,
+      pickupLabel: pickupLabel,
+      dropoffLabel: dropoffLabel,
+      scheduledAt: scheduledAt,
+      assignedAt: assignedAt,
+      arrivedAt: arrivedAt,
+      startedAt: startedAt,
+      completedAt: completedAt,
+    );
+  }
 }
 
 class DashboardTripDetailsEntity {

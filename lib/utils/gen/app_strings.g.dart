@@ -925,6 +925,13 @@ class AppStrings {
   static String get tripStartEnRouteNavigation => 'tripStartEnRouteNavigation'.tr();
   /// Start Trip - بدء الرحلة - Start Trip - Start Trip - Start Trip - Start Trip - Start Trip - Start Trip - Start Trip
   static String get tripStartRide => 'tripStartRide'.tr();
+  /// Notify customer again
+  static String get notifyCustomerAgain => 'notifyCustomerAgain'.tr();
+  /// Notify again in {seconds}s
+  static String notifyAgainCountdown(int seconds) =>
+      'notifyAgainCountdown'.tr(namedArgs: {'seconds': '$seconds'});
+  /// Notification sent
+  static String get notificationSent => 'notificationSent'.tr();
   /// Status - الحالة - Status - Status - Status - Статус - Statut - Estado - Status
   static String get tripStatus => 'tripStatus'.tr();
   /// Cancelled - ملغاة - Geannuleerd - Storniert - Anulowany - Скасовано - Annulé - Cancelado - Anulată

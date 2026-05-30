@@ -65,10 +65,8 @@ class ApiEndpoints {
       '/api/v1/trips/$tripId/stops/$sequence/complete';
   static String driverCancelTrip(String tripId) =>
       '/api/v1/trips/$tripId/driver-cancellations';
-  static String startWaiting(String tripId) =>
-      '/api/v1/trips/$tripId/waiting/start';
-  static String stopWaiting(String tripId) =>
-      '/api/v1/trips/$tripId/waiting/stop';
+  static String arriveResend(String tripId) =>
+      '/api/v1/trips/$tripId/arrive/resend';
   static const String compensationClaims = '/api/v1/trips/compensation-claims';
   static String reviewCompensationClaim(String claimId) =>
       '/api/v1/trips/compensation-claims/$claimId/review';

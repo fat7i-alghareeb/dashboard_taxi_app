@@ -30,6 +30,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<_DriverLocationsRequested>(_onDriverLocationsRequested);
     on<_DriverLocationReceived>(_onDriverLocationReceived);
     on<_AdminTripsRequested>(_onAdminTripsRequested);
+    on<_AdminTripStatusPatched>(_onAdminTripStatusPatched);
     on<_TripDetailsRequested>(_onTripDetailsRequested);
     on<_AdminConfigRequested>(_onAdminConfigRequested);
     on<_AdminVehicleTypesRequested>(_onAdminVehicleTypesRequested);
@@ -57,24 +58,72 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               longitude: longitude,
             ),
           );
-        // Trip lifecycle changes affect the overview's pending/active lists.
-        // Refresh (debounced) so the admin sees new bookings and status
-        // changes without a manual pull-to-refresh.
+        // A brand-new trip appeared. Refresh the admin trips list and the
+        // overview counters; admins live in the "Admins" SignalR group so they
+        // already receive the TripRequested broadcast.
         case RealtimeTripRequested():
-        case RealtimeDriverAssigned():
-        case RealtimeTripCancelled():
-        case RealtimeTripCompleted():
+          _scheduleAdminTripsRefresh();
           _scheduleOverviewRefresh();
-        case RealtimeTripStarted():
-        case RealtimeDriverEnRoute():
-        case RealtimeDriverArrived():
+        // Status transitions: patch the in-memory list in-place to avoid a
+        // flicker. The overview counters also need a refresh.
+        case RealtimeDriverAssigned(:final tripId):
+          _applyTripStatusInPlace(tripId, 'DriverAssigned');
+          _scheduleOverviewRefresh();
+        case RealtimeDriverEnRoute(:final tripId):
+          _applyTripStatusInPlace(tripId, 'DriverEnRoute');
+        case RealtimeDriverArrived(:final tripId):
+          _applyTripStatusInPlace(tripId, 'DriverArrived');
+        case RealtimeTripStarted(:final tripId):
+          _applyTripStatusInPlace(tripId, 'InProgress');
+        case RealtimeTripStopCompleted():
+          break;
+        case RealtimeTripCompleted(:final tripId):
+          _applyTripStatusInPlace(tripId, 'Completed');
+          _scheduleOverviewRefresh();
+        case RealtimeTripCancelled(:final tripId):
+          _applyTripStatusInPlace(tripId, 'Cancelled');
+          _scheduleOverviewRefresh();
         case RealtimePaymentConfirmed():
         case RealtimePaymentFailed():
         case RealtimeTripRefunded():
-        case RealtimeTripStopCompleted():
           break;
       }
     });
+  }
+
+  void _scheduleAdminTripsRefresh() {
+    _adminTripsRefreshTimer?.cancel();
+    _adminTripsRefreshTimer = Timer(const Duration(milliseconds: 600), () {
+      if (isClosed) return;
+      printC('[DashboardBloc] realtime trip event → admin trips refresh');
+      add(const DashboardEvent.adminTripsRequested());
+    });
+  }
+
+  void _applyTripStatusInPlace(String tripId, String newStatus) {
+    if (isClosed) return;
+    add(DashboardEvent.adminTripStatusPatched(
+      tripId: tripId,
+      newStatus: newStatus,
+    ));
+  }
+
+  void _onAdminTripStatusPatched(
+    _AdminTripStatusPatched event,
+    Emitter<DashboardState> emit,
+  ) {
+    final current = state.adminTripsState.maybeWhen(
+      success: (data) => data,
+      orElse: () => const <DashboardTripEntity>[],
+    );
+    final index = current.indexWhere((t) => t.id == event.tripId);
+    if (index < 0) return;
+    final updated = List<DashboardTripEntity>.of(current);
+    updated[index] = current[index].copyWithStatus(event.newStatus);
+    printC(
+      '[DashboardBloc] realtime in-place status trip=${event.tripId} → ${event.newStatus}',
+    );
+    emit(state.copyWith(adminTripsState: BlocStatus.success(updated)));
   }
 
   void _scheduleOverviewRefresh() {
@@ -91,6 +140,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final RootModeService _rootModeService;
   StreamSubscription<RealtimeEvent>? _realtimeSub;
   Timer? _overviewRefreshTimer;
+  Timer? _adminTripsRefreshTimer;
+  final Set<String> _joinedTripGroups = <String>{};
 
   Future<void> _onStarted(_Started event, Emitter<DashboardState> emit) {
     return _onOverviewRequested(const _OverviewRequested(), emit);
@@ -309,12 +360,27 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       success: (data) {
         printG('[DashboardBloc] admin trips success count=${data.length}');
         emit(state.copyWith(adminTripsState: BlocStatus.success(data)));
+        _syncTripGroupSubscriptions(data.map((t) => t.id).toSet());
       },
       failure: (message) {
         printY('[DashboardBloc] admin trips failed: $message');
         emit(state.copyWith(adminTripsState: BlocStatus.failure(message)));
       },
     );
+  }
+
+  void _syncTripGroupSubscriptions(Set<String> nextIds) {
+    final toLeave = _joinedTripGroups.difference(nextIds);
+    final toJoin = nextIds.difference(_joinedTripGroups);
+    for (final id in toLeave) {
+      unawaited(_realtimeService.leaveTripGroup(id));
+    }
+    for (final id in toJoin) {
+      unawaited(_realtimeService.joinTripGroup(id));
+    }
+    _joinedTripGroups
+      ..removeAll(toLeave)
+      ..addAll(toJoin);
   }
 
   Future<void> _onTripDetailsRequested(
@@ -538,6 +604,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> close() {
     _realtimeSub?.cancel();
     _overviewRefreshTimer?.cancel();
+    _adminTripsRefreshTimer?.cancel();
+    for (final id in _joinedTripGroups) {
+      unawaited(_realtimeService.leaveTripGroup(id));
+    }
+    _joinedTripGroups.clear();
     return super.close();
   }
 }

@@ -3,7 +3,6 @@ import 'package:dashboardtaxi/core/domain/extensions/user_role_extensions.dart';
 import 'package:dashboardtaxi/core/services/session/auth_manager.dart';
 import 'package:dashboardtaxi/features/root/domain/services/root_tab_controller.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
-import 'package:dashboardtaxi/features/trip/presentation/states/trip_sheet_stage.dart';
 
 import 'home/root_home_tab_section.dart';
 import 'nav/root_bottom_nav_bar.dart';
@@ -97,22 +96,9 @@ class _RootBodyState extends State<RootBody> {
     final pages = _buildPages();
 
     return BlocBuilder<TripBloc, TripState>(
-      buildWhen: (prev, curr) =>
-          prev.sheetStage != curr.sheetStage ||
-          prev.pendingTrips != curr.pendingTrips,
+      buildWhen: (prev, curr) => prev.pendingTrips != curr.pendingTrips,
       builder: (context, tripState) {
         final navItems = _buildNavItems(tripState.pendingTrips.length);
-        // Only hide the nav for the immersive active-driving stages. Idle,
-        // pending-assignment, the completion summary and read-only views keep
-        // the nav so the admin can always move between tabs.
-        const immersiveStages = {
-          TripSheetStage.incoming,
-          TripSheetStage.toPickup,
-          TripSheetStage.atPickup,
-          TripSheetStage.inProgress,
-        };
-        final hideNav = _currentIndex == _homeTabIndex &&
-            immersiveStages.contains(tripState.sheetStage);
 
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -124,13 +110,11 @@ class _RootBodyState extends State<RootBody> {
               child: RootDrawerContent(),
             ),
           ),
-          bottomNavigationBar: hideNav
-              ? null
-              : RootBottomNavBar(
-                  items: navItems,
-                  currentIndex: _currentIndex,
-                  onItemSelected: _onTabSelected,
-                ),
+          bottomNavigationBar: RootBottomNavBar(
+            items: navItems,
+            currentIndex: _currentIndex,
+            onItemSelected: _onTabSelected,
+          ),
           body: PageView(
             controller: _pageController,
             physics: const NeverScrollableScrollPhysics(),

@@ -14,6 +14,8 @@ class TripEvent with _$TripEvent {
       _MarkEnRouteRequested;
   const factory TripEvent.markArrivedRequested(String tripId) =
       _MarkArrivedRequested;
+  const factory TripEvent.resendArrivedNotificationRequested(String tripId) =
+      _ResendArrivedNotificationRequested;
   const factory TripEvent.startTripRequested(String tripId) =
       _StartTripRequested;
   const factory TripEvent.completeTripRequested(String tripId) =
@@ -25,10 +27,6 @@ class TripEvent with _$TripEvent {
     required String reason,
     String? note,
   }) = _DriverCancelRequested;
-  const factory TripEvent.startWaitingRequested(String tripId) =
-      _StartWaitingRequested;
-  const factory TripEvent.stopWaitingRequested(String tripId) =
-      _StopWaitingRequested;
   const factory TripEvent.completeStopRequested({
     required String tripId,
     required int sequence,

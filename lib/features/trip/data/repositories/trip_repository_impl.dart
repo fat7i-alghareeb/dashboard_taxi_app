@@ -40,6 +40,11 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
+  Future<Result<void>> resendArrived(String tripId) {
+    return runAsResult(() => _remote.resendArrived(tripId));
+  }
+
+  @override
   Future<Result<void>> startTrip(String tripId) {
     return runAsResult(() => _remote.startTrip(tripId));
   }
@@ -76,21 +81,5 @@ class TripRepositoryImpl implements TripRepository {
     String? note,
   ) {
     return runAsResult(() => _remote.driverCancelTrip(tripId, reason, note));
-  }
-
-  @override
-  Future<Result<TripWaitingSessionEntity>> startWaiting(String tripId) {
-    return runAsResult(() async {
-      final model = await _remote.startWaiting(tripId);
-      return model.toEntity;
-    });
-  }
-
-  @override
-  Future<Result<TripWaitingSessionEntity>> stopWaiting(String tripId) {
-    return runAsResult(() async {
-      final model = await _remote.stopWaiting(tripId);
-      return model.toEntity;
-    });
   }
 }

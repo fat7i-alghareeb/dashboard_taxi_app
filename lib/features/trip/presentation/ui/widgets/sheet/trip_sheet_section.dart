@@ -145,7 +145,20 @@ class _TripSheetChrome extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(child: _DragHandle()),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  _DragHandle(),
+                  Positioned(
+                    right: 0,
+                    child: _SheetCloseButton(
+                      onPressed: () => context
+                          .read<TripBloc>()
+                          .add(const TripEvent.selectionCleared()),
+                    ),
+                  ),
+                ],
+              ),
               AppSpacing.md.verticalSpace,
               child,
             ],
@@ -165,6 +178,35 @@ class _DragHandle extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
         color: context.onSurface.withValues(alpha: 0.14),
+      ),
+    );
+  }
+}
+
+class _SheetCloseButton extends StatelessWidget {
+  const _SheetCloseButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 32.r,
+      height: 32.r,
+      child: Material(
+        color: context.onSurface.withValues(alpha: 0.06),
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onPressed,
+          child: Center(
+            child: FaIcon(
+              FontAwesomeIcons.xmark,
+              size: 14.r,
+              color: context.onSurface.withValues(alpha: 0.72),
+            ),
+          ),
+        ),
       ),
     );
   }

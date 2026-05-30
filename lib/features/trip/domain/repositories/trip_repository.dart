@@ -6,6 +6,7 @@ abstract class TripRepository {
   Future<Result<TripEntity>> getTripById(String tripId);
   Future<Result<void>> markEnRoute(String tripId);
   Future<Result<void>> markArrived(String tripId);
+  Future<Result<void>> resendArrived(String tripId);
   Future<Result<void>> startTrip(String tripId);
   Future<Result<void>> completeTrip(String tripId);
   Future<Result<void>> completeStop(String tripId, int sequence);
@@ -17,6 +18,4 @@ abstract class TripRepository {
     String reason,
     String? note,
   );
-  Future<Result<TripWaitingSessionEntity>> startWaiting(String tripId);
-  Future<Result<TripWaitingSessionEntity>> stopWaiting(String tripId);
 }

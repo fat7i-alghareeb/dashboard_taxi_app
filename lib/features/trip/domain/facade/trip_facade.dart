@@ -26,6 +26,10 @@ class TripFacade {
     return _repository.markArrived(tripId);
   }
 
+  Future<Result<void>> resendArrived(String tripId) {
+    return _repository.resendArrived(tripId);
+  }
+
   Future<Result<void>> startTrip(String tripId) {
     return _repository.startTrip(tripId);
   }
@@ -56,13 +60,5 @@ class TripFacade {
     String? note,
   ) {
     return _repository.driverCancelTrip(tripId, reason, note);
-  }
-
-  Future<Result<TripWaitingSessionEntity>> startWaiting(String tripId) {
-    return _repository.startWaiting(tripId);
-  }
-
-  Future<Result<TripWaitingSessionEntity>> stopWaiting(String tripId) {
-    return _repository.stopWaiting(tripId);
   }
 }

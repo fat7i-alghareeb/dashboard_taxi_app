@@ -36,12 +36,11 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     on<_SelectionCleared>(_onSelectionCleared);
     on<_MarkEnRouteRequested>(_onMarkEnRouteRequested);
     on<_MarkArrivedRequested>(_onMarkArrivedRequested);
+    on<_ResendArrivedNotificationRequested>(_onResendArrivedNotificationRequested);
     on<_StartTripRequested>(_onStartTripRequested);
     on<_CompleteTripRequested>(_onCompleteTripRequested);
     on<_ClearCompletedSummaryRequested>(_onClearCompletedSummaryRequested);
     on<_DriverCancelRequested>(_onDriverCancelRequested);
-    on<_StartWaitingRequested>(_onStartWaitingRequested);
-    on<_StopWaitingRequested>(_onStopWaitingRequested);
     on<_CompleteStopRequested>(_onCompleteStopRequested);
     on<_AdminSelfAssignRequested>(_onAdminSelfAssignRequested);
     on<_AdminCancelRequested>(_onAdminCancelRequested);
@@ -303,6 +302,46 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     );
   }
 
+  static const Duration _resendArrivedCooldown = Duration(seconds: 30);
+
+  Future<void> _onResendArrivedNotificationRequested(
+    _ResendArrivedNotificationRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    final lastSent = state.lastArrivedResendAt;
+    if (lastSent != null &&
+        DateTime.now().difference(lastSent) < _resendArrivedCooldown) {
+      printC('[TripBloc] resend arrived blocked by cooldown trip=${event.tripId}');
+      return;
+    }
+    printM('[TripBloc] resend arrived requested trip=${event.tripId}');
+    emit(
+      state.copyWith(
+        resendArrivedNotificationState: const BlocStatus.loading(),
+      ),
+    );
+    final result = await _facade.resendArrived(event.tripId);
+    result.when(
+      success: (_) {
+        printG('[TripBloc] resend arrived success trip=${event.tripId}');
+        emit(
+          state.copyWith(
+            resendArrivedNotificationState: const BlocStatus.success(null),
+            lastArrivedResendAt: DateTime.now(),
+          ),
+        );
+      },
+      failure: (message) {
+        printY('[TripBloc] resend arrived failed trip=${event.tripId}: $message');
+        emit(
+          state.copyWith(
+            resendArrivedNotificationState: BlocStatus.failure(message),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _onStartTripRequested(
     _StartTripRequested event,
     Emitter<TripState> emit,
@@ -396,54 +435,6 @@ class TripBloc extends Bloc<TripEvent, TripState> {
       failure: (message) async {
         printY('[TripBloc] driver cancel failed trip=${event.tripId}: $message');
         emit(state.copyWith(driverCancelState: BlocStatus.failure(message)));
-      },
-    );
-  }
-
-  Future<void> _onStartWaitingRequested(
-    _StartWaitingRequested event,
-    Emitter<TripState> emit,
-  ) async {
-    printM('[TripBloc] start waiting requested trip=${event.tripId}');
-    emit(state.copyWith(startWaitingState: const BlocStatus.loading()));
-    final result = await _facade.startWaiting(event.tripId);
-    result.when(
-      success: (session) {
-        printG('[TripBloc] start waiting success trip=${event.tripId}');
-        emit(
-          state.copyWith(
-            startWaitingState: const BlocStatus.success(null),
-            activeTrip: state.activeTrip?.copyWithWaitingSession(session),
-          ),
-        );
-      },
-      failure: (message) {
-        printY('[TripBloc] start waiting failed trip=${event.tripId}: $message');
-        emit(state.copyWith(startWaitingState: BlocStatus.failure(message)));
-      },
-    );
-  }
-
-  Future<void> _onStopWaitingRequested(
-    _StopWaitingRequested event,
-    Emitter<TripState> emit,
-  ) async {
-    printM('[TripBloc] stop waiting requested trip=${event.tripId}');
-    emit(state.copyWith(stopWaitingState: const BlocStatus.loading()));
-    final result = await _facade.stopWaiting(event.tripId);
-    result.when(
-      success: (session) {
-        printG('[TripBloc] stop waiting success trip=${event.tripId}');
-        emit(
-          state.copyWith(
-            stopWaitingState: const BlocStatus.success(null),
-            activeTrip: state.activeTrip?.copyWithWaitingSession(session),
-          ),
-        );
-      },
-      failure: (message) {
-        printY('[TripBloc] stop waiting failed trip=${event.tripId}: $message');
-        emit(state.copyWith(stopWaitingState: BlocStatus.failure(message)));
       },
     );
   }
