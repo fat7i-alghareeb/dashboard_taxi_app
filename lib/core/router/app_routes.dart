@@ -79,25 +79,41 @@ class AppRouteRegistry {
       ),
     ),
     GoRoute(
-      path: DashboardAdminOperationsScreen.pagePath,
-      name: DashboardAdminOperationsScreen.pageName,
-      pageBuilder: (context, state) => AppPageTransitions.build(
-        state: state,
-        child: const DashboardAdminOperationsScreen(),
-      ),
-    ),
-    GoRoute(
       path: KycScreen.pagePath,
       name: KycScreen.pageName,
       pageBuilder: (context, state) =>
           AppPageTransitions.build(state: state, child: const KycScreen()),
     ),
     GoRoute(
-      path: AdminSettingsScreen.pagePath,
-      name: AdminSettingsScreen.pageName,
+      path: ControlCenterScreen.pagePath,
+      name: ControlCenterScreen.pageName,
       pageBuilder: (context, state) => AppPageTransitions.build(
         state: state,
-        child: const AdminSettingsScreen(),
+        child: const ControlCenterScreen(),
+      ),
+    ),
+    GoRoute(
+      path: CreateAdminScreen.pagePath,
+      name: CreateAdminScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const CreateAdminScreen(),
+      ),
+    ),
+    GoRoute(
+      path: CompensationClaimsScreen.pagePath,
+      name: CompensationClaimsScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const CompensationClaimsScreen(),
+      ),
+    ),
+    GoRoute(
+      path: ChangePasswordScreen.pagePath,
+      name: ChangePasswordScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const ChangePasswordScreen(),
       ),
     ),
   ];

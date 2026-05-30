@@ -22,8 +22,11 @@ import '../../utils/helpers/colored_print.dart';
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  printC('[Notifications] FCM background message received');
-  printC('[Notifications] data=${message.data}');
+  printC('[FCM] Background message received');
+  printC('[FCM] messageId=${message.messageId}');
+  printC('[FCM] title="${message.notification?.title}" body="${message.notification?.body}"');
+  printC('[FCM] data=${message.data}');
+  printC('[FCM] sentTime=${message.sentTime}');
 }
 
 /// Handles background taps/actions from flutter_local_notifications.

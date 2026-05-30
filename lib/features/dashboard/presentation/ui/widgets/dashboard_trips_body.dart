@@ -1,7 +1,6 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart';
-import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_details_panel_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_filter.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_filter_pills_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trips_header_widget.dart';
@@ -9,7 +8,12 @@ import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboa
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trips_shimmer_widget.dart';
 
 class DashboardTripsBody extends StatefulWidget {
-  const DashboardTripsBody({super.key});
+  final bool showBackButton;
+
+  const DashboardTripsBody({
+    super.key,
+    this.showBackButton = true,
+  });
 
   @override
   State<DashboardTripsBody> createState() => _DashboardTripsBodyState();
@@ -38,7 +42,7 @@ class _DashboardTripsBodyState extends State<DashboardTripsBody> {
                 vertical: AppSpacing.lg,
               ),
               children: [
-                const DashboardTripsHeaderWidget(),
+                DashboardTripsHeaderWidget(showBackButton: widget.showBackButton),
                 AppSpacing.lg.verticalSpace,
                 DashboardTripFilterPillsWidget(
                   selected: _filter,
@@ -59,8 +63,6 @@ class _DashboardTripsBodyState extends State<DashboardTripsBody> {
                     );
                   },
                 ),
-                AppSpacing.xl.verticalSpace,
-                DashboardTripDetailsPanelWidget(state: state.tripDetailsState),
                 AppSpacing.xxl.verticalSpace,
               ],
             ),

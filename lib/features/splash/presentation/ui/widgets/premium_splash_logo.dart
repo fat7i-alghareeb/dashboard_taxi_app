@@ -19,7 +19,7 @@ class PremiumSplashLogo extends StatelessWidget {
               width: logoSize,
               height: logoSize,
               fit: BoxFit.contain,
-              color: context.onPrimary,
+              color: context.onSurface,
             )
             .animate()
             .fadeIn(duration: 600.ms, curve: Curves.easeOutCubic)
@@ -41,7 +41,7 @@ class PremiumSplashLogo extends StatelessWidget {
         Text(
               AppStrings.appName,
               style: AppTextStyles.s20w700.copyWith(
-                color: context.onPrimary,
+                color: context.onSurface,
                 letterSpacing: 1.2,
               ),
             )
@@ -52,7 +52,7 @@ class PremiumSplashLogo extends StatelessWidget {
         Text(
               AppStrings.appTagline.toUpperCase(),
               style: AppTextStyles.s12w500.copyWith(
-                color: context.onPrimary.withValues(alpha: 0.70),
+                color: context.onSurface.withValues(alpha: 0.70),
                 letterSpacing: 2.4,
               ),
             )

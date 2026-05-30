@@ -173,12 +173,12 @@ class _ProfileFormState extends State<_ProfileForm> {
             ),
             if (widget.isAdmin) ...[
               AppSpacing.md.verticalSpace,
-              AppReactiveTextField.text(
+              AppReactiveTextField.phone(
                 formControlName: _fieldPhone1,
                 title: AppStrings.profileFieldPhone,
               ),
               AppSpacing.md.verticalSpace,
-              AppReactiveTextField.text(
+              AppReactiveTextField.phone(
                 formControlName: _fieldPhone2,
                 title: AppStrings.profileFieldPhone2,
               ),

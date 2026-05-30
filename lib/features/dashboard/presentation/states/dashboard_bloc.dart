@@ -31,11 +31,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<_DriverLocationReceived>(_onDriverLocationReceived);
     on<_AdminTripsRequested>(_onAdminTripsRequested);
     on<_TripDetailsRequested>(_onTripDetailsRequested);
-    on<_AdminOperationsRequested>(_onAdminOperationsRequested);
-    on<_DriverSuspensionRequested>(_onDriverSuspensionRequested);
-    on<_DriverVehicleTypeAssignmentRequested>(
-      _onDriverVehicleTypeAssignmentRequested,
-    );
+    on<_AdminConfigRequested>(_onAdminConfigRequested);
+    on<_AdminVehicleTypesRequested>(_onAdminVehicleTypesRequested);
     on<_VehicleTypeStatusToggleRequested>(_onVehicleTypeStatusToggleRequested);
     on<_VehicleTypeRemovalRequested>(_onVehicleTypeRemovalRequested);
     on<_VehicleTypeCreateRequested>(_onVehicleTypeCreateRequested);
@@ -44,22 +41,48 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<_CurrencyUpdateRequested>(_onCurrencyUpdateRequested);
 
     _realtimeSub = _realtimeService.events.listen((final event) {
-      if (event case RealtimeDriverLocationUpdated(
-        :final driverId,
-        :final latitude,
-        :final longitude,
-      )) {
-        printC(
-          '[DashboardBloc] realtime location driver=$driverId lat=$latitude lng=$longitude',
-        );
-        add(
-          DashboardEvent.driverLocationReceived(
-            driverId: driverId,
-            latitude: latitude,
-            longitude: longitude,
-          ),
-        );
+      switch (event) {
+        case RealtimeDriverLocationUpdated(
+          :final driverId,
+          :final latitude,
+          :final longitude,
+        ):
+          printC(
+            '[DashboardBloc] realtime location driver=$driverId lat=$latitude lng=$longitude',
+          );
+          add(
+            DashboardEvent.driverLocationReceived(
+              driverId: driverId,
+              latitude: latitude,
+              longitude: longitude,
+            ),
+          );
+        // Trip lifecycle changes affect the overview's pending/active lists.
+        // Refresh (debounced) so the admin sees new bookings and status
+        // changes without a manual pull-to-refresh.
+        case RealtimeTripRequested():
+        case RealtimeDriverAssigned():
+        case RealtimeTripCancelled():
+        case RealtimeTripCompleted():
+          _scheduleOverviewRefresh();
+        case RealtimeTripStarted():
+        case RealtimeDriverEnRoute():
+        case RealtimeDriverArrived():
+        case RealtimePaymentConfirmed():
+        case RealtimePaymentFailed():
+        case RealtimeTripRefunded():
+        case RealtimeTripStopCompleted():
+          break;
       }
+    });
+  }
+
+  void _scheduleOverviewRefresh() {
+    _overviewRefreshTimer?.cancel();
+    _overviewRefreshTimer = Timer(const Duration(milliseconds: 800), () {
+      if (isClosed) return;
+      printC('[DashboardBloc] realtime trip event → overview refresh');
+      add(const DashboardEvent.overviewRequested());
     });
   }
 
@@ -67,6 +90,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final RealtimeService _realtimeService;
   final RootModeService _rootModeService;
   StreamSubscription<RealtimeEvent>? _realtimeSub;
+  Timer? _overviewRefreshTimer;
 
   Future<void> _onStarted(_Started event, Emitter<DashboardState> emit) {
     return _onOverviewRequested(const _OverviewRequested(), emit);
@@ -320,75 +344,88 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     );
   }
 
-  Future<void> _onAdminOperationsRequested(
-    _AdminOperationsRequested event,
+  // ---------------------------------------------------------------------------
+  // Control Center admin fetch handlers
+  // ---------------------------------------------------------------------------
+
+  Future<void> _onAdminConfigRequested(
+    _AdminConfigRequested event,
     Emitter<DashboardState> emit,
   ) async {
-    printM('[DashboardBloc] admin operations requested');
-    emit(state.copyWith(adminOperationsState: const BlocStatus.loading()));
-
-    final result = await _facade.getAdminOperations();
+    printM('[DashboardBloc] admin config requested');
+    emit(state.copyWith(adminConfigState: const BlocStatus.loading()));
+    final result = await _facade.getAdminConfig();
     result.when(
       success: (data) {
-        printG(
-          '[DashboardBloc] admin operations success drivers=${data.drivers.length} vehicleTypes=${data.vehicleTypes.length}',
-        );
-        emit(state.copyWith(adminOperationsState: BlocStatus.success(data)));
+        printG('[DashboardBloc] admin config success');
+        emit(state.copyWith(adminConfigState: BlocStatus.success(data)));
       },
       failure: (message) {
-        printY('[DashboardBloc] admin operations failed: $message');
-        emit(state.copyWith(adminOperationsState: BlocStatus.failure(message)));
+        printY('[DashboardBloc] admin config failed: $message');
+        emit(state.copyWith(adminConfigState: BlocStatus.failure(message)));
       },
     );
   }
 
-  Future<void> _runAdminAction(
+  Future<void> _onAdminVehicleTypesRequested(
+    _AdminVehicleTypesRequested event,
     Emitter<DashboardState> emit,
-    String actionName,
-    Future<Result<void>> Function() action,
   ) async {
+    printM('[DashboardBloc] admin vehicle types requested');
+    emit(
+      state.copyWith(adminVehicleTypesState: const BlocStatus.loading()),
+    );
+    final result = await _facade.getAdminVehicleTypes();
+    result.when(
+      success: (data) {
+        printG(
+          '[DashboardBloc] admin vehicle types success count=${data.length}',
+        );
+        emit(state.copyWith(adminVehicleTypesState: BlocStatus.success(data)));
+      },
+      failure: (message) {
+        printY('[DashboardBloc] admin vehicle types failed: $message');
+        emit(
+          state.copyWith(
+            adminVehicleTypesState: BlocStatus.failure(message),
+          ),
+        );
+      },
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Scoped admin action helpers
+  // ---------------------------------------------------------------------------
+
+  /// Runs an admin mutation, shows loading on [actionStateField], then
+  /// reloads only the affected [reloadEvents] on success.
+  Future<void> _runScopedAdminAction({
+    required Emitter<DashboardState> emit,
+    required String actionName,
+    required Future<Result<void>> Function() action,
+    required DashboardState Function(DashboardState s, BlocStatus<void> status)
+        applyActionState,
+    required List<DashboardEvent> reloadEvents,
+  }) async {
     printM('[DashboardBloc] admin action requested action=$actionName');
-    emit(state.copyWith(adminActionState: const BlocStatus.loading()));
+    emit(applyActionState(state, const BlocStatus.loading()));
 
     final result = await action();
     await result.when(
       success: (_) async {
         printG('[DashboardBloc] admin action success action=$actionName');
-        emit(state.copyWith(adminActionState: const BlocStatus.success(null)));
-        add(const DashboardEvent.adminOperationsRequested());
-        add(const DashboardEvent.overviewRequested());
+        emit(applyActionState(state, const BlocStatus.success(null)));
+        for (final event in reloadEvents) {
+          add(event);
+        }
       },
       failure: (message) async {
         printY(
           '[DashboardBloc] admin action failed action=$actionName: $message',
         );
-        emit(state.copyWith(adminActionState: BlocStatus.failure(message)));
+        emit(applyActionState(state, BlocStatus.failure(message)));
       },
-    );
-  }
-
-  Future<void> _onDriverSuspensionRequested(
-    _DriverSuspensionRequested event,
-    Emitter<DashboardState> emit,
-  ) {
-    return _runAdminAction(
-      emit,
-      'suspendDriver:${event.driverId}',
-      () => _facade.suspendDriver(event.driverId),
-    );
-  }
-
-  Future<void> _onDriverVehicleTypeAssignmentRequested(
-    _DriverVehicleTypeAssignmentRequested event,
-    Emitter<DashboardState> emit,
-  ) {
-    return _runAdminAction(
-      emit,
-      'assignDriverVehicleType:${event.driverId}:${event.vehicleTypeId}',
-      () => _facade.assignDriverVehicleType(
-        driverId: event.driverId,
-        vehicleTypeId: event.vehicleTypeId,
-      ),
     );
   }
 
@@ -408,10 +445,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       sortOrder: vehicleType.sortOrder,
       isActive: !vehicleType.isActive,
     );
-    return _runAdminAction(
-      emit,
-      'toggleVehicleType:${vehicleType.id}:${nextVehicleType.isActive}',
-      () => _facade.updateVehicleType(nextVehicleType),
+    return _runScopedAdminAction(
+      emit: emit,
+      actionName:
+          'toggleVehicleType:${vehicleType.id}:${nextVehicleType.isActive}',
+      action: () => _facade.updateVehicleType(nextVehicleType),
+      applyActionState: (s, status) =>
+          s.copyWith(vehicleTypeActionState: status),
+      reloadEvents: [const DashboardEvent.adminVehicleTypesRequested()],
     );
   }
 
@@ -419,10 +460,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _VehicleTypeRemovalRequested event,
     Emitter<DashboardState> emit,
   ) {
-    return _runAdminAction(
-      emit,
-      'removeVehicleType:${event.vehicleTypeId}',
-      () => _facade.removeVehicleType(event.vehicleTypeId),
+    return _runScopedAdminAction(
+      emit: emit,
+      actionName: 'removeVehicleType:${event.vehicleTypeId}',
+      action: () => _facade.removeVehicleType(event.vehicleTypeId),
+      applyActionState: (s, status) =>
+          s.copyWith(vehicleTypeActionState: status),
+      reloadEvents: [const DashboardEvent.adminVehicleTypesRequested()],
     );
   }
 
@@ -430,10 +474,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _VehicleTypeCreateRequested event,
     Emitter<DashboardState> emit,
   ) {
-    return _runAdminAction(
-      emit,
-      'createVehicleType:${event.code}',
-      () => _facade.createVehicleType(
+    return _runScopedAdminAction(
+      emit: emit,
+      actionName: 'createVehicleType:${event.code}',
+      action: () => _facade.createVehicleType(
         code: event.code,
         name: event.name,
         capacity: event.capacity,
@@ -442,6 +486,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         minFare: event.minFare,
         sortOrder: event.sortOrder,
       ),
+      applyActionState: (s, status) =>
+          s.copyWith(vehicleTypeActionState: status),
+      reloadEvents: [const DashboardEvent.adminVehicleTypesRequested()],
     );
   }
 
@@ -449,10 +496,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _VehicleTypeUpdateRequested event,
     Emitter<DashboardState> emit,
   ) {
-    return _runAdminAction(
-      emit,
-      'updateVehicleType:${event.vehicleType.id}',
-      () => _facade.updateVehicleType(event.vehicleType),
+    return _runScopedAdminAction(
+      emit: emit,
+      actionName: 'updateVehicleType:${event.vehicleType.id}',
+      action: () => _facade.updateVehicleType(event.vehicleType),
+      applyActionState: (s, status) =>
+          s.copyWith(vehicleTypeActionState: status),
+      reloadEvents: [const DashboardEvent.adminVehicleTypesRequested()],
     );
   }
 
@@ -460,10 +510,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _TripDiscountUpdateRequested event,
     Emitter<DashboardState> emit,
   ) {
-    return _runAdminAction(
-      emit,
-      'updateTripDiscount:${event.discountPercent}',
-      () => _facade.updateTripDiscount(event.discountPercent),
+    return _runScopedAdminAction(
+      emit: emit,
+      actionName: 'updateTripDiscount:${event.discountPercent}',
+      action: () => _facade.updateTripDiscount(event.discountPercent),
+      applyActionState: (s, status) =>
+          s.copyWith(configActionState: status),
+      reloadEvents: [const DashboardEvent.adminConfigRequested()],
     );
   }
 
@@ -471,16 +524,20 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _CurrencyUpdateRequested event,
     Emitter<DashboardState> emit,
   ) {
-    return _runAdminAction(
-      emit,
-      'updateCurrency:${event.currencyCode}',
-      () => _facade.updateCurrency(event.currencyCode),
+    return _runScopedAdminAction(
+      emit: emit,
+      actionName: 'updateCurrency:${event.currencyCode}',
+      action: () => _facade.updateCurrency(event.currencyCode),
+      applyActionState: (s, status) =>
+          s.copyWith(configActionState: status),
+      reloadEvents: [const DashboardEvent.adminConfigRequested()],
     );
   }
 
   @override
   Future<void> close() {
     _realtimeSub?.cancel();
+    _overviewRefreshTimer?.cancel();
     return super.close();
   }
 }

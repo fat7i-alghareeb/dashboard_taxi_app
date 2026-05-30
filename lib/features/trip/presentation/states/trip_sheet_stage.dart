@@ -7,13 +7,14 @@ import 'trip_bloc.dart';
 /// we mirror the same idea on the driver/admin side, but driven by the trip's
 /// server status instead of a user-typed booking flow.
 enum TripSheetStage {
-  /// No active trip and no recent completion — idle map.
+  /// No selected trip and no recent completion — idle map.
   idle,
 
-  /// New trip arrived (admin-only): waiting for admin to take or dismiss.
-  adminPending,
+  /// Selected trip not yet assigned (`pendingDriver`/`scheduled`): admin can
+  /// take it or assign a driver.
+  pendingAssignment,
 
-  /// Trip just assigned to this driver, awaiting accept (`driverAssigned`).
+  /// Trip assigned, awaiting accept (`driverAssigned`).
   incoming,
 
   /// Driver heading to pickup (`driverEnRoute`).
@@ -25,24 +26,32 @@ enum TripSheetStage {
   /// Trip in progress towards stops/destination (`inProgress`).
   inProgress,
 
-  /// Trip just completed — show summary until dismissed.
+  /// Trip just completed in-session — show summary until dismissed.
   summary,
+
+  /// A terminal or non-actionable trip selected from the list — read-only info.
+  readonly,
 }
 
 extension TripSheetStageX on TripState {
   TripSheetStage get sheetStage {
+    // Only an in-session completion (set by the complete/cancel flows) shows the
+    // celebratory summary. Tapping a finished trip uses the read-only stage.
     if (completedTrip != null) return TripSheetStage.summary;
+
+    // Pending/new admin trips no longer auto-open the sheet; they surface via
+    // the Trips-tab badge + notification. The sheet only shows a selected trip.
     final trip = activeTrip;
-    if (trip == null) {
-      if (pendingTrip != null) return TripSheetStage.adminPending;
-      return TripSheetStage.idle;
-    }
+    if (trip == null) return TripSheetStage.idle;
+
     return switch (trip.status) {
+      TripStatus.pendingDriver ||
+      TripStatus.scheduled => TripSheetStage.pendingAssignment,
       TripStatus.driverAssigned => TripSheetStage.incoming,
       TripStatus.driverEnRoute => TripSheetStage.toPickup,
       TripStatus.driverArrived => TripSheetStage.atPickup,
       TripStatus.inProgress => TripSheetStage.inProgress,
-      _ => TripSheetStage.idle,
+      _ => TripSheetStage.readonly,
     };
   }
 }

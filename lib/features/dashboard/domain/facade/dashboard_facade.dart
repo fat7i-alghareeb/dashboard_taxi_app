@@ -32,9 +32,30 @@ class DashboardFacade {
     return _repository.getTripDetails(tripId);
   }
 
-  Future<Result<DashboardAdminOperationsEntity>> getAdminOperations() {
-    return _repository.getAdminOperations();
+  Future<Result<DashboardAdminProfileEntity?>> getAdminProfile() {
+    return _repository.getAdminProfile();
   }
+
+  Future<Result<DashboardSystemConfigEntity>> getAdminConfig() {
+    return _repository.getAdminConfig();
+  }
+
+  Future<Result<List<DashboardDriverEntity>>> getAdminDrivers() {
+    return _repository.getAdminDrivers();
+  }
+
+  Future<Result<List<DashboardVehicleTypeEntity>>> getAdminVehicleTypes() {
+    return _repository.getAdminVehicleTypes();
+  }
+
+  Future<Result<List<DashboardUserEntity>>> getAdminUsers() {
+    return _repository.getAdminUsers();
+  }
+
+  Future<Result<List<DashboardAuditLogEntity>>> getAdminAuditLogs() {
+    return _repository.getAdminAuditLogs();
+  }
+
 
   Future<Result<void>> suspendDriver(String driverId) {
     return _repository.suspendDriver(driverId);

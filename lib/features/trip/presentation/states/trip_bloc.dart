@@ -32,6 +32,8 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     on<_GetAllRequested>(_onGetAllRequested);
     on<_RealtimeEventReceived>(_onRealtimeEventReceived);
     on<_FetchActiveRequested>(_onFetchActiveRequested);
+    on<_TripSelected>(_onTripSelected);
+    on<_SelectionCleared>(_onSelectionCleared);
     on<_MarkEnRouteRequested>(_onMarkEnRouteRequested);
     on<_MarkArrivedRequested>(_onMarkArrivedRequested);
     on<_StartTripRequested>(_onStartTripRequested);
@@ -42,6 +44,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     on<_StopWaitingRequested>(_onStopWaitingRequested);
     on<_CompleteStopRequested>(_onCompleteStopRequested);
     on<_AdminSelfAssignRequested>(_onAdminSelfAssignRequested);
+    on<_AdminCancelRequested>(_onAdminCancelRequested);
     on<_DismissPendingTripRequested>(_onDismissPendingTripRequested);
 
     _eventsSub = _realtimeService.events.listen((event) {
@@ -98,6 +101,16 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         await _refreshOrAdvance(tripId, TripStatus.completed, emit);
       case RealtimeTripCancelled(:final tripId):
         printC('[TripBloc] realtime TripCancelled trip=$tripId');
+        // Drop it from the pending queue if it was waiting.
+        if (state.pendingTrips.any((t) => t.id == tripId)) {
+          emit(
+            state.copyWith(
+              pendingTrips: state.pendingTrips
+                  .where((t) => t.id != tripId)
+                  .toList(),
+            ),
+          );
+        }
         await _refreshOrAdvance(tripId, TripStatus.cancelled, emit);
       case RealtimeTripStopCompleted(:final tripId, :final sequence):
         printC(
@@ -111,9 +124,16 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         }
       case RealtimeDriverAssigned(:final tripId):
         printC('[TripBloc] realtime DriverAssigned trip=$tripId');
-        // Clear pending preview if admin just self-assigned or another admin took it.
-        if (state.pendingTrip?.id == tripId) {
-          emit(state.copyWith(pendingTrip: null));
+        // Remove from the pending queue if admin just self-assigned or it got
+        // assigned elsewhere.
+        if (state.pendingTrips.any((t) => t.id == tripId)) {
+          emit(
+            state.copyWith(
+              pendingTrips: state.pendingTrips
+                  .where((t) => t.id != tripId)
+                  .toList(),
+            ),
+          );
         }
         await _loadActiveTrip(tripId, emit, joinGroup: true);
       case RealtimeDriverLocationUpdated():
@@ -176,6 +196,53 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     Emitter<TripState> emit,
   ) {
     return _loadActiveTrip(event.tripId, emit, joinGroup: true);
+  }
+
+  /// Explicit selection (e.g. tapping a trip in the Trips tab). Unlike
+  /// [_loadActiveTrip] this shows the trip even when terminal (read-only sheet)
+  /// and clears any stale in-session completion summary.
+  Future<void> _onTripSelected(
+    _TripSelected event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] trip selected trip=${event.tripId}');
+    emit(state.copyWith(activeTripState: const BlocStatus.loading()));
+    await _realtimeService.joinTripGroup(event.tripId);
+
+    final result = await _facade.getTripById(event.tripId);
+    result.when(
+      success: (trip) {
+        printG(
+          '[TripBloc] trip selected loaded trip=${event.tripId} '
+          'status=${trip.status}',
+        );
+        emit(
+          state.copyWith(
+            activeTripState: BlocStatus.success(trip),
+            activeTrip: trip,
+            completedTrip: null,
+            arrivedAt: trip.status == TripStatus.driverArrived
+                ? (state.arrivedAt ?? DateTime.now())
+                : null,
+          ),
+        );
+      },
+      failure: (message) {
+        printY('[TripBloc] trip selected failed trip=${event.tripId}: $message');
+        emit(state.copyWith(activeTripState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _onSelectionCleared(
+    _SelectionCleared event,
+    Emitter<TripState> emit,
+  ) async {
+    final tripId = state.activeTrip?.id;
+    if (tripId != null) {
+      await _realtimeService.leaveTripGroup(tripId);
+    }
+    emit(state.copyWith(activeTrip: null, completedTrip: null, arrivedAt: null));
   }
 
   Future<void> _onMarkEnRouteRequested(
@@ -438,14 +505,22 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     String tripId,
     Emitter<TripState> emit,
   ) async {
-    // Don't clobber an already-active trip or an existing pending preview.
-    if (state.activeTrip != null || state.pendingTrip != null) return;
+    // Already the active trip, or already queued — ignore duplicates.
+    if (state.activeTrip?.id == tripId ||
+        state.pendingTrips.any((t) => t.id == tripId)) {
+      return;
+    }
 
     final result = await _facade.getTripById(tripId);
     result.when(
       success: (trip) {
-        printG('[TripBloc] admin pending trip loaded trip=$tripId');
-        emit(state.copyWith(pendingTrip: trip));
+        // Guard again post-await: state may have changed while fetching.
+        if (state.activeTrip?.id == trip.id ||
+            state.pendingTrips.any((t) => t.id == trip.id)) {
+          return;
+        }
+        printG('[TripBloc] admin pending trip queued trip=$tripId');
+        emit(state.copyWith(pendingTrips: [...state.pendingTrips, trip]));
         _notifications.showLocal(
           title: AppStrings.adminNewTripArrivedTitle,
           body: AppStrings.adminNewTripArrivedBody,
@@ -472,7 +547,9 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         emit(
           state.copyWith(
             adminSelfAssignState: const BlocStatus.success(null),
-            pendingTrip: null,
+            pendingTrips: state.pendingTrips
+                .where((t) => t.id != event.tripId)
+                .toList(),
           ),
         );
         await _loadActiveTrip(event.tripId, emit, joinGroup: true);
@@ -486,12 +563,46 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     );
   }
 
+  Future<void> _onAdminCancelRequested(
+    _AdminCancelRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] admin cancel trip=${event.tripId}');
+    emit(state.copyWith(adminCancelState: const BlocStatus.loading()));
+
+    final result = await _facade.adminCancelTrip(event.tripId);
+    await result.when(
+      success: (_) async {
+        printG('[TripBloc] admin cancel success trip=${event.tripId}');
+        await _realtimeService.leaveTripGroup(event.tripId);
+        emit(
+          state.copyWith(
+            adminCancelState: const BlocStatus.success(null),
+            activeTrip: null,
+            completedTrip: null,
+            arrivedAt: null,
+          ),
+        );
+      },
+      failure: (message) async {
+        printY('[TripBloc] admin cancel failed trip=${event.tripId}: $message');
+        emit(state.copyWith(adminCancelState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
   void _onDismissPendingTripRequested(
     _DismissPendingTripRequested event,
     Emitter<TripState> emit,
   ) {
-    printM('[TripBloc] dismiss pending trip');
-    emit(state.copyWith(pendingTrip: null));
+    printM('[TripBloc] dismiss pending trip=${event.tripId}');
+    emit(
+      state.copyWith(
+        pendingTrips: state.pendingTrips
+            .where((t) => t.id != event.tripId)
+            .toList(),
+      ),
+    );
   }
 
   @override

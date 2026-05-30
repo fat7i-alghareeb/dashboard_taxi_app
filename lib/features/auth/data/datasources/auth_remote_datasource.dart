@@ -89,4 +89,22 @@ class AuthRemoteDataSource {
         );
         return model;
       });
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) => rethrowAsAppException(() async {
+    printY(
+      '[AuthRemoteDataSource] changePassword -> '
+      '${ApiEndpoints.changeAdminPassword}',
+    );
+    await _dio.post(
+      ApiEndpoints.changeAdminPassword,
+      data: {
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+      },
+    );
+    printG('[AuthRemoteDataSource] changePassword success');
+  });
 }

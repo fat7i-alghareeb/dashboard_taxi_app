@@ -1,6 +1,7 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/core/domain/extensions/user_role_extensions.dart';
 import 'package:dashboardtaxi/core/services/session/auth_manager.dart';
+import 'package:dashboardtaxi/features/root/domain/services/root_tab_controller.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_sheet_stage.dart';
 
@@ -21,6 +22,7 @@ class _RootBodyState extends State<RootBody> {
   late final PageController _pageController;
   late final bool _isAdmin;
   late final int _homeTabIndex;
+  late final RootTabController _tabController;
   int _currentIndex = 0;
 
   @override
@@ -32,12 +34,21 @@ class _RootBodyState extends State<RootBody> {
     _homeTabIndex = 1;
     _currentIndex = _homeTabIndex;
     _pageController = PageController(initialPage: _currentIndex);
+    _tabController = getIt<RootTabController>()..addListener(_onTabRequested);
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_onTabRequested);
     _pageController.dispose();
     super.dispose();
+  }
+
+  void _onTabRequested() {
+    final requested = _tabController.pendingIndex;
+    if (requested == null) return;
+    _tabController.consume();
+    _onTabSelected(requested);
   }
 
   void _onTabSelected(int index) {
@@ -53,7 +64,7 @@ class _RootBodyState extends State<RootBody> {
     setState(() => _currentIndex = index);
   }
 
-  List<RootBottomNavItemConfig> _buildNavItems() {
+  List<RootBottomNavItemConfig> _buildNavItems(int newTripsCount) {
     return <RootBottomNavItemConfig>[
       RootBottomNavItemConfig(
         label: AppStrings.tabAccount,
@@ -67,6 +78,7 @@ class _RootBodyState extends State<RootBody> {
         RootBottomNavItemConfig(
           label: AppStrings.drawerTrips,
           icon: FontAwesomeIcons.clock,
+          badgeCount: newTripsCount,
         ),
     ];
   }
@@ -82,14 +94,25 @@ class _RootBodyState extends State<RootBody> {
   @override
   Widget build(BuildContext context) {
     printM('[RootBody] build currentIndex=$_currentIndex isAdmin=$_isAdmin');
-    final navItems = _buildNavItems();
     final pages = _buildPages();
 
     return BlocBuilder<TripBloc, TripState>(
-      buildWhen: (prev, curr) => prev.sheetStage != curr.sheetStage,
+      buildWhen: (prev, curr) =>
+          prev.sheetStage != curr.sheetStage ||
+          prev.pendingTrips != curr.pendingTrips,
       builder: (context, tripState) {
+        final navItems = _buildNavItems(tripState.pendingTrips.length);
+        // Only hide the nav for the immersive active-driving stages. Idle,
+        // pending-assignment, the completion summary and read-only views keep
+        // the nav so the admin can always move between tabs.
+        const immersiveStages = {
+          TripSheetStage.incoming,
+          TripSheetStage.toPickup,
+          TripSheetStage.atPickup,
+          TripSheetStage.inProgress,
+        };
         final hideNav = _currentIndex == _homeTabIndex &&
-            tripState.sheetStage != TripSheetStage.idle;
+            immersiveStages.contains(tripState.sheetStage);
 
         return Scaffold(
           resizeToAvoidBottomInset: false,

@@ -1,8 +1,8 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
+import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_admin_cancel_button.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_customer_contact_widget.dart';
-import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_navigation_button_widget.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_route_card_widget.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_status_chip_widget.dart';
 
@@ -48,8 +48,6 @@ class TripToPickupSheet extends StatelessWidget {
         AppSpacing.sm.verticalSpace,
         TripCustomerContactWidget(trip: trip),
         AppSpacing.md.verticalSpace,
-        TripNavigationButtonWidget(stop: trip.pickup),
-        AppSpacing.md.verticalSpace,
         AppButton.primary(
           isLoading: state.markArrivedState.isLoading,
           layout: const AppButtonLayout(height: 52),
@@ -66,6 +64,11 @@ class TripToPickupSheet extends StatelessWidget {
             ),
             textStyle: AppTextStyles.s14w600,
           ),
+        ),
+        AppSpacing.sm.verticalSpace,
+        TripAdminCancelButton(
+          tripId: trip.id,
+          isLoading: state.adminCancelState.isLoading,
         ),
       ],
     );

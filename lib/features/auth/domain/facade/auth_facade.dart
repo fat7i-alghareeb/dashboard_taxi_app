@@ -43,4 +43,15 @@ class AuthFacade {
     printC('[AuthFacade] forceResetPassword');
     return _repository.forceResetPassword(newPassword);
   }
+
+  Future<Result<void>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) {
+    printC('[AuthFacade] changePassword');
+    return _repository.changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
+  }
 }

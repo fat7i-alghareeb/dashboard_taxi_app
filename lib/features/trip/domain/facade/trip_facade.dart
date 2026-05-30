@@ -46,6 +46,10 @@ class TripFacade {
     return _repository.adminTakeTrip(tripId);
   }
 
+  Future<Result<void>> adminCancelTrip(String tripId, {String? note}) {
+    return _repository.adminCancelTrip(tripId, note: note);
+  }
+
   Future<Result<void>> driverCancelTrip(
     String tripId,
     String reason,

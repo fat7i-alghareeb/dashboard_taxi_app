@@ -2,7 +2,6 @@ import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_customer_contact_widget.dart';
-import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_navigation_button_widget.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_route_card_widget.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_status_chip_widget.dart';
 
@@ -40,9 +39,6 @@ class TripInProgressSheet extends StatelessWidget {
     final hasMultiStop = intermediateIndices.isNotEmpty;
     final onFinalLeg = pendingIndices.isEmpty;
 
-    final nextStop = onFinalLeg
-        ? trip.dropoff
-        : trip.stops[pendingIndices.first];
     final totalIntermediate = intermediateIndices.length;
     final currentNumber = hasMultiStop && !onFinalLeg
         ? totalIntermediate - pendingIndices.length + 1
@@ -71,7 +67,7 @@ class TripInProgressSheet extends StatelessWidget {
         AppSpacing.sm.verticalSpace,
         Text(
           hasMultiStop && !onFinalLeg
-              ? 'Stop $currentNumber of $totalIntermediate'
+              ? AppStrings.tripStopProgress(currentNumber, totalIntermediate)
               : AppStrings.tripInProgressHint,
           style: AppTextStyles.s12w400.copyWith(
             color: context.onSurface.withValues(alpha: 0.60),
@@ -81,8 +77,6 @@ class TripInProgressSheet extends StatelessWidget {
         TripRouteCardWidget(trip: trip),
         AppSpacing.sm.verticalSpace,
         TripCustomerContactWidget(trip: trip),
-        AppSpacing.md.verticalSpace,
-        TripNavigationButtonWidget(stop: nextStop),
         AppSpacing.md.verticalSpace,
         if (hasMultiStop && !onFinalLeg)
           AppButton.primary(
@@ -97,7 +91,7 @@ class TripInProgressSheet extends StatelessWidget {
               );
             },
             child: AppButtonChild.labelIcon(
-              label: 'Finish stop $currentNumber of $totalIntermediate',
+              label: AppStrings.tripFinishStop(currentNumber, totalIntermediate),
               icon: IconSource.widget(
                 FaIcon(FontAwesomeIcons.flagCheckered, size: 14.r),
                 size: 14,

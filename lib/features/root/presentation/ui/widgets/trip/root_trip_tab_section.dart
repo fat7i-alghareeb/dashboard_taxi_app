@@ -7,10 +7,15 @@ class RootTripTabSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-          getIt<DashboardBloc>()..add(const DashboardEvent.adminTripsRequested()),
-      child: const DashboardTripsBody(),
+    return SafeArea(
+      bottom: false,
+      child: BlocProvider(
+        create: (_) =>
+            getIt<DashboardBloc>()..add(const DashboardEvent.adminTripsRequested()),
+        child: const DashboardTripsBody(
+          showBackButton: false,
+        ),
+      ),
     );
   }
 }

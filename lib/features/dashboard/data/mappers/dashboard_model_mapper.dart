@@ -126,18 +126,6 @@ extension DashboardAdminProfileModelMapper on DashboardAdminProfileModel {
   }
 }
 
-extension DashboardAdminOperationsModelMapper on DashboardAdminOperationsModel {
-  DashboardAdminOperationsEntity get toEntity {
-    return DashboardAdminOperationsEntity(
-      adminProfile: adminProfile?.toEntity,
-      drivers: drivers.map((driver) => driver.toEntity).toList(),
-      vehicleTypes: vehicleTypes.map((type) => type.toEntity).toList(),
-      users: users.map((user) => user.toEntity).toList(),
-      auditLogs: auditLogs.map((log) => log.toEntity).toList(),
-      config: config.toEntity,
-    );
-  }
-}
 
 extension DashboardTripModelMapper on DashboardTripModel {
   DashboardTripEntity get toEntity {
@@ -154,6 +142,11 @@ extension DashboardTripModelMapper on DashboardTripModel {
       pickupLongitude: pickup?.longitude,
       pickupLabel: pickup?.label,
       dropoffLabel: dropoff?.label,
+      scheduledAt: scheduledAt,
+      assignedAt: assignedAt,
+      arrivedAt: arrivedAt,
+      startedAt: startedAt,
+      completedAt: completedAt,
     );
   }
 }

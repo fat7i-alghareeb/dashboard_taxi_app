@@ -39,6 +39,9 @@ Key points:
   - Loads persisted user + guest flag.
   - Ensures `AuthStateNotifier.authStatus` is not stuck on `Status.initial`.
   - Initializes token storage and subscribes to `authenticationStatus`.
+  - Restores the session when a persisted user and token exist, even if the
+    access token is already expired. The next protected request is allowed to
+    refresh using the stored refresh token.
   - May log token expiry/remaining time for debugging purposes.
 
 - During `login(...)`:
@@ -132,6 +135,8 @@ Why it exists:
    - Loads user/guest from `StorageService`.
    - Ensures status is not `Status.initial`.
    - Restores token in `JwtTokenStorage` and begins streaming `AuthStatus`.
+   - Marks a persisted user + token as authenticated so an expired access token
+     can be refreshed instead of forcing logout during app boot.
 
 4. Router starts on splash and then decides the next route based on:
    - `AuthStateNotifier.authStatus.status`

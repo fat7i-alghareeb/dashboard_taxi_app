@@ -9,21 +9,21 @@ class TripRouteCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final stops = trip.stops;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TripStopRowWidget(
-          label: AppStrings.tripPickup,
-          value: trip.pickup?.displayLabel ?? AppStrings.tripUnknownAddress,
-          isPickup: true,
-          isLast: false,
-        ),
-        TripStopRowWidget(
-          label: AppStrings.tripDropoff,
-          value: trip.dropoff?.displayLabel ?? AppStrings.tripUnknownAddress,
-          isPickup: false,
-          isLast: true,
-        ),
+        for (var i = 0; i < stops.length; i++)
+          TripStopRowWidget(
+            label: i == 0
+                ? AppStrings.tripPickup
+                : i == stops.length - 1
+                    ? AppStrings.tripDropoff
+                    : '${AppStrings.tripStop} $i',
+            value: stops[i].displayLabel,
+            isPickup: i == 0,
+            isLast: i == stops.length - 1,
+          ),
       ],
     );
   }

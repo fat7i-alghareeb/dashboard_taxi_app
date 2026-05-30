@@ -19,6 +19,7 @@ import 'core/services/localization/locale_service.dart';
 import 'core/services/session/auth_manager.dart';
 import 'package:dashboardtaxi/core/services/realtime/realtime_lifecycle_coordinator.dart';
 import 'package:dashboardtaxi/core/utils/result.dart';
+import 'package:dashboardtaxi/core/domain/extensions/user_role_extensions.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/root/presentation/ui/screens/root_screen.dart';
 import 'features/trip/presentation/states/trip_bloc.dart';
@@ -139,10 +140,9 @@ Future<void> _handleNotificationTap(AppNotificationPayload payload) async {
   }
 
   final explicitLocation = payload.toGoRouterLocation;
-  final location =
-      (explicitLocation != null && explicitLocation.isNotEmpty)
-          ? explicitLocation
-          : (tripId != null ? RootScreen.pagePath : null);
+  final location = (explicitLocation != null && explicitLocation.isNotEmpty)
+      ? explicitLocation
+      : (tripId != null ? RootScreen.pagePath : null);
 
   if (location == null) {
     printC('[Notifications] Tap ignored (no route/deepLink/tripId)');
@@ -174,7 +174,9 @@ void _routeTripPayloadToBloc(AppNotificationPayload payload) {
 
 String? _tripIdFromPayload(AppNotificationPayload payload) {
   final raw =
-      payload.data['tripId'] ?? payload.data['TripId'] ?? payload.data['trip_id'];
+      payload.data['tripId'] ??
+      payload.data['TripId'] ??
+      payload.data['trip_id'];
   if (raw is String && raw.trim().isNotEmpty) return raw;
   if (raw != null) {
     final asString = raw.toString();
@@ -183,11 +185,20 @@ String? _tripIdFromPayload(AppNotificationPayload payload) {
   return null;
 }
 
-/// Sends the FCM device token to the backend. No-op when unauthenticated —
-/// the next login will repush the token via the login handshake.
 Future<void> _syncFcmTokenToBackend(String token) async {
-  if (!getIt<AuthManager>().isAuthenticated) {
+  final authManager = getIt<AuthManager>();
+  if (!authManager.isAuthenticated) {
     printC('[Notifications] FCM token refreshed; deferred (not authenticated)');
+    return;
+  }
+
+  await authManager.syncNotificationTopicsForCurrentUser();
+
+  if (authManager.currentUser?.isAdmin == true) {
+    printC(
+      '[Notifications] FCM token refreshed; deferred '
+      '(admin user does not support FCM token sync)',
+    );
     return;
   }
   try {
@@ -218,7 +229,8 @@ Future<void> _initializeAuthAndNetwork() async {
   //     callback fired in that window).
   //   - A prior on-login submission silently failed.
   // The runtime onTokenRefresh callback still handles in-session rotations.
-  if (authManager.isAuthenticated) {
+  // Note: We bypass this for Admin users since they do not support FCM tokens or preferred language synchronization.
+  if (authManager.isAuthenticated && authManager.currentUser?.isAdmin != true) {
     try {
       final coordinator = getIt<NotificationCoordinator>();
       final token = await coordinator.getDeviceToken();
@@ -226,7 +238,8 @@ Future<void> _initializeAuthAndNetwork() async {
         final result = await getIt<AuthRepository>().updateFcmToken(token);
         result.when(
           success: (_) => printG('[Bootstrap] Startup FCM token backup synced'),
-          failure: (msg) => printY('[Bootstrap] Startup FCM token backup failed: $msg'),
+          failure: (msg) =>
+              printY('[Bootstrap] Startup FCM token backup failed: $msg'),
         );
       }
     } catch (e) {
@@ -238,10 +251,14 @@ Future<void> _initializeAuthAndNetwork() async {
       try {
         final localeService = getIt<LocaleService>();
         final code = await localeService.currentLanguageCode();
-        final result = await getIt<AuthRepository>().updatePreferredLanguage(code);
+        final result = await getIt<AuthRepository>().updatePreferredLanguage(
+          code,
+        );
         result.when(
-          success: (_) => printG('[Bootstrap] Startup language backup synced: $code'),
-          failure: (msg) => printY('[Bootstrap] Startup language backup failed: $msg'),
+          success: (_) =>
+              printG('[Bootstrap] Startup language backup synced: $code'),
+          failure: (msg) =>
+              printY('[Bootstrap] Startup language backup failed: $msg'),
         );
       } catch (e) {
         printY('[Bootstrap] Startup language backup failed: $e');

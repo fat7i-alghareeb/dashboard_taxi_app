@@ -15,12 +15,17 @@ class AuthTokenModel extends AuthToken {
 
   /// Creates an [AuthTokenModel] from a raw JSON map.
   factory AuthTokenModel.fromMap(Map<String, dynamic> map) {
-    final base = AuthToken.fromMap(map);
+    final accessToken = map['accessToken'] ?? map['AccessToken'];
+    final refreshToken = map['refreshToken'] ?? map['RefreshToken'];
+    final tokenType =
+        map['tokenType'] ?? map['TokenType'] ?? AuthToken.defaultTokenType;
+    final expiresIn = map['expiresIn'] ?? map['ExpiresIn'];
+
     return AuthTokenModel(
-      accessToken: base.accessToken,
-      tokenType: base.tokenType,
-      refreshToken: base.refreshToken,
-      expiresIn: base.expiresIn,
+      accessToken: accessToken as String,
+      tokenType: tokenType as String,
+      refreshToken: refreshToken as String?,
+      expiresIn: expiresIn is int ? expiresIn : null,
     );
   }
 }

@@ -44,7 +44,7 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
       }
     } catch (_) {}
 
-    return 'TR';
+    return 'NL';
   }
 
   /// Syncs the internal controller from the reactive control value.

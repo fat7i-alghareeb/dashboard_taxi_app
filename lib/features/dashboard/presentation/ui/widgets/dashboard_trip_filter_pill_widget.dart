@@ -18,7 +18,7 @@ class DashboardTripFilterPillWidget extends StatelessWidget {
         ? context.primary
         : context.onSurface.withValues(alpha: 0.04);
     final fg = isSelected
-        ? context.onPrimary
+        ? context.onSurface
         : context.onSurface.withValues(alpha: 0.72);
     final borderColor = isSelected
         ? context.primary

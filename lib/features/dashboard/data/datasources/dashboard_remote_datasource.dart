@@ -90,63 +90,103 @@ class DashboardRemoteDataSource {
     });
   }
 
-  Future<DashboardAdminOperationsModel> getAdminOperations() {
+  Future<DashboardAdminProfileModel?> getAdminProfile() {
     return rethrowAsAppException(() async {
-      printY('[DashboardRemoteDataSource] getAdminOperations');
+      printY('[DashboardRemoteDataSource] getAdminProfile');
+      final response = await _dio.get<dynamic>(
+        ApiEndpoints.currentAdminProfile,
+      );
+      final payload = _asNullableMap(response.data);
+      printC(
+        '[DashboardRemoteDataSource] admin profile loaded='
+        '${payload != null}',
+      );
+      return payload == null
+          ? null
+          : DashboardAdminProfileModel.fromJson(payload);
+    });
+  }
+
+  Future<DashboardSystemConfigModel> getAdminConfig() {
+    return rethrowAsAppException(() async {
+      printY('[DashboardRemoteDataSource] getAdminConfig');
       final responses = await Future.wait([
-        _dio.get<dynamic>(ApiEndpoints.currentAdminProfile),
-        _dio.get<dynamic>(ApiEndpoints.drivers),
-        _dio.get<dynamic>(ApiEndpoints.vehicleTypes),
-        _dio.get<dynamic>(
-          ApiEndpoints.users,
-          queryParameters: {'page': 1, 'pageSize': 50},
-        ),
-        _dio.get<dynamic>(
-          ApiEndpoints.auditLogs,
-          queryParameters: {'page': 1, 'pageSize': 50},
-        ),
         _dio.get<dynamic>(ApiEndpoints.tripDiscount),
         _dio.get<dynamic>(ApiEndpoints.currency),
         _dio.get<dynamic>(ApiEndpoints.clientConfig),
       ]);
-
-      final adminProfilePayload = _asNullableMap(responses[0].data);
-      printC(
-        '[DashboardRemoteDataSource] admin profile loaded='
-        '${adminProfilePayload != null}',
+      printG('[DashboardRemoteDataSource] getAdminConfig success');
+      return DashboardSystemConfigModel.fromPayloads(
+        discount: _asMap(responses[0].data),
+        currency: _asMap(responses[1].data),
+        client: _asMap(responses[2].data),
       );
-      final drivers = _asList(
-        responses[1].data,
-      ).map((e) => DashboardDriverModel.fromJson(e)).toList();
-      final vehicleTypes = _asList(
-        responses[2].data,
-      ).map((e) => DashboardVehicleTypeModel.fromJson(e)).toList();
-      final users = _asList(
-        responses[3].data,
-      ).map((e) => DashboardUserModel.fromJson(e)).toList();
-      final auditLogs = _asList(
-        responses[4].data,
-      ).map((e) => DashboardAuditLogModel.fromJson(e)).toList();
+    });
+  }
+
+  Future<List<DashboardDriverModel>> getAdminDrivers() {
+    return rethrowAsAppException(() async {
+      printY('[DashboardRemoteDataSource] getAdminDrivers');
+      final response = await _dio.get<dynamic>(ApiEndpoints.drivers);
+      final drivers = _asList(response.data)
+          .map((e) => DashboardDriverModel.fromJson(e))
+          .toList();
       printG(
-        '[DashboardRemoteDataSource] getAdminOperations success '
-        'drivers=${drivers.length} vehicleTypes=${vehicleTypes.length} '
-        'users=${users.length} auditLogs=${auditLogs.length}',
+        '[DashboardRemoteDataSource] getAdminDrivers success '
+        'count=${drivers.length}',
       );
+      return drivers;
+    });
+  }
 
-      return DashboardAdminOperationsModel(
-        adminProfile: adminProfilePayload == null
-            ? null
-            : DashboardAdminProfileModel.fromJson(adminProfilePayload),
-        drivers: drivers,
-        vehicleTypes: vehicleTypes,
-        users: users,
-        auditLogs: auditLogs,
-        config: DashboardSystemConfigModel.fromPayloads(
-          discount: _asMap(responses[5].data),
-          currency: _asMap(responses[6].data),
-          client: _asMap(responses[7].data),
-        ),
+  Future<List<DashboardVehicleTypeModel>> getAdminVehicleTypes() {
+    return rethrowAsAppException(() async {
+      printY('[DashboardRemoteDataSource] getAdminVehicleTypes');
+      final response = await _dio.get<dynamic>(ApiEndpoints.adminVehicleTypes);
+      final types = _asList(response.data)
+          .map((e) => DashboardVehicleTypeModel.fromJson(e))
+          .toList();
+      printG(
+        '[DashboardRemoteDataSource] getAdminVehicleTypes success '
+        'count=${types.length}',
       );
+      return types;
+    });
+  }
+
+  Future<List<DashboardUserModel>> getAdminUsers() {
+    return rethrowAsAppException(() async {
+      printY('[DashboardRemoteDataSource] getAdminUsers');
+      final response = await _dio.get<dynamic>(
+        ApiEndpoints.users,
+        queryParameters: {'page': 1, 'pageSize': 50},
+      );
+      final users = _asList(response.data)
+          .map((e) => DashboardUserModel.fromJson(e))
+          .toList();
+      printG(
+        '[DashboardRemoteDataSource] getAdminUsers success '
+        'count=${users.length}',
+      );
+      return users;
+    });
+  }
+
+  Future<List<DashboardAuditLogModel>> getAdminAuditLogs() {
+    return rethrowAsAppException(() async {
+      printY('[DashboardRemoteDataSource] getAdminAuditLogs');
+      final response = await _dio.get<dynamic>(
+        ApiEndpoints.auditLogs,
+        queryParameters: {'page': 1, 'pageSize': 50},
+      );
+      final logs = _asList(response.data)
+          .map((e) => DashboardAuditLogModel.fromJson(e))
+          .toList();
+      printG(
+        '[DashboardRemoteDataSource] getAdminAuditLogs success '
+        'count=${logs.length}',
+      );
+      return logs;
     });
   }
 

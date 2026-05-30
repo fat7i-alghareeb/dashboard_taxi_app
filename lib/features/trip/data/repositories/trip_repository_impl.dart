@@ -65,6 +65,11 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
+  Future<Result<void>> adminCancelTrip(String tripId, {String? note}) {
+    return runAsResult(() => _remote.adminCancelTrip(tripId, note: note));
+  }
+
+  @override
   Future<Result<void>> driverCancelTrip(
     String tripId,
     String reason,

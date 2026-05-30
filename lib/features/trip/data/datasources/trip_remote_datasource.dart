@@ -90,6 +90,16 @@ class TripRemoteDataSource {
     });
   }
 
+  Future<void> adminCancelTrip(String tripId, {String? note}) {
+    return rethrowAsAppException(() async {
+      printY('[TripRemoteDataSource] adminCancelTrip trip=$tripId');
+      await _dio.post<dynamic>(
+        ApiEndpoints.cancelTrip(tripId),
+        data: {'note': note},
+      );
+    });
+  }
+
   Future<TripWaitingSessionModel> startWaiting(String tripId) {
     return rethrowAsAppException(() async {
       printY('[TripRemoteDataSource] startWaiting trip=$tripId');

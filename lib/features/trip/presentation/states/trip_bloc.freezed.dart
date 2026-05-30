@@ -55,14 +55,16 @@ extension TripEventPatterns on TripEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _GetAllRequested value)?  getAllRequested,TResult Function( _RealtimeEventReceived value)?  realtimeEventReceived,TResult Function( _FetchActiveRequested value)?  fetchActiveRequested,TResult Function( _MarkEnRouteRequested value)?  markEnRouteRequested,TResult Function( _MarkArrivedRequested value)?  markArrivedRequested,TResult Function( _StartTripRequested value)?  startTripRequested,TResult Function( _CompleteTripRequested value)?  completeTripRequested,TResult Function( _ClearCompletedSummaryRequested value)?  clearCompletedSummaryRequested,TResult Function( _DriverCancelRequested value)?  driverCancelRequested,TResult Function( _StartWaitingRequested value)?  startWaitingRequested,TResult Function( _StopWaitingRequested value)?  stopWaitingRequested,TResult Function( _CompleteStopRequested value)?  completeStopRequested,TResult Function( _AdminSelfAssignRequested value)?  adminSelfAssignRequested,TResult Function( _DismissPendingTripRequested value)?  dismissPendingTripRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _GetAllRequested value)?  getAllRequested,TResult Function( _RealtimeEventReceived value)?  realtimeEventReceived,TResult Function( _FetchActiveRequested value)?  fetchActiveRequested,TResult Function( _TripSelected value)?  tripSelected,TResult Function( _SelectionCleared value)?  selectionCleared,TResult Function( _MarkEnRouteRequested value)?  markEnRouteRequested,TResult Function( _MarkArrivedRequested value)?  markArrivedRequested,TResult Function( _StartTripRequested value)?  startTripRequested,TResult Function( _CompleteTripRequested value)?  completeTripRequested,TResult Function( _ClearCompletedSummaryRequested value)?  clearCompletedSummaryRequested,TResult Function( _DriverCancelRequested value)?  driverCancelRequested,TResult Function( _StartWaitingRequested value)?  startWaitingRequested,TResult Function( _StopWaitingRequested value)?  stopWaitingRequested,TResult Function( _CompleteStopRequested value)?  completeStopRequested,TResult Function( _AdminSelfAssignRequested value)?  adminSelfAssignRequested,TResult Function( _AdminCancelRequested value)?  adminCancelRequested,TResult Function( _DismissPendingTripRequested value)?  dismissPendingTripRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started(_that);case _GetAllRequested() when getAllRequested != null:
 return getAllRequested(_that);case _RealtimeEventReceived() when realtimeEventReceived != null:
 return realtimeEventReceived(_that);case _FetchActiveRequested() when fetchActiveRequested != null:
-return fetchActiveRequested(_that);case _MarkEnRouteRequested() when markEnRouteRequested != null:
+return fetchActiveRequested(_that);case _TripSelected() when tripSelected != null:
+return tripSelected(_that);case _SelectionCleared() when selectionCleared != null:
+return selectionCleared(_that);case _MarkEnRouteRequested() when markEnRouteRequested != null:
 return markEnRouteRequested(_that);case _MarkArrivedRequested() when markArrivedRequested != null:
 return markArrivedRequested(_that);case _StartTripRequested() when startTripRequested != null:
 return startTripRequested(_that);case _CompleteTripRequested() when completeTripRequested != null:
@@ -72,7 +74,8 @@ return driverCancelRequested(_that);case _StartWaitingRequested() when startWait
 return startWaitingRequested(_that);case _StopWaitingRequested() when stopWaitingRequested != null:
 return stopWaitingRequested(_that);case _CompleteStopRequested() when completeStopRequested != null:
 return completeStopRequested(_that);case _AdminSelfAssignRequested() when adminSelfAssignRequested != null:
-return adminSelfAssignRequested(_that);case _DismissPendingTripRequested() when dismissPendingTripRequested != null:
+return adminSelfAssignRequested(_that);case _AdminCancelRequested() when adminCancelRequested != null:
+return adminCancelRequested(_that);case _DismissPendingTripRequested() when dismissPendingTripRequested != null:
 return dismissPendingTripRequested(_that);case _:
   return orElse();
 
@@ -91,14 +94,16 @@ return dismissPendingTripRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _GetAllRequested value)  getAllRequested,required TResult Function( _RealtimeEventReceived value)  realtimeEventReceived,required TResult Function( _FetchActiveRequested value)  fetchActiveRequested,required TResult Function( _MarkEnRouteRequested value)  markEnRouteRequested,required TResult Function( _MarkArrivedRequested value)  markArrivedRequested,required TResult Function( _StartTripRequested value)  startTripRequested,required TResult Function( _CompleteTripRequested value)  completeTripRequested,required TResult Function( _ClearCompletedSummaryRequested value)  clearCompletedSummaryRequested,required TResult Function( _DriverCancelRequested value)  driverCancelRequested,required TResult Function( _StartWaitingRequested value)  startWaitingRequested,required TResult Function( _StopWaitingRequested value)  stopWaitingRequested,required TResult Function( _CompleteStopRequested value)  completeStopRequested,required TResult Function( _AdminSelfAssignRequested value)  adminSelfAssignRequested,required TResult Function( _DismissPendingTripRequested value)  dismissPendingTripRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _GetAllRequested value)  getAllRequested,required TResult Function( _RealtimeEventReceived value)  realtimeEventReceived,required TResult Function( _FetchActiveRequested value)  fetchActiveRequested,required TResult Function( _TripSelected value)  tripSelected,required TResult Function( _SelectionCleared value)  selectionCleared,required TResult Function( _MarkEnRouteRequested value)  markEnRouteRequested,required TResult Function( _MarkArrivedRequested value)  markArrivedRequested,required TResult Function( _StartTripRequested value)  startTripRequested,required TResult Function( _CompleteTripRequested value)  completeTripRequested,required TResult Function( _ClearCompletedSummaryRequested value)  clearCompletedSummaryRequested,required TResult Function( _DriverCancelRequested value)  driverCancelRequested,required TResult Function( _StartWaitingRequested value)  startWaitingRequested,required TResult Function( _StopWaitingRequested value)  stopWaitingRequested,required TResult Function( _CompleteStopRequested value)  completeStopRequested,required TResult Function( _AdminSelfAssignRequested value)  adminSelfAssignRequested,required TResult Function( _AdminCancelRequested value)  adminCancelRequested,required TResult Function( _DismissPendingTripRequested value)  dismissPendingTripRequested,}){
 final _that = this;
 switch (_that) {
 case _Started():
 return started(_that);case _GetAllRequested():
 return getAllRequested(_that);case _RealtimeEventReceived():
 return realtimeEventReceived(_that);case _FetchActiveRequested():
-return fetchActiveRequested(_that);case _MarkEnRouteRequested():
+return fetchActiveRequested(_that);case _TripSelected():
+return tripSelected(_that);case _SelectionCleared():
+return selectionCleared(_that);case _MarkEnRouteRequested():
 return markEnRouteRequested(_that);case _MarkArrivedRequested():
 return markArrivedRequested(_that);case _StartTripRequested():
 return startTripRequested(_that);case _CompleteTripRequested():
@@ -108,7 +113,8 @@ return driverCancelRequested(_that);case _StartWaitingRequested():
 return startWaitingRequested(_that);case _StopWaitingRequested():
 return stopWaitingRequested(_that);case _CompleteStopRequested():
 return completeStopRequested(_that);case _AdminSelfAssignRequested():
-return adminSelfAssignRequested(_that);case _DismissPendingTripRequested():
+return adminSelfAssignRequested(_that);case _AdminCancelRequested():
+return adminCancelRequested(_that);case _DismissPendingTripRequested():
 return dismissPendingTripRequested(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -126,14 +132,16 @@ return dismissPendingTripRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _GetAllRequested value)?  getAllRequested,TResult? Function( _RealtimeEventReceived value)?  realtimeEventReceived,TResult? Function( _FetchActiveRequested value)?  fetchActiveRequested,TResult? Function( _MarkEnRouteRequested value)?  markEnRouteRequested,TResult? Function( _MarkArrivedRequested value)?  markArrivedRequested,TResult? Function( _StartTripRequested value)?  startTripRequested,TResult? Function( _CompleteTripRequested value)?  completeTripRequested,TResult? Function( _ClearCompletedSummaryRequested value)?  clearCompletedSummaryRequested,TResult? Function( _DriverCancelRequested value)?  driverCancelRequested,TResult? Function( _StartWaitingRequested value)?  startWaitingRequested,TResult? Function( _StopWaitingRequested value)?  stopWaitingRequested,TResult? Function( _CompleteStopRequested value)?  completeStopRequested,TResult? Function( _AdminSelfAssignRequested value)?  adminSelfAssignRequested,TResult? Function( _DismissPendingTripRequested value)?  dismissPendingTripRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _GetAllRequested value)?  getAllRequested,TResult? Function( _RealtimeEventReceived value)?  realtimeEventReceived,TResult? Function( _FetchActiveRequested value)?  fetchActiveRequested,TResult? Function( _TripSelected value)?  tripSelected,TResult? Function( _SelectionCleared value)?  selectionCleared,TResult? Function( _MarkEnRouteRequested value)?  markEnRouteRequested,TResult? Function( _MarkArrivedRequested value)?  markArrivedRequested,TResult? Function( _StartTripRequested value)?  startTripRequested,TResult? Function( _CompleteTripRequested value)?  completeTripRequested,TResult? Function( _ClearCompletedSummaryRequested value)?  clearCompletedSummaryRequested,TResult? Function( _DriverCancelRequested value)?  driverCancelRequested,TResult? Function( _StartWaitingRequested value)?  startWaitingRequested,TResult? Function( _StopWaitingRequested value)?  stopWaitingRequested,TResult? Function( _CompleteStopRequested value)?  completeStopRequested,TResult? Function( _AdminSelfAssignRequested value)?  adminSelfAssignRequested,TResult? Function( _AdminCancelRequested value)?  adminCancelRequested,TResult? Function( _DismissPendingTripRequested value)?  dismissPendingTripRequested,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started(_that);case _GetAllRequested() when getAllRequested != null:
 return getAllRequested(_that);case _RealtimeEventReceived() when realtimeEventReceived != null:
 return realtimeEventReceived(_that);case _FetchActiveRequested() when fetchActiveRequested != null:
-return fetchActiveRequested(_that);case _MarkEnRouteRequested() when markEnRouteRequested != null:
+return fetchActiveRequested(_that);case _TripSelected() when tripSelected != null:
+return tripSelected(_that);case _SelectionCleared() when selectionCleared != null:
+return selectionCleared(_that);case _MarkEnRouteRequested() when markEnRouteRequested != null:
 return markEnRouteRequested(_that);case _MarkArrivedRequested() when markArrivedRequested != null:
 return markArrivedRequested(_that);case _StartTripRequested() when startTripRequested != null:
 return startTripRequested(_that);case _CompleteTripRequested() when completeTripRequested != null:
@@ -143,7 +151,8 @@ return driverCancelRequested(_that);case _StartWaitingRequested() when startWait
 return startWaitingRequested(_that);case _StopWaitingRequested() when stopWaitingRequested != null:
 return stopWaitingRequested(_that);case _CompleteStopRequested() when completeStopRequested != null:
 return completeStopRequested(_that);case _AdminSelfAssignRequested() when adminSelfAssignRequested != null:
-return adminSelfAssignRequested(_that);case _DismissPendingTripRequested() when dismissPendingTripRequested != null:
+return adminSelfAssignRequested(_that);case _AdminCancelRequested() when adminCancelRequested != null:
+return adminCancelRequested(_that);case _DismissPendingTripRequested() when dismissPendingTripRequested != null:
 return dismissPendingTripRequested(_that);case _:
   return null;
 
@@ -161,13 +170,15 @@ return dismissPendingTripRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  getAllRequested,TResult Function( RealtimeEvent event)?  realtimeEventReceived,TResult Function( String tripId)?  fetchActiveRequested,TResult Function( String tripId)?  markEnRouteRequested,TResult Function( String tripId)?  markArrivedRequested,TResult Function( String tripId)?  startTripRequested,TResult Function( String tripId)?  completeTripRequested,TResult Function()?  clearCompletedSummaryRequested,TResult Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult Function( String tripId)?  startWaitingRequested,TResult Function( String tripId)?  stopWaitingRequested,TResult Function( String tripId,  int sequence)?  completeStopRequested,TResult Function( String tripId)?  adminSelfAssignRequested,TResult Function()?  dismissPendingTripRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  getAllRequested,TResult Function( RealtimeEvent event)?  realtimeEventReceived,TResult Function( String tripId)?  fetchActiveRequested,TResult Function( String tripId)?  tripSelected,TResult Function()?  selectionCleared,TResult Function( String tripId)?  markEnRouteRequested,TResult Function( String tripId)?  markArrivedRequested,TResult Function( String tripId)?  startTripRequested,TResult Function( String tripId)?  completeTripRequested,TResult Function()?  clearCompletedSummaryRequested,TResult Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult Function( String tripId)?  startWaitingRequested,TResult Function( String tripId)?  stopWaitingRequested,TResult Function( String tripId,  int sequence)?  completeStopRequested,TResult Function( String tripId)?  adminSelfAssignRequested,TResult Function( String tripId)?  adminCancelRequested,TResult Function( String tripId)?  dismissPendingTripRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _GetAllRequested() when getAllRequested != null:
 return getAllRequested();case _RealtimeEventReceived() when realtimeEventReceived != null:
 return realtimeEventReceived(_that.event);case _FetchActiveRequested() when fetchActiveRequested != null:
-return fetchActiveRequested(_that.tripId);case _MarkEnRouteRequested() when markEnRouteRequested != null:
+return fetchActiveRequested(_that.tripId);case _TripSelected() when tripSelected != null:
+return tripSelected(_that.tripId);case _SelectionCleared() when selectionCleared != null:
+return selectionCleared();case _MarkEnRouteRequested() when markEnRouteRequested != null:
 return markEnRouteRequested(_that.tripId);case _MarkArrivedRequested() when markArrivedRequested != null:
 return markArrivedRequested(_that.tripId);case _StartTripRequested() when startTripRequested != null:
 return startTripRequested(_that.tripId);case _CompleteTripRequested() when completeTripRequested != null:
@@ -177,8 +188,9 @@ return driverCancelRequested(_that.tripId,_that.reason,_that.note);case _StartWa
 return startWaitingRequested(_that.tripId);case _StopWaitingRequested() when stopWaitingRequested != null:
 return stopWaitingRequested(_that.tripId);case _CompleteStopRequested() when completeStopRequested != null:
 return completeStopRequested(_that.tripId,_that.sequence);case _AdminSelfAssignRequested() when adminSelfAssignRequested != null:
-return adminSelfAssignRequested(_that.tripId);case _DismissPendingTripRequested() when dismissPendingTripRequested != null:
-return dismissPendingTripRequested();case _:
+return adminSelfAssignRequested(_that.tripId);case _AdminCancelRequested() when adminCancelRequested != null:
+return adminCancelRequested(_that.tripId);case _DismissPendingTripRequested() when dismissPendingTripRequested != null:
+return dismissPendingTripRequested(_that.tripId);case _:
   return orElse();
 
 }
@@ -196,13 +208,15 @@ return dismissPendingTripRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  getAllRequested,required TResult Function( RealtimeEvent event)  realtimeEventReceived,required TResult Function( String tripId)  fetchActiveRequested,required TResult Function( String tripId)  markEnRouteRequested,required TResult Function( String tripId)  markArrivedRequested,required TResult Function( String tripId)  startTripRequested,required TResult Function( String tripId)  completeTripRequested,required TResult Function()  clearCompletedSummaryRequested,required TResult Function( String tripId,  String reason,  String? note)  driverCancelRequested,required TResult Function( String tripId)  startWaitingRequested,required TResult Function( String tripId)  stopWaitingRequested,required TResult Function( String tripId,  int sequence)  completeStopRequested,required TResult Function( String tripId)  adminSelfAssignRequested,required TResult Function()  dismissPendingTripRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  getAllRequested,required TResult Function( RealtimeEvent event)  realtimeEventReceived,required TResult Function( String tripId)  fetchActiveRequested,required TResult Function( String tripId)  tripSelected,required TResult Function()  selectionCleared,required TResult Function( String tripId)  markEnRouteRequested,required TResult Function( String tripId)  markArrivedRequested,required TResult Function( String tripId)  startTripRequested,required TResult Function( String tripId)  completeTripRequested,required TResult Function()  clearCompletedSummaryRequested,required TResult Function( String tripId,  String reason,  String? note)  driverCancelRequested,required TResult Function( String tripId)  startWaitingRequested,required TResult Function( String tripId)  stopWaitingRequested,required TResult Function( String tripId,  int sequence)  completeStopRequested,required TResult Function( String tripId)  adminSelfAssignRequested,required TResult Function( String tripId)  adminCancelRequested,required TResult Function( String tripId)  dismissPendingTripRequested,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case _GetAllRequested():
 return getAllRequested();case _RealtimeEventReceived():
 return realtimeEventReceived(_that.event);case _FetchActiveRequested():
-return fetchActiveRequested(_that.tripId);case _MarkEnRouteRequested():
+return fetchActiveRequested(_that.tripId);case _TripSelected():
+return tripSelected(_that.tripId);case _SelectionCleared():
+return selectionCleared();case _MarkEnRouteRequested():
 return markEnRouteRequested(_that.tripId);case _MarkArrivedRequested():
 return markArrivedRequested(_that.tripId);case _StartTripRequested():
 return startTripRequested(_that.tripId);case _CompleteTripRequested():
@@ -212,8 +226,9 @@ return driverCancelRequested(_that.tripId,_that.reason,_that.note);case _StartWa
 return startWaitingRequested(_that.tripId);case _StopWaitingRequested():
 return stopWaitingRequested(_that.tripId);case _CompleteStopRequested():
 return completeStopRequested(_that.tripId,_that.sequence);case _AdminSelfAssignRequested():
-return adminSelfAssignRequested(_that.tripId);case _DismissPendingTripRequested():
-return dismissPendingTripRequested();case _:
+return adminSelfAssignRequested(_that.tripId);case _AdminCancelRequested():
+return adminCancelRequested(_that.tripId);case _DismissPendingTripRequested():
+return dismissPendingTripRequested(_that.tripId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -230,13 +245,15 @@ return dismissPendingTripRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  getAllRequested,TResult? Function( RealtimeEvent event)?  realtimeEventReceived,TResult? Function( String tripId)?  fetchActiveRequested,TResult? Function( String tripId)?  markEnRouteRequested,TResult? Function( String tripId)?  markArrivedRequested,TResult? Function( String tripId)?  startTripRequested,TResult? Function( String tripId)?  completeTripRequested,TResult? Function()?  clearCompletedSummaryRequested,TResult? Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult? Function( String tripId)?  startWaitingRequested,TResult? Function( String tripId)?  stopWaitingRequested,TResult? Function( String tripId,  int sequence)?  completeStopRequested,TResult? Function( String tripId)?  adminSelfAssignRequested,TResult? Function()?  dismissPendingTripRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  getAllRequested,TResult? Function( RealtimeEvent event)?  realtimeEventReceived,TResult? Function( String tripId)?  fetchActiveRequested,TResult? Function( String tripId)?  tripSelected,TResult? Function()?  selectionCleared,TResult? Function( String tripId)?  markEnRouteRequested,TResult? Function( String tripId)?  markArrivedRequested,TResult? Function( String tripId)?  startTripRequested,TResult? Function( String tripId)?  completeTripRequested,TResult? Function()?  clearCompletedSummaryRequested,TResult? Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult? Function( String tripId)?  startWaitingRequested,TResult? Function( String tripId)?  stopWaitingRequested,TResult? Function( String tripId,  int sequence)?  completeStopRequested,TResult? Function( String tripId)?  adminSelfAssignRequested,TResult? Function( String tripId)?  adminCancelRequested,TResult? Function( String tripId)?  dismissPendingTripRequested,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _GetAllRequested() when getAllRequested != null:
 return getAllRequested();case _RealtimeEventReceived() when realtimeEventReceived != null:
 return realtimeEventReceived(_that.event);case _FetchActiveRequested() when fetchActiveRequested != null:
-return fetchActiveRequested(_that.tripId);case _MarkEnRouteRequested() when markEnRouteRequested != null:
+return fetchActiveRequested(_that.tripId);case _TripSelected() when tripSelected != null:
+return tripSelected(_that.tripId);case _SelectionCleared() when selectionCleared != null:
+return selectionCleared();case _MarkEnRouteRequested() when markEnRouteRequested != null:
 return markEnRouteRequested(_that.tripId);case _MarkArrivedRequested() when markArrivedRequested != null:
 return markArrivedRequested(_that.tripId);case _StartTripRequested() when startTripRequested != null:
 return startTripRequested(_that.tripId);case _CompleteTripRequested() when completeTripRequested != null:
@@ -246,8 +263,9 @@ return driverCancelRequested(_that.tripId,_that.reason,_that.note);case _StartWa
 return startWaitingRequested(_that.tripId);case _StopWaitingRequested() when stopWaitingRequested != null:
 return stopWaitingRequested(_that.tripId);case _CompleteStopRequested() when completeStopRequested != null:
 return completeStopRequested(_that.tripId,_that.sequence);case _AdminSelfAssignRequested() when adminSelfAssignRequested != null:
-return adminSelfAssignRequested(_that.tripId);case _DismissPendingTripRequested() when dismissPendingTripRequested != null:
-return dismissPendingTripRequested();case _:
+return adminSelfAssignRequested(_that.tripId);case _AdminCancelRequested() when adminCancelRequested != null:
+return adminCancelRequested(_that.tripId);case _DismissPendingTripRequested() when dismissPendingTripRequested != null:
+return dismissPendingTripRequested(_that.tripId);case _:
   return null;
 
 }
@@ -459,6 +477,104 @@ as String,
 
 
 }
+
+/// @nodoc
+
+
+class _TripSelected implements TripEvent {
+  const _TripSelected(this.tripId);
+  
+
+ final  String tripId;
+
+/// Create a copy of TripEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TripSelectedCopyWith<_TripSelected> get copyWith => __$TripSelectedCopyWithImpl<_TripSelected>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TripSelected&&(identical(other.tripId, tripId) || other.tripId == tripId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,tripId);
+
+@override
+String toString() {
+  return 'TripEvent.tripSelected(tripId: $tripId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TripSelectedCopyWith<$Res> implements $TripEventCopyWith<$Res> {
+  factory _$TripSelectedCopyWith(_TripSelected value, $Res Function(_TripSelected) _then) = __$TripSelectedCopyWithImpl;
+@useResult
+$Res call({
+ String tripId
+});
+
+
+
+
+}
+/// @nodoc
+class __$TripSelectedCopyWithImpl<$Res>
+    implements _$TripSelectedCopyWith<$Res> {
+  __$TripSelectedCopyWithImpl(this._self, this._then);
+
+  final _TripSelected _self;
+  final $Res Function(_TripSelected) _then;
+
+/// Create a copy of TripEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? tripId = null,}) {
+  return _then(_TripSelected(
+null == tripId ? _self.tripId : tripId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _SelectionCleared implements TripEvent {
+  const _SelectionCleared();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SelectionCleared);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'TripEvent.selectionCleared()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 
@@ -1095,39 +1211,139 @@ as String,
 /// @nodoc
 
 
-class _DismissPendingTripRequested implements TripEvent {
-  const _DismissPendingTripRequested();
+class _AdminCancelRequested implements TripEvent {
+  const _AdminCancelRequested(this.tripId);
   
 
+ final  String tripId;
 
-
+/// Create a copy of TripEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AdminCancelRequestedCopyWith<_AdminCancelRequested> get copyWith => __$AdminCancelRequestedCopyWithImpl<_AdminCancelRequested>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DismissPendingTripRequested);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminCancelRequested&&(identical(other.tripId, tripId) || other.tripId == tripId));
 }
 
 
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,tripId);
 
 @override
 String toString() {
-  return 'TripEvent.dismissPendingTripRequested()';
+  return 'TripEvent.adminCancelRequested(tripId: $tripId)';
 }
 
 
 }
 
+/// @nodoc
+abstract mixin class _$AdminCancelRequestedCopyWith<$Res> implements $TripEventCopyWith<$Res> {
+  factory _$AdminCancelRequestedCopyWith(_AdminCancelRequested value, $Res Function(_AdminCancelRequested) _then) = __$AdminCancelRequestedCopyWithImpl;
+@useResult
+$Res call({
+ String tripId
+});
 
 
+
+
+}
+/// @nodoc
+class __$AdminCancelRequestedCopyWithImpl<$Res>
+    implements _$AdminCancelRequestedCopyWith<$Res> {
+  __$AdminCancelRequestedCopyWithImpl(this._self, this._then);
+
+  final _AdminCancelRequested _self;
+  final $Res Function(_AdminCancelRequested) _then;
+
+/// Create a copy of TripEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? tripId = null,}) {
+  return _then(_AdminCancelRequested(
+null == tripId ? _self.tripId : tripId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _DismissPendingTripRequested implements TripEvent {
+  const _DismissPendingTripRequested(this.tripId);
+  
+
+ final  String tripId;
+
+/// Create a copy of TripEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DismissPendingTripRequestedCopyWith<_DismissPendingTripRequested> get copyWith => __$DismissPendingTripRequestedCopyWithImpl<_DismissPendingTripRequested>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DismissPendingTripRequested&&(identical(other.tripId, tripId) || other.tripId == tripId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,tripId);
+
+@override
+String toString() {
+  return 'TripEvent.dismissPendingTripRequested(tripId: $tripId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DismissPendingTripRequestedCopyWith<$Res> implements $TripEventCopyWith<$Res> {
+  factory _$DismissPendingTripRequestedCopyWith(_DismissPendingTripRequested value, $Res Function(_DismissPendingTripRequested) _then) = __$DismissPendingTripRequestedCopyWithImpl;
+@useResult
+$Res call({
+ String tripId
+});
+
+
+
+
+}
+/// @nodoc
+class __$DismissPendingTripRequestedCopyWithImpl<$Res>
+    implements _$DismissPendingTripRequestedCopyWith<$Res> {
+  __$DismissPendingTripRequestedCopyWithImpl(this._self, this._then);
+
+  final _DismissPendingTripRequested _self;
+  final $Res Function(_DismissPendingTripRequested) _then;
+
+/// Create a copy of TripEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? tripId = null,}) {
+  return _then(_DismissPendingTripRequested(
+null == tripId ? _self.tripId : tripId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
 
 /// @nodoc
 mixin _$TripState {
 
- BlocStatus<List<TripEntity>> get getAllState; BlocStatus<TripEntity> get activeTripState; BlocStatus<void> get markEnRouteState; BlocStatus<void> get markArrivedState; BlocStatus<void> get startTripState; BlocStatus<void> get completeTripState; BlocStatus<void> get driverCancelState; BlocStatus<void> get startWaitingState; BlocStatus<void> get stopWaitingState; BlocStatus<void> get completeStopState; TripEntity? get activeTrip; TripEntity? get completedTrip; TripEntity? get pendingTrip; DateTime? get arrivedAt; Set<int> get completedStops; BlocStatus<void> get adminSelfAssignState;
+ BlocStatus<List<TripEntity>> get getAllState; BlocStatus<TripEntity> get activeTripState; BlocStatus<void> get markEnRouteState; BlocStatus<void> get markArrivedState; BlocStatus<void> get startTripState; BlocStatus<void> get completeTripState; BlocStatus<void> get driverCancelState; BlocStatus<void> get startWaitingState; BlocStatus<void> get stopWaitingState; BlocStatus<void> get completeStopState; TripEntity? get activeTrip; TripEntity? get completedTrip; List<TripEntity> get pendingTrips; DateTime? get arrivedAt; Set<int> get completedStops; BlocStatus<void> get adminSelfAssignState; BlocStatus<void> get adminCancelState;
 /// Create a copy of TripState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1138,16 +1354,16 @@ $TripStateCopyWith<TripState> get copyWith => _$TripStateCopyWithImpl<TripState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TripState&&(identical(other.getAllState, getAllState) || other.getAllState == getAllState)&&(identical(other.activeTripState, activeTripState) || other.activeTripState == activeTripState)&&(identical(other.markEnRouteState, markEnRouteState) || other.markEnRouteState == markEnRouteState)&&(identical(other.markArrivedState, markArrivedState) || other.markArrivedState == markArrivedState)&&(identical(other.startTripState, startTripState) || other.startTripState == startTripState)&&(identical(other.completeTripState, completeTripState) || other.completeTripState == completeTripState)&&(identical(other.driverCancelState, driverCancelState) || other.driverCancelState == driverCancelState)&&(identical(other.startWaitingState, startWaitingState) || other.startWaitingState == startWaitingState)&&(identical(other.stopWaitingState, stopWaitingState) || other.stopWaitingState == stopWaitingState)&&(identical(other.completeStopState, completeStopState) || other.completeStopState == completeStopState)&&(identical(other.activeTrip, activeTrip) || other.activeTrip == activeTrip)&&(identical(other.completedTrip, completedTrip) || other.completedTrip == completedTrip)&&(identical(other.pendingTrip, pendingTrip) || other.pendingTrip == pendingTrip)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&const DeepCollectionEquality().equals(other.completedStops, completedStops)&&(identical(other.adminSelfAssignState, adminSelfAssignState) || other.adminSelfAssignState == adminSelfAssignState));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TripState&&(identical(other.getAllState, getAllState) || other.getAllState == getAllState)&&(identical(other.activeTripState, activeTripState) || other.activeTripState == activeTripState)&&(identical(other.markEnRouteState, markEnRouteState) || other.markEnRouteState == markEnRouteState)&&(identical(other.markArrivedState, markArrivedState) || other.markArrivedState == markArrivedState)&&(identical(other.startTripState, startTripState) || other.startTripState == startTripState)&&(identical(other.completeTripState, completeTripState) || other.completeTripState == completeTripState)&&(identical(other.driverCancelState, driverCancelState) || other.driverCancelState == driverCancelState)&&(identical(other.startWaitingState, startWaitingState) || other.startWaitingState == startWaitingState)&&(identical(other.stopWaitingState, stopWaitingState) || other.stopWaitingState == stopWaitingState)&&(identical(other.completeStopState, completeStopState) || other.completeStopState == completeStopState)&&(identical(other.activeTrip, activeTrip) || other.activeTrip == activeTrip)&&(identical(other.completedTrip, completedTrip) || other.completedTrip == completedTrip)&&const DeepCollectionEquality().equals(other.pendingTrips, pendingTrips)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&const DeepCollectionEquality().equals(other.completedStops, completedStops)&&(identical(other.adminSelfAssignState, adminSelfAssignState) || other.adminSelfAssignState == adminSelfAssignState)&&(identical(other.adminCancelState, adminCancelState) || other.adminCancelState == adminCancelState));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,getAllState,activeTripState,markEnRouteState,markArrivedState,startTripState,completeTripState,driverCancelState,startWaitingState,stopWaitingState,completeStopState,activeTrip,completedTrip,pendingTrip,arrivedAt,const DeepCollectionEquality().hash(completedStops),adminSelfAssignState);
+int get hashCode => Object.hash(runtimeType,getAllState,activeTripState,markEnRouteState,markArrivedState,startTripState,completeTripState,driverCancelState,startWaitingState,stopWaitingState,completeStopState,activeTrip,completedTrip,const DeepCollectionEquality().hash(pendingTrips),arrivedAt,const DeepCollectionEquality().hash(completedStops),adminSelfAssignState,adminCancelState);
 
 @override
 String toString() {
-  return 'TripState(getAllState: $getAllState, activeTripState: $activeTripState, markEnRouteState: $markEnRouteState, markArrivedState: $markArrivedState, startTripState: $startTripState, completeTripState: $completeTripState, driverCancelState: $driverCancelState, startWaitingState: $startWaitingState, stopWaitingState: $stopWaitingState, completeStopState: $completeStopState, activeTrip: $activeTrip, completedTrip: $completedTrip, pendingTrip: $pendingTrip, arrivedAt: $arrivedAt, completedStops: $completedStops, adminSelfAssignState: $adminSelfAssignState)';
+  return 'TripState(getAllState: $getAllState, activeTripState: $activeTripState, markEnRouteState: $markEnRouteState, markArrivedState: $markArrivedState, startTripState: $startTripState, completeTripState: $completeTripState, driverCancelState: $driverCancelState, startWaitingState: $startWaitingState, stopWaitingState: $stopWaitingState, completeStopState: $completeStopState, activeTrip: $activeTrip, completedTrip: $completedTrip, pendingTrips: $pendingTrips, arrivedAt: $arrivedAt, completedStops: $completedStops, adminSelfAssignState: $adminSelfAssignState, adminCancelState: $adminCancelState)';
 }
 
 
@@ -1158,11 +1374,11 @@ abstract mixin class $TripStateCopyWith<$Res>  {
   factory $TripStateCopyWith(TripState value, $Res Function(TripState) _then) = _$TripStateCopyWithImpl;
 @useResult
 $Res call({
- BlocStatus<List<TripEntity>> getAllState, BlocStatus<TripEntity> activeTripState, BlocStatus<void> markEnRouteState, BlocStatus<void> markArrivedState, BlocStatus<void> startTripState, BlocStatus<void> completeTripState, BlocStatus<void> driverCancelState, BlocStatus<void> startWaitingState, BlocStatus<void> stopWaitingState, BlocStatus<void> completeStopState, TripEntity? activeTrip, TripEntity? completedTrip, TripEntity? pendingTrip, DateTime? arrivedAt, Set<int> completedStops, BlocStatus<void> adminSelfAssignState
+ BlocStatus<List<TripEntity>> getAllState, BlocStatus<TripEntity> activeTripState, BlocStatus<void> markEnRouteState, BlocStatus<void> markArrivedState, BlocStatus<void> startTripState, BlocStatus<void> completeTripState, BlocStatus<void> driverCancelState, BlocStatus<void> startWaitingState, BlocStatus<void> stopWaitingState, BlocStatus<void> completeStopState, TripEntity? activeTrip, TripEntity? completedTrip, List<TripEntity> pendingTrips, DateTime? arrivedAt, Set<int> completedStops, BlocStatus<void> adminSelfAssignState, BlocStatus<void> adminCancelState
 });
 
 
-$BlocStatusCopyWith<List<TripEntity>, $Res> get getAllState;$BlocStatusCopyWith<TripEntity, $Res> get activeTripState;$BlocStatusCopyWith<void, $Res> get markEnRouteState;$BlocStatusCopyWith<void, $Res> get markArrivedState;$BlocStatusCopyWith<void, $Res> get startTripState;$BlocStatusCopyWith<void, $Res> get completeTripState;$BlocStatusCopyWith<void, $Res> get driverCancelState;$BlocStatusCopyWith<void, $Res> get startWaitingState;$BlocStatusCopyWith<void, $Res> get stopWaitingState;$BlocStatusCopyWith<void, $Res> get completeStopState;$BlocStatusCopyWith<void, $Res> get adminSelfAssignState;
+$BlocStatusCopyWith<List<TripEntity>, $Res> get getAllState;$BlocStatusCopyWith<TripEntity, $Res> get activeTripState;$BlocStatusCopyWith<void, $Res> get markEnRouteState;$BlocStatusCopyWith<void, $Res> get markArrivedState;$BlocStatusCopyWith<void, $Res> get startTripState;$BlocStatusCopyWith<void, $Res> get completeTripState;$BlocStatusCopyWith<void, $Res> get driverCancelState;$BlocStatusCopyWith<void, $Res> get startWaitingState;$BlocStatusCopyWith<void, $Res> get stopWaitingState;$BlocStatusCopyWith<void, $Res> get completeStopState;$BlocStatusCopyWith<void, $Res> get adminSelfAssignState;$BlocStatusCopyWith<void, $Res> get adminCancelState;
 
 }
 /// @nodoc
@@ -1175,7 +1391,7 @@ class _$TripStateCopyWithImpl<$Res>
 
 /// Create a copy of TripState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? getAllState = null,Object? activeTripState = null,Object? markEnRouteState = null,Object? markArrivedState = null,Object? startTripState = null,Object? completeTripState = null,Object? driverCancelState = null,Object? startWaitingState = null,Object? stopWaitingState = null,Object? completeStopState = null,Object? activeTrip = freezed,Object? completedTrip = freezed,Object? pendingTrip = freezed,Object? arrivedAt = freezed,Object? completedStops = null,Object? adminSelfAssignState = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? getAllState = null,Object? activeTripState = null,Object? markEnRouteState = null,Object? markArrivedState = null,Object? startTripState = null,Object? completeTripState = null,Object? driverCancelState = null,Object? startWaitingState = null,Object? stopWaitingState = null,Object? completeStopState = null,Object? activeTrip = freezed,Object? completedTrip = freezed,Object? pendingTrips = null,Object? arrivedAt = freezed,Object? completedStops = null,Object? adminSelfAssignState = null,Object? adminCancelState = null,}) {
   return _then(_self.copyWith(
 getAllState: null == getAllState ? _self.getAllState : getAllState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<List<TripEntity>>,activeTripState: null == activeTripState ? _self.activeTripState : activeTripState // ignore: cast_nullable_to_non_nullable
@@ -1189,10 +1405,11 @@ as BlocStatus<void>,stopWaitingState: null == stopWaitingState ? _self.stopWaiti
 as BlocStatus<void>,completeStopState: null == completeStopState ? _self.completeStopState : completeStopState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<void>,activeTrip: freezed == activeTrip ? _self.activeTrip : activeTrip // ignore: cast_nullable_to_non_nullable
 as TripEntity?,completedTrip: freezed == completedTrip ? _self.completedTrip : completedTrip // ignore: cast_nullable_to_non_nullable
-as TripEntity?,pendingTrip: freezed == pendingTrip ? _self.pendingTrip : pendingTrip // ignore: cast_nullable_to_non_nullable
-as TripEntity?,arrivedAt: freezed == arrivedAt ? _self.arrivedAt : arrivedAt // ignore: cast_nullable_to_non_nullable
+as TripEntity?,pendingTrips: null == pendingTrips ? _self.pendingTrips : pendingTrips // ignore: cast_nullable_to_non_nullable
+as List<TripEntity>,arrivedAt: freezed == arrivedAt ? _self.arrivedAt : arrivedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,completedStops: null == completedStops ? _self.completedStops : completedStops // ignore: cast_nullable_to_non_nullable
 as Set<int>,adminSelfAssignState: null == adminSelfAssignState ? _self.adminSelfAssignState : adminSelfAssignState // ignore: cast_nullable_to_non_nullable
+as BlocStatus<void>,adminCancelState: null == adminCancelState ? _self.adminCancelState : adminCancelState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<void>,
   ));
 }
@@ -1294,6 +1511,15 @@ $BlocStatusCopyWith<void, $Res> get adminSelfAssignState {
   
   return $BlocStatusCopyWith<void, $Res>(_self.adminSelfAssignState, (value) {
     return _then(_self.copyWith(adminSelfAssignState: value));
+  });
+}/// Create a copy of TripState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BlocStatusCopyWith<void, $Res> get adminCancelState {
+  
+  return $BlocStatusCopyWith<void, $Res>(_self.adminCancelState, (value) {
+    return _then(_self.copyWith(adminCancelState: value));
   });
 }
 }
@@ -1377,10 +1603,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BlocStatus<List<TripEntity>> getAllState,  BlocStatus<TripEntity> activeTripState,  BlocStatus<void> markEnRouteState,  BlocStatus<void> markArrivedState,  BlocStatus<void> startTripState,  BlocStatus<void> completeTripState,  BlocStatus<void> driverCancelState,  BlocStatus<void> startWaitingState,  BlocStatus<void> stopWaitingState,  BlocStatus<void> completeStopState,  TripEntity? activeTrip,  TripEntity? completedTrip,  TripEntity? pendingTrip,  DateTime? arrivedAt,  Set<int> completedStops,  BlocStatus<void> adminSelfAssignState)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BlocStatus<List<TripEntity>> getAllState,  BlocStatus<TripEntity> activeTripState,  BlocStatus<void> markEnRouteState,  BlocStatus<void> markArrivedState,  BlocStatus<void> startTripState,  BlocStatus<void> completeTripState,  BlocStatus<void> driverCancelState,  BlocStatus<void> startWaitingState,  BlocStatus<void> stopWaitingState,  BlocStatus<void> completeStopState,  TripEntity? activeTrip,  TripEntity? completedTrip,  List<TripEntity> pendingTrips,  DateTime? arrivedAt,  Set<int> completedStops,  BlocStatus<void> adminSelfAssignState,  BlocStatus<void> adminCancelState)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TripState() when $default != null:
-return $default(_that.getAllState,_that.activeTripState,_that.markEnRouteState,_that.markArrivedState,_that.startTripState,_that.completeTripState,_that.driverCancelState,_that.startWaitingState,_that.stopWaitingState,_that.completeStopState,_that.activeTrip,_that.completedTrip,_that.pendingTrip,_that.arrivedAt,_that.completedStops,_that.adminSelfAssignState);case _:
+return $default(_that.getAllState,_that.activeTripState,_that.markEnRouteState,_that.markArrivedState,_that.startTripState,_that.completeTripState,_that.driverCancelState,_that.startWaitingState,_that.stopWaitingState,_that.completeStopState,_that.activeTrip,_that.completedTrip,_that.pendingTrips,_that.arrivedAt,_that.completedStops,_that.adminSelfAssignState,_that.adminCancelState);case _:
   return orElse();
 
 }
@@ -1398,10 +1624,10 @@ return $default(_that.getAllState,_that.activeTripState,_that.markEnRouteState,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BlocStatus<List<TripEntity>> getAllState,  BlocStatus<TripEntity> activeTripState,  BlocStatus<void> markEnRouteState,  BlocStatus<void> markArrivedState,  BlocStatus<void> startTripState,  BlocStatus<void> completeTripState,  BlocStatus<void> driverCancelState,  BlocStatus<void> startWaitingState,  BlocStatus<void> stopWaitingState,  BlocStatus<void> completeStopState,  TripEntity? activeTrip,  TripEntity? completedTrip,  TripEntity? pendingTrip,  DateTime? arrivedAt,  Set<int> completedStops,  BlocStatus<void> adminSelfAssignState)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BlocStatus<List<TripEntity>> getAllState,  BlocStatus<TripEntity> activeTripState,  BlocStatus<void> markEnRouteState,  BlocStatus<void> markArrivedState,  BlocStatus<void> startTripState,  BlocStatus<void> completeTripState,  BlocStatus<void> driverCancelState,  BlocStatus<void> startWaitingState,  BlocStatus<void> stopWaitingState,  BlocStatus<void> completeStopState,  TripEntity? activeTrip,  TripEntity? completedTrip,  List<TripEntity> pendingTrips,  DateTime? arrivedAt,  Set<int> completedStops,  BlocStatus<void> adminSelfAssignState,  BlocStatus<void> adminCancelState)  $default,) {final _that = this;
 switch (_that) {
 case _TripState():
-return $default(_that.getAllState,_that.activeTripState,_that.markEnRouteState,_that.markArrivedState,_that.startTripState,_that.completeTripState,_that.driverCancelState,_that.startWaitingState,_that.stopWaitingState,_that.completeStopState,_that.activeTrip,_that.completedTrip,_that.pendingTrip,_that.arrivedAt,_that.completedStops,_that.adminSelfAssignState);case _:
+return $default(_that.getAllState,_that.activeTripState,_that.markEnRouteState,_that.markArrivedState,_that.startTripState,_that.completeTripState,_that.driverCancelState,_that.startWaitingState,_that.stopWaitingState,_that.completeStopState,_that.activeTrip,_that.completedTrip,_that.pendingTrips,_that.arrivedAt,_that.completedStops,_that.adminSelfAssignState,_that.adminCancelState);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1418,10 +1644,10 @@ return $default(_that.getAllState,_that.activeTripState,_that.markEnRouteState,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BlocStatus<List<TripEntity>> getAllState,  BlocStatus<TripEntity> activeTripState,  BlocStatus<void> markEnRouteState,  BlocStatus<void> markArrivedState,  BlocStatus<void> startTripState,  BlocStatus<void> completeTripState,  BlocStatus<void> driverCancelState,  BlocStatus<void> startWaitingState,  BlocStatus<void> stopWaitingState,  BlocStatus<void> completeStopState,  TripEntity? activeTrip,  TripEntity? completedTrip,  TripEntity? pendingTrip,  DateTime? arrivedAt,  Set<int> completedStops,  BlocStatus<void> adminSelfAssignState)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BlocStatus<List<TripEntity>> getAllState,  BlocStatus<TripEntity> activeTripState,  BlocStatus<void> markEnRouteState,  BlocStatus<void> markArrivedState,  BlocStatus<void> startTripState,  BlocStatus<void> completeTripState,  BlocStatus<void> driverCancelState,  BlocStatus<void> startWaitingState,  BlocStatus<void> stopWaitingState,  BlocStatus<void> completeStopState,  TripEntity? activeTrip,  TripEntity? completedTrip,  List<TripEntity> pendingTrips,  DateTime? arrivedAt,  Set<int> completedStops,  BlocStatus<void> adminSelfAssignState,  BlocStatus<void> adminCancelState)?  $default,) {final _that = this;
 switch (_that) {
 case _TripState() when $default != null:
-return $default(_that.getAllState,_that.activeTripState,_that.markEnRouteState,_that.markArrivedState,_that.startTripState,_that.completeTripState,_that.driverCancelState,_that.startWaitingState,_that.stopWaitingState,_that.completeStopState,_that.activeTrip,_that.completedTrip,_that.pendingTrip,_that.arrivedAt,_that.completedStops,_that.adminSelfAssignState);case _:
+return $default(_that.getAllState,_that.activeTripState,_that.markEnRouteState,_that.markArrivedState,_that.startTripState,_that.completeTripState,_that.driverCancelState,_that.startWaitingState,_that.stopWaitingState,_that.completeStopState,_that.activeTrip,_that.completedTrip,_that.pendingTrips,_that.arrivedAt,_that.completedStops,_that.adminSelfAssignState,_that.adminCancelState);case _:
   return null;
 
 }
@@ -1433,7 +1659,7 @@ return $default(_that.getAllState,_that.activeTripState,_that.markEnRouteState,_
 
 
 class _TripState implements TripState {
-  const _TripState({this.getAllState = const BlocStatus<List<TripEntity>>.initial(), this.activeTripState = const BlocStatus<TripEntity>.initial(), this.markEnRouteState = const BlocStatus<void>.initial(), this.markArrivedState = const BlocStatus<void>.initial(), this.startTripState = const BlocStatus<void>.initial(), this.completeTripState = const BlocStatus<void>.initial(), this.driverCancelState = const BlocStatus<void>.initial(), this.startWaitingState = const BlocStatus<void>.initial(), this.stopWaitingState = const BlocStatus<void>.initial(), this.completeStopState = const BlocStatus<void>.initial(), this.activeTrip, this.completedTrip, this.pendingTrip, this.arrivedAt, final  Set<int> completedStops = const <int>{}, this.adminSelfAssignState = const BlocStatus<void>.initial()}): _completedStops = completedStops;
+  const _TripState({this.getAllState = const BlocStatus<List<TripEntity>>.initial(), this.activeTripState = const BlocStatus<TripEntity>.initial(), this.markEnRouteState = const BlocStatus<void>.initial(), this.markArrivedState = const BlocStatus<void>.initial(), this.startTripState = const BlocStatus<void>.initial(), this.completeTripState = const BlocStatus<void>.initial(), this.driverCancelState = const BlocStatus<void>.initial(), this.startWaitingState = const BlocStatus<void>.initial(), this.stopWaitingState = const BlocStatus<void>.initial(), this.completeStopState = const BlocStatus<void>.initial(), this.activeTrip, this.completedTrip, final  List<TripEntity> pendingTrips = const <TripEntity>[], this.arrivedAt, final  Set<int> completedStops = const <int>{}, this.adminSelfAssignState = const BlocStatus<void>.initial(), this.adminCancelState = const BlocStatus<void>.initial()}): _pendingTrips = pendingTrips,_completedStops = completedStops;
   
 
 @override@JsonKey() final  BlocStatus<List<TripEntity>> getAllState;
@@ -1448,7 +1674,13 @@ class _TripState implements TripState {
 @override@JsonKey() final  BlocStatus<void> completeStopState;
 @override final  TripEntity? activeTrip;
 @override final  TripEntity? completedTrip;
-@override final  TripEntity? pendingTrip;
+ final  List<TripEntity> _pendingTrips;
+@override@JsonKey() List<TripEntity> get pendingTrips {
+  if (_pendingTrips is EqualUnmodifiableListView) return _pendingTrips;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_pendingTrips);
+}
+
 @override final  DateTime? arrivedAt;
  final  Set<int> _completedStops;
 @override@JsonKey() Set<int> get completedStops {
@@ -1458,6 +1690,7 @@ class _TripState implements TripState {
 }
 
 @override@JsonKey() final  BlocStatus<void> adminSelfAssignState;
+@override@JsonKey() final  BlocStatus<void> adminCancelState;
 
 /// Create a copy of TripState
 /// with the given fields replaced by the non-null parameter values.
@@ -1469,16 +1702,16 @@ _$TripStateCopyWith<_TripState> get copyWith => __$TripStateCopyWithImpl<_TripSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TripState&&(identical(other.getAllState, getAllState) || other.getAllState == getAllState)&&(identical(other.activeTripState, activeTripState) || other.activeTripState == activeTripState)&&(identical(other.markEnRouteState, markEnRouteState) || other.markEnRouteState == markEnRouteState)&&(identical(other.markArrivedState, markArrivedState) || other.markArrivedState == markArrivedState)&&(identical(other.startTripState, startTripState) || other.startTripState == startTripState)&&(identical(other.completeTripState, completeTripState) || other.completeTripState == completeTripState)&&(identical(other.driverCancelState, driverCancelState) || other.driverCancelState == driverCancelState)&&(identical(other.startWaitingState, startWaitingState) || other.startWaitingState == startWaitingState)&&(identical(other.stopWaitingState, stopWaitingState) || other.stopWaitingState == stopWaitingState)&&(identical(other.completeStopState, completeStopState) || other.completeStopState == completeStopState)&&(identical(other.activeTrip, activeTrip) || other.activeTrip == activeTrip)&&(identical(other.completedTrip, completedTrip) || other.completedTrip == completedTrip)&&(identical(other.pendingTrip, pendingTrip) || other.pendingTrip == pendingTrip)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&const DeepCollectionEquality().equals(other._completedStops, _completedStops)&&(identical(other.adminSelfAssignState, adminSelfAssignState) || other.adminSelfAssignState == adminSelfAssignState));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TripState&&(identical(other.getAllState, getAllState) || other.getAllState == getAllState)&&(identical(other.activeTripState, activeTripState) || other.activeTripState == activeTripState)&&(identical(other.markEnRouteState, markEnRouteState) || other.markEnRouteState == markEnRouteState)&&(identical(other.markArrivedState, markArrivedState) || other.markArrivedState == markArrivedState)&&(identical(other.startTripState, startTripState) || other.startTripState == startTripState)&&(identical(other.completeTripState, completeTripState) || other.completeTripState == completeTripState)&&(identical(other.driverCancelState, driverCancelState) || other.driverCancelState == driverCancelState)&&(identical(other.startWaitingState, startWaitingState) || other.startWaitingState == startWaitingState)&&(identical(other.stopWaitingState, stopWaitingState) || other.stopWaitingState == stopWaitingState)&&(identical(other.completeStopState, completeStopState) || other.completeStopState == completeStopState)&&(identical(other.activeTrip, activeTrip) || other.activeTrip == activeTrip)&&(identical(other.completedTrip, completedTrip) || other.completedTrip == completedTrip)&&const DeepCollectionEquality().equals(other._pendingTrips, _pendingTrips)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&const DeepCollectionEquality().equals(other._completedStops, _completedStops)&&(identical(other.adminSelfAssignState, adminSelfAssignState) || other.adminSelfAssignState == adminSelfAssignState)&&(identical(other.adminCancelState, adminCancelState) || other.adminCancelState == adminCancelState));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,getAllState,activeTripState,markEnRouteState,markArrivedState,startTripState,completeTripState,driverCancelState,startWaitingState,stopWaitingState,completeStopState,activeTrip,completedTrip,pendingTrip,arrivedAt,const DeepCollectionEquality().hash(_completedStops),adminSelfAssignState);
+int get hashCode => Object.hash(runtimeType,getAllState,activeTripState,markEnRouteState,markArrivedState,startTripState,completeTripState,driverCancelState,startWaitingState,stopWaitingState,completeStopState,activeTrip,completedTrip,const DeepCollectionEquality().hash(_pendingTrips),arrivedAt,const DeepCollectionEquality().hash(_completedStops),adminSelfAssignState,adminCancelState);
 
 @override
 String toString() {
-  return 'TripState(getAllState: $getAllState, activeTripState: $activeTripState, markEnRouteState: $markEnRouteState, markArrivedState: $markArrivedState, startTripState: $startTripState, completeTripState: $completeTripState, driverCancelState: $driverCancelState, startWaitingState: $startWaitingState, stopWaitingState: $stopWaitingState, completeStopState: $completeStopState, activeTrip: $activeTrip, completedTrip: $completedTrip, pendingTrip: $pendingTrip, arrivedAt: $arrivedAt, completedStops: $completedStops, adminSelfAssignState: $adminSelfAssignState)';
+  return 'TripState(getAllState: $getAllState, activeTripState: $activeTripState, markEnRouteState: $markEnRouteState, markArrivedState: $markArrivedState, startTripState: $startTripState, completeTripState: $completeTripState, driverCancelState: $driverCancelState, startWaitingState: $startWaitingState, stopWaitingState: $stopWaitingState, completeStopState: $completeStopState, activeTrip: $activeTrip, completedTrip: $completedTrip, pendingTrips: $pendingTrips, arrivedAt: $arrivedAt, completedStops: $completedStops, adminSelfAssignState: $adminSelfAssignState, adminCancelState: $adminCancelState)';
 }
 
 
@@ -1489,11 +1722,11 @@ abstract mixin class _$TripStateCopyWith<$Res> implements $TripStateCopyWith<$Re
   factory _$TripStateCopyWith(_TripState value, $Res Function(_TripState) _then) = __$TripStateCopyWithImpl;
 @override @useResult
 $Res call({
- BlocStatus<List<TripEntity>> getAllState, BlocStatus<TripEntity> activeTripState, BlocStatus<void> markEnRouteState, BlocStatus<void> markArrivedState, BlocStatus<void> startTripState, BlocStatus<void> completeTripState, BlocStatus<void> driverCancelState, BlocStatus<void> startWaitingState, BlocStatus<void> stopWaitingState, BlocStatus<void> completeStopState, TripEntity? activeTrip, TripEntity? completedTrip, TripEntity? pendingTrip, DateTime? arrivedAt, Set<int> completedStops, BlocStatus<void> adminSelfAssignState
+ BlocStatus<List<TripEntity>> getAllState, BlocStatus<TripEntity> activeTripState, BlocStatus<void> markEnRouteState, BlocStatus<void> markArrivedState, BlocStatus<void> startTripState, BlocStatus<void> completeTripState, BlocStatus<void> driverCancelState, BlocStatus<void> startWaitingState, BlocStatus<void> stopWaitingState, BlocStatus<void> completeStopState, TripEntity? activeTrip, TripEntity? completedTrip, List<TripEntity> pendingTrips, DateTime? arrivedAt, Set<int> completedStops, BlocStatus<void> adminSelfAssignState, BlocStatus<void> adminCancelState
 });
 
 
-@override $BlocStatusCopyWith<List<TripEntity>, $Res> get getAllState;@override $BlocStatusCopyWith<TripEntity, $Res> get activeTripState;@override $BlocStatusCopyWith<void, $Res> get markEnRouteState;@override $BlocStatusCopyWith<void, $Res> get markArrivedState;@override $BlocStatusCopyWith<void, $Res> get startTripState;@override $BlocStatusCopyWith<void, $Res> get completeTripState;@override $BlocStatusCopyWith<void, $Res> get driverCancelState;@override $BlocStatusCopyWith<void, $Res> get startWaitingState;@override $BlocStatusCopyWith<void, $Res> get stopWaitingState;@override $BlocStatusCopyWith<void, $Res> get completeStopState;@override $BlocStatusCopyWith<void, $Res> get adminSelfAssignState;
+@override $BlocStatusCopyWith<List<TripEntity>, $Res> get getAllState;@override $BlocStatusCopyWith<TripEntity, $Res> get activeTripState;@override $BlocStatusCopyWith<void, $Res> get markEnRouteState;@override $BlocStatusCopyWith<void, $Res> get markArrivedState;@override $BlocStatusCopyWith<void, $Res> get startTripState;@override $BlocStatusCopyWith<void, $Res> get completeTripState;@override $BlocStatusCopyWith<void, $Res> get driverCancelState;@override $BlocStatusCopyWith<void, $Res> get startWaitingState;@override $BlocStatusCopyWith<void, $Res> get stopWaitingState;@override $BlocStatusCopyWith<void, $Res> get completeStopState;@override $BlocStatusCopyWith<void, $Res> get adminSelfAssignState;@override $BlocStatusCopyWith<void, $Res> get adminCancelState;
 
 }
 /// @nodoc
@@ -1506,7 +1739,7 @@ class __$TripStateCopyWithImpl<$Res>
 
 /// Create a copy of TripState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? getAllState = null,Object? activeTripState = null,Object? markEnRouteState = null,Object? markArrivedState = null,Object? startTripState = null,Object? completeTripState = null,Object? driverCancelState = null,Object? startWaitingState = null,Object? stopWaitingState = null,Object? completeStopState = null,Object? activeTrip = freezed,Object? completedTrip = freezed,Object? pendingTrip = freezed,Object? arrivedAt = freezed,Object? completedStops = null,Object? adminSelfAssignState = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? getAllState = null,Object? activeTripState = null,Object? markEnRouteState = null,Object? markArrivedState = null,Object? startTripState = null,Object? completeTripState = null,Object? driverCancelState = null,Object? startWaitingState = null,Object? stopWaitingState = null,Object? completeStopState = null,Object? activeTrip = freezed,Object? completedTrip = freezed,Object? pendingTrips = null,Object? arrivedAt = freezed,Object? completedStops = null,Object? adminSelfAssignState = null,Object? adminCancelState = null,}) {
   return _then(_TripState(
 getAllState: null == getAllState ? _self.getAllState : getAllState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<List<TripEntity>>,activeTripState: null == activeTripState ? _self.activeTripState : activeTripState // ignore: cast_nullable_to_non_nullable
@@ -1520,10 +1753,11 @@ as BlocStatus<void>,stopWaitingState: null == stopWaitingState ? _self.stopWaiti
 as BlocStatus<void>,completeStopState: null == completeStopState ? _self.completeStopState : completeStopState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<void>,activeTrip: freezed == activeTrip ? _self.activeTrip : activeTrip // ignore: cast_nullable_to_non_nullable
 as TripEntity?,completedTrip: freezed == completedTrip ? _self.completedTrip : completedTrip // ignore: cast_nullable_to_non_nullable
-as TripEntity?,pendingTrip: freezed == pendingTrip ? _self.pendingTrip : pendingTrip // ignore: cast_nullable_to_non_nullable
-as TripEntity?,arrivedAt: freezed == arrivedAt ? _self.arrivedAt : arrivedAt // ignore: cast_nullable_to_non_nullable
+as TripEntity?,pendingTrips: null == pendingTrips ? _self._pendingTrips : pendingTrips // ignore: cast_nullable_to_non_nullable
+as List<TripEntity>,arrivedAt: freezed == arrivedAt ? _self.arrivedAt : arrivedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,completedStops: null == completedStops ? _self._completedStops : completedStops // ignore: cast_nullable_to_non_nullable
 as Set<int>,adminSelfAssignState: null == adminSelfAssignState ? _self.adminSelfAssignState : adminSelfAssignState // ignore: cast_nullable_to_non_nullable
+as BlocStatus<void>,adminCancelState: null == adminCancelState ? _self.adminCancelState : adminCancelState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<void>,
   ));
 }
@@ -1626,6 +1860,15 @@ $BlocStatusCopyWith<void, $Res> get adminSelfAssignState {
   
   return $BlocStatusCopyWith<void, $Res>(_self.adminSelfAssignState, (value) {
     return _then(_self.copyWith(adminSelfAssignState: value));
+  });
+}/// Create a copy of TripState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BlocStatusCopyWith<void, $Res> get adminCancelState {
+  
+  return $BlocStatusCopyWith<void, $Res>(_self.adminCancelState, (value) {
+    return _then(_self.copyWith(adminCancelState: value));
   });
 }
 }

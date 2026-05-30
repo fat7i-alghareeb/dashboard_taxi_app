@@ -28,4 +28,10 @@ abstract class AuthRepository {
 
   /// Completes the mandatory password reset flow and refreshes the session.
   Future<Result<void>> forceResetPassword(String newPassword);
+
+  /// Changes the password of the currently authenticated user.
+  Future<Result<void>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  });
 }

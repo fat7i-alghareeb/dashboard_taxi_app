@@ -4,10 +4,15 @@ import 'package:dashboardtaxi/features/root/constants/root_constants.dart';
 import 'root_bottom_nav_item.dart';
 
 class RootBottomNavItemConfig {
-  const RootBottomNavItemConfig({required this.label, required this.icon});
+  const RootBottomNavItemConfig({
+    required this.label,
+    required this.icon,
+    this.badgeCount = 0,
+  });
 
   final String label;
   final IconData icon;
+  final int badgeCount;
 }
 
 class RootBottomNavBar extends StatelessWidget {
@@ -51,6 +56,7 @@ class RootBottomNavBar extends StatelessWidget {
                   label: items[i].label,
                   icon: items[i].icon,
                   isSelected: i == currentIndex,
+                  badgeCount: items[i].badgeCount,
                   onTap: () => onItemSelected(i),
                 ),
               ),

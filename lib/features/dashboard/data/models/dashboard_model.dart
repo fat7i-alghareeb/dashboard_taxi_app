@@ -58,6 +58,11 @@ class DashboardTripModel {
     required this.currencyCode,
     required this.createdAt,
     required this.stops,
+    this.scheduledAt,
+    this.assignedAt,
+    this.arrivedAt,
+    this.startedAt,
+    this.completedAt,
   });
 
   final String id;
@@ -68,6 +73,11 @@ class DashboardTripModel {
   final String currencyCode;
   final DateTime? createdAt;
   final List<DashboardTripStopModel> stops;
+  final DateTime? scheduledAt;
+  final DateTime? assignedAt;
+  final DateTime? arrivedAt;
+  final DateTime? startedAt;
+  final DateTime? completedAt;
 
   factory DashboardTripModel.fromJson(Map<String, dynamic> json) {
     return DashboardTripModel(
@@ -82,6 +92,11 @@ class DashboardTripModel {
         json,
         'stops',
       ).map((e) => DashboardTripStopModel.fromJson(e)).toList(),
+      scheduledAt: DateTime.tryParse(_readString(json, 'scheduledAtUtc')),
+      assignedAt: DateTime.tryParse(_readString(json, 'assignedAtUtc')),
+      arrivedAt: DateTime.tryParse(_readString(json, 'arrivedAtUtc')),
+      startedAt: DateTime.tryParse(_readString(json, 'startedAtUtc')),
+      completedAt: DateTime.tryParse(_readString(json, 'completedAtUtc')),
     );
   }
 }
@@ -409,23 +424,6 @@ class DashboardSystemConfigModel {
   }
 }
 
-class DashboardAdminOperationsModel {
-  const DashboardAdminOperationsModel({
-    required this.adminProfile,
-    required this.drivers,
-    required this.vehicleTypes,
-    required this.users,
-    required this.auditLogs,
-    required this.config,
-  });
-
-  final DashboardAdminProfileModel? adminProfile;
-  final List<DashboardDriverModel> drivers;
-  final List<DashboardVehicleTypeModel> vehicleTypes;
-  final List<DashboardUserModel> users;
-  final List<DashboardAuditLogModel> auditLogs;
-  final DashboardSystemConfigModel config;
-}
 
 String _readString(
   Map<String, dynamic> json,

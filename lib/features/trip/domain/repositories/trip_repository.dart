@@ -11,6 +11,7 @@ abstract class TripRepository {
   Future<Result<void>> completeStop(String tripId, int sequence);
   Future<Result<void>> assignToDriver(String tripId, String driverId);
   Future<Result<void>> adminTakeTrip(String tripId);
+  Future<Result<void>> adminCancelTrip(String tripId, {String? note});
   Future<Result<void>> driverCancelTrip(
     String tripId,
     String reason,

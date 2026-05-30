@@ -17,9 +17,10 @@ abstract class TripState with _$TripState {
     @Default(BlocStatus<void>.initial()) BlocStatus<void> completeStopState,
     TripEntity? activeTrip,
     TripEntity? completedTrip,
-    TripEntity? pendingTrip,
+    @Default(<TripEntity>[]) List<TripEntity> pendingTrips,
     DateTime? arrivedAt,
     @Default(<int>{}) Set<int> completedStops,
     @Default(BlocStatus<void>.initial()) BlocStatus<void> adminSelfAssignState,
+    @Default(BlocStatus<void>.initial()) BlocStatus<void> adminCancelState,
   }) = _TripState;
 }

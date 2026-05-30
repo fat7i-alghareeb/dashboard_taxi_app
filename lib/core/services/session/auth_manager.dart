@@ -6,6 +6,8 @@ import 'package:dio_refresh_bot/dio_refresh_bot.dart';
 import 'package:injectable/injectable.dart';
 import 'package:dashboardtaxi/core/injection/injectable.dart';
 import 'package:dashboardtaxi/core/network/api_endpoints.dart';
+import 'package:dashboardtaxi/core/notification/notification_coordinator.dart';
+import 'package:dashboardtaxi/core/notification/notification_topics.dart';
 import 'package:dashboardtaxi/core/services/localization/locale_service.dart';
 import 'package:dashboardtaxi/features/auth/domain/repositories/auth_repository.dart';
 
@@ -84,17 +86,23 @@ class AuthManager {
     }
 
     final hasStoredUser = state.user != null && !state.isGuest;
+    final hasStoredToken = tokenStorage.cachedToken != null;
     final hasValidTokens = await tokenStorage.hasValidTokens();
     printC(
       '${AuthLogTags.authManager} startup decision '
-      'hasStoredUser=$hasStoredUser hasValidTokens=$hasValidTokens '
+      'hasStoredUser=$hasStoredUser hasStoredToken=$hasStoredToken '
+      'hasValidTokens=$hasValidTokens '
       'status=${state.authStatus.status}',
     );
 
-    if (hasStoredUser && hasValidTokens) {
-      printG('${AuthLogTags.authManager} restoring authenticated session');
+    if (hasStoredUser && hasStoredToken) {
+      printG(
+        '${AuthLogTags.authManager} restoring authenticated session '
+        '(refresh will run on next protected request if token is expired)',
+      );
       state.setAuthStatus(AuthStatus.authenticated());
       await _refreshCurrentUserProfileOnStartup();
+      await syncNotificationTopicsForCurrentUser();
       return;
     }
 
@@ -135,20 +143,30 @@ class AuthManager {
     }
 
     // Sync preferred language to backend post-login
-    try {
-      final localeService = getIt<LocaleService>();
-      final langCode = await localeService.currentLanguageCode();
-      final authRepo = getIt<AuthRepository>();
-      unawaited(authRepo.updatePreferredLanguage(langCode));
-      printG('${AuthLogTags.authManager} language synced post-login: $langCode');
-    } catch (e) {
-      printY('${AuthLogTags.authManager} language sync post-login failed: $e');
+    if (!user.isAdmin) {
+      try {
+        final localeService = getIt<LocaleService>();
+        final langCode = await localeService.currentLanguageCode();
+        final authRepo = getIt<AuthRepository>();
+        unawaited(authRepo.updatePreferredLanguage(langCode));
+        printG(
+          '${AuthLogTags.authManager} language synced post-login: $langCode',
+        );
+      } catch (e) {
+        printY(
+          '${AuthLogTags.authManager} language sync post-login failed: $e',
+        );
+      }
     }
+
+    await syncNotificationTopicsForCurrentUser();
   }
 
   /// Logs out the current user, clears persisted data and removes tokens.
   Future<void> logout() async {
     printY('${AuthLogTags.authManager} logout');
+
+    final roleTopics = _notificationTopicsFor(state.user);
 
     await storage.remove(AuthStorageKeys.user);
     await storage.remove(AuthStorageKeys.guestFlag);
@@ -160,6 +178,22 @@ class AuthManager {
     );
 
     await tokenStorage.delete(AuthReasons.logout);
+
+    if (roleTopics.isNotEmpty) {
+      try {
+        await getIt<NotificationCoordinator>().unsubscribeFromTopics(
+          roleTopics,
+        );
+        printG(
+          '${AuthLogTags.authManager} unsubscribed notification topics: '
+          '${roleTopics.join(',')}',
+        );
+      } catch (e) {
+        printY(
+          '${AuthLogTags.authManager} notification topic unsubscribe failed: $e',
+        );
+      }
+    }
   }
 
   /// Updates the persisted user data and notifies listeners.
@@ -170,6 +204,28 @@ class AuthManager {
       'requiresPasswordReset=${user.requiresPasswordReset}',
     );
     await _persistUser(user);
+    await syncNotificationTopicsForCurrentUser();
+  }
+
+  /// Reconciles FCM topic subscriptions with the current user's roles.
+  ///
+  /// Called after login, startup profile restore, profile refresh, and FCM
+  /// token rotation so topic delivery survives token changes and app restarts.
+  Future<void> syncNotificationTopicsForCurrentUser() async {
+    final topics = _notificationTopicsFor(state.user);
+    if (topics.isEmpty) return;
+
+    try {
+      await getIt<NotificationCoordinator>().subscribeToTopics(topics);
+      printG(
+        '${AuthLogTags.authManager} subscribed notification topics: '
+        '${topics.join(',')}',
+      );
+    } catch (e) {
+      printY(
+        '${AuthLogTags.authManager} notification topic subscribe failed: $e',
+      );
+    }
   }
 
   /// Fetches the latest profile from the backend and synchronizes with storage.
@@ -182,9 +238,7 @@ class AuthManager {
     final endpoint = state.user.isAdmin
         ? ApiEndpoints.currentAdminProfile
         : ApiEndpoints.currentUser;
-    printC(
-      '${AuthLogTags.authManager} refreshCurrentUserProfile -> $endpoint',
-    );
+    printC('${AuthLogTags.authManager} refreshCurrentUserProfile -> $endpoint');
     final response = await getIt<Dio>().get(endpoint);
     printG(
       '${AuthLogTags.authManager} refreshCurrentUserProfile response '
@@ -261,6 +315,19 @@ class AuthManager {
     final jsonString = json.encode(user.toJson());
     await storage.writeString(AuthStorageKeys.user, jsonString);
     printG('${AuthLogTags.authManager} user persisted to storage');
+  }
+
+  List<String> _notificationTopicsFor(UserEntity? user) {
+    if (user == null) return const <String>[];
+
+    final topics = <String>[];
+    if (user.isDriver) {
+      topics.add(NotificationTopics.drivers);
+    }
+    if (user.isAdmin) {
+      topics.add(NotificationTopics.admins);
+    }
+    return topics;
   }
 
   /// Persists the guest flag and updates the in-memory representation.

@@ -7,45 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:74478390393:android:485121be381115063998a8",
-        "android_client_info": {
-          "package_name": "dev.fat7i.customertaxi"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBj7U9eBq4TsVk16pi9UvmE3T7jtBJQwNw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:74478390393:android:c773aa651172cbad3998a8",
-        "android_client_info": {
-          "package_name": "dev.fat7i.dashboardtaxi"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBj7U9eBq4TsVk16pi9UvmE3T7jtBJQwNw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:74478390393:android:3735564ca14c63a83998a8",
+        "mobilesdk_app_id": "1:74478390393:android:f9cce4c081c24b563998a8",
         "android_client_info": {
           "package_name": "dev.fat7i.dashboardtaxi"
         }

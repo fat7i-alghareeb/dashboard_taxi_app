@@ -164,7 +164,7 @@ class NotificationCoordinator {
           });
 
           if (config.autoSubscribeToTopics && config.initialTopics.isNotEmpty) {
-            await subscribeToTopics(config.initialTopics);
+            await _subscribeToTopics(config.initialTopics);
           }
 
           final token = await _fcmService.getDeviceToken();
@@ -172,8 +172,11 @@ class NotificationCoordinator {
             await onTokenRefresh?.call(token);
 
             if (config.enableDebugLogs) {
-              printG('[Notifications] token ready');
+              final preview = token.length > 12 ? '${token.substring(0, 8)}…(len=${token.length})' : token;
+              printG('[Notifications] token ready: $preview');
             }
+          } else {
+            printY('[Notifications] WARNING: getDeviceToken returned null/empty — FCM token not available');
           }
         }
       } catch (e) {
@@ -197,6 +200,14 @@ class NotificationCoordinator {
     final config = _config;
     if (!_initialized || config == null) return;
     if (!_options.enableFcm) return;
+
+    await _subscribeToTopics(topics);
+  }
+
+  Future<void> _subscribeToTopics(List<String> topics) async {
+    final config = _config;
+    if (config == null) return;
+    if (!_options.enableFcm || topics.isEmpty) return;
 
     await _fcmService.subscribeToTopics(topics: topics);
 

@@ -8,12 +8,14 @@ class RootBottomNavItem extends StatelessWidget {
     required this.icon,
     required this.isSelected,
     required this.onTap,
+    this.badgeCount = 0,
   });
 
   final String label;
   final IconData icon;
   final bool isSelected;
   final VoidCallback onTap;
+  final int badgeCount;
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +42,36 @@ class RootBottomNavItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            FaIcon(
-              icon,
-              size: RootConstants.bottomNavIconSize.r,
-              color: foreground,
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                FaIcon(
+                  icon,
+                  size: RootConstants.bottomNavIconSize.r,
+                  color: foreground,
+                ),
+                if (badgeCount > 0)
+                  Positioned(
+                    top: -6.r,
+                    right: -10.r,
+                    child: Container(
+                      padding: REdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                      constraints: BoxConstraints(minWidth: 16.r),
+                      decoration: BoxDecoration(
+                        color: context.error,
+                        borderRadius: BorderRadius.circular(999.r),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        badgeCount > 99 ? '99+' : '$badgeCount',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.s11w500.copyWith(
+                          color: context.colorScheme.onError,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
             AppSpacing.xs.verticalSpace,
             Text(

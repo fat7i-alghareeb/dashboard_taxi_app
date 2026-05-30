@@ -57,12 +57,9 @@ The **Dashboard** feature is the admin-facing operational surface for the taxi p
 - Surface pending dispatch trips and assign an online approved driver through `/api/v1/trips/{id}/assign`.
 - Surface fleet capability with vehicle-type capacity/pricing rows. The product model does not manage physical vehicles or cars; each driver carries one `vehicleTypeId`.
 - Provide a full-screen live fleet map route backed by `/api/v1/drivers/status` for initial driver coordinates and `DriverLocationUpdated` realtime events for ongoing marker movement; the map also renders pending trip pickup pins from admin trip stop coordinates and opens the dispatch sheet from a selected pickup with nearest drivers ranked by haversine distance.
-- Provide an Admin Operations route that combines driver management, vehicle-type management, user visibility, audit-log review, and system configuration quick actions through the production admin endpoints.
-- Surface pending driver review rows with license and approval status context.
-- Open a KYC review sheet for pending drivers, fetch their uploaded documents, approve/reject individual documents, and approve the driver once all documents are approved.
-- Surface recent trips with reference code, fare, status, and formatted creation time.
-- Surface recent audit activity with actor fallback and formatted creation time.
-- Use `StatusBuilder<DashboardEntity>` with a dedicated shimmer for loading and platform empty/error states.
+- Provide an Admin Operations route (Operations Center) and a Platform Settings route that combine driver management, vehicle-type management, user visibility, audit-log review, system configuration, and admin profile management.
+- Built on a **Per-Section Architecture** where each segment (profile, config, drivers, vehicle types, users, audit) utilizes its own typed `StatusBuilder` and shape-matched shimmer. Loading, refresh, or mutation in one section does not block or reload the other sections.
+- Use scoped loading states (`configActionState`, `driverActionState`, `vehicleTypeActionState`) for precise action feedback.
 
 ## 🚘 The Driver Feature: Driver Profile & Earnings
 

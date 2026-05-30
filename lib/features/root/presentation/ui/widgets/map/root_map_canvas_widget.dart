@@ -8,19 +8,58 @@ class RootMapCanvasWidget extends StatelessWidget {
     super.key,
     required this.currentLocation,
     required this.onMapCreated,
-    this.driverMarker,
     this.onCameraMove,
     this.onCameraIdle,
+    this.legPolylines = const <List<LatLng>>[],
+    this.tripMarkers = const <Marker>{},
   });
 
   final RootMapLocationEntity currentLocation;
   final void Function(GoogleMapController controller) onMapCreated;
-  final Marker? driverMarker;
   final void Function(CameraPosition position)? onCameraMove;
   final VoidCallback? onCameraIdle;
 
+  /// One decoded point list per route leg (drawn in order).
+  final List<List<LatLng>> legPolylines;
+
+  /// Pickup / stop / dropoff markers for the active trip.
+  final Set<Marker> tripMarkers;
+
   LatLng get _latLng =>
       LatLng(currentLocation.latitude, currentLocation.longitude);
+
+  Set<Polyline> _buildPolylines(BuildContext context) {
+    if (legPolylines.isEmpty) return const <Polyline>{};
+
+    final legColors = <Color>[context.primary, AppColors.success];
+    final polylines = <Polyline>{};
+
+    for (var i = 0; i < legPolylines.length; i++) {
+      final points = legPolylines[i];
+      if (points.length < 2) continue;
+
+      final color = legColors[i % legColors.length];
+
+      polylines.add(
+        Polyline(
+          polylineId: PolylineId('trip-leg-$i-shadow'),
+          points: points,
+          width: 8,
+          color: color.withValues(alpha: 0.18),
+        ),
+      );
+      polylines.add(
+        Polyline(
+          polylineId: PolylineId('trip-leg-$i'),
+          points: points,
+          width: 5,
+          color: color,
+        ),
+      );
+    }
+
+    return polylines;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +75,8 @@ class RootMapCanvasWidget extends StatelessWidget {
             target: _latLng,
             zoom: currentLocation.zoom,
           ),
-          markers: {?driverMarker},
+          markers: tripMarkers,
+          polylines: _buildPolylines(context),
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           compassEnabled: false,

@@ -16,9 +16,18 @@ abstract class DashboardState with _$DashboardState {
     BlocStatus<List<DashboardTripEntity>> adminTripsState,
     @Default(BlocStatus<DashboardTripDetailsEntity>.initial())
     BlocStatus<DashboardTripDetailsEntity> tripDetailsState,
-    @Default(BlocStatus<DashboardAdminOperationsEntity>.initial())
-    BlocStatus<DashboardAdminOperationsEntity> adminOperationsState,
-    @Default(BlocStatus<void>.initial()) BlocStatus<void> adminActionState,
+
+    // --- Control Center admin states ---
+    @Default(BlocStatus<DashboardSystemConfigEntity>.initial())
+    BlocStatus<DashboardSystemConfigEntity> adminConfigState,
+    @Default(BlocStatus<List<DashboardVehicleTypeEntity>>.initial())
+    BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState,
+
+    // Per-section action loading (scoped instead of shared)
+    @Default(BlocStatus<void>.initial()) BlocStatus<void> configActionState,
+    @Default(BlocStatus<void>.initial())
+    BlocStatus<void> vehicleTypeActionState,
+
     String? selectedDriverId,
     String? selectedTripId,
   }) = _DashboardState;

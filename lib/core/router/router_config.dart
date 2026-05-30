@@ -6,11 +6,13 @@ import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/router/app_page_transitions.dart';
-import '../../features/admin_settings/presentation/ui/screens/admin_settings_screen.dart';
 import '../../features/auth/presentation/ui/screens/admin_login_screen.dart';
+import '../../features/auth/presentation/ui/screens/change_password_screen.dart';
 import '../../features/auth/presentation/ui/screens/force_password_reset_screen.dart';
 import '../../features/auth/presentation/ui/screens/login_screen.dart';
-import '../../features/dashboard/presentation/ui/screens/dashboard_admin_operations_screen.dart';
+import '../../features/admin_management/presentation/ui/screens/create_admin_screen.dart';
+import '../../features/compensation/presentation/ui/screens/compensation_claims_screen.dart';
+import '../../features/control_center/presentation/ui/screens/control_center_screen.dart';
 import '../../features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
 import '../../features/dashboard/presentation/ui/screens/dashboard_screen.dart';
 import '../../features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';

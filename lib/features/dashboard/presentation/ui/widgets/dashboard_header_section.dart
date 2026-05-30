@@ -1,6 +1,6 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/features/control_center/presentation/ui/screens/control_center_screen.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart';
-import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_admin_operations_screen.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_header_quick_link_widget.dart';
@@ -104,10 +104,9 @@ class DashboardHeaderSection extends StatelessWidget {
             AppSpacing.sm.horizontalSpace,
             Expanded(
               child: DashboardHeaderQuickLinkWidget(
-                icon: FontAwesomeIcons.gears,
-                label: AppStrings.dashboardOpenAdminOps,
-                onTap: () =>
-                    context.push(DashboardAdminOperationsScreen.pagePath),
+                icon: FontAwesomeIcons.sliders,
+                label: AppStrings.controlCenter,
+                onTap: () => context.push(ControlCenterScreen.pagePath),
               ),
             ),
           ],

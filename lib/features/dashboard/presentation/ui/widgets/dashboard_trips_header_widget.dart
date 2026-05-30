@@ -3,19 +3,26 @@ import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_b
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_icon_action_widget.dart';
 
 class DashboardTripsHeaderWidget extends StatelessWidget {
-  const DashboardTripsHeaderWidget({super.key});
+  final bool showBackButton;
+
+  const DashboardTripsHeaderWidget({
+    super.key,
+    this.showBackButton = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DashboardIconActionWidget(
-          icon: context.chevronStart,
-          tooltip: AppStrings.back,
-          onTap: () => context.pop(),
-        ),
-        AppSpacing.md.horizontalSpace,
+        if (showBackButton) ...[
+          DashboardIconActionWidget(
+            icon: context.chevronStart,
+            tooltip: AppStrings.back,
+            onTap: () => context.pop(),
+          ),
+          AppSpacing.md.horizontalSpace,
+        ],
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

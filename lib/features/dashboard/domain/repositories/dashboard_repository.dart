@@ -14,7 +14,18 @@ abstract class DashboardRepository {
 
   Future<Result<DashboardTripDetailsEntity>> getTripDetails(String tripId);
 
-  Future<Result<DashboardAdminOperationsEntity>> getAdminOperations();
+  Future<Result<DashboardAdminProfileEntity?>> getAdminProfile();
+
+  Future<Result<DashboardSystemConfigEntity>> getAdminConfig();
+
+  Future<Result<List<DashboardDriverEntity>>> getAdminDrivers();
+
+  Future<Result<List<DashboardVehicleTypeEntity>>> getAdminVehicleTypes();
+
+  Future<Result<List<DashboardUserEntity>>> getAdminUsers();
+
+  Future<Result<List<DashboardAuditLogEntity>>> getAdminAuditLogs();
+
 
   Future<Result<void>> suspendDriver(String driverId);
 

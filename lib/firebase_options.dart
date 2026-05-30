@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBj7U9eBq4TsVk16pi9UvmE3T7jtBJQwNw',
-    appId: '1:74478390393:android:3735564ca14c63a83998a8',
+    appId: '1:74478390393:android:f9cce4c081c24b563998a8',
     messagingSenderId: '74478390393',
     projectId: 'adam-otp',
     storageBucket: 'adam-otp.firebasestorage.app',
@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDm-E4yTangVD30orkrEk3oXVvfwAxzLnY',
-    appId: '1:74478390393:ios:8717f0a0a4e0778a3998a8',
+    appId: '1:74478390393:ios:50a28fde12ecc79e3998a8',
     messagingSenderId: '74478390393',
     projectId: 'adam-otp',
     storageBucket: 'adam-otp.firebasestorage.app',

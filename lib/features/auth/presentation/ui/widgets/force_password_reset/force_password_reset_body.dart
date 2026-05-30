@@ -20,6 +20,25 @@ class _ForcePasswordResetBodyState extends State<ForcePasswordResetBody> {
     super.dispose();
   }
 
+  void _submit(BuildContext context) {
+    if (_form.invalid) {
+      _form.markAllAsTouched();
+      return;
+    }
+    final newPassword =
+        _form.control(AuthForms.newPasswordField).value as String?;
+    final confirmPassword =
+        _form.control(AuthForms.confirmPasswordField).value as String?;
+    if (newPassword != confirmPassword) {
+      showErrorOverlay(context, AppStrings.passwordsDoNotMatch);
+      return;
+    }
+    printC('[ForcePasswordResetBody] submit reset');
+    context.read<AuthBloc>().add(
+      AuthEvent.forceResetPasswordRequested(newPassword ?? ''),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
@@ -64,12 +83,15 @@ class _ForcePasswordResetBodyState extends State<ForcePasswordResetBody> {
                           formControlName: AuthForms.newPasswordField,
                           title: AppStrings.newPassword,
                           hintText: AppStrings.newPassword,
+                          textInputAction: TextInputAction.next,
                         ),
                         AppSpacing.lg.verticalSpace,
                         AppReactiveTextField.password(
                           formControlName: AuthForms.confirmPasswordField,
                           title: AppStrings.confirmPassword,
                           hintText: AppStrings.confirmPassword,
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (_, _) => _submit(context),
                         ),
                         AppSpacing.xl.verticalSpace,
                         ReactiveFormConsumer(
@@ -102,14 +124,7 @@ class _ForcePasswordResetBodyState extends State<ForcePasswordResetBody> {
                                   );
                                 }
                               },
-                              onTap: () {
-                                printC('[ForcePasswordResetBody] submit reset');
-                                context.read<AuthBloc>().add(
-                                  AuthEvent.forceResetPasswordRequested(
-                                    newPassword ?? '',
-                                  ),
-                                );
-                              },
+                              onTap: () => _submit(context),
                               child: AppButtonChild.label(
                                 AppStrings.resetPassword,
                               ),

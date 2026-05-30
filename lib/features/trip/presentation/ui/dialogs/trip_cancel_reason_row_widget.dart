@@ -56,7 +56,7 @@ class TripCancelReasonRowWidget extends StatelessWidget {
                           width: 6.r,
                           height: 6.r,
                           decoration: BoxDecoration(
-                            color: context.onPrimary,
+                            color: context.onSurface,
                             shape: BoxShape.circle,
                           ),
                         ),

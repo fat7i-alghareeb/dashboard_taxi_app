@@ -3,7 +3,6 @@ import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/core/domain/extensions/user_role_extensions.dart';
 import 'package:dashboardtaxi/core/services/session/auth_manager.dart';
 import 'package:dashboardtaxi/features/driver_home/presentation/states/driver_home_bloc.dart';
-import 'package:dashboardtaxi/features/driver_home/presentation/ui/widgets/driver_home_connection_pill_widget.dart';
 import 'package:dashboardtaxi/features/driver_home/presentation/ui/widgets/driver_home_controls_panel_widget.dart';
 import 'package:dashboardtaxi/features/root/constants/root_constants.dart';
 import 'package:dashboardtaxi/features/root/domain/entities/root_map_location_entity.dart';
@@ -59,7 +58,6 @@ class RootHomeTabSection extends StatelessWidget {
   }
 }
 
-/// Hamburger button (top-left) + connection pill (top-center).
 class _HomeTopOverlay extends StatelessWidget {
   const _HomeTopOverlay();
 
@@ -92,19 +90,6 @@ class _HomeTopOverlay extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-        ),
-        BlocBuilder<DriverHomeBloc, DriverHomeState>(
-          buildWhen: (p, c) => p.connectionState != c.connectionState,
-          builder: (context, state) => Positioned(
-            top: AppSpacing.md.h,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: DriverHomeConnectionPillWidget(
-                connectionState: state.connectionState,
               ),
             ),
           ),

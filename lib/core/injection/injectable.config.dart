@@ -42,6 +42,8 @@ import 'package:dashboardtaxi/core/services/location/location_service.dart'
     as _i113;
 import 'package:dashboardtaxi/core/services/location/startup_map_warmup_coordinator.dart'
     as _i190;
+import 'package:dashboardtaxi/core/services/maps/map_directions_service.dart'
+    as _i247;
 import 'package:dashboardtaxi/core/services/onboarding/onboarding_service.dart'
     as _i565;
 import 'package:dashboardtaxi/core/services/permissions/location_permission_service.dart'
@@ -63,6 +65,14 @@ import 'package:dashboardtaxi/core/services/session/jwt_token_storage.dart'
 import 'package:dashboardtaxi/core/services/storage/storage_service.dart'
     as _i76;
 import 'package:dashboardtaxi/core/theme/theme_controller.dart' as _i548;
+import 'package:dashboardtaxi/features/admin_management/data/datasources/admin_management_remote_datasource.dart'
+    as _i193;
+import 'package:dashboardtaxi/features/admin_management/data/repositories/admin_management_repository_impl.dart'
+    as _i127;
+import 'package:dashboardtaxi/features/admin_management/domain/facade/admin_management_facade.dart'
+    as _i625;
+import 'package:dashboardtaxi/features/admin_management/domain/repositories/admin_management_repository.dart'
+    as _i392;
 import 'package:dashboardtaxi/features/auth/data/datasources/auth_firebase_datasource.dart'
     as _i538;
 import 'package:dashboardtaxi/features/auth/data/datasources/auth_remote_datasource.dart'
@@ -75,6 +85,10 @@ import 'package:dashboardtaxi/features/auth/domain/repositories/auth_repository.
     as _i706;
 import 'package:dashboardtaxi/features/auth/presentation/states/auth_bloc.dart'
     as _i100;
+import 'package:dashboardtaxi/features/compensation/data/datasources/compensation_remote_datasource.dart'
+    as _i756;
+import 'package:dashboardtaxi/features/compensation/presentation/states/compensation_cubit.dart'
+    as _i498;
 import 'package:dashboardtaxi/features/dashboard/data/datasources/dashboard_remote_datasource.dart'
     as _i505;
 import 'package:dashboardtaxi/features/dashboard/data/repositories/dashboard_repository_impl.dart'
@@ -127,6 +141,8 @@ import 'package:dashboardtaxi/features/root/domain/repositories/root_repository.
     as _i825;
 import 'package:dashboardtaxi/features/root/domain/services/root_mode_service.dart'
     as _i885;
+import 'package:dashboardtaxi/features/root/domain/services/root_tab_controller.dart'
+    as _i452;
 import 'package:dashboardtaxi/features/root/presentation/states/root_bloc.dart'
     as _i554;
 import 'package:dashboardtaxi/features/trip/data/datasources/trip_remote_datasource.dart'
@@ -191,6 +207,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i1021.AuthStateNotifier(),
     );
     gh.lazySingleton<_i885.RootModeService>(() => _i885.RootModeService());
+    gh.lazySingleton<_i452.RootTabController>(() => _i452.RootTabController());
     gh.lazySingleton<_i538.AuthFirebaseDataSource>(
       () => _i538.AuthFirebaseDataSource(
         gh<_i59.FirebaseAuth>(),
@@ -266,8 +283,17 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1043.JwtTokenStorage>(),
       ),
     );
+    gh.lazySingleton<_i247.MapDirectionsService>(
+      () => _i247.MapDirectionsService(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i193.AdminManagementRemoteDataSource>(
+      () => _i193.AdminManagementRemoteDataSource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i1012.AuthRemoteDataSource>(
       () => _i1012.AuthRemoteDataSource(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i756.CompensationRemoteDataSource>(
+      () => _i756.CompensationRemoteDataSource(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i505.DashboardRemoteDataSource>(
       () => _i505.DashboardRemoteDataSource(gh<_i361.Dio>()),
@@ -293,6 +319,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i512.ProfileFacade>(
       () => _i512.ProfileFacade(gh<_i670.ProfileRepository>()),
     );
+    gh.factory<_i498.CompensationCubit>(
+      () => _i498.CompensationCubit(gh<_i756.CompensationRemoteDataSource>()),
+    );
     gh.lazySingleton<_i574.DashboardRepository>(
       () =>
           _i150.DashboardRepositoryImpl(gh<_i505.DashboardRemoteDataSource>()),
@@ -305,6 +334,11 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i538.AuthFirebaseDataSource>(),
         gh<_i1012.AuthRemoteDataSource>(),
         gh<_i322.AuthManager>(),
+      ),
+    );
+    gh.lazySingleton<_i392.AdminManagementRepository>(
+      () => _i127.AdminManagementRepositoryImpl(
+        gh<_i193.AdminManagementRemoteDataSource>(),
       ),
     );
     gh.factory<_i356.ProfileBloc>(
@@ -330,6 +364,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i969.DashboardFacade>(
       () => _i969.DashboardFacade(gh<_i574.DashboardRepository>()),
+    );
+    gh.lazySingleton<_i625.AdminManagementFacade>(
+      () => _i625.AdminManagementFacade(gh<_i392.AdminManagementRepository>()),
     );
     gh.factory<_i100.AuthBloc>(() => _i100.AuthBloc(gh<_i471.AuthFacade>()));
     gh.lazySingleton<_i461.DriverFacade>(
@@ -358,19 +395,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i698.DriverBloc>(
       () => _i698.DriverBloc(gh<_i461.DriverFacade>()),
     );
+    gh.factory<_i170.DriverHomeBloc>(
+      () => _i170.DriverHomeBloc(
+        gh<_i461.DriverFacade>(),
+        gh<_i650.DriverLocationStreamer>(),
+        gh<_i868.RealtimeService>(),
+        gh<_i322.AuthManager>(),
+      ),
+    );
     gh.lazySingleton<_i540.TripBloc>(
       () => _i540.TripBloc(
         gh<_i931.TripFacade>(),
         gh<_i868.RealtimeService>(),
         gh<_i322.AuthManager>(),
         gh<_i17.NotificationCoordinator>(),
-      ),
-    );
-    gh.factory<_i170.DriverHomeBloc>(
-      () => _i170.DriverHomeBloc(
-        gh<_i461.DriverFacade>(),
-        gh<_i650.DriverLocationStreamer>(),
-        gh<_i868.RealtimeService>(),
       ),
     );
     return this;

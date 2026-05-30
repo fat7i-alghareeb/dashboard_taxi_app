@@ -124,23 +124,6 @@ class DashboardAdminProfileEntity {
   final bool isActive;
 }
 
-class DashboardAdminOperationsEntity {
-  const DashboardAdminOperationsEntity({
-    required this.adminProfile,
-    required this.drivers,
-    required this.vehicleTypes,
-    required this.users,
-    required this.auditLogs,
-    required this.config,
-  });
-
-  final DashboardAdminProfileEntity? adminProfile;
-  final List<DashboardDriverEntity> drivers;
-  final List<DashboardVehicleTypeEntity> vehicleTypes;
-  final List<DashboardUserEntity> users;
-  final List<DashboardAuditLogEntity> auditLogs;
-  final DashboardSystemConfigEntity config;
-}
 
 class DashboardTripEntity {
   const DashboardTripEntity({
@@ -154,6 +137,11 @@ class DashboardTripEntity {
     required this.pickupLongitude,
     required this.pickupLabel,
     required this.dropoffLabel,
+    this.scheduledAt,
+    this.assignedAt,
+    this.arrivedAt,
+    this.startedAt,
+    this.completedAt,
   });
 
   final String id;
@@ -166,6 +154,11 @@ class DashboardTripEntity {
   final double? pickupLongitude;
   final String? pickupLabel;
   final String? dropoffLabel;
+  final DateTime? scheduledAt;
+  final DateTime? assignedAt;
+  final DateTime? arrivedAt;
+  final DateTime? startedAt;
+  final DateTime? completedAt;
 
   bool get hasPickupLocation =>
       pickupLatitude != null && pickupLongitude != null;

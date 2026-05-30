@@ -39,7 +39,8 @@ class NotificationFcmService {
 
     // This call is safe even when the permission was requested earlier via
     // permission_handler. On iOS it will not prompt again once granted.
-    await _messaging.requestPermission();
+    final permissionSettings = await _messaging.requestPermission();
+    printG('[FCM] requestPermission result: authorizationStatus=${permissionSettings.authorizationStatus}');
 
     // Prevent iOS from showing system notifications in foreground.
     // Foreground notifications are shown via flutter_local_notifications.
@@ -63,6 +64,8 @@ class NotificationFcmService {
     _openedSub ??= FirebaseMessaging.onMessageOpenedApp.listen((message) async {
       final payload = AppNotificationPayload.fromRemoteMessage(message);
 
+      printG('[FCM] onMessageOpenedApp: messageId=${message.messageId} title="${message.notification?.title}" body="${message.notification?.body}" data=${message.data}');
+
       if (config.enableDebugLogs) {
         printG('[Notifications] opened from background/terminated');
       }
@@ -73,6 +76,8 @@ class NotificationFcmService {
     _foregroundSub ??= FirebaseMessaging.onMessage.listen((message) async {
       final payload = AppNotificationPayload.fromRemoteMessage(message);
 
+      printG('[FCM] onMessage (foreground): messageId=${message.messageId} title="${message.notification?.title}" body="${message.notification?.body}" data=${message.data}');
+
       if (config.enableDebugLogs) {
         printG('[Notifications] foreground message received');
       }
@@ -82,6 +87,8 @@ class NotificationFcmService {
 
     _tokenRefreshSub ??= _messaging.onTokenRefresh.listen((token) {
       _cachedToken = token;
+      final preview = token.length > 12 ? '${token.substring(0, 8)}…(len=${token.length})' : token;
+      printG('[FCM] onTokenRefresh: token=$preview');
       if (config.enableDebugLogs) {
         printG('[Notifications] token refreshed');
       }
@@ -94,20 +101,32 @@ class NotificationFcmService {
   }
 
   Future<String?> getDeviceToken() async {
-    if (_cachedToken != null) return _cachedToken;
+    if (_cachedToken != null) {
+      final preview = _cachedToken!.length > 12 ? '${_cachedToken!.substring(0, 8)}…(len=${_cachedToken!.length})' : _cachedToken!;
+      printG('[FCM] getDeviceToken: returning cached token=$preview');
+      return _cachedToken;
+    }
     _cachedToken = await _messaging.getToken();
+    if (_cachedToken != null) {
+      final preview = _cachedToken!.length > 12 ? '${_cachedToken!.substring(0, 8)}…(len=${_cachedToken!.length})' : _cachedToken!;
+      printG('[FCM] getDeviceToken: fetched new token=$preview');
+    } else {
+      printY('[FCM] getDeviceToken: token is NULL (Firebase not ready or permission denied?)');
+    }
     return _cachedToken;
   }
 
   Future<void> subscribeToTopics({required List<String> topics}) async {
     for (final topic in topics) {
       await _messaging.subscribeToTopic(topic);
+      printG('[FCM] subscribeToTopic: topic=$topic');
     }
   }
 
   Future<void> unsubscribeFromTopics({required List<String> topics}) async {
     for (final topic in topics) {
       await _messaging.unsubscribeFromTopic(topic);
+      printG('[FCM] unsubscribeFromTopic: topic=$topic');
     }
   }
 

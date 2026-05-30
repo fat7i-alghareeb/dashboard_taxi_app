@@ -6,11 +6,13 @@ import 'package:dashboardtaxi/core/services/localization/locale_service.dart';
 import 'package:dashboardtaxi/core/services/session/auth_manager.dart';
 import 'package:dashboardtaxi/core/services/session/auth_state_notifier.dart';
 import 'package:dashboardtaxi/core/theme/theme_controller.dart';
-import 'package:dashboardtaxi/features/admin_settings/presentation/ui/screens/admin_settings_screen.dart';
-import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_admin_operations_screen.dart';
-import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
-import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_screen.dart';
-import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
+import 'package:dashboardtaxi/features/admin_management/presentation/ui/screens/create_admin_screen.dart';
+import 'package:dashboardtaxi/features/auth/presentation/ui/screens/change_password_screen.dart';
+import 'package:dashboardtaxi/features/compensation/presentation/ui/screens/compensation_claims_screen.dart';
+import 'package:dashboardtaxi/features/control_center/presentation/ui/screens/control_center_screen.dart';
+// import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
+// import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_screen.dart';
+// import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
 
 import 'drawer/drawer_header_section.dart';
 import 'drawer/drawer_logout_footer.dart';
@@ -62,44 +64,60 @@ class RootDrawerContent extends StatelessWidget {
   List<Widget> _buildAdminSection(BuildContext context) {
     return [
       _buildSectionHeader(context, AppStrings.drawerSectionAdmin),
-      DrawerMenuItem(
-        icon: FontAwesomeIcons.gaugeHigh,
-        label: AppStrings.drawerAdminDashboard,
-        onTap: () {
-          Navigator.maybePop(context);
-          context.pushNamed(DashboardScreen.pageName);
-        },
-      ),
-      DrawerMenuItem(
-        icon: FontAwesomeIcons.route,
-        label: AppStrings.drawerAdminTrips,
-        onTap: () {
-          Navigator.maybePop(context);
-          context.pushNamed(DashboardTripsScreen.pageName);
-        },
-      ),
-      DrawerMenuItem(
-        icon: FontAwesomeIcons.locationDot,
-        label: AppStrings.drawerAdminLiveFleet,
-        onTap: () {
-          Navigator.maybePop(context);
-          context.pushNamed(DashboardLiveMapScreen.pageName);
-        },
-      ),
-      DrawerMenuItem(
-        icon: FontAwesomeIcons.userGear,
-        label: AppStrings.drawerAdminOperations,
-        onTap: () {
-          Navigator.maybePop(context);
-          context.pushNamed(DashboardAdminOperationsScreen.pageName);
-        },
-      ),
+      // DrawerMenuItem(
+      //   icon: FontAwesomeIcons.gaugeHigh,
+      //   label: AppStrings.drawerAdminDashboard,
+      //   onTap: () {
+      //     Navigator.maybePop(context);
+      //     context.pushNamed(DashboardScreen.pageName);
+      //   },
+      // ),
+      // DrawerMenuItem(
+      //   icon: FontAwesomeIcons.route,
+      //   label: AppStrings.drawerAdminTrips,
+      //   onTap: () {
+      //     Navigator.maybePop(context);
+      //     context.pushNamed(DashboardTripsScreen.pageName);
+      //   },
+      // ),
+      // DrawerMenuItem(
+      //   icon: FontAwesomeIcons.locationDot,
+      //   label: AppStrings.drawerAdminLiveFleet,
+      //   onTap: () {
+      //     Navigator.maybePop(context);
+      //     context.pushNamed(DashboardLiveMapScreen.pageName);
+      //   },
+      // ),
       DrawerMenuItem(
         icon: FontAwesomeIcons.sliders,
-        label: AppStrings.drawerAdminSystemSettings,
+        label: AppStrings.controlCenter,
         onTap: () {
           Navigator.maybePop(context);
-          context.pushNamed(AdminSettingsScreen.pageName);
+          context.pushNamed(ControlCenterScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.handHoldingDollar,
+        label: 'Compensation Claims',
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(CompensationClaimsScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.userShield,
+        label: AppStrings.drawerAddAdmin,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(CreateAdminScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.key,
+        label: AppStrings.drawerChangePassword,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(ChangePasswordScreen.pageName);
         },
       ),
     ];

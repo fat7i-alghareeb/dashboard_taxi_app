@@ -3,6 +3,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 abstract class AuthForms {
   static const String phoneField = 'phone';
   static const String otpField = 'otp';
+  static const String currentPasswordField = 'currentPassword';
   static const String newPasswordField = 'newPassword';
   static const String confirmPasswordField = 'confirmPassword';
   static const String userNameField = 'userName';
@@ -26,7 +27,23 @@ abstract class AuthForms {
     confirmPasswordField: FormControl<String>(
       validators: [Validators.required, Validators.minLength(8)],
     ),
-  });
+  }, validators: [
+    Validators.mustMatch(newPasswordField, confirmPasswordField),
+  ]);
+
+  static FormGroup changePasswordFormGroup() => FormGroup({
+    currentPasswordField: FormControl<String>(
+      validators: [Validators.required],
+    ),
+    newPasswordField: FormControl<String>(
+      validators: [Validators.required, Validators.minLength(8)],
+    ),
+    confirmPasswordField: FormControl<String>(
+      validators: [Validators.required, Validators.minLength(8)],
+    ),
+  }, validators: [
+    Validators.mustMatch(newPasswordField, confirmPasswordField),
+  ]);
 
   static FormGroup adminLoginFormGroup() => FormGroup({
     userNameField: FormControl<String>(validators: [Validators.required]),

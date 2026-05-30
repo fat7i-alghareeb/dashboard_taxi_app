@@ -12,6 +12,8 @@ import '../../../../core/utils/result.dart';
 import '../../../../utils/helpers/colored_print.dart';
 import '../../../driver/domain/entities/driver_entity.dart';
 import '../../../driver/domain/facade/driver_facade.dart';
+import '../../../../core/services/session/auth_manager.dart';
+import '../../../../core/domain/extensions/user_role_extensions.dart';
 
 part 'driver_home_event.dart';
 part 'driver_home_state.dart';
@@ -23,6 +25,7 @@ class DriverHomeBloc extends Bloc<DriverHomeEvent, DriverHomeState> {
     this._driverFacade,
     this._locationStreamer,
     this._realtimeService,
+    this._authManager,
   ) : super(const DriverHomeState()) {
     on<_Started>(_onStarted);
     on<_ToggleStatusRequested>(_onToggleStatusRequested);
@@ -38,6 +41,7 @@ class DriverHomeBloc extends Bloc<DriverHomeEvent, DriverHomeState> {
   final DriverFacade _driverFacade;
   final DriverLocationStreamer _locationStreamer;
   final RealtimeService _realtimeService;
+  final AuthManager _authManager;
 
   StreamSubscription<RealtimeConnectionState>? _connectionStateSub;
 
@@ -50,7 +54,13 @@ class DriverHomeBloc extends Bloc<DriverHomeEvent, DriverHomeState> {
         connectionState: _realtimeService.currentConnectionState,
       ),
     );
-    add(const DriverHomeEvent.earningsRequested());
+    // Only fetch earnings if the current user has the Driver role.
+    // Admin users landing on the home map tab do not support the /earnings contract.
+    if (_authManager.currentUser?.isDriver ?? false) {
+      add(const DriverHomeEvent.earningsRequested());
+    } else {
+      printW('[DriverHomeBloc] User is not a driver. Skipping earnings request.');
+    }
   }
 
   Future<void> _onEarningsRequested(

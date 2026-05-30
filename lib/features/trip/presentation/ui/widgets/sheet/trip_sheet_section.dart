@@ -2,10 +2,11 @@ import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_sheet_stage.dart';
 
-import 'stages/trip_admin_pending_sheet.dart';
 import 'stages/trip_at_pickup_sheet.dart';
 import 'stages/trip_in_progress_sheet.dart';
 import 'stages/trip_incoming_sheet.dart';
+import 'stages/trip_pending_assignment_sheet.dart';
+import 'stages/trip_readonly_sheet.dart';
 import 'stages/trip_summary_sheet.dart';
 import 'stages/trip_to_pickup_sheet.dart';
 
@@ -26,6 +27,8 @@ class TripSheetSection extends StatelessWidget {
           a.sheetStage != b.sheetStage ||
           a.activeTrip != b.activeTrip ||
           a.completedTrip != b.completedTrip ||
+          a.pendingTrips != b.pendingTrips ||
+          a.adminSelfAssignState != b.adminSelfAssignState ||
           a.markEnRouteState != b.markEnRouteState ||
           a.markArrivedState != b.markArrivedState ||
           a.startTripState != b.startTripState ||
@@ -82,10 +85,14 @@ class TripSheetSection extends StatelessWidget {
     switch (stage) {
       case TripSheetStage.idle:
         return idleBuilder?.call(context) ?? const SizedBox.shrink();
-      case TripSheetStage.adminPending:
-        final trip = state.pendingTrip;
+      case TripSheetStage.pendingAssignment:
+        final trip = state.activeTrip;
         if (trip == null) return const SizedBox.shrink();
-        return TripAdminPendingSheet(trip: trip, state: state);
+        return TripPendingAssignmentSheet(trip: trip, state: state);
+      case TripSheetStage.readonly:
+        final trip = state.activeTrip;
+        if (trip == null) return const SizedBox.shrink();
+        return TripReadonlySheet(trip: trip);
       case TripSheetStage.incoming:
         final trip = state.activeTrip;
         if (trip == null) return const SizedBox.shrink();

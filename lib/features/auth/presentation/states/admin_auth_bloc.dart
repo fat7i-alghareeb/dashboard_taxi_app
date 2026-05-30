@@ -17,17 +17,36 @@ final class AdminLoginRequested extends AdminAuthEvent {
   final String password;
 }
 
+final class AdminChangePasswordRequested extends AdminAuthEvent {
+  AdminChangePasswordRequested({
+    required this.currentPassword,
+    required this.newPassword,
+  });
+  final String currentPassword;
+  final String newPassword;
+}
+
 // ---------------------------------------------------------------------------
 // State
 // ---------------------------------------------------------------------------
 
 class AdminAuthState {
-  const AdminAuthState({this.loginStatus = const BlocStatus.initial()});
+  const AdminAuthState({
+    this.loginStatus = const BlocStatus.initial(),
+    this.changePasswordStatus = const BlocStatus.initial(),
+  });
 
   final BlocStatus<void> loginStatus;
+  final BlocStatus<void> changePasswordStatus;
 
-  AdminAuthState copyWith({BlocStatus<void>? loginStatus}) =>
-      AdminAuthState(loginStatus: loginStatus ?? this.loginStatus);
+  AdminAuthState copyWith({
+    BlocStatus<void>? loginStatus,
+    BlocStatus<void>? changePasswordStatus,
+  }) =>
+      AdminAuthState(
+        loginStatus: loginStatus ?? this.loginStatus,
+        changePasswordStatus: changePasswordStatus ?? this.changePasswordStatus,
+      );
 }
 
 // ---------------------------------------------------------------------------
@@ -37,6 +56,7 @@ class AdminAuthState {
 class AdminAuthBloc extends Bloc<AdminAuthEvent, AdminAuthState> {
   AdminAuthBloc(this._facade) : super(const AdminAuthState()) {
     on<AdminLoginRequested>(_onLoginRequested);
+    on<AdminChangePasswordRequested>(_onChangePasswordRequested);
   }
 
   final AuthFacade _facade;
@@ -67,6 +87,44 @@ class AdminAuthBloc extends Bloc<AdminAuthEvent, AdminAuthState> {
       failure: (message) {
         printY('[AdminAuthBloc] login failed: $message');
         emit(state.copyWith(loginStatus: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _onChangePasswordRequested(
+    AdminChangePasswordRequested event,
+    Emitter<AdminAuthState> emit,
+  ) async {
+    if (state.changePasswordStatus.isLoading) {
+      printY(
+        '[AdminAuthBloc] change password ignored because request is already loading',
+      );
+      return;
+    }
+    printM('[AdminAuthBloc] change password requested');
+    emit(state.copyWith(changePasswordStatus: const BlocStatus.loading()));
+
+    final result = await _facade.changePassword(
+      currentPassword: event.currentPassword,
+      newPassword: event.newPassword,
+    );
+
+    result.when(
+      success: (_) {
+        printG('[AdminAuthBloc] change password success');
+        emit(
+          state.copyWith(
+            changePasswordStatus: const BlocStatus.success(null),
+          ),
+        );
+      },
+      failure: (message) {
+        printY('[AdminAuthBloc] change password failed: $message');
+        emit(
+          state.copyWith(
+            changePasswordStatus: BlocStatus.failure(message),
+          ),
+        );
       },
     );
   }

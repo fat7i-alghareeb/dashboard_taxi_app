@@ -8,6 +8,8 @@ class TripEvent with _$TripEvent {
       _RealtimeEventReceived;
   const factory TripEvent.fetchActiveRequested(String tripId) =
       _FetchActiveRequested;
+  const factory TripEvent.tripSelected(String tripId) = _TripSelected;
+  const factory TripEvent.selectionCleared() = _SelectionCleared;
   const factory TripEvent.markEnRouteRequested(String tripId) =
       _MarkEnRouteRequested;
   const factory TripEvent.markArrivedRequested(String tripId) =
@@ -33,6 +35,8 @@ class TripEvent with _$TripEvent {
   }) = _CompleteStopRequested;
   const factory TripEvent.adminSelfAssignRequested(String tripId) =
       _AdminSelfAssignRequested;
-  const factory TripEvent.dismissPendingTripRequested() =
+  const factory TripEvent.adminCancelRequested(String tripId) =
+      _AdminCancelRequested;
+  const factory TripEvent.dismissPendingTripRequested(String tripId) =
       _DismissPendingTripRequested;
 }

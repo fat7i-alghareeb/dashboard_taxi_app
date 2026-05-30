@@ -2,8 +2,6 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/domain/user_entity.dart';
 import '../../../../core/error/global_error_handler.dart';
-import '../../../../core/injection/injectable.dart';
-import '../../../../core/notification/notification_coordinator.dart';
 import '../../../../core/services/session/auth_manager.dart';
 import '../../../../core/utils/result.dart';
 import '../../../../utils/helpers/colored_print.dart';
@@ -141,29 +139,14 @@ class AuthRepositoryImpl implements AuthRepository {
         'requiresPasswordReset=${_authManager.currentUser?.requiresPasswordReset}',
       );
 
-      // Sync the FCM token. Driver login attaches it to the login body, but
-      // admin login has no field for it — so we push it here. Best-effort:
-      // if FCM hasn't issued a token yet, the bootstrap onTokenRefresh
-      // callback will push it on the next rotation.
-      await _syncFcmTokenBestEffort();
+      // Note: Admins reside in the AdminProfiles table and do not support FCM tokens or preferred language synchronization.
+      // So we skip FCM token syncing here.
 
       return _authManager.currentUser ?? user;
     });
   }
 
-  Future<void> _syncFcmTokenBestEffort() async {
-    final fcmToken = getIt<NotificationCoordinator>().cachedToken;
-    if (fcmToken == null || fcmToken.isEmpty) {
-      printC('[AuthRepository] adminLogin no cached FCM token to sync');
-      return;
-    }
-    try {
-      await _remote.updateFcmToken(fcmToken);
-      printG('[AuthRepository] adminLogin FCM token synced');
-    } catch (error) {
-      printY('[AuthRepository] adminLogin FCM token sync failed: $error');
-    }
-  }
+
 
   @override
   Future<Result<void>> forceResetPassword(String newPassword) {
@@ -189,6 +172,21 @@ class AuthRepositoryImpl implements AuthRepository {
       printC('[AuthRepository] forceResetPassword refreshing profile');
       await _authManager.refreshCurrentUserProfile();
       printG('[AuthRepository] forceResetPassword completed');
+    });
+  }
+
+  @override
+  Future<Result<void>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) {
+    return runAsResult(() async {
+      printC('[AuthRepository] changePassword start');
+      await _remote.changePassword(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      );
+      printG('[AuthRepository] changePassword completed');
     });
   }
 }

@@ -7,12 +7,19 @@ class ApiEndpoints {
   static const String forceResetPassword = '/api/v1/auth/force-reset-password';
   static const String refreshToken = '/api/v1/identity/tokens/refresh';
 
+  // Identity / admin management
+  static const String registerAdmin = '/api/v1/identity/admins';
+
   // Users
   static const String currentUser = '/api/v1/users/me';
   static const String updateFcmToken = '/api/v1/users/me/fcm-token';
   static const String updatePreferredLanguage = '/api/v1/users/me/language';
   static const String currentAdminProfile = '/api/v1/admins/me';
+  static const String changeAdminPassword = '/api/v1/admins/change-password';
   static const String currentDriverProfile = '/api/v1/drivers/me';
+
+  // Maps
+  static const String mapsDirections = '/api/v1/maps/directions';
 
   // Trips
   static const String trips = '/api/v1/trips';
@@ -25,6 +32,7 @@ class ApiEndpoints {
   static const String driversStatus = '/api/v1/drivers/status';
   static const String auditLogs = '/api/v1/audit-logs';
   static const String vehicleTypes = '/api/v1/vehicle-types';
+  static const String adminVehicleTypes = '/api/v1/vehicle-types/admin';
   static const String users = '/api/v1/users';
   static const String tripDiscount = '/api/v1/app-config/trip-discount';
   static const String currency = '/api/v1/app-config/currency';
@@ -48,6 +56,8 @@ class ApiEndpoints {
   static String vehicleType(String vehicleTypeId) =>
       '/api/v1/vehicle-types/$vehicleTypeId';
 
+  static String cancelTrip(String tripId) =>
+      '/api/v1/trips/$tripId/cancellations';
   static String assignTrip(String tripId) => '/api/v1/trips/$tripId/assign';
   static String adminTakeTrip(String tripId) =>
       '/api/v1/trips/$tripId/admin-take';

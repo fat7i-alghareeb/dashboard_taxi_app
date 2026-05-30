@@ -2,6 +2,7 @@ import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/dialogs/driver_trip_cancellation_dialog.dart';
+import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_admin_cancel_button.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_customer_contact_widget.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_route_card_widget.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_status_chip_widget.dart';
@@ -123,6 +124,11 @@ class TripAtPickupSheet extends StatelessWidget {
             ),
           ),
         ],
+        AppSpacing.sm.verticalSpace,
+        TripAdminCancelButton(
+          tripId: trip.id,
+          isLoading: state.adminCancelState.isLoading,
+        ),
       ],
     );
   }

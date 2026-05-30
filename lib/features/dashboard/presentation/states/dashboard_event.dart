@@ -30,14 +30,11 @@ class DashboardEvent with _$DashboardEvent {
       _AdminTripsRequested;
   const factory DashboardEvent.tripDetailsRequested(String tripId) =
       _TripDetailsRequested;
-  const factory DashboardEvent.adminOperationsRequested() =
-      _AdminOperationsRequested;
-  const factory DashboardEvent.driverSuspensionRequested(String driverId) =
-      _DriverSuspensionRequested;
-  const factory DashboardEvent.driverVehicleTypeAssignmentRequested({
-    required String driverId,
-    required String vehicleTypeId,
-  }) = _DriverVehicleTypeAssignmentRequested;
+  // --- Control Center admin fetch events ---
+  const factory DashboardEvent.adminConfigRequested() = _AdminConfigRequested;
+  const factory DashboardEvent.adminVehicleTypesRequested() =
+      _AdminVehicleTypesRequested;
+
   const factory DashboardEvent.vehicleTypeStatusToggleRequested(
     DashboardVehicleTypeEntity vehicleType,
   ) = _VehicleTypeStatusToggleRequested;

@@ -28,9 +28,9 @@ class SplashMapWarmupProgressWidget extends StatelessWidget {
                   child: LinearProgressIndicator(
                     minHeight: 2.h,
                     value: warmupCoordinator.progress,
-                    backgroundColor: context.onPrimary.withValues(alpha: 0.18),
+                    backgroundColor: context.onSurface.withValues(alpha: 0.18),
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      context.onPrimary,
+                      context.onSurface,
                     ),
                   ),
                 ),

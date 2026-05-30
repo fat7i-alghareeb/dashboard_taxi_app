@@ -57,12 +57,53 @@ class DashboardRepositoryImpl implements DashboardRepository {
   }
 
   @override
-  Future<Result<DashboardAdminOperationsEntity>> getAdminOperations() {
+  Future<Result<DashboardAdminProfileEntity?>> getAdminProfile() {
     return runAsResult(() async {
-      final model = await _remote.getAdminOperations();
+      final model = await _remote.getAdminProfile();
+      return model?.toEntity;
+    });
+  }
+
+  @override
+  Future<Result<DashboardSystemConfigEntity>> getAdminConfig() {
+    return runAsResult(() async {
+      final model = await _remote.getAdminConfig();
       return model.toEntity;
     });
   }
+
+  @override
+  Future<Result<List<DashboardDriverEntity>>> getAdminDrivers() {
+    return runAsResult(() async {
+      final models = await _remote.getAdminDrivers();
+      return models.map((e) => e.toEntity).toList();
+    });
+  }
+
+  @override
+  Future<Result<List<DashboardVehicleTypeEntity>>> getAdminVehicleTypes() {
+    return runAsResult(() async {
+      final models = await _remote.getAdminVehicleTypes();
+      return models.map((e) => e.toEntity).toList();
+    });
+  }
+
+  @override
+  Future<Result<List<DashboardUserEntity>>> getAdminUsers() {
+    return runAsResult(() async {
+      final models = await _remote.getAdminUsers();
+      return models.map((e) => e.toEntity).toList();
+    });
+  }
+
+  @override
+  Future<Result<List<DashboardAuditLogEntity>>> getAdminAuditLogs() {
+    return runAsResult(() async {
+      final models = await _remote.getAdminAuditLogs();
+      return models.map((e) => e.toEntity).toList();
+    });
+  }
+
 
   @override
   Future<Result<void>> suspendDriver(String driverId) {

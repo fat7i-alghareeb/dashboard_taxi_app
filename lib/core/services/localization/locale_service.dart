@@ -8,6 +8,8 @@ import 'package:dashboardtaxi/core/injection/injectable.dart';
 import 'package:dashboardtaxi/core/services/session/auth_state_notifier.dart';
 import 'package:dashboardtaxi/features/auth/domain/repositories/auth_repository.dart';
 
+import 'package:dashboardtaxi/core/domain/extensions/user_role_extensions.dart';
+
 import '../../../utils/constants/localization_constants.dart';
 import '../../config/localization_config.dart';
 import '../../services/storage/storage_service.dart';
@@ -66,7 +68,7 @@ class LocaleService {
     // Implicit background call to update language on backend if authenticated
     try {
       final authState = getIt<AuthStateNotifier>();
-      if (authState.isAuthenticated) {
+      if (authState.isAuthenticated && !(authState.user?.isAdmin ?? false)) {
         final authRepo = getIt<AuthRepository>();
         unawaited(authRepo.updatePreferredLanguage(code));
       }

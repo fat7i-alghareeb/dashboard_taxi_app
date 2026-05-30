@@ -86,7 +86,7 @@ class DriverStatusSwitchWidget extends StatelessWidget {
                           child: CircularProgressIndicator(
                             strokeWidth: 2.r,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              context.onPrimary,
+                              context.onSurface,
                             ),
                           ),
                         )
@@ -95,7 +95,7 @@ class DriverStatusSwitchWidget extends StatelessWidget {
                               ? FontAwesomeIcons.bolt
                               : FontAwesomeIcons.powerOff,
                           size: 16.r,
-                          color: context.onPrimary,
+                          color: context.onSurface,
                         ),
                 ),
               ),
