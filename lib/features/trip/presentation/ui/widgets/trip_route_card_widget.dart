@@ -10,6 +10,14 @@ class TripRouteCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stops = trip.stops;
+    int nextStopIndex = -1;
+    for (var i = 0; i < stops.length; i++) {
+      if (!stops[i].isCompleted) {
+        nextStopIndex = i;
+        break;
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -23,6 +31,10 @@ class TripRouteCardWidget extends StatelessWidget {
             value: stops[i].displayLabel,
             isPickup: i == 0,
             isLast: i == stops.length - 1,
+            isCompleted: stops[i].isCompleted,
+            isNext: i == nextStopIndex,
+            latitude: stops[i].latitude,
+            longitude: stops[i].longitude,
           ),
       ],
     );

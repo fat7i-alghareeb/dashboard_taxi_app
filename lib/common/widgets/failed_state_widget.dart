@@ -95,8 +95,11 @@ class FailedStateWidget extends StatelessWidget {
         return SingleChildScrollView(
           physics: physics,
           child: ConstrainedBox(
-            // Keeps the state vertically centered by filling the viewport.
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            constraints: BoxConstraints(
+              minHeight: constraints.hasBoundedHeight
+                  ? constraints.maxHeight
+                  : 0.0,
+            ),
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: (maxWidth ?? 560).w),

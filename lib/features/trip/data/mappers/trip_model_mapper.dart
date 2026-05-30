@@ -2,8 +2,14 @@ import '../../domain/entities/trip_entity.dart';
 import '../models/trip_model.dart';
 
 extension TripStopModelMapper on TripStopModel {
-  TripStopEntity get toEntity =>
-      TripStopEntity(latitude: latitude, longitude: longitude, label: label);
+  TripStopEntity get toEntity => TripStopEntity(
+    latitude: latitude,
+    longitude: longitude,
+    label: label,
+    sequence: sequence,
+    isCompleted: isCompleted,
+    completedAtUtc: completedAtUtc,
+  );
 }
 
 extension TripModelMapper on TripModel {
@@ -27,6 +33,8 @@ extension TripModelMapper on TripModel {
     activeWaitingSession: activeWaitingSession?.toEntity,
     passengerName: passengerName,
     passengerPhone: passengerPhone,
+    routeSegments: routeSegments.map((e) => e.toEntity).toList(),
+    encodedOverviewPolyline: encodedOverviewPolyline,
   );
 }
 
@@ -57,6 +65,18 @@ extension TripWaitingSessionModelMapper on TripWaitingSessionModel {
     minutes: minutes,
     estimatedFee: estimatedFee,
     isActive: isActive,
+  );
+}
+
+extension TripRouteSegmentModelMapper on TripRouteSegmentModel {
+  TripRouteSegmentEntity get toEntity => TripRouteSegmentEntity(
+    distanceMeters: distanceMeters,
+    durationSeconds: durationSeconds,
+    encodedPolyline: encodedPolyline,
+    startLatitude: startLatitude,
+    startLongitude: startLongitude,
+    endLatitude: endLatitude,
+    endLongitude: endLongitude,
   );
 }
 

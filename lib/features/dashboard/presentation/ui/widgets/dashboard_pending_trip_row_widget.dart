@@ -72,6 +72,31 @@ class DashboardPendingTripRowWidget extends StatelessWidget {
               ),
             ],
           ),
+          if (trip.isScheduled) ...[
+            AppSpacing.sm.verticalSpace,
+            Row(
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.solidCalendarCheck,
+                  size: 12.r,
+                  color: AppColors.warning,
+                ),
+                AppSpacing.sm.horizontalSpace,
+                Expanded(
+                  child: Text(
+                    AppStrings.scheduledForLabel(
+                      trip.scheduledAt!.toLocal().toSmartDateTime(),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.s12w500.copyWith(
+                      color: AppColors.warning,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
           if ((trip.pickupLabel ?? '').isNotEmpty) ...[
             AppSpacing.sm.verticalSpace,
             Text(

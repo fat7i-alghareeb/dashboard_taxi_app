@@ -932,6 +932,18 @@ class AppStrings {
       'notifyAgainCountdown'.tr(namedArgs: {'seconds': '$seconds'});
   /// Notification sent
   static String get notificationSent => 'notificationSent'.tr();
+  /// Scheduled for {when}
+  static String scheduledForLabel(String when) =>
+      'scheduledForLabel'.tr(namedArgs: {'when': when});
+  /// Scheduled (filter chip)
+  static String get filterScheduled => 'filterScheduled'.tr();
+  /// Open in Maps
+  static String get tripOpenInMaps => 'tripOpenInMaps'.tr();
+  /// Next stop
+  static String get tripNextStop => 'tripNextStop'.tr();
+  /// Completed at {when}
+  static String tripStopCompletedAt(String when) =>
+      'tripStopCompletedAt'.tr(namedArgs: {'when': when});
   /// Status - الحالة - Status - Status - Status - Статус - Statut - Estado - Status
   static String get tripStatus => 'tripStatus'.tr();
   /// Cancelled - ملغاة - Geannuleerd - Storniert - Anulowany - Скасовано - Annulé - Cancelado - Anulată

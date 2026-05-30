@@ -1,0 +1,71 @@
+workflows:
+  android-production:
+    name: dashboardtaxi Android APK (Production)
+
+    max_build_duration: 60
+
+    environment:
+      flutter: 3.41.5
+      groups:
+        - production
+      vars:
+        GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4096m"
+        ANDROID_NDK_VERSION: "28.2.13676358"
+        ANDROID_NDK_HOME: "/usr/local/share/android-sdk/ndk/28.2.13676358"
+
+    cache:
+      cache_paths:
+        - $HOME/.pub-cache
+        - $HOME/.gradle/caches
+        # - /usr/local/share/android-sdk/ndk
+
+    scripts:
+      - name: Get Dependencies
+        script: flutter pub get
+
+      - name: Generate Code
+        script: |
+          # Diagnostic output for verification
+          echo "--- Environment Diagnostics ---"
+          if [ -z "$GOOGLE_MAPS_API_KEY" ]; then
+            echo "❌ ERROR: GOOGLE_MAPS_API_KEY is empty or not found."
+          else
+            echo "✅ GOOGLE_MAPS_API_KEY detected (Length: ${#GOOGLE_MAPS_API_KEY})"
+          fi
+
+          if [ -z "$PRODUCTION_BASE_URL" ]; then
+            echo "❌ ERROR: PRODUCTION_BASE_URL is empty or not found."
+          else
+            echo "✅ PRODUCTION_BASE_URL detected (Length: ${#PRODUCTION_BASE_URL})"
+          fi
+          echo "-------------------------------"
+
+          # Write to .env for build_runner and build.gradle
+          echo "GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY" > .env
+          echo "STAGE_BASE_URL=$STAGE_BASE_URL" >> .env
+          echo "PRODUCTION_BASE_URL=$PRODUCTION_BASE_URL" >> .env
+
+          # Run build_runner
+          dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build APK (Production)
+        # flutter build apk --release --obfuscate --split-debug-info=build/debug-info
+        script: |
+          flutter build apk \
+            --release \
+            --flavor production \
+            -t lib/main.dart \
+            --obfuscate \
+            --split-debug-info=build/debug-info
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+
+    publishing:
+      email:
+        recipients:
+          - fat7ighareeb@gmail.com
+          # - fat7ighareeb@gmail.com
+          # - fat7ighareeb@gmail.com
+        notify:
+          success: true
+          failure: false

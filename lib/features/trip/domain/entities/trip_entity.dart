@@ -39,11 +39,17 @@ class TripStopEntity {
     required this.latitude,
     required this.longitude,
     this.label,
+    this.sequence = 0,
+    this.isCompleted = false,
+    this.completedAtUtc,
   });
 
   final double latitude;
   final double longitude;
   final String? label;
+  final int sequence;
+  final bool isCompleted;
+  final DateTime? completedAtUtc;
 
   String get coordinateLabel {
     final lat = latitude.toStringAsFixed(5);
@@ -79,6 +85,8 @@ class TripEntity {
     this.activeWaitingSession,
     this.passengerName,
     this.passengerPhone,
+    this.routeSegments = const [],
+    this.encodedOverviewPolyline,
   });
 
   final String id;
@@ -100,6 +108,8 @@ class TripEntity {
   final TripWaitingSessionEntity? activeWaitingSession;
   final String? passengerName;
   final String? passengerPhone;
+  final List<TripRouteSegmentEntity> routeSegments;
+  final String? encodedOverviewPolyline;
 
   TripStopEntity? get pickup => stops.isEmpty ? null : stops.first;
   TripStopEntity? get dropoff => stops.length < 2 ? null : stops.last;
@@ -131,6 +141,8 @@ class TripEntity {
       activeWaitingSession: activeWaitingSession,
       passengerName: passengerName,
       passengerPhone: passengerPhone,
+      routeSegments: routeSegments,
+      encodedOverviewPolyline: encodedOverviewPolyline,
     );
   }
 
@@ -182,4 +194,24 @@ class TripWaitingSessionEntity {
   final int? minutes;
   final double? estimatedFee;
   final bool isActive;
+}
+
+class TripRouteSegmentEntity {
+  const TripRouteSegmentEntity({
+    required this.distanceMeters,
+    required this.durationSeconds,
+    required this.encodedPolyline,
+    required this.startLatitude,
+    required this.startLongitude,
+    required this.endLatitude,
+    required this.endLongitude,
+  });
+
+  final int distanceMeters;
+  final int durationSeconds;
+  final String encodedPolyline;
+  final double startLatitude;
+  final double startLongitude;
+  final double endLatitude;
+  final double endLongitude;
 }

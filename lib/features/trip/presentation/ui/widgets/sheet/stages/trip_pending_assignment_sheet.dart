@@ -40,6 +40,30 @@ class TripPendingAssignmentSheet extends StatelessWidget {
             TripStatusChipWidget(status: trip.status),
           ],
         ),
+        if (trip.status == TripStatus.scheduled &&
+            trip.scheduledAtUtc != null) ...[
+          AppSpacing.sm.verticalSpace,
+          Row(
+            children: [
+              FaIcon(
+                FontAwesomeIcons.solidCalendarCheck,
+                size: 14.r,
+                color: AppColors.warning,
+              ),
+              AppSpacing.sm.horizontalSpace,
+              Expanded(
+                child: Text(
+                  AppStrings.scheduledForLabel(
+                    trip.scheduledAtUtc!.toLocal().toSmartDateTime(),
+                  ),
+                  style: AppTextStyles.s14w500.copyWith(
+                    color: AppColors.warning,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
         AppSpacing.md.verticalSpace,
         TripRouteCardWidget(trip: trip),
         AppSpacing.sm.verticalSpace,

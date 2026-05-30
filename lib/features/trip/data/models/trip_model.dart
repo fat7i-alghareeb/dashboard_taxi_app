@@ -3,17 +3,28 @@ class TripStopModel {
     required this.latitude,
     required this.longitude,
     this.label,
+    this.sequence = 0,
+    this.isCompleted = false,
+    this.completedAtUtc,
   });
 
   final double latitude;
   final double longitude;
   final String? label;
+  final int sequence;
+  final bool isCompleted;
+  final DateTime? completedAtUtc;
 
   factory TripStopModel.fromJson(Map<String, dynamic> json) {
+    final completedRaw = json['completedAtUtc'] ?? json['CompletedAtUtc'];
     return TripStopModel(
       latitude: _readDouble(json, 'latitude'),
       longitude: _readDouble(json, 'longitude'),
       label: (json['label'] ?? json['Label'])?.toString(),
+      sequence: ((json['sequence'] ?? json['Sequence']) as num?)?.toInt() ?? 0,
+      isCompleted: (json['isCompleted'] ?? json['IsCompleted']) == true,
+      completedAtUtc:
+          completedRaw is String ? DateTime.tryParse(completedRaw) : null,
     );
   }
 }
@@ -39,6 +50,8 @@ class TripModel {
     this.activeWaitingSession,
     this.passengerName,
     this.passengerPhone,
+    this.routeSegments = const [],
+    this.encodedOverviewPolyline,
   });
 
   final String id;
@@ -60,6 +73,8 @@ class TripModel {
   final TripWaitingSessionModel? activeWaitingSession;
   final String? passengerName;
   final String? passengerPhone;
+  final List<TripRouteSegmentModel> routeSegments;
+  final String? encodedOverviewPolyline;
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
     final stopsJson =
@@ -98,6 +113,12 @@ class TripModel {
             ),
       passengerName: _readNullableString(json, 'passengerName'),
       passengerPhone: _readNullableString(json, 'passengerPhone'),
+      routeSegments: ((json['routeSegments'] ?? json['RouteSegments']) as List<dynamic>?)
+              ?.whereType<Map>()
+              .map((e) => TripRouteSegmentModel.fromJson(Map<String, dynamic>.from(e)))
+              .toList() ??
+          const [],
+      encodedOverviewPolyline: _readNullableString(json, 'encodedOverviewPolyline'),
     );
   }
 }
@@ -236,4 +257,36 @@ bool _readBool(Map<String, dynamic> json, String key) {
 String _pascal(String key) {
   if (key.isEmpty) return key;
   return '${key[0].toUpperCase()}${key.substring(1)}';
+}
+
+class TripRouteSegmentModel {
+  const TripRouteSegmentModel({
+    required this.distanceMeters,
+    required this.durationSeconds,
+    required this.encodedPolyline,
+    required this.startLatitude,
+    required this.startLongitude,
+    required this.endLatitude,
+    required this.endLongitude,
+  });
+
+  final int distanceMeters;
+  final int durationSeconds;
+  final String encodedPolyline;
+  final double startLatitude;
+  final double startLongitude;
+  final double endLatitude;
+  final double endLongitude;
+
+  factory TripRouteSegmentModel.fromJson(Map<String, dynamic> json) {
+    return TripRouteSegmentModel(
+      distanceMeters: _readNullableInt(json, 'distanceMeters') ?? 0,
+      durationSeconds: _readNullableInt(json, 'durationSeconds') ?? 0,
+      encodedPolyline: _readString(json, 'encodedPolyline'),
+      startLatitude: _readDouble(json, 'startLatitude'),
+      startLongitude: _readDouble(json, 'startLongitude'),
+      endLatitude: _readDouble(json, 'endLatitude'),
+      endLongitude: _readDouble(json, 'endLongitude'),
+    );
+  }
 }

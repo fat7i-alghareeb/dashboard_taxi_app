@@ -163,6 +163,9 @@ class DashboardTripEntity {
   bool get hasPickupLocation =>
       pickupLatitude != null && pickupLongitude != null;
 
+  bool get isScheduled =>
+      status.toLowerCase() == 'scheduled' && scheduledAt != null;
+
   DashboardTripEntity copyWithStatus(String newStatus) {
     return DashboardTripEntity(
       id: id,
