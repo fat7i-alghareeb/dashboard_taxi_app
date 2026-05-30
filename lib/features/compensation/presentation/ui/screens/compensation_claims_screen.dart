@@ -58,7 +58,9 @@ class _CompensationClaimsBody extends StatelessWidget {
                 success: (claims) {
                   if (claims.isEmpty) {
                     return Center(
-                      child: EmptyStateWidget(text: AppStrings.dashboardNoPendingClaims),
+                      child: EmptyStateWidget(
+                        text: AppStrings.dashboardNoPendingClaims,
+                      ),
                     );
                   }
                   return RefreshIndicator(
@@ -104,7 +106,11 @@ class _Header extends StatelessWidget {
         children: [
           IconButton(
             onPressed: onBack,
-            icon: FaIcon(context.chevronStart, size: 18.r, color: context.onSurface),
+            icon: FaIcon(
+              context.chevronStart,
+              size: 18.r,
+              color: context.onSurface,
+            ),
           ),
           Expanded(
             child: Text(
@@ -233,7 +239,10 @@ class _EvidenceLink extends StatelessWidget {
       onTap: () async {
         final uri = Uri.tryParse(url);
         if (uri == null) return;
-        final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+        final opened = await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
         if (!opened && context.mounted) {
           showErrorOverlay(context, AppStrings.somethingWentWrong);
         }
@@ -250,7 +259,9 @@ class _EvidenceLink extends StatelessWidget {
             AppSpacing.sm.horizontalSpace,
             Expanded(
               child: Text(
-                AppStrings.compensationEvidenceItem(index),
+                AppStrings.compensationEvidenceItem.trParams({
+                  'index': index,
+                }),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.s12w500.copyWith(color: context.primary),

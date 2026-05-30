@@ -48,12 +48,12 @@ class _CreateAdminBodyState extends State<_CreateAdminBody> {
     }
 
     final params = RegisterAdminParams(
-      userName: (_form.control(AdminManagementForms.userNameField).value
-              as String)
-          .trim(),
-      password: (_form.control(AdminManagementForms.passwordField).value
-              as String)
-          .trim(),
+      userName:
+          (_form.control(AdminManagementForms.userNameField).value as String)
+              .trim(),
+      password:
+          (_form.control(AdminManagementForms.passwordField).value as String)
+              .trim(),
       name: (_form.control(AdminManagementForms.nameField).value as String)
           .trim(),
       email: (_form.control(AdminManagementForms.emailField).value as String)
@@ -118,6 +118,21 @@ class _CreateAdminBodyState extends State<_CreateAdminBody> {
                   formControlName: AdminManagementForms.passwordField,
                   title: AppStrings.authPassword,
                   hintText: AppStrings.authPasswordHint,
+                  textInputAction: TextInputAction.next,
+                ),
+                AppSpacing.sm.verticalSpace,
+                Text(
+                  AppStrings.createAdminPasswordChangeNote,
+                  style: AppTextStyles.s12w400.copyWith(
+                    color: context.onSurface.withValues(alpha: 0.6),
+                  ),
+                ),
+                AppSpacing.lg.verticalSpace,
+                AppReactiveTextField.password(
+                  formControlName:
+                      AdminManagementForms.passwordConfirmationField,
+                  title: AppStrings.confirmPassword,
+                  hintText: AppStrings.confirmPasswordHint,
                   textInputAction: TextInputAction.next,
                 ),
                 AppSpacing.lg.verticalSpace,

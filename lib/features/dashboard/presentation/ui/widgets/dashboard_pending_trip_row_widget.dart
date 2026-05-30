@@ -84,9 +84,9 @@ class DashboardPendingTripRowWidget extends StatelessWidget {
                 AppSpacing.sm.horizontalSpace,
                 Expanded(
                   child: Text(
-                    AppStrings.scheduledForLabel(
-                      trip.scheduledAt!.toLocal().toSmartDateTime(),
-                    ),
+                    AppStrings.scheduledForLabel.trParams({
+                      'when': trip.scheduledAt!.toLocal().toSmartDateTime(),
+                    }),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.s12w500.copyWith(

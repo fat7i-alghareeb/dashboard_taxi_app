@@ -23,10 +23,9 @@ class DashboardAssignDriverOptionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final distanceText = distanceKm == null
         ? null
-        : AppStrings.dashboardDistanceKm.replaceAll(
-            '{value}',
-            distanceKm!.toStringAsFixed(1),
-          );
+        : AppStrings.dashboardDistanceKm.trParams({
+            'value': distanceKm!.toStringAsFixed(1),
+          });
 
     return DecoratedBox(
       decoration: BoxDecoration(

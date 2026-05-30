@@ -66,6 +66,7 @@ Every date in the UI must use these extensions to ensure Arabic-to-English digit
 - **Nullable**: `isNullOrEmpty`, `isNullOrBlank`.
 - **Transform**: `capitalizeFirst()`, `capitalizeWords()`, `ellipsis(length)`.
 - **Color**: `toColor()` (Parses hex strings like `#FF0000` to Flutter `Color`).
+- **Translation**: `trParams(namedArgs)` (Interpolates dynamic parameterized placeholders `{key}` in translated strings cleanly).
 
 ### `widget_extensions.dart`
 

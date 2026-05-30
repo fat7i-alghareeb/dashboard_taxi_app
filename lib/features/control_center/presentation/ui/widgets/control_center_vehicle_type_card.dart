@@ -135,10 +135,9 @@ class ControlCenterVehicleTypeCard extends StatelessWidget {
                 children: [
                   _Chip(
                     icon: FontAwesomeIcons.userGroup,
-                    label: AppStrings.dashboardCapacityValue.replaceAll(
-                      '{value}',
-                      vehicleType.capacity.toString(),
-                    ),
+                    label: AppStrings.dashboardCapacityValue.trParams({
+                      'value': vehicleType.capacity,
+                    }),
                   ),
                   _Chip(
                     icon: FontAwesomeIcons.route,
@@ -152,10 +151,9 @@ class ControlCenterVehicleTypeCard extends StatelessWidget {
                   ),
                   _Chip(
                     icon: FontAwesomeIcons.moneyBill,
-                    label: AppStrings.dashboardMinFareValue.replaceAll(
-                      '{value}',
-                      vehicleType.minFare.toStringAsFixed(2),
-                    ),
+                    label: AppStrings.dashboardMinFareValue.trParams({
+                      'value': vehicleType.minFare.toStringAsFixed(2),
+                    }),
                   ),
                 ],
               ),

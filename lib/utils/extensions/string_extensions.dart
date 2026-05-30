@@ -48,6 +48,20 @@ extension StringExtensions on String {
     if (maxLength <= overflow.length) return substring(0, maxLength);
     return substring(0, maxLength - overflow.length) + overflow;
   }
+
+  /// Interpolates parameterized placeholders (like `{name}`) in an already-translated string.
+  ///
+  /// Example:
+  /// ```dart
+  /// AppStrings.notifyAgainCountdown.trParams({'seconds': '30'});
+  /// ```
+  String trParams(Map<String, Object> namedArgs) {
+    var result = this;
+    namedArgs.forEach((key, value) {
+      result = result.replaceAll('{$key}', value.toString());
+    });
+    return result;
+  }
 }
 
 /// Parsing hexadecimal color strings into [Color] instances.

@@ -49,9 +49,7 @@ class CreateAdminBloc extends Bloc<CreateAdminEvent, CreateAdminState> {
       printY('[CreateAdminBloc] submit ignored, request already loading');
       return;
     }
-    printM(
-      '[CreateAdminBloc] submit userName="${event.params.userName}"',
-    );
+    printM('[CreateAdminBloc] submit userName="${event.params.userName}"');
     emit(state.copyWith(submitStatus: const BlocStatus.loading()));
 
     final result = await _facade.registerAdmin(event.params);

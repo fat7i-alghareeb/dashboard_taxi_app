@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile_device_identifier/mobile_device_identifier.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
 
@@ -16,7 +15,7 @@ class DeviceHelper {
     } else if (Platform.isIOS) {
       String? mobileDeviceIdentifier, identifier;
       try {
-        mobileDeviceIdentifier = await MobileDeviceIdentifier().getDeviceId();
+        // mobileDeviceIdentifier = await MobileDeviceIdentifier().getDeviceId();
       } catch (_) {}
       try {
         identifier = await UniqueIdentifier.serial;

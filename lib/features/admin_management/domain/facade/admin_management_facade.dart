@@ -12,7 +12,9 @@ class AdminManagementFacade {
   final AdminManagementRepository _repository;
 
   Future<Result<String>> registerAdmin(RegisterAdminParams params) {
-    printC('[AdminManagementFacade] registerAdmin userName="${params.userName}"');
+    printC(
+      '[AdminManagementFacade] registerAdmin userName="${params.userName}"',
+    );
     return _repository.registerAdmin(params);
   }
 }

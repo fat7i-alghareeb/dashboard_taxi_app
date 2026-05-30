@@ -78,10 +78,10 @@ class ErrorInterceptor extends Interceptor {
 
         //? 3.3) Server errors
         if (status == 500) {
-          return AppException.known(AppStrings.serverError);
+          return AppException.known(apiMsg ?? AppStrings.serverError);
         }
         if (status == 503) {
-          return AppException.known(AppStrings.serverServiceUnavailable);
+          return AppException.known(apiMsg ?? AppStrings.serverServiceUnavailable);
         }
 
         //? 3.4) Unknown HTTP status
@@ -113,19 +113,77 @@ class ErrorInterceptor extends Interceptor {
 
   /// Tries to extract a human-friendly message from a typical API error
   /// payload. Common backend shapes are supported:
+  /// - `{ "errors": { "field": ["msg"] } }` (ValidationProblemDetails)
   /// - `{ "message": "..." }`
   /// - `{ "error": "..." }`
+  /// - `{ "title": "..." }` (ProblemDetails)
   /// - `{ "detail": "..." }`
   String? _extractApiMessage(Response<dynamic>? response) {
     if (response == null) return null;
     final data = response.data;
     if (data == null) return null;
     if (data is String && data.trim().isNotEmpty) return data;
-    if (data is Map<String, dynamic>) {
-      final Object? msg = data['message'] ?? data['error'] ?? data['detail'];
-      if (msg is String && msg.trim().isNotEmpty) return msg;
+    if (data is Map) {
+      final String? validationMessage = _extractValidationMessage(data);
+      if (validationMessage != null) return validationMessage;
+
+      final String? message = _readString(data['message']) ??
+          _readString(data['error']);
+      final String? title = _readString(data['title']);
+      final String? detail = _readString(data['detail']);
+
+      if (message != null) return message;
+
+      final String? combined = _combineTitleDetail(title, detail);
+      if (combined != null) return combined;
     }
     return null;
+  }
+
+  String? _extractValidationMessage(Map data) {
+    final Object? errors = data['errors'];
+    if (errors is! Map) return null;
+
+    final List<String> messages = <String>[];
+    for (final Object? value in errors.values) {
+      _collectMessages(value, messages);
+    }
+
+    if (messages.isEmpty) return null;
+    return messages.join('\n');
+  }
+
+  void _collectMessages(Object? value, List<String> messages) {
+    if (value is String) {
+      final trimmed = value.trim();
+      if (trimmed.isNotEmpty) messages.add(trimmed);
+      return;
+    }
+    if (value is Iterable) {
+      for (final Object? item in value) {
+        _collectMessages(item, messages);
+      }
+      return;
+    }
+    if (value is Map) {
+      for (final Object? item in value.values) {
+        _collectMessages(item, messages);
+      }
+    }
+  }
+
+  String? _readString(Object? value) {
+    if (value is! String) return null;
+    final trimmed = value.trim();
+    return trimmed.isEmpty ? null : trimmed;
+  }
+
+  String? _combineTitleDetail(String? title, String? detail) {
+    if (title == null && detail == null) return null;
+    if (title != null && detail != null && title != detail) {
+      return '$title\n$detail';
+    }
+    return title ?? detail;
   }
 
   bool _isTimeout(DioException e) {

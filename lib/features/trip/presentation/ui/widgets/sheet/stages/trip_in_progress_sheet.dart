@@ -53,10 +53,9 @@ class TripInProgressSheet extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                AppStrings.tripReferenceCode.replaceAll(
-                  '{code}',
-                  trip.referenceCode,
-                ),
+                AppStrings.tripReferenceCode.trParams({
+                  'code': trip.referenceCode,
+                }),
                 style: AppTextStyles.s16w600.copyWith(color: context.onSurface),
               ),
             ),
@@ -67,7 +66,10 @@ class TripInProgressSheet extends StatelessWidget {
         AppSpacing.sm.verticalSpace,
         Text(
           hasMultiStop && !onFinalLeg
-              ? AppStrings.tripStopProgress(currentNumber, totalIntermediate)
+              ? AppStrings.tripStopProgress.trParams({
+                    'current': currentNumber,
+                    'total': totalIntermediate,
+                  })
               : AppStrings.tripInProgressHint,
           style: AppTextStyles.s12w400.copyWith(
             color: context.onSurface.withValues(alpha: 0.60),
@@ -91,7 +93,10 @@ class TripInProgressSheet extends StatelessWidget {
               );
             },
             child: AppButtonChild.labelIcon(
-              label: AppStrings.tripFinishStop(currentNumber, totalIntermediate),
+              label: AppStrings.tripFinishStop.trParams({
+                'current': currentNumber,
+                'total': totalIntermediate,
+              }),
               icon: IconSource.widget(
                 FaIcon(FontAwesomeIcons.flagCheckered, size: 14.r),
                 size: 14,

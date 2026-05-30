@@ -24,6 +24,30 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
     return RegExp(r'^\d+$').hasMatch(v);
   }
 
+  void _runSuppressedPhoneCallbacks(VoidCallback action) {
+    _suppressPhoneCallbacks = true;
+    action();
+    Future.microtask(() {
+      if (!mounted) return;
+      _suppressPhoneCallbacks = false;
+    });
+  }
+
+  void _setPhoneControllerText(String text) {
+    if (phoneController.text == text) return;
+    _runSuppressedPhoneCallbacks(() {
+      phoneController.value = TextEditingValue(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+      );
+    });
+  }
+
+  void _clearPhoneController() {
+    if (phoneController.text.trim().isEmpty) return;
+    _runSuppressedPhoneCallbacks(phoneController.clear);
+  }
+
   /// Picks the initial ISO country code.
   ///
   /// Priority:
@@ -54,6 +78,7 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
   void _syncPhoneControllerFromControl(
     String? value, {
     required String isoCode,
+    required bool canOverrideInvalid,
   }) {
     if (_focusNode.hasFocus) return;
 
@@ -61,7 +86,9 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
     // do NOT overwrite the controller from the control value (which may still
     // contain the last valid E.164). This prevents reverting to the last valid
     // value on blur.
-    if (!_phoneIsValid && phoneController.text.trim().isNotEmpty) {
+    if (!_phoneIsValid &&
+        phoneController.text.trim().isNotEmpty &&
+        !canOverrideInvalid) {
       return;
     }
 
@@ -80,16 +107,18 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
     if (_looksLikeE164(e164)) {
       PhoneNumber.getRegionInfoFromPhoneNumber(e164, isoCode)
           .then((pn) {
-            final text = pn.parseNumber();
+            final resolvedIso = pn.isoCode;
+            if (resolvedIso != null &&
+                resolvedIso.trim().isNotEmpty &&
+                _phoneIsoCode != resolvedIso) {
+              _phoneIsoCode = resolvedIso;
+            }
+            final text = pn.parseCleanNumber();
             if (phoneController.text == text) return;
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!mounted) return;
-              if (phoneController.text == text) return;
-              phoneController.value = TextEditingValue(
-                text: text,
-                selection: TextSelection.collapsed(offset: text.length),
-              );
+              _setPhoneControllerText(text);
             });
           })
           .catchError((_) {
@@ -104,11 +133,7 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
       if (phoneController.text == e164) return;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        if (phoneController.text == e164) return;
-        phoneController.value = TextEditingValue(
-          text: e164,
-          selection: TextSelection.collapsed(offset: e164.length),
-        );
+        _setPhoneControllerText(e164);
       });
     }
   }
@@ -142,17 +167,25 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
           _phoneLastEmittedE164 = null;
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (!mounted) return;
-            if (phoneController.text.trim().isEmpty) return;
-            phoneController.clear();
+            _clearPhoneController();
           });
         }
 
-        _syncPhoneControllerFromControl(value, isoCode: isoCode);
+        _syncPhoneControllerFromControl(
+          value,
+          isoCode: isoCode,
+          canOverrideInvalid: !control.dirty && !control.touched,
+        );
 
         final e164 = (value ?? '').trim();
-        final initial = _looksLikeE164(e164)
-            ? PhoneNumber(isoCode: isoCode, phoneNumber: e164)
-            : PhoneNumber(isoCode: isoCode);
+        final signature = isoCode;
+
+        if (_phoneInitialValueSignature != signature) {
+          _phoneInitialValueSignature = signature;
+          _phoneInitialValueCached = PhoneNumber(isoCode: isoCode);
+        }
+
+        final initial = _phoneInitialValueCached!;
 
         return Directionality(
           textDirection: direction,
@@ -162,250 +195,309 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
               alignment: direction == TextDirection.ltr
                   ? Alignment.centerLeft
                   : Alignment.centerRight,
-            child: InternationalPhoneNumberInput(
-              key: ValueKey<String>('${widget.formControlName}_phone'),
-              isEnabled: widget.enabled,
-              textFieldController: phoneController,
-              focusNode: _focusNode,
-              textStyle: textStyle,
-              selectorTextStyle: textStyle,
-              ignoreBlank: true,
-              formatInput: false,
-              keyboardType: TextInputType.number,
-              selectorConfig: SelectorConfig(
-                selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                useBottomSheetSafeArea: true,
-                setSelectorButtonAsPrefixIcon: true,
-                useEmoji: widget.phoneUseEmojiFlags,
-                leadingPadding: 0,
-                trailingSpace: false,
-              ),
-              autoFocusSearch: true,
-              searchBoxDecoration: InputDecoration(
-                isDense: true,
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-                hintText: AppStrings.search,
-              ),
-              spaceBetweenSelectorAndTextField: 0,
-              selectorButtonOnErrorPadding: 0,
-              countries: widget.phoneCountries,
-              initialValue: initial,
-              onInputValidated: (isValid) {
-                final AbstractControl<Object>? inherited = ReactiveForm.of(
-                  context,
-                  listen: false,
-                );
-                final FormGroup? form =
-                    widget.formGroup ??
-                    (inherited is FormGroup
-                        ? inherited
-                        : inherited?.parent as FormGroup?);
+              child: InternationalPhoneNumberInput(
+                key: ValueKey<String>('${widget.formControlName}_phone'),
+                isEnabled: widget.enabled,
+                textFieldController: phoneController,
+                focusNode: _focusNode,
+                textStyle: textStyle,
+                selectorTextStyle: textStyle,
+                ignoreBlank: true,
+                formatInput: false,
+                keyboardType: TextInputType.number,
+                selectorConfig: SelectorConfig(
+                  selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                  useBottomSheetSafeArea: true,
+                  setSelectorButtonAsPrefixIcon: true,
+                  useEmoji: widget.phoneUseEmojiFlags,
+                  leadingPadding: 0,
+                  trailingSpace: false,
+                ),
+                autoFocusSearch: true,
+                searchBoxDecoration: InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                  hintText: AppStrings.search,
+                ),
+                spaceBetweenSelectorAndTextField: 0,
+                selectorButtonOnErrorPadding: 0,
+                countries: widget.phoneCountries,
+                initialValue: initial,
+                onInputValidated: (isValid) {
+                  final AbstractControl<Object>? inherited = ReactiveForm.of(
+                    context,
+                    listen: false,
+                  );
+                  final FormGroup? form =
+                      widget.formGroup ??
+                      (inherited is FormGroup
+                          ? inherited
+                          : inherited?.parent as FormGroup?);
 
-                if (form == null) return;
+                  if (form == null) return;
 
-                final AbstractControl<dynamic> raw = form.control(
-                  widget.formControlName,
-                );
-                if (raw is! FormControl<String>) return;
-                final c = raw;
+                  final AbstractControl<dynamic> raw = form.control(
+                    widget.formControlName,
+                  );
+                  if (raw is! FormControl<String>) return;
+                  final c = raw;
 
-                final currentText = phoneController.text.trim();
-                final shouldStartValidation =
-                    currentText.isNotEmpty ||
-                    (c.value ?? '').isNotEmpty ||
-                    c.dirty ||
-                    c.touched;
+                  final rawText = phoneController.text.trim();
 
-                if (shouldStartValidation) {
-                  c.markAsDirty();
-                  _armDeferredValidation();
-                }
+                  final wasValid = _phoneIsValid;
+                  _phoneIsValid = isValid;
 
-                final wasValid = _phoneIsValid;
-                _phoneIsValid = isValid;
+                  if (_suppressPhoneCallbacks) {
+                    _lastPhoneValidationText = rawText;
+                    return;
+                  }
 
-                if (wasValid != isValid) {
-                  if (isValid) {
-                    printG(
-                      '[PhoneField] ${widget.formControlName} validated=true '
-                      'text="${phoneController.text.trim()}" '
-                      'control="${(c.value ?? "").toString()}" '
-                      'errors=${c.errors.keys.toList()}',
-                    );
-                  } else {
+                  final digits = isValid
+                      ? (_phoneLastNumber?.parseCleanNumber() ?? '')
+                      : '';
+                  final effectiveText =
+                      digits.isNotEmpty ? digits : rawText;
+
+                  if (digits.isNotEmpty && digits != rawText) {
+                    _setPhoneControllerText(digits);
+                  }
+
+                  final shouldStartValidation =
+                      effectiveText.isNotEmpty ||
+                      (c.value ?? '').isNotEmpty ||
+                      c.dirty ||
+                      c.touched;
+
+                  final didChangeText =
+                      effectiveText != _lastPhoneValidationText;
+                  if (didChangeText) {
+                    _lastPhoneValidationText = effectiveText;
+                  }
+
+                  if (shouldStartValidation &&
+                      (didChangeText || wasValid != isValid)) {
+                    if (!c.dirty) {
+                      c.markAsDirty();
+                    }
+                    _armDeferredValidation(input: effectiveText);
+                  }
+
+                  if (wasValid != isValid) {
+                    if (isValid) {
+                      printG(
+                        '[PhoneField] ${widget.formControlName} validated=true '
+                        'text="${phoneController.text.trim()}" '
+                        'control="${(c.value ?? "").toString()}" '
+                        'errors=${c.errors.keys.toList()}',
+                      );
+                    } else {
+                      printR(
+                        '[PhoneField] ${widget.formControlName} validated=false '
+                        'text="${phoneController.text.trim()}" '
+                        'control="${(c.value ?? "").toString()}" '
+                        'errors=${c.errors.keys.toList()}',
+                      );
+                    }
+                  }
+
+                  if (wasValid && !isValid) {
+                    if ((c.value ?? '').isNotEmpty) {
+                      c.updateValue('');
+                    }
+                    final current = Map<String, dynamic>.from(c.errors);
+                    current[AppReactiveValidationMessages.invalidPhoneKey] =
+                        true;
+                    c.setErrors(current);
                     printR(
-                      '[PhoneField] ${widget.formControlName} validated=false '
+                      '[PhoneField] ${widget.formControlName} set invalidPhone '
+                      'control="${(c.value ?? "").toString()}" '
+                      'errors=${c.errors.keys.toList()}',
+                    );
+                    _phoneLastEmittedE164 = null;
+                    return;
+                  }
+                  if (effectiveText.isEmpty) {
+                    if (c.hasError(
+                      AppReactiveValidationMessages.invalidPhoneKey,
+                    )) {
+                      c.removeError(
+                        AppReactiveValidationMessages.invalidPhoneKey,
+                      );
+                    }
+                    if ((c.value ?? '').isNotEmpty) {
+                      c.updateValue('');
+                    } else {
+                      c.updateValueAndValidity();
+                    }
+                    return;
+                  }
+
+                  if (isValid) {
+                    if (c.hasError(
+                      AppReactiveValidationMessages.invalidPhoneKey,
+                    )) {
+                      c.removeError(
+                        AppReactiveValidationMessages.invalidPhoneKey,
+                      );
+                    }
+
+                    final e164 = _phoneLastNumber?.phoneNumber ?? '';
+                    if (_looksLikeE164(e164) && c.value != e164) {
+                      c.updateValue(e164);
+                    } else {
+                      c.updateValueAndValidity();
+                    }
+
+                    if (_phoneLastEmittedE164 != e164) {
+                      _phoneLastEmittedE164 = e164;
+                      widget.onChanged?.call(e164, true);
+                      scheduleDebounced(e164, true);
+                    }
+                  } else {
+                    final current = Map<String, dynamic>.from(c.errors);
+                    current[AppReactiveValidationMessages.invalidPhoneKey] =
+                        true;
+                    c.setErrors(current);
+                    printR(
+                      '[PhoneField] ${widget.formControlName} set invalidPhone '
+                      'control="${(c.value ?? "").toString()}" '
+                      'errors=${c.errors.keys.toList()}',
+                    );
+                  }
+                },
+                inputDecoration: const InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                ),
+                hintText: widget.hintText.isNullOrBlank
+                    ? null
+                    : widget.hintText,
+                // We render errors in AppReactiveTextField (below the container).
+                errorMessage: '',
+                onInputChanged: (number) {
+                  _phoneLastNumber = number;
+                  if (number.isoCode != null &&
+                      number.isoCode!.trim().isNotEmpty) {
+                    _phoneIsoCode = number.isoCode!.trim().toUpperCase();
+                  }
+
+                  final phone = number.phoneNumber;
+                  final AbstractControl<Object>? inherited = ReactiveForm.of(
+                    context,
+                    listen: false,
+                  );
+                  final FormGroup? form =
+                      widget.formGroup ??
+                      (inherited is FormGroup
+                          ? inherited
+                          : inherited?.parent as FormGroup?);
+
+                  if (form == null) return;
+
+                  final AbstractControl<dynamic> raw = form.control(
+                    widget.formControlName,
+                  );
+                  if (raw is! FormControl<String>) return;
+                  final c = raw;
+
+                  final currentText = phoneController.text.trim();
+                  final shouldStartValidation =
+                      currentText.isNotEmpty ||
+                      (c.value ?? '').isNotEmpty ||
+                      c.dirty ||
+                      c.touched;
+
+                  if (_suppressPhoneCallbacks) {
+                    _lastPhoneValidationText = currentText;
+                    return;
+                  }
+
+                  _lastPhoneValidationText = currentText;
+
+                  if (shouldStartValidation) {
+                    if (!c.dirty) {
+                      c.markAsDirty();
+                    }
+                    _armDeferredValidation(input: currentText);
+                  }
+
+                  if (!_phoneIsValid &&
+                      phoneController.text.trim().isNotEmpty) {
+                    printY(
+                      '[PhoneField] ${widget.formControlName} typing invalid '
                       'text="${phoneController.text.trim()}" '
                       'control="${(c.value ?? "").toString()}" '
                       'errors=${c.errors.keys.toList()}',
                     );
                   }
-                }
 
-                if (wasValid && !isValid) {
-                  if ((c.value ?? '').isNotEmpty) {
-                    c.updateValue('');
-                  }
-                  final current = Map<String, dynamic>.from(c.errors);
-                  current[AppReactiveValidationMessages.invalidPhoneKey] = true;
-                  c.setErrors(current);
-                  printR(
-                    '[PhoneField] ${widget.formControlName} set invalidPhone '
-                    'control="${(c.value ?? "").toString()}" '
-                    'errors=${c.errors.keys.toList()}',
-                  );
-                  _phoneLastEmittedE164 = null;
-                  return;
-                }
-                if (currentText.isEmpty) {
-                  if (c.hasError(
-                    AppReactiveValidationMessages.invalidPhoneKey,
-                  )) {
-                    c.removeError(
+                  final nextValue = phone ?? '';
+
+                  if (currentText.isEmpty) {
+                    _phoneLastEmittedE164 = null;
+                    if ((c.value ?? '').isNotEmpty) {
+                      c.updateValue('');
+                    }
+                    if (c.hasError(
                       AppReactiveValidationMessages.invalidPhoneKey,
-                    );
-                  }
-                  if ((c.value ?? '').isNotEmpty) {
-                    c.updateValue('');
-                  } else {
-                    c.updateValueAndValidity();
-                  }
-                  return;
-                }
-
-                if (isValid) {
-                  if (c.hasError(
-                    AppReactiveValidationMessages.invalidPhoneKey,
-                  )) {
-                    c.removeError(
-                      AppReactiveValidationMessages.invalidPhoneKey,
-                    );
+                    )) {
+                      c.removeError(
+                        AppReactiveValidationMessages.invalidPhoneKey,
+                      );
+                      c.updateValueAndValidity();
+                    }
+                    return;
                   }
 
-                  final e164 = _phoneLastNumber?.phoneNumber ?? '';
-                  if (_looksLikeE164(e164) && c.value != e164) {
-                    c.updateValue(e164);
-                  } else {
-                    c.updateValueAndValidity();
+                  // Gate: until the package confirms validity, we don't update
+                  // the stored value (keep the last valid E.164 in the control)
+                  // and we don't fire callbacks.
+                  if (!_phoneIsValid) {
+                    return;
                   }
 
-                  if (_phoneLastEmittedE164 != e164) {
-                    _phoneLastEmittedE164 = e164;
-                    widget.onChanged?.call(e164, true);
-                    scheduleDebounced(e164, true);
+                  if (_looksLikeE164(nextValue) && c.value != nextValue) {
+                    c.updateValue(nextValue);
                   }
-                } else {
-                  final current = Map<String, dynamic>.from(c.errors);
-                  current[AppReactiveValidationMessages.invalidPhoneKey] = true;
-                  c.setErrors(current);
-                  printR(
-                    '[PhoneField] ${widget.formControlName} set invalidPhone '
-                    'control="${(c.value ?? "").toString()}" '
-                    'errors=${c.errors.keys.toList()}',
-                  );
-                }
-              },
-              inputDecoration: const InputDecoration(
-                isDense: true,
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
+                },
+                onFieldSubmitted: (_) {
+                  if (!_phoneIsValid) return;
+                  final phone = (control.value ?? '').toString();
+                  if (!_looksLikeE164(phone)) return;
+                  widget.onSubmitted?.call(phone, control.valid);
+                },
               ),
-              hintText: widget.hintText.isNullOrBlank ? null : widget.hintText,
-              // We render errors in AppReactiveTextField (below the container).
-              errorMessage: '',
-              onInputChanged: (number) {
-                _phoneLastNumber = number;
-                if (number.isoCode != null &&
-                    number.isoCode!.trim().isNotEmpty) {
-                  _phoneIsoCode = number.isoCode!.trim().toUpperCase();
-                }
-
-                final phone = number.phoneNumber;
-                final AbstractControl<Object>? inherited = ReactiveForm.of(
-                  context,
-                  listen: false,
-                );
-                final FormGroup? form =
-                    widget.formGroup ??
-                    (inherited is FormGroup
-                        ? inherited
-                        : inherited?.parent as FormGroup?);
-
-                if (form == null) return;
-
-                final AbstractControl<dynamic> raw = form.control(
-                  widget.formControlName,
-                );
-                if (raw is! FormControl<String>) return;
-                final c = raw;
-
-                final currentText = phoneController.text.trim();
-                final shouldStartValidation =
-                    currentText.isNotEmpty ||
-                    (c.value ?? '').isNotEmpty ||
-                    c.dirty ||
-                    c.touched;
-
-                if (shouldStartValidation) {
-                  c.markAsDirty();
-                  _armDeferredValidation();
-                }
-
-                if (!_phoneIsValid && phoneController.text.trim().isNotEmpty) {
-                  printY(
-                    '[PhoneField] ${widget.formControlName} typing invalid '
-                    'text="${phoneController.text.trim()}" '
-                    'control="${(c.value ?? "").toString()}" '
-                    'errors=${c.errors.keys.toList()}',
-                  );
-                }
-
-                final nextValue = phone ?? '';
-
-                if (currentText.isEmpty) {
-                  _phoneLastEmittedE164 = null;
-                  if ((c.value ?? '').isNotEmpty) {
-                    c.updateValue('');
-                  }
-                  if (c.hasError(
-                    AppReactiveValidationMessages.invalidPhoneKey,
-                  )) {
-                    c.removeError(
-                      AppReactiveValidationMessages.invalidPhoneKey,
-                    );
-                    c.updateValueAndValidity();
-                  }
-                  return;
-                }
-
-                // Gate: until the package confirms validity, we don't update
-                // the stored value (keep the last valid E.164 in the control)
-                // and we don't fire callbacks.
-                if (!_phoneIsValid) {
-                  return;
-                }
-
-                if (_looksLikeE164(nextValue) && c.value != nextValue) {
-                  c.updateValue(nextValue);
-                }
-              },
-              onFieldSubmitted: (_) {
-                if (!_phoneIsValid) return;
-                final phone = (control.value ?? '').toString();
-                if (!_looksLikeE164(phone)) return;
-                widget.onSubmitted?.call(phone, control.valid);
-              },
             ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+  }
 }
+
+extension PhoneNumberX on PhoneNumber {
+  /// Robustly strips the dial code and the '+' prefix from the phone number
+  /// to get the raw national digits suitable for the text field.
+  String parseCleanNumber() {
+    final rawDial = dialCode ?? '';
+    final dial = rawDial.startsWith('+') ? rawDial.substring(1) : rawDial;
+    var text = phoneNumber ?? '';
+
+    if (text.startsWith('+')) {
+      text = text.substring(1);
+    }
+
+    if (dial.isNotEmpty && text.startsWith(dial)) {
+      text = text.substring(dial.length);
+    }
+
+    return text.trim();
+  }
 }

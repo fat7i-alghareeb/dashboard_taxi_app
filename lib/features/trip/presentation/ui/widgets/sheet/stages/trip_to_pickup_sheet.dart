@@ -25,10 +25,9 @@ class TripToPickupSheet extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                AppStrings.tripReferenceCode.replaceAll(
-                  '{code}',
-                  trip.referenceCode,
-                ),
+                AppStrings.tripReferenceCode.trParams({
+                  'code': trip.referenceCode,
+                }),
                 style: AppTextStyles.s16w600.copyWith(color: context.onSurface),
               ),
             ),

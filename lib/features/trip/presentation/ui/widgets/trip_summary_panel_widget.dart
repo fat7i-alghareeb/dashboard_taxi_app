@@ -55,9 +55,10 @@ class TripSummaryPanelWidget extends StatelessWidget {
             ),
             AppSpacing.xs.verticalSpace,
             Text(
-              AppStrings.tripFare
-                  .replaceAll('{fare}', trip.quotedFare.toStringAsFixed(2))
-                  .replaceAll('{currency}', trip.currencyCode),
+              AppStrings.tripFare.trParams({
+                'fare': trip.quotedFare.toStringAsFixed(2),
+                'currency': trip.currencyCode,
+              }),
               style: AppTextStyles.s28w700.copyWith(color: AppColors.success),
             ),
             AppSpacing.xl.verticalSpace,

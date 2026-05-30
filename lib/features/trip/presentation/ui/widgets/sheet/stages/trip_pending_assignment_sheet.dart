@@ -53,9 +53,9 @@ class TripPendingAssignmentSheet extends StatelessWidget {
               AppSpacing.sm.horizontalSpace,
               Expanded(
                 child: Text(
-                  AppStrings.scheduledForLabel(
-                    trip.scheduledAtUtc!.toLocal().toSmartDateTime(),
-                  ),
+                  AppStrings.scheduledForLabel.trParams({
+                    'when': trip.scheduledAtUtc!.toLocal().toSmartDateTime(),
+                  }),
                   style: AppTextStyles.s14w500.copyWith(
                     color: AppColors.warning,
                   ),

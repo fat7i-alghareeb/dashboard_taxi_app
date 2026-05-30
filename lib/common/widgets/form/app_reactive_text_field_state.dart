@@ -45,6 +45,14 @@ class _AppReactiveTextFieldState extends State<AppReactiveTextField>
   // Password visibility state.
   bool _obscure = true;
 
+  // Phone initial value cache to prevent infinite rebuild loops in intl_phone_number_input.
+  PhoneNumber? _phoneInitialValueCached;
+  String? _phoneInitialValueSignature;
+
+  bool _suppressPhoneCallbacks = false;
+  String? _lastDeferredValidationInput;
+  String? _lastPhoneValidationText;
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +74,8 @@ class _AppReactiveTextFieldState extends State<AppReactiveTextField>
             widget.validation.deferErrorsUntilFirstDebounce) {
       _deferValidationDebounce?.cancel();
       _deferValidationArmed = false;
+      _lastDeferredValidationInput = null;
+      _lastPhoneValidationText = null;
     }
 
     if (oldWidget._type != widget._type) {
@@ -79,6 +89,10 @@ class _AppReactiveTextFieldState extends State<AppReactiveTextField>
         _phoneLastNumber = null;
         _phoneIsValid = false;
         _phoneLastEmittedE164 = null;
+        _phoneInitialValueCached = null;
+        _phoneInitialValueSignature = null;
+        _lastPhoneValidationText = null;
+        _suppressPhoneCallbacks = false;
       }
     }
 
@@ -104,9 +118,14 @@ class _AppReactiveTextFieldState extends State<AppReactiveTextField>
     super.dispose();
   }
 
-  void _armDeferredValidation() {
+  void _armDeferredValidation({String? input}) {
     if (!widget.validation.deferErrorsUntilFirstDebounce) return;
     if (_deferValidationArmed) return;
+    final isActive = _deferValidationDebounce?.isActive ?? false;
+    if (isActive && input != null && input == _lastDeferredValidationInput) {
+      return;
+    }
+    _lastDeferredValidationInput = input;
     _deferValidationDebounce?.cancel();
     printC(
       '[AppReactiveTextField] arm deferred validation: ${widget.formControlName}',
@@ -518,7 +537,7 @@ class _AppReactiveTextFieldState extends State<AppReactiveTextField>
               onChanged: (control) {
                 final value = (control.value ?? '').toString();
                 final isValid = control.valid;
-                _armDeferredValidation();
+                _armDeferredValidation(input: value);
                 widget.onChanged?.call(value, isValid);
                 scheduleDebounced(value, isValid);
               },

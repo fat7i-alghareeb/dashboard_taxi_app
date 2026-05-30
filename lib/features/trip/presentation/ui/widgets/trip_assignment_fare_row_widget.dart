@@ -15,9 +15,10 @@ class TripAssignmentFareRowWidget extends StatelessWidget {
         Expanded(
           child: TripInfoTileWidget(
             label: AppStrings.tripFareLabel,
-            value: AppStrings.tripFare
-                .replaceAll('{fare}', trip.quotedFare.toStringAsFixed(2))
-                .replaceAll('{currency}', trip.currencyCode),
+            value: AppStrings.tripFare.trParams({
+              'fare': trip.quotedFare.toStringAsFixed(2),
+              'currency': trip.currencyCode,
+            }),
           ),
         ),
         AppSpacing.lg.horizontalSpace,

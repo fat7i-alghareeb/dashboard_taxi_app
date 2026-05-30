@@ -8,18 +8,15 @@ class DashboardVehicleTypeRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rate = AppStrings.dashboardRatePerKm.replaceAll(
-      '{value}',
-      vehicleType.ratePerKm.toStringAsFixed(2),
-    );
-    final capacity = AppStrings.dashboardCapacityValue.replaceAll(
-      '{value}',
-      vehicleType.capacity.toString(),
-    );
-    final minFare = AppStrings.dashboardMinFareValue.replaceAll(
-      '{value}',
-      vehicleType.minFare.toStringAsFixed(2),
-    );
+    final rate = AppStrings.dashboardRatePerKm.trParams({
+      'value': vehicleType.ratePerKm.toStringAsFixed(2),
+    });
+    final capacity = AppStrings.dashboardCapacityValue.trParams({
+      'value': vehicleType.capacity,
+    });
+    final minFare = AppStrings.dashboardMinFareValue.trParams({
+      'value': vehicleType.minFare.toStringAsFixed(2),
+    });
 
     return Padding(
       padding: REdgeInsets.symmetric(vertical: AppSpacing.sm),

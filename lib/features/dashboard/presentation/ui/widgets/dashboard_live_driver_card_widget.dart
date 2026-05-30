@@ -18,10 +18,9 @@ class DashboardLiveDriverCardWidget extends StatelessWidget {
         : driver.vehicleTypeName!;
     final lastSeen = driver.locationUpdatedAt == null
         ? AppStrings.tripUnknownAddress
-        : AppStrings.dashboardLastSeen.replaceAll(
-            '{time}',
-            driver.locationUpdatedAt!.toSmartDateTime(),
-          );
+        : AppStrings.dashboardLastSeen.trParams({
+            'time': driver.locationUpdatedAt!.toSmartDateTime(),
+          });
 
     return DecoratedBox(
       decoration: BoxDecoration(

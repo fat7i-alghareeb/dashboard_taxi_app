@@ -74,10 +74,12 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
         arrivedAt != null &&
         DateTime.now().difference(arrivedAt) >= const Duration(minutes: 10);
     final cooldownRemaining = _remainingCooldownSeconds();
-    final resendDisabled = cooldownRemaining > 0 ||
-        state.resendArrivedNotificationState.isLoading;
+    final resendDisabled =
+        cooldownRemaining > 0 || state.resendArrivedNotificationState.isLoading;
     final resendLabel = cooldownRemaining > 0
-        ? AppStrings.notifyAgainCountdown(cooldownRemaining)
+        ? AppStrings.notifyAgainCountdown.trParams({
+            'seconds': cooldownRemaining,
+          })
         : AppStrings.notifyCustomerAgain;
 
     return MultiBlocListener(
@@ -105,12 +107,12 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
             children: [
               Expanded(
                 child: Text(
-                  AppStrings.tripReferenceCode.replaceAll(
-                    '{code}',
-                    trip.referenceCode,
+                  AppStrings.tripReferenceCode.trParams({
+                    'code': trip.referenceCode,
+                  }),
+                  style: AppTextStyles.s16w600.copyWith(
+                    color: context.onSurface,
                   ),
-                  style:
-                      AppTextStyles.s16w600.copyWith(color: context.onSurface),
                 ),
               ),
               AppSpacing.sm.horizontalSpace,
@@ -151,8 +153,8 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
             onTap: resendDisabled
                 ? null
                 : () => context.read<TripBloc>().add(
-                      TripEvent.resendArrivedNotificationRequested(trip.id),
-                    ),
+                    TripEvent.resendArrivedNotificationRequested(trip.id),
+                  ),
             child: AppButtonChild.labelIcon(
               label: resendLabel,
               icon: IconSource.widget(

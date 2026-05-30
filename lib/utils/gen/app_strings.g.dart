@@ -101,6 +101,12 @@ class AppStrings {
   static String get clientUnprocessableEntity => 'clientUnprocessableEntity'.tr();
   /// Coming Soon - قريباً - Binnenkort beschikbaar - Demnächst verfügbar - Wkrótce dostępne - Незабаром - Bientôt disponible - Próximamente - În curând
   static String get comingSoon => 'comingSoon'.tr();
+  /// Evidence - الأدلة - Bewijs - Nachweis - Dowód - Доказ - Preuve - Evidencia - Dovadă
+  static String get compensationEvidence => 'compensationEvidence'.tr();
+  /// Evidence {index} - دليل {index} - Bewijs {index} - Nachweis {index} - Dowód {index} - Доказ {index} - Preuve {index} - Evidencia {index} - Dovadă {index}
+  static String get compensationEvidenceItem => 'compensationEvidenceItem'.tr();
+  /// 2% compensation - تعويض 2% - 2% compensatie - 2% Entschädigung - 2% odszkodowania - 2% компенсації - 2% d'indemnisation - 2% de compensación - 2% compensație
+  static String get compensationPercentage => 'compensationPercentage'.tr();
   /// Confirm password - تأكيد كلمة المرور - Confirm password - Confirm password - Confirm password - Confirm password - Confirm password - Confirm password - Confirm password
   static String get confirmPassword => 'confirmPassword'.tr();
   /// Confirm your new password - أكد كلمة المرور الجديدة - Bevestig uw nieuwe wachtwoord - Bestätigen Sie Ihr neues Passwort - Potwierdź nowe hasło - Підтвердіть новий пароль - Confirmez votre nouveau mot de passe - Confirme su nueva contraseña - Confirmați parola nouă
@@ -131,6 +137,8 @@ class AppStrings {
   static String get controlCenterTypes => 'controlCenterTypes'.tr();
   /// Could not create admin - تعذّر إنشاء المشرف - Kon beheerder niet aanmaken - Admin konnte nicht erstellt werden - Nie udało się utworzyć administratora - Не вдалося створити адміністратора - Impossible de créer l'administrateur - No se pudo crear el administrador - Administratorul nu a putut fi creat
   static String get createAdminFailed => 'createAdminFailed'.tr();
+  /// Note: The new admin will be required to change their password upon their first login. - ملاحظة: سيُطلب من المشرف الجديد تغيير كلمة المرور عند تسجيل الدخول الأول. - Opmerking: De nieuwe beheerder moet zijn wachtwoord wijzigen bij de eerste keer inloggen. - Hinweis: Der neue Administrator muss sein Passwort bei der ersten Anmeldung ändern. - Uwaga: Nowy administrator będzie musiał zmienić swoje hasło przy pierwszym logowaniu. - Примітка: Новий адміністратор повинен буде змінити свій пароль при першому вході. - Remarque : Le nouvel administrateur devra changer son mot de passe lors de sa première connexion. - Nota: El nuevo administrador deberá cambiar su contraseña en su primer inicio de sesión. - Notă: Noul administrator va trebui să își schimbe parola la prima conectare.
+  static String get createAdminPasswordChangeNote => 'createAdminPasswordChangeNote'.tr();
   /// Create Admin - إنشاء مشرف - Admin aanmaken - Admin erstellen - Utwórz administratora - Створити адміна - Créer l'admin - Crear admin - Creează admin
   static String get createAdminSubmit => 'createAdminSubmit'.tr();
   /// Create a new admin account - إنشاء حساب مشرف جديد - Een nieuw beheerdersaccount aanmaken - Ein neues Admin-Konto erstellen - Utwórz nowe konto administratora - Створити новий обліковий запис адміністратора - Créer un nouveau compte administrateur - Crear una nueva cuenta de administrador - Creează un cont nou de administrator
@@ -141,7 +149,7 @@ class AppStrings {
   static String get createAdminTitle => 'createAdminTitle'.tr();
   /// Current Password - كلمة المرور الحالية - Huidig wachtwoord - Aktuelles Passwort - Aktualne hasło - Поточний пароль - Mot de passe actuel - Contraseña actual - Parola actuală
   static String get currentPassword => 'currentPassword'.tr();
-  /// Enter your current password - أدخل كلمة المرور الحالية - Voer uw huidige wachtwoord in - Geben Sie Ihr aktuelles Passwort ein - Wprowadź aktualne hasło - Введіть поточний пароль - Entrez votre mot de passe actuel - Introduzca su contraseña actual - Introduceți parola actuală
+  /// Enter your current password - أدخل كلمة المرور ا لحالية - Voer uw huidige wachtwoord in - Geben Sie Ihr aktuelles Passwort ein - Wprowadź aktualne hasło - Введіть поточний пароль - Entrez votre mot de passe actuel - Introduzca su contraseña actual - Introduceți parola actuală
   static String get currentPasswordHint => 'currentPasswordHint'.tr();
   /// Dark - الداكن - Donker - Dunkel - Ciemny - Темна - Sombre - Oscuro - Întunecat
   static String get dark => 'dark'.tr();
@@ -345,12 +353,6 @@ class AppStrings {
   static String get dashboardRefresh => 'dashboardRefresh'.tr();
   /// Reject - رفض - Afwijzen - Ablehnen - Odrzuć - Відхилити - Rejeter - Rechazar - Respinge
   static String get dashboardRejectClaim => 'dashboardRejectClaim'.tr();
-  /// 2% compensation - تعويض 2% - 2% compensation - 2% compensation - 2% compensation - 2% compensation - 2% compensation - 2% compensation - 2% compensation
-  static String get compensationPercentage => 'compensationPercentage'.tr();
-  /// Evidence - الأدلة - Evidence - Evidence - Evidence - Evidence - Evidence - Evidence - Evidence
-  static String get compensationEvidence => 'compensationEvidence'.tr();
-  /// Evidence {index}
-  static String compensationEvidenceItem(int index) => 'compensationEvidenceItem'.tr(namedArgs: {'index': index.toString()});
   /// Reject - رفض - Reject - Reject - Reject - Reject - Reject - Reject - Reject
   static String get dashboardRejectDocument => 'dashboardRejectDocument'.tr();
   /// Rejected by admin review. - تم الرفض من مراجعة الإدارة. - Rejected by admin review. - Rejected by admin review. - Rejected by admin review. - Rejected by admin review. - Rejected by admin review. - Rejected by admin review. - Rejected by admin review.
@@ -509,6 +511,8 @@ class AppStrings {
   static String get feb => 'feb'.tr();
   /// February - فبراير - Februari - Februar - Luty - Лютий - Février - Febrero - Februarie
   static String get february => 'february'.tr();
+  /// Scheduled - مجدولة - Gepland - Geplant - Zaplanowane - Заплановано - Programmé - Programado - Programat
+  static String get filterScheduled => 'filterScheduled'.tr();
   /// Password reset required - إعادة تعيين كلمة المرور مطلوبة - Password reset required - Password reset required - Password reset required - Password reset required - Password reset required - Password reset required - Password reset required
   static String get forcePasswordReset => 'forcePasswordReset'.tr();
   /// Set a new password before entering the dashboard. - قم بتعيين كلمة مرور جديدة قبل الدخول إلى لوحة التحكم. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard.
@@ -645,6 +649,12 @@ class AppStrings {
   static String get newPasswordHint => 'newPasswordHint'.tr();
   /// No results found. - لا توجد نتائج. - Geen resultaten gevonden. - Keine Ergebnisse gefunden. - Nie znaleziono wyników. - Нічого не знайдено. - Aucun résultat trouvé. - No se encontraron resultados. - Nu s-au găsit rezultate.
   static String get noResultsFound => 'noResultsFound'.tr();
+  /// Notification sent - تم إرسال التنبيه - Melding verzonden - Benachrichtigung gesendet - Powiadomienie wysłane - Сповіщення надіслано - Notification envoyée - Notificación enviada - Notificare trimisă
+  static String get notificationSent => 'notificationSent'.tr();
+  /// Notify again in {seconds}s - التنبيه مجدداً خلال {seconds} ثانية - Opnieuw waarschuwen over {seconds}s - Erneut benachrichtigen in {seconds}s - Powiadom ponownie za {seconds}s - Сповістити знову через {seconds}с - Notifier à nouveau dans {seconds}s - Notificar de nuevo en {seconds}s - Notifică din nou în {seconds}s
+  static String get notifyAgainCountdown => 'notifyAgainCountdown'.tr();
+  /// Notify customer again - تنبيه العميل مرة أخرى - Klant opnieuw waarschuwen - Kunden erneut benachrichtigen - Powiadom klienta ponownie - Сповістити клієнта знову - Notifier à nouveau le client - Notificar de nuevo al cliente - Notifică clientul din nou
+  static String get notifyCustomerAgain => 'notifyCustomerAgain'.tr();
   /// Nov - نوف - Nov - Nov - Lis - Лист - Nov - Nov - Nov
   static String get nov => 'nov'.tr();
   /// November - نوفمبر - November - November - Listopad - Листопад - Novembre - Noviembre - Noiembrie
@@ -763,6 +773,8 @@ class AppStrings {
   static String get saturday => 'saturday'.tr();
   /// Save - حفظ - Opslaan - Speichern - Zapisz - Зберегти - Enregistrer - Guardar - Salvează
   static String get save => 'save'.tr();
+  /// Scheduled for {when} - مجدولة في {when} - Gepland voor {when} - Geplant für {when} - Zaplanowane na {when} - Заплановано на {when} - Programmé pour {when} - Programado para {when} - Programat pentru {when}
+  static String get scheduledForLabel => 'scheduledForLabel'.tr();
   /// Search - بحث - Zoeken - Suche - Szukaj - Пошук - Rechercher - Buscar - Căutare
   static String get search => 'search'.tr();
   /// Select date - اختر التاريخ - Datum selecteren - Datum wählen - Wybierz datę - Вибрати дату - Choisir la date - Seleccionar fecha - Selectează data
@@ -887,14 +899,14 @@ class AppStrings {
   static String get tripCustomerSectionTitle => 'tripCustomerSectionTitle'.tr();
   /// Drop-off - نقطة الوصول - Drop-off - Drop-off - Drop-off - Drop-off - Drop-off - Drop-off - Drop-off
   static String get tripDropoff => 'tripDropoff'.tr();
-  /// Stop - محطة - Stop - Stop - Stop - Stop - Stop - Stop - Stop
-  static String get tripStop => 'tripStop'.tr();
   /// Navigate to the pickup point and notify the passenger when you arrive. - انتقل إلى نقطة الانطلاق وأبلغ الراكب عند وصولك. - Navigate to the pickup point and notify the passenger when you arrive. - Navigate to the pickup point and notify the passenger when you arrive. - Navigate to the pickup point and notify the passenger when you arrive. - Navigate to the pickup point and notify the passenger when you arrive. - Navigate to the pickup point and notify the passenger when you arrive. - Navigate to the pickup point and notify the passenger when you arrive. - Navigate to the pickup point and notify the passenger when you arrive.
   static String get tripEnRouteHint => 'tripEnRouteHint'.tr();
   /// {fare} {currency} - {fare} {currency} - {fare} {currency} - {fare} {currency} - {fare} {currency} - {fare} {currency} - {fare} {currency} - {fare} {currency} - {fare} {currency}
   static String get tripFare => 'tripFare'.tr();
   /// Fare - الأجرة - Fare - Fare - Fare - Fare - Fare - Fare - Fare
   static String get tripFareLabel => 'tripFareLabel'.tr();
+  /// Finish stop {current} of {total} - إنهاء المحطة {current} من {total} - Finish stop {current} of {total} - Finish stop {current} of {total} - Finish stop {current} of {total} - Finish stop {current} of {total} - Finish stop {current} of {total} - Finish stop {current} of {total} - Finish stop {current} of {total}
+  static String get tripFinishStop => 'tripFinishStop'.tr();
   /// I Have Arrived - لقد وصلت - I Have Arrived - I Have Arrived - I Have Arrived - I Have Arrived - I Have Arrived - I Have Arrived - I Have Arrived
   static String get tripHaveArrived => 'tripHaveArrived'.tr();
   /// No trips yet - لا توجد رحلات بعد - Nog geen ritten - Noch keine Fahrten - Brak przejazdów - Поїздок ще немає - Aucun trajet pour le moment - No hay viajes aún - Nicio cursă momentan
@@ -905,14 +917,14 @@ class AppStrings {
   static String get tripHistoryTitle => 'tripHistoryTitle'.tr();
   /// Navigate to the drop-off point and complete the trip at destination. - انتقل إلى نقطة الوصول وأنهِ الرحلة عند الوجهة. - Navigate to the drop-off point and complete the trip at destination. - Navigate to the drop-off point and complete the trip at destination. - Navigate to the drop-off point and complete the trip at destination. - Navigate to the drop-off point and complete the trip at destination. - Navigate to the drop-off point and complete the trip at destination. - Navigate to the drop-off point and complete the trip at destination. - Navigate to the drop-off point and complete the trip at destination.
   static String get tripInProgressHint => 'tripInProgressHint'.tr();
-  /// Stop {current} of {total}
-  static String tripStopProgress(int current, int total) => 'tripStopProgress'.tr(namedArgs: {'current': current.toString(), 'total': total.toString()});
-  /// Finish stop {current} of {total}
-  static String tripFinishStop(int current, int total) => 'tripFinishStop'.tr(namedArgs: {'current': current.toString(), 'total': total.toString()});
   /// Navigate - الملاحة - Navigate - Navigate - Navigate - Navigate - Navigate - Navigate - Navigate
   static String get tripNavigate => 'tripNavigate'.tr();
+  /// Next stop - المحطة التالية - Volgende stop - Nächster Stopp - Następny przystanek - Наступна зупинка - Prochain arrêt - Siguiente parada - Următoarea oprire
+  static String get tripNextStop => 'tripNextStop'.tr();
   /// No active ride - لا توجد رحلة نشطة - No active ride - No active ride - No active ride - No active ride - No active ride - No active ride - No active ride
   static String get tripNoActiveRide => 'tripNoActiveRide'.tr();
+  /// Open in Maps - افتح في الخرائط - Open in Maps - In Karten öffnen - Otwórz w Mapach - Відкрити в Картах - Ouvrir dans Maps - Abrir en Mapas - Deschide în Hărți
+  static String get tripOpenInMaps => 'tripOpenInMaps'.tr();
   /// Pickup - نقطة الانطلاق - Pickup - Pickup - Pickup - Pickup - Pickup - Pickup - Pickup
   static String get tripPickup => 'tripPickup'.tr();
   /// Trip #{code} - رحلة رقم {code} - Rit #{code} - Fahrt #{code} - Przejazd #{code} - Поїздка #{code} - Trajet #{code} - Viaje #{code} - Cursa #{code}
@@ -925,25 +937,6 @@ class AppStrings {
   static String get tripStartEnRouteNavigation => 'tripStartEnRouteNavigation'.tr();
   /// Start Trip - بدء الرحلة - Start Trip - Start Trip - Start Trip - Start Trip - Start Trip - Start Trip - Start Trip
   static String get tripStartRide => 'tripStartRide'.tr();
-  /// Notify customer again
-  static String get notifyCustomerAgain => 'notifyCustomerAgain'.tr();
-  /// Notify again in {seconds}s
-  static String notifyAgainCountdown(int seconds) =>
-      'notifyAgainCountdown'.tr(namedArgs: {'seconds': '$seconds'});
-  /// Notification sent
-  static String get notificationSent => 'notificationSent'.tr();
-  /// Scheduled for {when}
-  static String scheduledForLabel(String when) =>
-      'scheduledForLabel'.tr(namedArgs: {'when': when});
-  /// Scheduled (filter chip)
-  static String get filterScheduled => 'filterScheduled'.tr();
-  /// Open in Maps
-  static String get tripOpenInMaps => 'tripOpenInMaps'.tr();
-  /// Next stop
-  static String get tripNextStop => 'tripNextStop'.tr();
-  /// Completed at {when}
-  static String tripStopCompletedAt(String when) =>
-      'tripStopCompletedAt'.tr(namedArgs: {'when': when});
   /// Status - الحالة - Status - Status - Status - Статус - Statut - Estado - Status
   static String get tripStatus => 'tripStatus'.tr();
   /// Cancelled - ملغاة - Geannuleerd - Storniert - Anulowany - Скасовано - Annulé - Cancelado - Anulată
@@ -962,6 +955,12 @@ class AppStrings {
   static String get tripStatusPendingDriver => 'tripStatusPendingDriver'.tr();
   /// Scheduled - مجدولة - Ingepland - Geplant - Zaplanowany - Заплановано - Planifié - Programado - Programată
   static String get tripStatusScheduled => 'tripStatusScheduled'.tr();
+  /// Stop - محطة - Stop - Stop - Stop - Stop - Stop - Stop - Stop
+  static String get tripStop => 'tripStop'.tr();
+  /// Completed at {when} - اكتملت في {when} - Voltooid om {when} - Abgeschlossen um {when} - Ukończono o {when} - Завершено о {when} - Terminé à {when} - Completado a las {when} - Finalizat la {when}
+  static String get tripStopCompletedAt => 'tripStopCompletedAt'.tr();
+  /// Stop {current} of {total} - المحطة {current} من {total} - Stop {current} of {total} - Stop {current} of {total} - Stop {current} of {total} - Stop {current} of {total} - Stop {current} of {total} - Stop {current} of {total} - Stop {current} of {total}
+  static String get tripStopProgress => 'tripStopProgress'.tr();
   /// You are ready for the next assignment. - أنت جاهز للتكليف التالي. - You are ready for the next assignment. - You are ready for the next assignment. - You are ready for the next assignment. - You are ready for the next assignment. - You are ready for the next assignment. - You are ready for the next assignment. - You are ready for the next assignment.
   static String get tripSummarySubtitle => 'tripSummarySubtitle'.tr();
   /// Trip Completed - اكتملت الرحلة - Trip Completed - Trip Completed - Trip Completed - Trip Completed - Trip Completed - Trip Completed - Trip Completed
