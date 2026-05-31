@@ -1,5 +1,6 @@
 import 'dart:ui' show lerpDouble;
 
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:dashboardtaxi/common/imports/imports.dart';
@@ -8,6 +9,7 @@ import 'package:dashboardtaxi/core/services/maps/map_directions_service.dart';
 import 'package:dashboardtaxi/features/root/constants/root_constants.dart';
 import 'package:dashboardtaxi/features/root/domain/entities/root_map_location_entity.dart';
 import 'package:dashboardtaxi/features/root/presentation/states/root_bloc.dart';
+import 'package:dashboardtaxi/features/root/presentation/utils/map_marker_generator.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_sheet_stage.dart';
@@ -16,7 +18,11 @@ import 'package:dashboardtaxi/utils/constants/app_flow_constants.dart';
 import 'root_map_canvas_widget.dart';
 import 'root_map_controls_section.dart';
 
-typedef _TripOverlay = ({List<List<LatLng>> legs, Set<Marker> markers});
+typedef _TripOverlay = ({
+  List<List<LatLng>> legs,
+  Set<Marker> markers,
+  bool legsAreDashed,
+});
 
 class RootMapSection extends StatefulWidget {
   const RootMapSection({
@@ -39,9 +45,22 @@ class _RootMapSectionState extends State<RootMapSection>
 
   final MapDirectionsService _directions = getIt<MapDirectionsService>();
   final ValueNotifier<_TripOverlay> _tripOverlay = ValueNotifier<_TripOverlay>(
-    (legs: const <List<LatLng>>[], markers: const <Marker>{}),
+    (
+      legs: const <List<LatLng>>[],
+      markers: const <Marker>{},
+      legsAreDashed: false,
+    ),
   );
   String? _lastRouteKey;
+  final Map<String, List<List<LatLng>>> _decodedSegmentsCache =
+      <String, List<List<LatLng>>>{};
+
+  // Canvas-rendered A/B pin icons, ported from the customer app's
+  // MapMarkerGenerator. Loaded asynchronously on init; the rest of the
+  // marker pipeline falls back to default hue pins until they arrive so
+  // the map never blocks on icon generation.
+  BitmapDescriptor? _pickupMarkerIcon;
+  BitmapDescriptor? _destinationMarkerIcon;
 
   @override
   void initState() {
@@ -51,6 +70,7 @@ class _RootMapSectionState extends State<RootMapSection>
       vsync: this,
       duration: MapConfig.flightDuration,
     );
+    _loadCustomMarkers();
     printC(
       '[RootMapSection] initState '
       'lat=${_currentLocation.latitude} lng=${_currentLocation.longitude}',
@@ -72,6 +92,32 @@ class _RootMapSectionState extends State<RootMapSection>
     _tripOverlay.dispose();
     _mapController?.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadCustomMarkers() async {
+    try {
+      final pickup = await MapMarkerGenerator.createCustomMarker(
+        text: 'A',
+        color: Colors.orange,
+        size: 45.r,
+      );
+      final dropoff = await MapMarkerGenerator.createCustomMarker(
+        text: 'B',
+        color: Colors.blue,
+        size: 45.r,
+      );
+      if (!mounted) return;
+      _pickupMarkerIcon = pickup;
+      _destinationMarkerIcon = dropoff;
+      // Re-emit current overlay so the new icons take effect on the map.
+      final trip = context.read<TripBloc>().state.activeTrip;
+      if (trip != null) {
+        _lastRouteKey = null;
+        _syncTripRoute(context.read<TripBloc>().state);
+      }
+    } catch (e) {
+      printY('[RootMapSection] failed to load custom markers: $e');
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -178,16 +224,28 @@ class _RootMapSectionState extends State<RootMapSection>
   // --- Trip route drawing -------------------------------------------------
 
   /// Recomputes the polyline/markers for the active trip whenever it changes.
-  /// Before pickup (assigned / en-route) we route from the current location to
-  /// the pickup only; from pickup onwards we draw the whole trip with its stops.
+  ///
+  /// Two phases:
+  /// - **Before pickup** (incoming / toPickup): route is just driver→pickup,
+  ///   fetched from the directions service so it follows the road, and
+  ///   rendered as a dashed primary-colored polyline to communicate that
+  ///   the trip itself hasn't started yet.
+  /// - **From pickup onwards**: we mirror the customer app — decode the
+  ///   backend-computed `routeSegments` per leg so the multi-stop polyline
+  ///   follows the same legs the customer sees. If the backend didn't store
+  ///   any segments we fall back to the directions service over the
+  ///   sequence-sorted stops.
   Future<void> _syncTripRoute(TripState tripState) async {
     final trip = tripState.activeTrip;
     final pickup = trip?.pickup;
 
     if (trip == null || pickup == null) {
       _lastRouteKey = null;
-      _tripOverlay.value =
-          (legs: const <List<LatLng>>[], markers: const <Marker>{});
+      _tripOverlay.value = (
+        legs: const <List<LatLng>>[],
+        markers: const <Marker>{},
+        legsAreDashed: false,
+      );
       return;
     }
 
@@ -195,76 +253,191 @@ class _RootMapSectionState extends State<RootMapSection>
     final beforePickup = stage == TripSheetStage.incoming ||
         stage == TripSheetStage.toPickup;
 
-    final List<LatLng> routeStops = beforePickup
-        ? <LatLng>[
-            LatLng(_currentLocation.latitude, _currentLocation.longitude),
-            LatLng(pickup.latitude, pickup.longitude),
-          ]
-        : trip.stops
-            .map((s) => LatLng(s.latitude, s.longitude))
-            .toList();
-
-    if (routeStops.length < 2) return;
+    // Always read the stops in their canonical order so multi-stop routes
+    // never zig-zag because of a stale insertion order from the backend.
+    final orderedStops = List<TripStopEntity>.of(trip.stops)
+      ..sort((a, b) => a.sequence.compareTo(b.sequence));
 
     final key = '${trip.id}|${stage.name}|$beforePickup';
     if (key == _lastRouteKey) return;
     _lastRouteKey = key;
 
-    // Markers are local; show them immediately while the route is fetched.
+    // Markers are local; show them immediately while the route is being
+    // computed so the map never appears empty during the fetch.
     final markers = _buildTripMarkers(trip, beforePickup: beforePickup);
-    _tripOverlay.value = (legs: _tripOverlay.value.legs, markers: markers);
+    _tripOverlay.value = (
+      legs: _tripOverlay.value.legs,
+      markers: markers,
+      legsAreDashed: _tripOverlay.value.legsAreDashed,
+    );
 
-    final legs = await _directions.getLegPolylines(routeStops);
-    if (!mounted || _lastRouteKey != key) return;
+    final List<List<LatLng>> legs;
+    final List<LatLng> fallbackPoints;
+    final bool legsAreDashed;
 
-    _tripOverlay.value = (legs: legs, markers: markers);
-    _fitToRoute(legs, routeStops);
-  }
-
-  Set<Marker> _buildTripMarkers(TripEntity trip, {required bool beforePickup}) {
-    final markers = <Marker>{};
-    final pickup = trip.pickup;
-    if (pickup != null) {
-      markers.add(
-        Marker(
-          markerId: const MarkerId('trip-pickup'),
-          position: LatLng(pickup.latitude, pickup.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueOrange,
-          ),
-          infoWindow: InfoWindow(title: pickup.displayLabel),
-        ),
-      );
+    if (beforePickup) {
+      final stops = <LatLng>[
+        LatLng(_currentLocation.latitude, _currentLocation.longitude),
+        LatLng(pickup.latitude, pickup.longitude),
+      ];
+      legs = await _directions.getLegPolylines(stops);
+      fallbackPoints = stops;
+      legsAreDashed = true;
+    } else {
+      final decoded = _decodeRouteSegments(trip);
+      if (decoded.isNotEmpty) {
+        legs = decoded;
+      } else if (orderedStops.length >= 2) {
+        legs = await _directions.getLegPolylines(
+          orderedStops.map((s) => LatLng(s.latitude, s.longitude)).toList(),
+        );
+      } else {
+        legs = const <List<LatLng>>[];
+      }
+      fallbackPoints =
+          orderedStops.map((s) => LatLng(s.latitude, s.longitude)).toList();
+      legsAreDashed = false;
     }
 
-    if (!beforePickup) {
-      for (var i = 1; i < trip.stops.length - 1; i++) {
-        final stop = trip.stops[i];
-        markers.add(
-          Marker(
-            markerId: MarkerId('trip-stop-$i'),
-            position: LatLng(stop.latitude, stop.longitude),
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-              BitmapDescriptor.hueYellow,
-            ),
-            infoWindow: InfoWindow(title: stop.displayLabel),
-          ),
+    if (!mounted || _lastRouteKey != key) return;
+
+    _tripOverlay.value = (
+      legs: legs,
+      markers: markers,
+      legsAreDashed: legsAreDashed,
+    );
+    _fitToRoute(legs, fallbackPoints);
+  }
+
+  /// Decodes the backend-stored `routeSegments` for a trip, falling back to
+  /// the overview polyline. Results are cached per trip id so repeated stage
+  /// changes don't re-decode the same payload.
+  List<List<LatLng>> _decodeRouteSegments(TripEntity trip) {
+    if (trip.routeSegments.isNotEmpty) {
+      final cacheKey = '${trip.id}|segments';
+      final cached = _decodedSegmentsCache[cacheKey];
+      if (cached != null) return cached;
+
+      final decoded = trip.routeSegments
+          .map((segment) => PolylinePoints.decodePolyline(segment.encodedPolyline)
+              .map((p) => LatLng(p.latitude, p.longitude))
+              .toList())
+          .where((leg) => leg.isNotEmpty)
+          .toList();
+
+      if (decoded.isNotEmpty) {
+        _decodedSegmentsCache[cacheKey] = decoded;
+        return decoded;
+      }
+    }
+
+    final overview = trip.encodedOverviewPolyline;
+    if (overview != null && overview.isNotEmpty) {
+      final cacheKey = '${trip.id}|overview';
+      final cached = _decodedSegmentsCache[cacheKey];
+      if (cached != null) return cached;
+
+      final decoded = PolylinePoints.decodePolyline(overview)
+          .map((p) => LatLng(p.latitude, p.longitude))
+          .toList();
+
+      if (decoded.isNotEmpty) {
+        final result = <List<LatLng>>[decoded];
+        _decodedSegmentsCache[cacheKey] = result;
+        return result;
+      }
+    }
+
+    return const <List<LatLng>>[];
+  }
+
+  /// Builds the marker set for an active trip, mirroring the customer app's
+  /// ActiveTripBody:
+  /// - Pickup ("A" circle, orange).
+  /// - Each intermediate stop colored by progress — next uncompleted = red,
+  ///   already completed = green, future = violet.
+  /// - Dropoff ("B" circle, blue).
+  ///
+  /// Falls back to default Google hue pins for the pickup/dropoff icons
+  /// while the canvas-rendered A/B images are still loading.
+  Set<Marker> _buildTripMarkers(TripEntity trip, {required bool beforePickup}) {
+    final markers = <Marker>{};
+    final ordered = List<TripStopEntity>.of(trip.stops)
+      ..sort((a, b) => a.sequence.compareTo(b.sequence));
+    if (ordered.isEmpty) return markers;
+
+    int nextStopIndex = -1;
+    for (var i = 0; i < ordered.length; i++) {
+      if (!ordered[i].isCompleted) {
+        nextStopIndex = i;
+        break;
+      }
+    }
+
+    for (var i = 0; i < ordered.length; i++) {
+      final stop = ordered[i];
+      final isPickup = i == 0;
+      final isDestination = i == ordered.length - 1 && ordered.length > 1;
+      final isNext = i == nextStopIndex;
+
+      // Intermediate stops are only visible once we're past pickup phase, to
+      // match the existing "show full route after pickup" behaviour.
+      if (!isPickup && !isDestination && beforePickup) continue;
+
+      final BitmapDescriptor descriptor;
+      if (isPickup) {
+        descriptor = _pickupMarkerIcon ??
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
+      } else if (isDestination) {
+        descriptor = _destinationMarkerIcon ??
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+      } else if (isNext) {
+        descriptor = BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueRed,
+        );
+      } else if (stop.isCompleted) {
+        descriptor = BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueGreen,
+        );
+      } else {
+        descriptor = BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueViolet,
         );
       }
 
-      final dropoff = trip.dropoff;
-      if (dropoff != null) {
-        markers.add(
-          Marker(
-            markerId: const MarkerId('trip-dropoff'),
-            position: LatLng(dropoff.latitude, dropoff.longitude),
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-              BitmapDescriptor.hueAzure,
-            ),
-            infoWindow: InfoWindow(title: dropoff.displayLabel),
-          ),
-        );
+      // Title: actual address label when known, else the customer-app fallback
+      // ("Pickup" / "Drop-off" / "Stop N").
+      final hasAddress = stop.label != null && stop.label!.trim().isNotEmpty;
+      final String fallback;
+      if (isPickup) {
+        fallback = AppStrings.tripPickup;
+      } else if (isDestination) {
+        fallback = AppStrings.tripDropoff;
+      } else {
+        fallback = AppStrings.tripStopNumber.trParams({'number': '$i'});
       }
+      final title = hasAddress ? stop.label! : fallback;
+
+      // Snippet: progress hint, same wording the customer app shows.
+      final String? snippet;
+      if (stop.isCompleted) {
+        snippet = AppStrings.tripStopCompleted;
+      } else if (isNext && !isPickup) {
+        snippet = AppStrings.tripNextStop;
+      } else if (!isPickup && !isDestination) {
+        snippet = AppStrings.tripStopUpcoming;
+      } else {
+        snippet = null;
+      }
+
+      markers.add(
+        Marker(
+          markerId: MarkerId('trip-stop-${stop.sequence}-$i'),
+          position: LatLng(stop.latitude, stop.longitude),
+          icon: descriptor,
+          infoWindow: InfoWindow(title: title, snippet: snippet),
+        ),
+      );
     }
 
     return markers;
@@ -347,6 +520,7 @@ class _RootMapSectionState extends State<RootMapSection>
                 onMapCreated: _onMapCreated,
                 legPolylines: overlay.legs,
                 tripMarkers: overlay.markers,
+                legsAreDashed: overlay.legsAreDashed,
               );
             },
           ),

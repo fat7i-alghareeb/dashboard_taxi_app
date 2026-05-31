@@ -129,8 +129,10 @@ extension DashboardAdminProfileModelMapper on DashboardAdminProfileModel {
 
 extension DashboardTripModelMapper on DashboardTripModel {
   DashboardTripEntity get toEntity {
-    final pickup = stops.firstOrNull;
-    final dropoff = stops.length > 1 ? stops.last : null;
+    final ordered = List<DashboardTripStopModel>.of(stops)
+      ..sort((a, b) => a.sequence.compareTo(b.sequence));
+    final pickup = ordered.firstOrNull;
+    final dropoff = ordered.length > 1 ? ordered.last : null;
     return DashboardTripEntity(
       id: id,
       referenceCode: referenceCode,
@@ -142,6 +144,7 @@ extension DashboardTripModelMapper on DashboardTripModel {
       pickupLongitude: pickup?.longitude,
       pickupLabel: pickup?.label,
       dropoffLabel: dropoff?.label,
+      stops: ordered.map((s) => s.toEntity).toList(),
       scheduledAt: scheduledAt,
       assignedAt: assignedAt,
       arrivedAt: arrivedAt,
@@ -157,6 +160,7 @@ extension DashboardTripStopModelMapper on DashboardTripStopModel {
       latitude: latitude,
       longitude: longitude,
       label: label,
+      sequence: sequence,
     );
   }
 }

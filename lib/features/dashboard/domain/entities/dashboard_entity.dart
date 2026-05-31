@@ -137,6 +137,7 @@ class DashboardTripEntity {
     required this.pickupLongitude,
     required this.pickupLabel,
     required this.dropoffLabel,
+    this.stops = const <DashboardTripStopEntity>[],
     this.scheduledAt,
     this.assignedAt,
     this.arrivedAt,
@@ -154,6 +155,10 @@ class DashboardTripEntity {
   final double? pickupLongitude;
   final String? pickupLabel;
   final String? dropoffLabel;
+  // Full stop list in canonical (sequence-sorted) order. Carries the
+  // intermediate waypoints that pickupLabel/dropoffLabel do not expose, so the
+  // trips-tab card can render the entire route, not just the endpoints.
+  final List<DashboardTripStopEntity> stops;
   final DateTime? scheduledAt;
   final DateTime? assignedAt;
   final DateTime? arrivedAt;
@@ -178,6 +183,7 @@ class DashboardTripEntity {
       pickupLongitude: pickupLongitude,
       pickupLabel: pickupLabel,
       dropoffLabel: dropoffLabel,
+      stops: stops,
       scheduledAt: scheduledAt,
       assignedAt: assignedAt,
       arrivedAt: arrivedAt,
@@ -233,11 +239,21 @@ class DashboardTripStopEntity {
     required this.latitude,
     required this.longitude,
     required this.label,
+    this.sequence = 0,
   });
 
   final double latitude;
   final double longitude;
   final String? label;
+  final int sequence;
+
+  String get displayLabel {
+    final value = label;
+    if (value == null || value.trim().isEmpty) {
+      return '${latitude.toStringAsFixed(5)}, ${longitude.toStringAsFixed(5)}';
+    }
+    return value;
+  }
 }
 
 class DashboardAuditLogEntity {

@@ -79,6 +79,7 @@ class _ProfileFormState extends State<_ProfileForm> {
   static const _fieldPhone2 = 'phone2';
 
   late final FormGroup _form;
+  late Map<String, String> _initialValues;
 
   @override
   void initState() {
@@ -109,6 +110,23 @@ class _ProfileFormState extends State<_ProfileForm> {
         ),
       });
     }
+    _initialValues = _snapshot();
+  }
+
+  Map<String, String> _snapshot() {
+    return {
+      for (final key in _form.controls.keys)
+        key: ((_form.control(key).value as String?) ?? '').trim(),
+    };
+  }
+
+  bool get _hasChanges {
+    for (final entry in _initialValues.entries) {
+      final current =
+          ((_form.control(entry.key).value as String?) ?? '').trim();
+      if (current != entry.value) return true;
+    }
+    return false;
   }
 
   @override
@@ -149,81 +167,94 @@ class _ProfileFormState extends State<_ProfileForm> {
   @override
   Widget build(BuildContext context) {
     final p = widget.profile;
-    return ReactiveForm(
-      formGroup: _form,
-      child: SingleChildScrollView(
-        padding: REdgeInsets.all(AppSpacing.xl),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _Header(profile: p),
-            AppSpacing.xl.verticalSpace,
-            _SectionTitle(title: AppStrings.profileSectionAccount),
-            AppSpacing.md.verticalSpace,
-            AppReactiveTextField.text(
-              formControlName: _fieldName,
-              title: AppStrings.profileFieldName,
-              isRequired: true,
-            ),
-            AppSpacing.md.verticalSpace,
-            AppReactiveTextField.email(
-              formControlName: _fieldEmail,
-              title: AppStrings.profileFieldEmail,
-              isRequired: widget.isAdmin,
-            ),
-            if (widget.isAdmin) ...[
-              AppSpacing.md.verticalSpace,
-              AppReactiveTextField.phone(
-                formControlName: _fieldPhone1,
-                title: AppStrings.profileFieldPhone,
-              ),
-              AppSpacing.md.verticalSpace,
-              AppReactiveTextField.phone(
-                formControlName: _fieldPhone2,
-                title: AppStrings.profileFieldPhone2,
-              ),
-            ] else ...[
-              AppSpacing.md.verticalSpace,
-              _ReadOnlyTile(
-                label: AppStrings.profileFieldPhone,
-                value: p.phone ?? '—',
-              ),
-            ],
-            if (!widget.isAdmin) ...[
+    return BlocListener<ProfileBloc, ProfileState>(
+      listenWhen: (a, b) => a.updateStatus != b.updateStatus,
+      listener: (context, state) {
+        if (state.updateStatus.isSuccess) {
+          setState(() => _initialValues = _snapshot());
+        }
+      },
+      child: ReactiveForm(
+        formGroup: _form,
+        child: SingleChildScrollView(
+          padding: REdgeInsets.all(AppSpacing.xl),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _Header(profile: p),
               AppSpacing.xl.verticalSpace,
-              _SectionTitle(title: AppStrings.profileSectionDriverDetails),
+              _SectionTitle(title: AppStrings.profileSectionAccount),
               AppSpacing.md.verticalSpace,
-              if (p.licenseNumber != null)
-                _ReadOnlyTile(
-                  label: AppStrings.profileFieldLicense,
-                  value: p.licenseNumber!,
-                ),
-              if (p.vehicleTypeName != null) ...[
-                AppSpacing.sm.verticalSpace,
-                _ReadOnlyTile(
-                  label: AppStrings.profileFieldVehicleType,
-                  value: p.vehicleTypeName!,
-                ),
-              ],
-              if (p.approvalStatus != null) ...[
-                AppSpacing.sm.verticalSpace,
-                _ReadOnlyTile(
-                  label: AppStrings.profileFieldApprovalStatus,
-                  value: p.approvalStatus!,
-                ),
-              ],
-            ],
-            AppSpacing.xl.verticalSpace,
-            AppButton.primary(
-              isLoading: widget.isSaving,
-              layout: const AppButtonLayout(height: 52),
-              onTap: () => _submit(context),
-              child: AppButtonChild.label(
-                AppStrings.profileSaveButton,
-                textStyle: AppTextStyles.s14w600,
+              AppReactiveTextField.text(
+                formControlName: _fieldName,
+                title: AppStrings.profileFieldName,
+                isRequired: true,
               ),
-            ),
-          ],
+              AppSpacing.md.verticalSpace,
+              AppReactiveTextField.email(
+                formControlName: _fieldEmail,
+                title: AppStrings.profileFieldEmail,
+                isRequired: widget.isAdmin,
+              ),
+              if (widget.isAdmin) ...[
+                AppSpacing.md.verticalSpace,
+                AppReactiveTextField.phone(
+                  formControlName: _fieldPhone1,
+                  title: AppStrings.profileFieldPhone,
+                ),
+                AppSpacing.md.verticalSpace,
+                AppReactiveTextField.phone(
+                  formControlName: _fieldPhone2,
+                  title: AppStrings.profileFieldPhone2,
+                ),
+              ] else ...[
+                AppSpacing.md.verticalSpace,
+                _ReadOnlyTile(
+                  label: AppStrings.profileFieldPhone,
+                  value: p.phone ?? '—',
+                ),
+              ],
+              if (!widget.isAdmin) ...[
+                AppSpacing.xl.verticalSpace,
+                _SectionTitle(title: AppStrings.profileSectionDriverDetails),
+                AppSpacing.md.verticalSpace,
+                if (p.licenseNumber != null)
+                  _ReadOnlyTile(
+                    label: AppStrings.profileFieldLicense,
+                    value: p.licenseNumber!,
+                  ),
+                if (p.vehicleTypeName != null) ...[
+                  AppSpacing.sm.verticalSpace,
+                  _ReadOnlyTile(
+                    label: AppStrings.profileFieldVehicleType,
+                    value: p.vehicleTypeName!,
+                  ),
+                ],
+                if (p.approvalStatus != null) ...[
+                  AppSpacing.sm.verticalSpace,
+                  _ReadOnlyTile(
+                    label: AppStrings.profileFieldApprovalStatus,
+                    value: p.approvalStatus!,
+                  ),
+                ],
+              ],
+              AppSpacing.xl.verticalSpace,
+              ReactiveFormConsumer(
+                builder: (context, form, _) {
+                  if (!_hasChanges) return const SizedBox.shrink();
+                  return AppButton.primary(
+                    isLoading: widget.isSaving,
+                    layout: const AppButtonLayout(height: 52),
+                    onTap: () => _submit(context),
+                    child: AppButtonChild.label(
+                      AppStrings.profileSaveButton,
+                      textStyle: AppTextStyles.s14w600,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

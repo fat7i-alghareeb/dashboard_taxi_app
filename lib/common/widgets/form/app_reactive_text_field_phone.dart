@@ -48,6 +48,20 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
     _runSuppressedPhoneCallbacks(phoneController.clear);
   }
 
+  String _sanitizeNationalText(String rawText, {String? dialCode}) {
+    if (!rawText.startsWith('+')) return rawText;
+
+    var text = rawText.substring(1);
+    final rawDial = dialCode ?? '';
+    final dial = rawDial.startsWith('+') ? rawDial.substring(1) : rawDial;
+
+    if (dial.isNotEmpty && text.startsWith(dial)) {
+      text = text.substring(dial.length);
+    }
+
+    return text;
+  }
+
   /// Picks the initial ISO country code.
   ///
   /// Priority:
@@ -68,7 +82,7 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
       }
     } catch (_) {}
 
-    return 'NL';
+    return 'TR';
   }
 
   /// Syncs the internal controller from the reactive control value.
@@ -106,7 +120,7 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
     // (which can crash with NumberParseException).
     if (_looksLikeE164(e164)) {
       PhoneNumber.getRegionInfoFromPhoneNumber(e164, isoCode)
-          .then((pn) {
+          .then((PhoneNumber pn) {
             final resolvedIso = pn.isoCode;
             if (resolvedIso != null &&
                 resolvedIso.trim().isNotEmpty &&
@@ -176,6 +190,17 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
           isoCode: isoCode,
           canOverrideInvalid: !control.dirty && !control.touched,
         );
+
+        if (!_focusNode.hasFocus && !control.dirty && !control.touched) {
+          final rawText = phoneController.text.trim();
+          final sanitized = _sanitizeNationalText(
+            rawText,
+            dialCode: _phoneLastNumber?.dialCode,
+          );
+          if (sanitized != rawText) {
+            _setPhoneControllerText(sanitized);
+          }
+        }
 
         final e164 = (value ?? '').trim();
         final signature = isoCode;
@@ -258,11 +283,16 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
                   final digits = isValid
                       ? (_phoneLastNumber?.parseCleanNumber() ?? '')
                       : '';
-                  final effectiveText =
-                      digits.isNotEmpty ? digits : rawText;
+                  final fallback = digits.isNotEmpty
+                      ? digits
+                      : _sanitizeNationalText(
+                          rawText,
+                          dialCode: _phoneLastNumber?.dialCode,
+                        );
+                  final effectiveText = fallback;
 
-                  if (digits.isNotEmpty && digits != rawText) {
-                    _setPhoneControllerText(digits);
+                  if (fallback.isNotEmpty && fallback != rawText) {
+                    _setPhoneControllerText(fallback);
                   }
 
                   final shouldStartValidation =
@@ -329,43 +359,48 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
                     }
                     if ((c.value ?? '').isNotEmpty) {
                       c.updateValue('');
-                    } else {
-                      c.updateValueAndValidity();
                     }
                     return;
                   }
 
                   if (isValid) {
+                    bool changed = false;
                     if (c.hasError(
                       AppReactiveValidationMessages.invalidPhoneKey,
                     )) {
                       c.removeError(
                         AppReactiveValidationMessages.invalidPhoneKey,
                       );
+                      changed = true;
                     }
 
                     final e164 = _phoneLastNumber?.phoneNumber ?? '';
                     if (_looksLikeE164(e164) && c.value != e164) {
                       c.updateValue(e164);
-                    } else {
-                      c.updateValueAndValidity();
+                      changed = true;
                     }
 
-                    if (_phoneLastEmittedE164 != e164) {
-                      _phoneLastEmittedE164 = e164;
-                      widget.onChanged?.call(e164, true);
-                      scheduleDebounced(e164, true);
+                    if (changed) {
+                      if (_phoneLastEmittedE164 != e164) {
+                        _phoneLastEmittedE164 = e164;
+                        widget.onChanged?.call(e164, true);
+                        scheduleDebounced(e164, true);
+                      }
                     }
                   } else {
-                    final current = Map<String, dynamic>.from(c.errors);
-                    current[AppReactiveValidationMessages.invalidPhoneKey] =
-                        true;
-                    c.setErrors(current);
-                    printR(
-                      '[PhoneField] ${widget.formControlName} set invalidPhone '
-                      'control="${(c.value ?? "").toString()}" '
-                      'errors=${c.errors.keys.toList()}',
-                    );
+                    if (!c.hasError(
+                      AppReactiveValidationMessages.invalidPhoneKey,
+                    )) {
+                      final current = Map<String, dynamic>.from(c.errors);
+                      current[AppReactiveValidationMessages.invalidPhoneKey] =
+                          true;
+                      c.setErrors(current);
+                      printR(
+                        '[PhoneField] ${widget.formControlName} set invalidPhone '
+                        'control="${(c.value ?? "").toString()}" '
+                        'errors=${c.errors.keys.toList()}',
+                      );
+                    }
                   }
                 },
                 inputDecoration: const InputDecoration(
@@ -451,7 +486,6 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
                       c.removeError(
                         AppReactiveValidationMessages.invalidPhoneKey,
                       );
-                      c.updateValueAndValidity();
                     }
                     return;
                   }

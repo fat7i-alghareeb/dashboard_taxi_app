@@ -12,6 +12,7 @@ class RootMapCanvasWidget extends StatelessWidget {
     this.onCameraIdle,
     this.legPolylines = const <List<LatLng>>[],
     this.tripMarkers = const <Marker>{},
+    this.legsAreDashed = false,
   });
 
   final RootMapLocationEntity currentLocation;
@@ -25,34 +26,79 @@ class RootMapCanvasWidget extends StatelessWidget {
   /// Pickup / stop / dropoff markers for the active trip.
   final Set<Marker> tripMarkers;
 
+  /// When true, every leg is rendered as a single dashed primary-colored
+  /// polyline (no shadow, no leg color rotation). Used for the
+  /// driver→pickup phase to visually distinguish "approach" from the
+  /// actual trip route, while still following the road via the decoded
+  /// directions polyline.
+  ///
+  /// When false (default), legs are rendered the customer-app way: a soft
+  /// shadow layer underneath and a solid layer on top, rotating through
+  /// the leg color palette.
+  final bool legsAreDashed;
+
   LatLng get _latLng =>
       LatLng(currentLocation.latitude, currentLocation.longitude);
+
+  // Rotating leg colors — kept in sync with the customer app so the route
+  // looks identical across both surfaces.
+  static const List<Color> _legColors = <Color>[
+    Colors.orange,
+    Colors.blue,
+    Colors.green,
+    Colors.purple,
+    Colors.red,
+    Colors.teal,
+    Colors.indigo,
+  ];
 
   Set<Polyline> _buildPolylines(BuildContext context) {
     if (legPolylines.isEmpty) return const <Polyline>{};
 
-    final legColors = <Color>[context.primary, AppColors.success];
     final polylines = <Polyline>{};
 
+    if (legsAreDashed) {
+      // Driver→pickup approach: road-following polyline, rendered dashed so
+      // it doesn't look like a real trip leg yet.
+      for (var i = 0; i < legPolylines.length; i++) {
+        final points = legPolylines[i];
+        if (points.length < 2) continue;
+        polylines.add(
+          Polyline(
+            polylineId: PolylineId('trip-leg-$i-dashed'),
+            points: points,
+            width: 4.r.toInt(),
+            color: context.primary.withValues(alpha: 0.75),
+            patterns: <PatternItem>[
+              PatternItem.dash(18),
+              PatternItem.gap(10),
+            ],
+          ),
+        );
+      }
+      return polylines;
+    }
+
+    // Standard trip drawing: shadow + solid per leg, rotating colors.
     for (var i = 0; i < legPolylines.length; i++) {
       final points = legPolylines[i];
       if (points.length < 2) continue;
 
-      final color = legColors[i % legColors.length];
+      final color = _legColors[i % _legColors.length];
 
       polylines.add(
         Polyline(
           polylineId: PolylineId('trip-leg-$i-shadow'),
           points: points,
-          width: 8,
-          color: color.withValues(alpha: 0.18),
+          width: 6.r.toInt(),
+          color: color.withValues(alpha: 0.15),
         ),
       );
       polylines.add(
         Polyline(
           polylineId: PolylineId('trip-leg-$i'),
           points: points,
-          width: 5,
+          width: 4.r.toInt(),
           color: color,
         ),
       );

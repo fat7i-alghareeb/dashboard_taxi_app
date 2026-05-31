@@ -775,6 +775,10 @@ class AppStrings {
   static String get save => 'save'.tr();
   /// Scheduled for {when} - مجدولة في {when} - Gepland voor {when} - Geplant für {when} - Zaplanowane na {when} - Заплановано на {when} - Programmé pour {when} - Programado para {when} - Programat pentru {when}
   static String get scheduledForLabel => 'scheduledForLabel'.tr();
+  /// Scheduled — can be taken at {when} - مجدولة — يمكن استلامها في {when} - Gepland — beschikbaar om {when} - Geplant — annehmbar um {when} - Zaplanowane — dostępne o {when} - Заплановано — можна прийняти о {when} - Programmé — disponible à {when} - Programado — disponible a las {when} - Programat — disponibil la {when}
+  static String get scheduledNotReadyShort => 'scheduledNotReadyShort'.tr();
+  /// This trip is scheduled and can only be accepted at {when}. - هذه الرحلة مجدولة ولا يمكن قبولها قبل {when}. - Deze rit is gepland en kan pas op {when} worden geaccepteerd. - Diese Fahrt ist geplant und kann erst um {when} angenommen werden. - Ten przejazd jest zaplanowany i można go przyjąć dopiero o {when}. - Цю поїздку заплановано — її можна прийняти лише о {when}. - Ce trajet est programmé et ne peut être accepté qu'à {when}. - Este viaje está programado y solo puede aceptarse a las {when}. - Această cursă este programată și poate fi acceptată doar la {when}.
+  static String get scheduledNotReadyWarning => 'scheduledNotReadyWarning'.tr();
   /// Search - بحث - Zoeken - Suche - Szukaj - Пошук - Rechercher - Buscar - Căutare
   static String get search => 'search'.tr();
   /// Select date - اختر التاريخ - Datum selecteren - Datum wählen - Wybierz datę - Вибрати дату - Choisir la date - Seleccionar fecha - Selectează data
@@ -957,10 +961,16 @@ class AppStrings {
   static String get tripStatusScheduled => 'tripStatusScheduled'.tr();
   /// Stop - محطة - Stop - Stop - Stop - Stop - Stop - Stop - Stop
   static String get tripStop => 'tripStop'.tr();
+  /// Completed - مكتملة - Voltooid - Abgeschlossen - Zakończony - Завершено - Terminée - Completada - Finalizată
+  static String get tripStopCompleted => 'tripStopCompleted'.tr();
   /// Completed at {when} - اكتملت في {when} - Voltooid om {when} - Abgeschlossen um {when} - Ukończono o {when} - Завершено о {when} - Terminé à {when} - Completado a las {when} - Finalizat la {when}
   static String get tripStopCompletedAt => 'tripStopCompletedAt'.tr();
+  /// Stop {number} - محطة {number} - Stop {number} - Stopp {number} - Przystanek {number} - Зупинка {number} - Arrêt {number} - Parada {number} - Oprirea {number}
+  static String get tripStopNumber => 'tripStopNumber'.tr();
   /// Stop {current} of {total} - المحطة {current} من {total} - Stop {current} of {total} - Stop {current} of {total} - Stop {current} of {total} - Stop {current} of {total} - Stop {current} of {total} - Stop {current} of {total} - Stop {current} of {total}
   static String get tripStopProgress => 'tripStopProgress'.tr();
+  /// Upcoming stop - محطة قادمة - Aankomende stop - Bevorstehender Stopp - Nadchodzący przystanek - Майбутня зупинка - Arrêt à venir - Parada próxima - Oprire viitoare
+  static String get tripStopUpcoming => 'tripStopUpcoming'.tr();
   /// You are ready for the next assignment. - أنت جاهز للتكليف التالي. - You are ready for the next assignment. - You are ready for the next assignment. - You are ready for the next assignment. - You are ready for the next assignment. - You are ready for the next assignment. - You are ready for the next assignment. - You are ready for the next assignment.
   static String get tripSummarySubtitle => 'tripSummarySubtitle'.tr();
   /// Trip Completed - اكتملت الرحلة - Trip Completed - Trip Completed - Trip Completed - Trip Completed - Trip Completed - Trip Completed - Trip Completed

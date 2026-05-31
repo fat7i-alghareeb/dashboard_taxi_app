@@ -64,8 +64,8 @@ workflows:
       email:
         recipients:
           - fat7ighareeb@gmail.com
-          # - fat7ighareeb@gmail.com
-          # - fat7ighareeb@gmail.com
+          - fat7ighareeb@gmail.com
+          - fat7ighareeb@gmail.com
         notify:
           success: true
           failure: false

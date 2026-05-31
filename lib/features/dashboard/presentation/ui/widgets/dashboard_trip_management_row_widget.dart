@@ -1,6 +1,7 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_status_chip_widget.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_card_stops_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_card_timeline_widget.dart';
 import 'package:dashboardtaxi/features/root/domain/services/root_tab_controller.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
@@ -17,9 +18,6 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pickup = trip.pickupLabel ?? AppStrings.tripUnknownAddress;
-    final dropoff = trip.dropoffLabel ?? AppStrings.tripUnknownAddress;
-
     return Material(
       color: isSelected
           ? context.primary.withValues(alpha: 0.06)
@@ -60,24 +58,8 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              AppSpacing.xs.verticalSpace,
-              Text(
-                pickup,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.s12w400.copyWith(
-                  color: context.onSurface.withValues(alpha: 0.70),
-                ),
-              ),
-              AppSpacing.xs.verticalSpace,
-              Text(
-                dropoff,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.s12w400.copyWith(
-                  color: context.onSurface.withValues(alpha: 0.55),
-                ),
-              ),
+              AppSpacing.sm.verticalSpace,
+              DashboardTripCardStopsWidget(trip: trip),
               AppSpacing.sm.verticalSpace,
               Row(
                 children: [

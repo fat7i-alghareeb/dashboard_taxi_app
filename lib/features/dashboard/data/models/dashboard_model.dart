@@ -106,17 +106,20 @@ class DashboardTripStopModel {
     required this.latitude,
     required this.longitude,
     required this.label,
+    this.sequence = 0,
   });
 
   final double latitude;
   final double longitude;
   final String? label;
+  final int sequence;
 
   factory DashboardTripStopModel.fromJson(Map<String, dynamic> json) {
     return DashboardTripStopModel(
       latitude: _readNullableDouble(json, 'latitude') ?? 0,
       longitude: _readNullableDouble(json, 'longitude') ?? 0,
       label: _readNullableString(json, 'label'),
+      sequence: ((json['sequence'] ?? json['Sequence']) as num?)?.toInt() ?? 0,
     );
   }
 }

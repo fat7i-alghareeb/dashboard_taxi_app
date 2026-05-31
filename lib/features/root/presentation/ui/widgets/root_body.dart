@@ -52,6 +52,7 @@ class _RootBodyState extends State<RootBody> {
 
   void _onTabSelected(int index) {
     printM('[RootBody] _onTabSelected index=$index');
+    FocusManager.instance.primaryFocus?.unfocus();
     if (index == _currentIndex) return;
     setState(() => _currentIndex = index);
     _pageController.jumpToPage(index);

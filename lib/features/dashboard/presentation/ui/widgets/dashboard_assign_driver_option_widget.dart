@@ -1,4 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart';
 import 'package:dashboardtaxi/features/root/presentation/ui/screens/root_screen.dart';
@@ -26,6 +27,15 @@ class DashboardAssignDriverOptionWidget extends StatelessWidget {
         : AppStrings.dashboardDistanceKm.trParams({
             'value': distanceKm!.toStringAsFixed(1),
           });
+
+    // Scheduled trips are locked until their start time arrives. We compute the
+    // gate against the local "now" — backend re-checks in UTC, so a few seconds
+    // of clock skew won't cause a false unlock on the client.
+    final scheduledAtLocal = trip.scheduledAt?.toLocal();
+    final isScheduledNotReady = trip.isScheduled &&
+        scheduledAtLocal != null &&
+        scheduledAtLocal.isAfter(DateTime.now());
+    final scheduledLabel = scheduledAtLocal?.toSmartDateTime() ?? '';
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -90,6 +100,15 @@ class DashboardAssignDriverOptionWidget extends StatelessWidget {
             AppButton.success(
               layout: const AppButtonLayout(height: 36, borderRadius: AppRadii.sm),
               isLoading: isLoading,
+              isActive: !isScheduledNotReady,
+              onTapWhenInactive: !isScheduledNotReady
+                  ? null
+                  : () => showErrorOverlay(
+                        context,
+                        AppStrings.scheduledNotReadyWarning.trParams({
+                          'when': scheduledLabel,
+                        }),
+                      ),
               onTap: () {
                 context.read<DashboardBloc>().add(
                   DashboardEvent.tripAssignmentRequested(

@@ -1,4 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_admin_cancel_button.dart';
@@ -23,6 +24,15 @@ class TripPendingAssignmentSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLoading = state.adminSelfAssignState.isLoading;
+
+    // Mirrors the dashboard dispatch gate: a scheduled trip cannot be taken
+    // until its scheduled time arrives. Backend also rejects with
+    // Trip.Scheduled.NotReady, this is the local guardrail.
+    final scheduledAtLocal = trip.scheduledAtUtc?.toLocal();
+    final isScheduledNotReady = trip.status == TripStatus.scheduled &&
+        scheduledAtLocal != null &&
+        scheduledAtLocal.isAfter(DateTime.now());
+    final scheduledLabel = scheduledAtLocal?.toSmartDateTime() ?? '';
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -86,7 +96,16 @@ class TripPendingAssignmentSheet extends StatelessWidget {
         ),
         AppButton.primary(
           isLoading: isLoading,
+          isActive: !isScheduledNotReady,
           layout: const AppButtonLayout(height: 52),
+          onTapWhenInactive: !isScheduledNotReady
+              ? null
+              : () => showErrorOverlay(
+                    context,
+                    AppStrings.scheduledNotReadyWarning.trParams({
+                      'when': scheduledLabel,
+                    }),
+                  ),
           onTap: isLoading
               ? null
               : () => context.read<TripBloc>().add(
