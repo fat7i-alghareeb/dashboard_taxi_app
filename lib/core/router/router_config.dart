@@ -217,19 +217,22 @@ class AppRouteGuard {
     return null;
   }
 
-  Future<String?> _handlePermissionGate({
-    required String currentPath,
-  }) async {
+  Future<String?> _handlePermissionGate({required String currentPath}) async {
     if (!AppFlowConfig.permissionGateEnabled) {
       return null;
     }
 
-    final hasForeground = await permissionsCoordinator.isForegroundLocationGranted();
+    final hasForeground = await permissionsCoordinator
+        .isForegroundLocationGranted();
     if (!hasForeground) {
       if (currentPath != permissionGatePath &&
           currentPath != splashPath &&
-          currentPath != loginPath) {
-        printC('${RouterLogTags.redirect} → permission gate (location required)');
+          currentPath != loginPath &&
+          currentPath != forceResetPath &&
+          currentPath != KycScreen.pagePath) {
+        printC(
+          '${RouterLogTags.redirect} → permission gate (location required)',
+        );
         return permissionGatePath;
       }
       return null;
