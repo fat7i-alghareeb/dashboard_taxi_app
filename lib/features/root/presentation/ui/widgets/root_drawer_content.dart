@@ -98,7 +98,7 @@ class RootDrawerContent extends StatelessWidget {
       ),
       DrawerMenuItem(
         icon: FontAwesomeIcons.handHoldingDollar,
-        label: 'Compensation Claims',
+        label: AppStrings.dashboardCompensationClaims,
         onTap: () {
           Navigator.maybePop(context);
           context.pushNamed(CompensationClaimsScreen.pageName);
