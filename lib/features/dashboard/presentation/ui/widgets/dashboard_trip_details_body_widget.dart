@@ -73,6 +73,14 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
           },
         ),
         AppSpacing.xl.verticalSpace,
+        if (details.passengerNote?.trim().isNotEmpty == true) ...[
+          DashboardOverviewLabelWidget(
+            label: AppStrings.dashboardPassengerNote,
+          ),
+          AppSpacing.md.verticalSpace,
+          _PassengerNoteSection(note: details.passengerNote!.trim()),
+          AppSpacing.xl.verticalSpace,
+        ],
         DashboardOverviewLabelWidget(label: AppStrings.dashboardRouteSummary),
         AppSpacing.md.verticalSpace,
         DashboardTripStopsWidget(details: details),
@@ -81,6 +89,34 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
         AppSpacing.md.verticalSpace,
         DashboardTripTimelineWidget(details: details),
       ],
+    );
+  }
+}
+
+class _PassengerNoteSection extends StatelessWidget {
+  const _PassengerNoteSection({required this.note});
+
+  final String note;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: REdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: context.primary.withValues(alpha: 0.07),
+        borderRadius: BorderRadius.circular(AppRadii.md.r),
+        border: Border.all(
+          color: context.primary.withValues(alpha: 0.14),
+        ),
+      ),
+      child: Text(
+        note,
+        style: AppTextStyles.s14w500.copyWith(
+          color: context.onSurface,
+          height: 1.35,
+        ),
+      ),
     );
   }
 }

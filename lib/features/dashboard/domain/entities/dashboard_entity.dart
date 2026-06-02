@@ -143,6 +143,7 @@ class DashboardTripEntity {
     this.arrivedAt,
     this.startedAt,
     this.completedAt,
+    this.passengerNote,
   });
 
   final String id;
@@ -164,6 +165,7 @@ class DashboardTripEntity {
   final DateTime? arrivedAt;
   final DateTime? startedAt;
   final DateTime? completedAt;
+  final String? passengerNote;
 
   bool get hasPickupLocation =>
       pickupLatitude != null && pickupLongitude != null;
@@ -189,6 +191,7 @@ class DashboardTripEntity {
       arrivedAt: arrivedAt,
       startedAt: startedAt,
       completedAt: completedAt,
+      passengerNote: passengerNote,
     );
   }
 }
@@ -211,6 +214,7 @@ class DashboardTripDetailsEntity {
     required this.startedAt,
     required this.completedAt,
     required this.stops,
+    this.passengerNote,
   });
 
   final String id;
@@ -229,6 +233,7 @@ class DashboardTripDetailsEntity {
   final DateTime? startedAt;
   final DateTime? completedAt;
   final List<DashboardTripStopEntity> stops;
+  final String? passengerNote;
 
   DashboardTripStopEntity? get pickup => stops.firstOrNull;
   DashboardTripStopEntity? get dropoff => stops.length > 1 ? stops.last : null;

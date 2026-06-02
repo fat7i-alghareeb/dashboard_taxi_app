@@ -63,6 +63,7 @@ class DashboardTripModel {
     this.arrivedAt,
     this.startedAt,
     this.completedAt,
+    this.passengerNote,
   });
 
   final String id;
@@ -78,6 +79,7 @@ class DashboardTripModel {
   final DateTime? arrivedAt;
   final DateTime? startedAt;
   final DateTime? completedAt;
+  final String? passengerNote;
 
   factory DashboardTripModel.fromJson(Map<String, dynamic> json) {
     return DashboardTripModel(
@@ -97,6 +99,7 @@ class DashboardTripModel {
       arrivedAt: DateTime.tryParse(_readString(json, 'arrivedAtUtc')),
       startedAt: DateTime.tryParse(_readString(json, 'startedAtUtc')),
       completedAt: DateTime.tryParse(_readString(json, 'completedAtUtc')),
+      passengerNote: _readNullableString(json, 'passengerNote'),
     );
   }
 }
@@ -143,6 +146,7 @@ class DashboardTripDetailsModel {
     required this.startedAt,
     required this.completedAt,
     required this.stops,
+    this.passengerNote,
   });
 
   final String id;
@@ -162,6 +166,7 @@ class DashboardTripDetailsModel {
   final DateTime? startedAt;
   final DateTime? completedAt;
   final List<DashboardTripStopModel> stops;
+  final String? passengerNote;
 
   factory DashboardTripDetailsModel.fromJson(Map<String, dynamic> json) {
     return DashboardTripDetailsModel(
@@ -185,6 +190,7 @@ class DashboardTripDetailsModel {
         json,
         'stops',
       ).map((e) => DashboardTripStopModel.fromJson(e)).toList(),
+      passengerNote: _readNullableString(json, 'passengerNote'),
     );
   }
 }

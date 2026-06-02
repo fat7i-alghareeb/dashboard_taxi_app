@@ -202,7 +202,6 @@ extension _AppReactiveTextFieldPhone on _AppReactiveTextFieldState {
           }
         }
 
-        final e164 = (value ?? '').trim();
         final signature = isoCode;
 
         if (_phoneInitialValueSignature != signature) {

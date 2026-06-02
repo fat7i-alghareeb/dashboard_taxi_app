@@ -8,8 +8,8 @@ class ApiConfig {
 
   static String get baseUrl {
     // const url = 'http://82.29.177.228:5001';
-    const url = 'https://api.fat7i.dev';
-    // const url = 'https://pecan-synergy-shush.ngrok-free.dev';
+    // const url = 'https://api.fat7i.dev';
+    const url = 'https://pecan-synergy-shush.ngrok-free.dev';
     _logBaseUrlOnce(url);
     return url;
   }

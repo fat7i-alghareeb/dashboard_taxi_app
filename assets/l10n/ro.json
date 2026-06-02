@@ -522,5 +522,6 @@
   "confirmPasswordHint": "Confirmați parola nouă",
   "changePasswordSubmit": "Actualizare parolă",
   "changePasswordSuccess": "Parolă actualizată cu succes",
-  "changePasswordFailed": "Actualizarea parolei a eșuat"
+  "changePasswordFailed": "Actualizarea parolei a eșuat",
+  "dashboardPassengerNote": "Nota pasagerului"
 }

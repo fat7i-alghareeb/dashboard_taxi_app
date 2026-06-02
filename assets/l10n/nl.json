@@ -522,5 +522,6 @@
   "confirmPasswordHint": "Bevestig uw nieuwe wachtwoord",
   "changePasswordSubmit": "Wachtwoord bijwerken",
   "changePasswordSuccess": "Wachtwoord succesvol bijgewerkt",
-  "changePasswordFailed": "Wachtwoord bijwerken mislukt"
+  "changePasswordFailed": "Wachtwoord bijwerken mislukt",
+  "dashboardPassengerNote": "Passagiersnotitie"
 }

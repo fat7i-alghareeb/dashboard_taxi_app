@@ -522,5 +522,6 @@
   "confirmPasswordHint": "Bestätigen Sie Ihr neues Passwort",
   "changePasswordSubmit": "Passwort aktualisieren",
   "changePasswordSuccess": "Passwort erfolgreich aktualisiert",
-  "changePasswordFailed": "Passwort konnte nicht aktualisiert werden"
+  "changePasswordFailed": "Passwort konnte nicht aktualisiert werden",
+  "dashboardPassengerNote": "Fahrgastnotiz"
 }

@@ -331,6 +331,8 @@ class AppStrings {
   static String get dashboardOverviewLabel => 'dashboardOverviewLabel'.tr();
   /// Passenger - الراكب - Passenger - Passenger - Passenger - Passenger - Passenger - Passenger - Passenger
   static String get dashboardPassenger => 'dashboardPassenger'.tr();
+  /// Passenger note - ملاحظة الراكب - Passagiersnotitie - Fahrgastnotiz - Notatka pasażera - Примітка пасажира - Note du passager - Nota del pasajero - Nota pasagerului
+  static String get dashboardPassengerNote => 'dashboardPassengerNote'.tr();
   /// Pending dispatch - رحلات بانتظار التعيين - Pending dispatch - Pending dispatch - Pending dispatch - Pending dispatch - Pending dispatch - Pending dispatch - Pending dispatch
   static String get dashboardPendingDispatch => 'dashboardPendingDispatch'.tr();
   /// Driver reviews - مراجعات السائقين - Driver reviews - Driver reviews - Driver reviews - Driver reviews - Driver reviews - Driver reviews - Driver reviews

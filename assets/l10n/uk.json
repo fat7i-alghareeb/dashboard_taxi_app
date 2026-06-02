@@ -522,5 +522,6 @@
   "confirmPasswordHint": "Підтвердіть новий пароль",
   "changePasswordSubmit": "Оновити пароль",
   "changePasswordSuccess": "Пароль успішно оновлено",
-  "changePasswordFailed": "Не вдалося оновити пароль"
+  "changePasswordFailed": "Не вдалося оновити пароль",
+  "dashboardPassengerNote": "Примітка пасажира"
 }

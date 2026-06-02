@@ -522,5 +522,6 @@
   "confirmPasswordHint": "أكد كلمة المرور الجديدة",
   "changePasswordSubmit": "تحديث كلمة المرور",
   "changePasswordSuccess": "تم تحديث كلمة المرور بنجاح",
-  "changePasswordFailed": "فشل تحديث كلمة المرور"
+  "changePasswordFailed": "فشل تحديث كلمة المرور",
+  "dashboardPassengerNote": "ملاحظة الراكب"
 }

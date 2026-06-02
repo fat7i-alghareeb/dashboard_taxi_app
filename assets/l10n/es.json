@@ -522,5 +522,6 @@
   "confirmPasswordHint": "Confirme su nueva contraseña",
   "changePasswordSubmit": "Actualizar contraseña",
   "changePasswordSuccess": "Contraseña actualizada correctamente",
-  "changePasswordFailed": "Error al actualizar la contraseña"
+  "changePasswordFailed": "Error al actualizar la contraseña",
+  "dashboardPassengerNote": "Nota del pasajero"
 }

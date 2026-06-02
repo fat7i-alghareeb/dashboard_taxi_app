@@ -60,6 +60,10 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
               ),
               AppSpacing.sm.verticalSpace,
               DashboardTripCardStopsWidget(trip: trip),
+              if (trip.passengerNote?.trim().isNotEmpty == true) ...[
+                AppSpacing.sm.verticalSpace,
+                _PassengerNotePreview(note: trip.passengerNote!.trim()),
+              ],
               AppSpacing.sm.verticalSpace,
               Row(
                 children: [
@@ -81,6 +85,47 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _PassengerNotePreview extends StatelessWidget {
+  const _PassengerNotePreview({required this.note});
+
+  final String note;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: REdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: context.primary.withValues(alpha: 0.07),
+        borderRadius: BorderRadius.circular(AppRadii.sm.r),
+      ),
+      child: Row(
+        children: [
+          FaIcon(
+            FontAwesomeIcons.message,
+            size: 12.r,
+            color: context.primary,
+          ),
+          AppSpacing.xs.horizontalSpace,
+          Expanded(
+            child: Text(
+              '${AppStrings.dashboardPassengerNote}: $note',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.s12w500.copyWith(
+                color: context.onSurface.withValues(alpha: 0.72),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

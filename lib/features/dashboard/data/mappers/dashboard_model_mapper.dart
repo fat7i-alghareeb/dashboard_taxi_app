@@ -150,6 +150,7 @@ extension DashboardTripModelMapper on DashboardTripModel {
       arrivedAt: arrivedAt,
       startedAt: startedAt,
       completedAt: completedAt,
+      passengerNote: passengerNote,
     );
   }
 }
@@ -184,6 +185,7 @@ extension DashboardTripDetailsModelMapper on DashboardTripDetailsModel {
       startedAt: startedAt,
       completedAt: completedAt,
       stops: stops.map((stop) => stop.toEntity).toList(),
+      passengerNote: passengerNote,
     );
   }
 }
