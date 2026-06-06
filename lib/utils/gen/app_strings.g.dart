@@ -463,6 +463,8 @@ class AppStrings {
   static String get drawerSectionAdmin => 'drawerSectionAdmin'.tr();
   /// Settings - الإعدادات - Instellingen - Einstellungen - Ustawienia - Налаштування - Paramètres - Configuración - Setări
   static String get drawerSectionSettings => 'drawerSectionSettings'.tr();
+  /// Send Notification - إرسال إشعار - Melding verzenden - Benachrichtigung senden - Wyślij powiadomienie - Надіслати сповіщення - Envoyer une notification - Enviar notificación - Trimite notificare
+  static String get drawerSendNotification => 'drawerSendNotification'.tr();
   /// Total Trips - إجمالي الرحلات - Totaal aantal ritten - Gesamte Fahrten - Suma przejazdów - Всього поїздок - Total des trajets - Total de viajes - Total curse
   static String get drawerTotalTrips => 'drawerTotalTrips'.tr();
   /// Trips - الرحلات - Ritten - Fahrten - Przejazdy - Поїздки - Trajets - Viajes - Curse
@@ -801,6 +803,26 @@ class AppStrings {
   static String get selectTime => 'selectTime'.tr();
   /// Select year - اختر السنة - Jaar selecteren - Jahr wählen - Wybierz rok - Вибрати рік - Choisir l'année - Seleccionar año - Selectează anul
   static String get selectYear => 'selectYear'.tr();
+  /// This notification will be sent to all customers. - سيتم إرسال هذا الإشعار إلى جميع العملاء. - Deze melding wordt naar alle klanten verzonden. - Diese Benachrichtigung wird an alle Kunden gesendet. - To powiadomienie zostanie wysłane do wszystkich klientów. - Це сповіщення буде надіслано всім клієнтам. - Cette notification sera envoyée à tous les clients. - Esta notificación se enviará a todos los clientes. - Această notificare va fi trimisă tuturor clienților.
+  static String get sendNotificationAudienceNote => 'sendNotificationAudienceNote'.tr();
+  /// Could not send notification - تعذر إرسال الإشعار - Kon de melding niet verzenden - Benachrichtigung konnte nicht gesendet werden - Nie udało się wysłać powiadomienia - Не вдалося надіслати сповіщення - Impossible d'envoyer la notification - No se pudo enviar la notificación - Notificarea nu a putut fi trimisă
+  static String get sendNotificationFailed => 'sendNotificationFailed'.tr();
+  /// Message - الرسالة - Bericht - Nachricht - Wiadomość - Повідомлення - Message - Mensaje - Mesaj
+  static String get sendNotificationFieldBody => 'sendNotificationFieldBody'.tr();
+  /// Notification message - نص الإشعار - Tekst van de melding - Text der Benachrichtigung - Treść powiadomienia - Текст сповіщення - Texte de la notification - Texto de la notificación - Textul notificării
+  static String get sendNotificationFieldBodyHint => 'sendNotificationFieldBodyHint'.tr();
+  /// Title - العنوان - Titel - Titel - Tytuł - Заголовок - Titre - Título - Titlu
+  static String get sendNotificationFieldTitle => 'sendNotificationFieldTitle'.tr();
+  /// Notification title - عنوان الإشعار - Titel van de melding - Titel der Benachrichtigung - Tytuł powiadomienia - Заголовок сповіщення - Titre de la notification - Título de la notificación - Titlul notificării
+  static String get sendNotificationFieldTitleHint => 'sendNotificationFieldTitleHint'.tr();
+  /// Send Notification - إرسال إشعار - Melding verzenden - Benachrichtigung senden - Wyślij powiadomienie - Надіслати сповіщення - Envoyer une notification - Enviar notificación - Trimite notificare
+  static String get sendNotificationSubmit => 'sendNotificationSubmit'.tr();
+  /// Broadcast a push notification to all customers - إرسال إشعار فوري إلى جميع العملاء - Stuur een pushmelding naar alle klanten - Eine Push-Benachrichtigung an alle Kunden senden - Wyślij powiadomienie push do wszystkich klientów - Надішліть push-сповіщення всім клієнтам - Envoyer une notification push à tous les clients - Enviar una notificación push a todos los clientes - Trimite o notificare push tuturor clienților
+  static String get sendNotificationSubtitle => 'sendNotificationSubtitle'.tr();
+  /// Notification sent successfully - تم إرسال الإشعار بنجاح - Melding succesvol verzonden - Benachrichtigung erfolgreich gesendet - Powiadomienie wysłane pomyślnie - Сповіщення успішно надіслано - Notification envoyée avec succès - Notificación enviada correctamente - Notificare trimisă cu succes
+  static String get sendNotificationSuccess => 'sendNotificationSuccess'.tr();
+  /// Send Notification - إرسال إشعار - Melding verzenden - Benachrichtigung senden - Wyślij powiadomienie - Надіслати сповіщення - Envoyer une notification - Enviar notificación - Trimite notificare
+  static String get sendNotificationTitle => 'sendNotificationTitle'.tr();
   /// Send Code - إرسال الرمز - Code verzenden - Code senden - Wyślij kod - Надіслати код - Envoyer le code - Enviar código - Trimite codul
   static String get sendOtp => 'sendOtp'.tr();
   /// Sep - سبتم - Sep - Sep - Wrz - Вер - Sept - Sep - Sep

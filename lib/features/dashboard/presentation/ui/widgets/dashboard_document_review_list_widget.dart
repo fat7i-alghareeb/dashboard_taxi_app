@@ -47,7 +47,7 @@ class DashboardDocumentReviewListWidget extends StatelessWidget {
           },
           child: AppButtonChild.labelIcon(
             label: AppStrings.dashboardApproveDriver,
-            icon: IconSource.icon(FontAwesomeIcons.circleCheck),
+            icon: IconSource.widget(const FaIcon(FontAwesomeIcons.circleCheck)),
           ),
         ),
       ],

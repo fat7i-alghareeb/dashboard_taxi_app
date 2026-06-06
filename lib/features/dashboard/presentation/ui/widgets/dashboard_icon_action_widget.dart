@@ -8,7 +8,7 @@ class DashboardIconActionWidget extends StatelessWidget {
     required this.tooltip,
   });
 
-  final IconData icon;
+  final FaIconData icon;
   final VoidCallback onTap;
   final String tooltip;
 

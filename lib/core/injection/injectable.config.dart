@@ -121,6 +121,14 @@ import 'package:dashboardtaxi/features/kyc/domain/repositories/kyc_repository.da
     as _i986;
 import 'package:dashboardtaxi/features/kyc/presentation/states/kyc_bloc.dart'
     as _i141;
+import 'package:dashboardtaxi/features/notifications/data/datasources/notification_remote_datasource.dart'
+    as _i6;
+import 'package:dashboardtaxi/features/notifications/data/repositories/notification_repository_impl.dart'
+    as _i39;
+import 'package:dashboardtaxi/features/notifications/domain/facade/notification_facade.dart'
+    as _i973;
+import 'package:dashboardtaxi/features/notifications/domain/repositories/notification_repository.dart'
+    as _i248;
 import 'package:dashboardtaxi/features/profile/data/datasources/profile_remote_datasource.dart'
     as _i508;
 import 'package:dashboardtaxi/features/profile/data/repositories/profile_repository_impl.dart'
@@ -304,6 +312,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i221.KycRemoteDataSource>(
       () => _i221.KycRemoteDataSource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i6.NotificationRemoteDataSource>(
+      () => _i6.NotificationRemoteDataSource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i508.ProfileRemoteDataSource>(
       () => _i508.ProfileRemoteDataSource(gh<_i361.Dio>()),
     );
@@ -328,6 +339,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i825.RootRepository>(
       () => _i349.RootRepositoryImpl(gh<_i1064.RootRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i248.NotificationRepository>(
+      () => _i39.NotificationRepositoryImpl(
+        gh<_i6.NotificationRemoteDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i973.NotificationFacade>(
+      () => _i973.NotificationFacade(gh<_i248.NotificationRepository>()),
     );
     gh.lazySingleton<_i706.AuthRepository>(
       () => _i174.AuthRepositoryImpl(

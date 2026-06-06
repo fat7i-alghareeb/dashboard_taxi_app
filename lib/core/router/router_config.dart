@@ -16,6 +16,7 @@ import '../../features/control_center/presentation/ui/screens/control_center_scr
 import '../../features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
 import '../../features/dashboard/presentation/ui/screens/dashboard_screen.dart';
 import '../../features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
+import '../../features/notifications/presentation/ui/screens/send_notification_screen.dart';
 import '../../features/permissions/presentation/ui/screens/permission_gate_screen.dart';
 import '../../features/root/presentation/ui/screens/root_screen.dart';
 import '../../features/kyc/presentation/ui/screens/kyc_screen.dart';

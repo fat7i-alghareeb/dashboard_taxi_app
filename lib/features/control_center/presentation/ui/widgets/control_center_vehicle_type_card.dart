@@ -215,7 +215,7 @@ class ControlCenterVehicleTypeCard extends StatelessWidget {
 class _Chip extends StatelessWidget {
   const _Chip({required this.icon, required this.label});
 
-  final IconData icon;
+  final FaIconData icon;
   final String label;
 
   @override
@@ -257,7 +257,7 @@ class _IconAction extends StatelessWidget {
     required this.onTap,
   });
 
-  final IconData icon;
+  final FaIconData icon;
   final Color color;
   final VoidCallback onTap;
 

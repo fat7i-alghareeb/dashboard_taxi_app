@@ -158,7 +158,7 @@ class _LifecycleConfig {
 
   final String label;
   final String hint;
-  final IconData icon;
+  final FaIconData icon;
   final bool isLoading;
   final TripEvent event;
 }

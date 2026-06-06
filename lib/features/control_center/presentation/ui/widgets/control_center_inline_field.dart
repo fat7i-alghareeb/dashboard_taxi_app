@@ -20,7 +20,7 @@ class ControlCenterInlineField extends StatelessWidget {
   final TextInputType keyboardType;
   final bool isSaving;
   final VoidCallback onSave;
-  final IconData? icon;
+  final FaIconData? icon;
   final String? suffix;
 
   @override

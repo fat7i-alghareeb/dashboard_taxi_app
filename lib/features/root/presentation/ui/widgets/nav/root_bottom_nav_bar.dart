@@ -11,7 +11,7 @@ class RootBottomNavItemConfig {
   });
 
   final String label;
-  final IconData icon;
+  final FaIconData icon;
   final int badgeCount;
 }
 

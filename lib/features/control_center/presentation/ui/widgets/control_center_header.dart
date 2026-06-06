@@ -97,7 +97,7 @@ class ControlCenterHeader extends StatelessWidget {
 class _CircleAction extends StatelessWidget {
   const _CircleAction({required this.icon, required this.onTap});
 
-  final IconData icon;
+  final FaIconData icon;
   final VoidCallback onTap;
 
   @override

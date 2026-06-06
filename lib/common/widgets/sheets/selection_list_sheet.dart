@@ -10,7 +10,7 @@ class SelectionItem<T> {
 
   final String label;
   final T value;
-  final IconData? icon;
+  final FaIconData? icon;
 }
 
 class SelectionListSheet<T> extends StatelessWidget {

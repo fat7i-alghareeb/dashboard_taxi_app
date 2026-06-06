@@ -15,7 +15,7 @@ class DashboardSectionShellWidget extends StatelessWidget {
   });
 
   final String title;
-  final IconData icon;
+  final FaIconData icon;
   final Widget child;
   final String? subtitle;
   final String? trailingLabel;

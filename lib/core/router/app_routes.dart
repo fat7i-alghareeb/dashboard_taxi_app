@@ -109,6 +109,14 @@ class AppRouteRegistry {
       ),
     ),
     GoRoute(
+      path: SendNotificationScreen.pagePath,
+      name: SendNotificationScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const SendNotificationScreen(),
+      ),
+    ),
+    GoRoute(
       path: ChangePasswordScreen.pagePath,
       name: ChangePasswordScreen.pageName,
       pageBuilder: (context, state) => AppPageTransitions.build(

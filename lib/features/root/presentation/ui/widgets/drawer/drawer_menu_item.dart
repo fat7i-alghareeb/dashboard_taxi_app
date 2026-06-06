@@ -9,7 +9,7 @@ class DrawerMenuItem extends StatelessWidget {
     this.value,
   });
 
-  final IconData icon;
+  final FaIconData icon;
   final String label;
   final VoidCallback onTap;
   final String? value;

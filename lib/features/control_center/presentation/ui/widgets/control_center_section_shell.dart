@@ -17,7 +17,7 @@ class ControlCenterSectionShell extends StatelessWidget {
 
   final String title;
   final String subtitle;
-  final IconData icon;
+  final FaIconData icon;
   final Widget child;
   final String? trailingLabel;
   final VoidCallback? onTrailingTap;

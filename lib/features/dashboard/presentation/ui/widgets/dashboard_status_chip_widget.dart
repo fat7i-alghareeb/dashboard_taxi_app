@@ -13,7 +13,7 @@ class DashboardStatusChipWidget extends StatelessWidget {
 
   final String label;
   final DashboardStatusTone tone;
-  final IconData? icon;
+  final FaIconData? icon;
   final bool dense;
 
   Color _resolveColor(BuildContext context) {

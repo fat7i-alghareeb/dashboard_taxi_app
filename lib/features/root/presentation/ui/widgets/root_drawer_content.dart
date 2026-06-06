@@ -10,6 +10,7 @@ import 'package:dashboardtaxi/features/admin_management/presentation/ui/screens/
 import 'package:dashboardtaxi/features/auth/presentation/ui/screens/change_password_screen.dart';
 import 'package:dashboardtaxi/features/compensation/presentation/ui/screens/compensation_claims_screen.dart';
 import 'package:dashboardtaxi/features/control_center/presentation/ui/screens/control_center_screen.dart';
+import 'package:dashboardtaxi/features/notifications/presentation/ui/screens/send_notification_screen.dart';
 // import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
 // import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_screen.dart';
 // import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
@@ -102,6 +103,14 @@ class RootDrawerContent extends StatelessWidget {
         onTap: () {
           Navigator.maybePop(context);
           context.pushNamed(CompensationClaimsScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.bullhorn,
+        label: AppStrings.drawerSendNotification,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(SendNotificationScreen.pageName);
         },
       ),
       DrawerMenuItem(

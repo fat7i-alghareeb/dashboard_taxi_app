@@ -187,9 +187,7 @@ class _AppScaffoldAppBar extends StatelessWidget {
     /// If no custom leading widget is provided, we default to a standard back icon.
     final icon =
         config.leading ??
-        IconSource.icon(
-          context.chevronStart,
-        ).build(context, color: context.onSurface, size: 22);
+        FaIcon(context.chevronStart, size: 22, color: context.onSurface);
 
     /// If no leading callback is provided, default behavior is route pop.
     final onTap = config.onLeadingTap ?? () => context.pop();

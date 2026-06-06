@@ -8,7 +8,7 @@ class DashboardHeaderQuickLinkWidget extends StatelessWidget {
     required this.onTap,
   });
 
-  final IconData icon;
+  final FaIconData icon;
   final String label;
   final VoidCallback onTap;
 

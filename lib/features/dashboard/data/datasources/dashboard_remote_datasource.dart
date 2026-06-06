@@ -128,9 +128,9 @@ class DashboardRemoteDataSource {
     return rethrowAsAppException(() async {
       printY('[DashboardRemoteDataSource] getAdminDrivers');
       final response = await _dio.get<dynamic>(ApiEndpoints.drivers);
-      final drivers = _asList(response.data)
-          .map((e) => DashboardDriverModel.fromJson(e))
-          .toList();
+      final drivers = _asList(
+        response.data,
+      ).map((e) => DashboardDriverModel.fromJson(e)).toList();
       printG(
         '[DashboardRemoteDataSource] getAdminDrivers success '
         'count=${drivers.length}',
@@ -143,9 +143,9 @@ class DashboardRemoteDataSource {
     return rethrowAsAppException(() async {
       printY('[DashboardRemoteDataSource] getAdminVehicleTypes');
       final response = await _dio.get<dynamic>(ApiEndpoints.adminVehicleTypes);
-      final types = _asList(response.data)
-          .map((e) => DashboardVehicleTypeModel.fromJson(e))
-          .toList();
+      final types = _asList(
+        response.data,
+      ).map((e) => DashboardVehicleTypeModel.fromJson(e)).toList();
       printG(
         '[DashboardRemoteDataSource] getAdminVehicleTypes success '
         'count=${types.length}',
@@ -161,9 +161,9 @@ class DashboardRemoteDataSource {
         ApiEndpoints.users,
         queryParameters: {'page': 1, 'pageSize': 50},
       );
-      final users = _asList(response.data)
-          .map((e) => DashboardUserModel.fromJson(e))
-          .toList();
+      final users = _asList(
+        response.data,
+      ).map((e) => DashboardUserModel.fromJson(e)).toList();
       printG(
         '[DashboardRemoteDataSource] getAdminUsers success '
         'count=${users.length}',
@@ -179,9 +179,9 @@ class DashboardRemoteDataSource {
         ApiEndpoints.auditLogs,
         queryParameters: {'page': 1, 'pageSize': 50},
       );
-      final logs = _asList(response.data)
-          .map((e) => DashboardAuditLogModel.fromJson(e))
-          .toList();
+      final logs = _asList(
+        response.data,
+      ).map((e) => DashboardAuditLogModel.fromJson(e)).toList();
       printG(
         '[DashboardRemoteDataSource] getAdminAuditLogs success '
         'count=${logs.length}',
@@ -343,7 +343,7 @@ class DashboardRemoteDataSource {
       printY(
         '[DashboardRemoteDataSource] reviewDriverDocument driver=$driverId document=$documentId approved=$approved',
       );
-      await _dio.put<dynamic>(
+      await _dio.post<dynamic>(
         ApiEndpoints.reviewDriverDocument(driverId, documentId),
         data: {'approved': approved, 'notes': notes},
       );

@@ -77,7 +77,7 @@ class AuthRemoteDataSource {
           '[AuthRemoteDataSource] forceResetPassword -> '
           '${ApiEndpoints.forceResetPassword}',
         );
-        final res = await _dio.post(
+        final res = await _dio.put(
           ApiEndpoints.forceResetPassword,
           data: {'newPassword': newPassword},
         );
@@ -98,12 +98,9 @@ class AuthRemoteDataSource {
       '[AuthRemoteDataSource] changePassword -> '
       '${ApiEndpoints.changeAdminPassword}',
     );
-    await _dio.post(
+    await _dio.put(
       ApiEndpoints.changeAdminPassword,
-      data: {
-        'currentPassword': currentPassword,
-        'newPassword': newPassword,
-      },
+      data: {'currentPassword': currentPassword, 'newPassword': newPassword},
     );
     printG('[AuthRemoteDataSource] changePassword success');
   });

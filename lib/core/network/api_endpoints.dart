@@ -1,21 +1,25 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  // Auth
-  static const String login = '/api/v1.0/auth/login';
-  static const String adminLogin = '/api/v1.0/auth/admin/login';
-  static const String forceResetPassword = '/api/v1/auth/force-reset-password';
-  static const String refreshToken = '/api/v1/identity/tokens/refresh';
+  // Auth (Constitution-compliant nouns)
+  static const String login = '/api/v1/auth/sessions';
+  static const String adminLogin = '/api/v1/auth/admin-sessions';
+  static const String forceResetPassword = '/api/v1/auth/me/password'; // PUT
+  static const String refreshToken = '/api/v1/auth/tokens/refreshes';
 
-  // Identity / admin management
-  static const String registerAdmin = '/api/v1/identity/admins';
+  // Identity / admin management (moved to /admins)
+  static const String registerAdmin = '/api/v1/admins';
+
+  // Notifications (admin broadcast to an audience topic)
+  static const String broadcastNotification = '/api/v1/notifications/broadcasts';
 
   // Users
   static const String currentUser = '/api/v1/users/me';
   static const String updateFcmToken = '/api/v1/users/me/fcm-token';
   static const String updatePreferredLanguage = '/api/v1/users/me/language';
+  static const String currentUserClaims = '/api/v1/users/me/claims';
   static const String currentAdminProfile = '/api/v1/admins/me';
-  static const String changeAdminPassword = '/api/v1/admins/change-password';
+  static const String changeAdminPassword = '/api/v1/admins/me/password'; // PUT
   static const String currentDriverProfile = '/api/v1/drivers/me';
 
   // Maps
@@ -23,6 +27,7 @@ class ApiEndpoints {
 
   // Trips
   static const String trips = '/api/v1/trips';
+  // Admin-scoped collection view (sub-resource alias — documented exception).
   static const String adminTrips = '/api/v1/trips/admin';
   static String adminTripDetails(String tripId) =>
       '/api/v1/trips/$tripId/details';
@@ -32,6 +37,7 @@ class ApiEndpoints {
   static const String driversStatus = '/api/v1/drivers/status';
   static const String auditLogs = '/api/v1/audit-logs';
   static const String vehicleTypes = '/api/v1/vehicle-types';
+  // Admin-scoped collection view (sub-resource alias — documented exception).
   static const String adminVehicleTypes = '/api/v1/vehicle-types/admin';
   static const String users = '/api/v1/users';
   static const String tripDiscount = '/api/v1/app-config/trip-discount';
@@ -41,14 +47,15 @@ class ApiEndpoints {
   static String driverDocuments(String driverId) =>
       '/api/v1/drivers/$driverId/documents';
 
+  // POST (was PUT /review)
   static String reviewDriverDocument(String driverId, String documentId) =>
-      '/api/v1/drivers/$driverId/documents/$documentId/review';
+      '/api/v1/drivers/$driverId/documents/$documentId/reviews';
 
   static String approveDriver(String driverId) =>
-      '/api/v1/drivers/$driverId/approve';
+      '/api/v1/drivers/$driverId/approvals';
 
   static String suspendDriver(String driverId) =>
-      '/api/v1/drivers/$driverId/suspend';
+      '/api/v1/drivers/$driverId/suspensions';
 
   static String assignDriverVehicleType(String driverId) =>
       '/api/v1/drivers/$driverId/vehicle-type';
@@ -56,18 +63,20 @@ class ApiEndpoints {
   static String vehicleType(String vehicleTypeId) =>
       '/api/v1/vehicle-types/$vehicleTypeId';
 
+  // Trip lifecycle (noun-modeled)
   static String cancelTrip(String tripId) =>
       '/api/v1/trips/$tripId/cancellations';
-  static String assignTrip(String tripId) => '/api/v1/trips/$tripId/assign';
+  static String assignTrip(String tripId) =>
+      '/api/v1/trips/$tripId/assignments';
   static String adminTakeTrip(String tripId) =>
-      '/api/v1/trips/$tripId/admin-take';
+      '/api/v1/trips/$tripId/admin-takeovers';
   static String completeTripStop(String tripId, int sequence) =>
-      '/api/v1/trips/$tripId/stops/$sequence/complete';
+      '/api/v1/trips/$tripId/stops/$sequence/completions';
   static String driverCancelTrip(String tripId) =>
       '/api/v1/trips/$tripId/driver-cancellations';
   static String arriveResend(String tripId) =>
-      '/api/v1/trips/$tripId/arrive/resend';
+      '/api/v1/trips/$tripId/arrival-notifications';
   static const String compensationClaims = '/api/v1/trips/compensation-claims';
   static String reviewCompensationClaim(String claimId) =>
-      '/api/v1/trips/compensation-claims/$claimId/review';
+      '/api/v1/trips/compensation-claims/$claimId/reviews';
 }

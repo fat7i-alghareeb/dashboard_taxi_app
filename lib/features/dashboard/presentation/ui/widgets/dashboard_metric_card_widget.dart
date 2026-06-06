@@ -13,7 +13,7 @@ class DashboardMetricCardWidget extends StatelessWidget {
 
   final String label;
   final String value;
-  final IconData icon;
+  final FaIconData icon;
   final DashboardStatusTone tone;
   final String? trailingChip;
 
