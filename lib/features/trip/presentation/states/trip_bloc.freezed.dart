@@ -55,14 +55,15 @@ extension TripEventPatterns on TripEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _GetAllRequested value)?  getAllRequested,TResult Function( _RealtimeEventReceived value)?  realtimeEventReceived,TResult Function( _FetchActiveRequested value)?  fetchActiveRequested,TResult Function( _TripSelected value)?  tripSelected,TResult Function( _SelectionCleared value)?  selectionCleared,TResult Function( _MarkEnRouteRequested value)?  markEnRouteRequested,TResult Function( _MarkArrivedRequested value)?  markArrivedRequested,TResult Function( _ResendArrivedNotificationRequested value)?  resendArrivedNotificationRequested,TResult Function( _StartTripRequested value)?  startTripRequested,TResult Function( _CompleteTripRequested value)?  completeTripRequested,TResult Function( _ClearCompletedSummaryRequested value)?  clearCompletedSummaryRequested,TResult Function( _DriverCancelRequested value)?  driverCancelRequested,TResult Function( _CompleteStopRequested value)?  completeStopRequested,TResult Function( _AdminSelfAssignRequested value)?  adminSelfAssignRequested,TResult Function( _AdminCancelRequested value)?  adminCancelRequested,TResult Function( _DismissPendingTripRequested value)?  dismissPendingTripRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _GetAllRequested value)?  getAllRequested,TResult Function( _RealtimeEventReceived value)?  realtimeEventReceived,TResult Function( _FetchActiveRequested value)?  fetchActiveRequested,TResult Function( _ActiveTripResolveRequested value)?  activeTripResolveRequested,TResult Function( _TripSelected value)?  tripSelected,TResult Function( _SelectionCleared value)?  selectionCleared,TResult Function( _MarkEnRouteRequested value)?  markEnRouteRequested,TResult Function( _MarkArrivedRequested value)?  markArrivedRequested,TResult Function( _ResendArrivedNotificationRequested value)?  resendArrivedNotificationRequested,TResult Function( _StartTripRequested value)?  startTripRequested,TResult Function( _CompleteTripRequested value)?  completeTripRequested,TResult Function( _ClearCompletedSummaryRequested value)?  clearCompletedSummaryRequested,TResult Function( _DriverCancelRequested value)?  driverCancelRequested,TResult Function( _CompleteStopRequested value)?  completeStopRequested,TResult Function( _AdminSelfAssignRequested value)?  adminSelfAssignRequested,TResult Function( _AdminCancelRequested value)?  adminCancelRequested,TResult Function( _DismissPendingTripRequested value)?  dismissPendingTripRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started(_that);case _GetAllRequested() when getAllRequested != null:
 return getAllRequested(_that);case _RealtimeEventReceived() when realtimeEventReceived != null:
 return realtimeEventReceived(_that);case _FetchActiveRequested() when fetchActiveRequested != null:
-return fetchActiveRequested(_that);case _TripSelected() when tripSelected != null:
+return fetchActiveRequested(_that);case _ActiveTripResolveRequested() when activeTripResolveRequested != null:
+return activeTripResolveRequested(_that);case _TripSelected() when tripSelected != null:
 return tripSelected(_that);case _SelectionCleared() when selectionCleared != null:
 return selectionCleared(_that);case _MarkEnRouteRequested() when markEnRouteRequested != null:
 return markEnRouteRequested(_that);case _MarkArrivedRequested() when markArrivedRequested != null:
@@ -93,14 +94,15 @@ return dismissPendingTripRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _GetAllRequested value)  getAllRequested,required TResult Function( _RealtimeEventReceived value)  realtimeEventReceived,required TResult Function( _FetchActiveRequested value)  fetchActiveRequested,required TResult Function( _TripSelected value)  tripSelected,required TResult Function( _SelectionCleared value)  selectionCleared,required TResult Function( _MarkEnRouteRequested value)  markEnRouteRequested,required TResult Function( _MarkArrivedRequested value)  markArrivedRequested,required TResult Function( _ResendArrivedNotificationRequested value)  resendArrivedNotificationRequested,required TResult Function( _StartTripRequested value)  startTripRequested,required TResult Function( _CompleteTripRequested value)  completeTripRequested,required TResult Function( _ClearCompletedSummaryRequested value)  clearCompletedSummaryRequested,required TResult Function( _DriverCancelRequested value)  driverCancelRequested,required TResult Function( _CompleteStopRequested value)  completeStopRequested,required TResult Function( _AdminSelfAssignRequested value)  adminSelfAssignRequested,required TResult Function( _AdminCancelRequested value)  adminCancelRequested,required TResult Function( _DismissPendingTripRequested value)  dismissPendingTripRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _GetAllRequested value)  getAllRequested,required TResult Function( _RealtimeEventReceived value)  realtimeEventReceived,required TResult Function( _FetchActiveRequested value)  fetchActiveRequested,required TResult Function( _ActiveTripResolveRequested value)  activeTripResolveRequested,required TResult Function( _TripSelected value)  tripSelected,required TResult Function( _SelectionCleared value)  selectionCleared,required TResult Function( _MarkEnRouteRequested value)  markEnRouteRequested,required TResult Function( _MarkArrivedRequested value)  markArrivedRequested,required TResult Function( _ResendArrivedNotificationRequested value)  resendArrivedNotificationRequested,required TResult Function( _StartTripRequested value)  startTripRequested,required TResult Function( _CompleteTripRequested value)  completeTripRequested,required TResult Function( _ClearCompletedSummaryRequested value)  clearCompletedSummaryRequested,required TResult Function( _DriverCancelRequested value)  driverCancelRequested,required TResult Function( _CompleteStopRequested value)  completeStopRequested,required TResult Function( _AdminSelfAssignRequested value)  adminSelfAssignRequested,required TResult Function( _AdminCancelRequested value)  adminCancelRequested,required TResult Function( _DismissPendingTripRequested value)  dismissPendingTripRequested,}){
 final _that = this;
 switch (_that) {
 case _Started():
 return started(_that);case _GetAllRequested():
 return getAllRequested(_that);case _RealtimeEventReceived():
 return realtimeEventReceived(_that);case _FetchActiveRequested():
-return fetchActiveRequested(_that);case _TripSelected():
+return fetchActiveRequested(_that);case _ActiveTripResolveRequested():
+return activeTripResolveRequested(_that);case _TripSelected():
 return tripSelected(_that);case _SelectionCleared():
 return selectionCleared(_that);case _MarkEnRouteRequested():
 return markEnRouteRequested(_that);case _MarkArrivedRequested():
@@ -130,14 +132,15 @@ return dismissPendingTripRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _GetAllRequested value)?  getAllRequested,TResult? Function( _RealtimeEventReceived value)?  realtimeEventReceived,TResult? Function( _FetchActiveRequested value)?  fetchActiveRequested,TResult? Function( _TripSelected value)?  tripSelected,TResult? Function( _SelectionCleared value)?  selectionCleared,TResult? Function( _MarkEnRouteRequested value)?  markEnRouteRequested,TResult? Function( _MarkArrivedRequested value)?  markArrivedRequested,TResult? Function( _ResendArrivedNotificationRequested value)?  resendArrivedNotificationRequested,TResult? Function( _StartTripRequested value)?  startTripRequested,TResult? Function( _CompleteTripRequested value)?  completeTripRequested,TResult? Function( _ClearCompletedSummaryRequested value)?  clearCompletedSummaryRequested,TResult? Function( _DriverCancelRequested value)?  driverCancelRequested,TResult? Function( _CompleteStopRequested value)?  completeStopRequested,TResult? Function( _AdminSelfAssignRequested value)?  adminSelfAssignRequested,TResult? Function( _AdminCancelRequested value)?  adminCancelRequested,TResult? Function( _DismissPendingTripRequested value)?  dismissPendingTripRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _GetAllRequested value)?  getAllRequested,TResult? Function( _RealtimeEventReceived value)?  realtimeEventReceived,TResult? Function( _FetchActiveRequested value)?  fetchActiveRequested,TResult? Function( _ActiveTripResolveRequested value)?  activeTripResolveRequested,TResult? Function( _TripSelected value)?  tripSelected,TResult? Function( _SelectionCleared value)?  selectionCleared,TResult? Function( _MarkEnRouteRequested value)?  markEnRouteRequested,TResult? Function( _MarkArrivedRequested value)?  markArrivedRequested,TResult? Function( _ResendArrivedNotificationRequested value)?  resendArrivedNotificationRequested,TResult? Function( _StartTripRequested value)?  startTripRequested,TResult? Function( _CompleteTripRequested value)?  completeTripRequested,TResult? Function( _ClearCompletedSummaryRequested value)?  clearCompletedSummaryRequested,TResult? Function( _DriverCancelRequested value)?  driverCancelRequested,TResult? Function( _CompleteStopRequested value)?  completeStopRequested,TResult? Function( _AdminSelfAssignRequested value)?  adminSelfAssignRequested,TResult? Function( _AdminCancelRequested value)?  adminCancelRequested,TResult? Function( _DismissPendingTripRequested value)?  dismissPendingTripRequested,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started(_that);case _GetAllRequested() when getAllRequested != null:
 return getAllRequested(_that);case _RealtimeEventReceived() when realtimeEventReceived != null:
 return realtimeEventReceived(_that);case _FetchActiveRequested() when fetchActiveRequested != null:
-return fetchActiveRequested(_that);case _TripSelected() when tripSelected != null:
+return fetchActiveRequested(_that);case _ActiveTripResolveRequested() when activeTripResolveRequested != null:
+return activeTripResolveRequested(_that);case _TripSelected() when tripSelected != null:
 return tripSelected(_that);case _SelectionCleared() when selectionCleared != null:
 return selectionCleared(_that);case _MarkEnRouteRequested() when markEnRouteRequested != null:
 return markEnRouteRequested(_that);case _MarkArrivedRequested() when markArrivedRequested != null:
@@ -167,13 +170,14 @@ return dismissPendingTripRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  getAllRequested,TResult Function( RealtimeEvent event)?  realtimeEventReceived,TResult Function( String tripId)?  fetchActiveRequested,TResult Function( String tripId)?  tripSelected,TResult Function()?  selectionCleared,TResult Function( String tripId)?  markEnRouteRequested,TResult Function( String tripId)?  markArrivedRequested,TResult Function( String tripId)?  resendArrivedNotificationRequested,TResult Function( String tripId)?  startTripRequested,TResult Function( String tripId)?  completeTripRequested,TResult Function()?  clearCompletedSummaryRequested,TResult Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult Function( String tripId,  int sequence)?  completeStopRequested,TResult Function( String tripId)?  adminSelfAssignRequested,TResult Function( String tripId)?  adminCancelRequested,TResult Function( String tripId)?  dismissPendingTripRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  getAllRequested,TResult Function( RealtimeEvent event)?  realtimeEventReceived,TResult Function( String tripId)?  fetchActiveRequested,TResult Function()?  activeTripResolveRequested,TResult Function( String tripId)?  tripSelected,TResult Function()?  selectionCleared,TResult Function( String tripId)?  markEnRouteRequested,TResult Function( String tripId)?  markArrivedRequested,TResult Function( String tripId)?  resendArrivedNotificationRequested,TResult Function( String tripId)?  startTripRequested,TResult Function( String tripId)?  completeTripRequested,TResult Function()?  clearCompletedSummaryRequested,TResult Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult Function( String tripId,  int sequence)?  completeStopRequested,TResult Function( String tripId)?  adminSelfAssignRequested,TResult Function( String tripId)?  adminCancelRequested,TResult Function( String tripId)?  dismissPendingTripRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _GetAllRequested() when getAllRequested != null:
 return getAllRequested();case _RealtimeEventReceived() when realtimeEventReceived != null:
 return realtimeEventReceived(_that.event);case _FetchActiveRequested() when fetchActiveRequested != null:
-return fetchActiveRequested(_that.tripId);case _TripSelected() when tripSelected != null:
+return fetchActiveRequested(_that.tripId);case _ActiveTripResolveRequested() when activeTripResolveRequested != null:
+return activeTripResolveRequested();case _TripSelected() when tripSelected != null:
 return tripSelected(_that.tripId);case _SelectionCleared() when selectionCleared != null:
 return selectionCleared();case _MarkEnRouteRequested() when markEnRouteRequested != null:
 return markEnRouteRequested(_that.tripId);case _MarkArrivedRequested() when markArrivedRequested != null:
@@ -204,13 +208,14 @@ return dismissPendingTripRequested(_that.tripId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  getAllRequested,required TResult Function( RealtimeEvent event)  realtimeEventReceived,required TResult Function( String tripId)  fetchActiveRequested,required TResult Function( String tripId)  tripSelected,required TResult Function()  selectionCleared,required TResult Function( String tripId)  markEnRouteRequested,required TResult Function( String tripId)  markArrivedRequested,required TResult Function( String tripId)  resendArrivedNotificationRequested,required TResult Function( String tripId)  startTripRequested,required TResult Function( String tripId)  completeTripRequested,required TResult Function()  clearCompletedSummaryRequested,required TResult Function( String tripId,  String reason,  String? note)  driverCancelRequested,required TResult Function( String tripId,  int sequence)  completeStopRequested,required TResult Function( String tripId)  adminSelfAssignRequested,required TResult Function( String tripId)  adminCancelRequested,required TResult Function( String tripId)  dismissPendingTripRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  getAllRequested,required TResult Function( RealtimeEvent event)  realtimeEventReceived,required TResult Function( String tripId)  fetchActiveRequested,required TResult Function()  activeTripResolveRequested,required TResult Function( String tripId)  tripSelected,required TResult Function()  selectionCleared,required TResult Function( String tripId)  markEnRouteRequested,required TResult Function( String tripId)  markArrivedRequested,required TResult Function( String tripId)  resendArrivedNotificationRequested,required TResult Function( String tripId)  startTripRequested,required TResult Function( String tripId)  completeTripRequested,required TResult Function()  clearCompletedSummaryRequested,required TResult Function( String tripId,  String reason,  String? note)  driverCancelRequested,required TResult Function( String tripId,  int sequence)  completeStopRequested,required TResult Function( String tripId)  adminSelfAssignRequested,required TResult Function( String tripId)  adminCancelRequested,required TResult Function( String tripId)  dismissPendingTripRequested,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case _GetAllRequested():
 return getAllRequested();case _RealtimeEventReceived():
 return realtimeEventReceived(_that.event);case _FetchActiveRequested():
-return fetchActiveRequested(_that.tripId);case _TripSelected():
+return fetchActiveRequested(_that.tripId);case _ActiveTripResolveRequested():
+return activeTripResolveRequested();case _TripSelected():
 return tripSelected(_that.tripId);case _SelectionCleared():
 return selectionCleared();case _MarkEnRouteRequested():
 return markEnRouteRequested(_that.tripId);case _MarkArrivedRequested():
@@ -240,13 +245,14 @@ return dismissPendingTripRequested(_that.tripId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  getAllRequested,TResult? Function( RealtimeEvent event)?  realtimeEventReceived,TResult? Function( String tripId)?  fetchActiveRequested,TResult? Function( String tripId)?  tripSelected,TResult? Function()?  selectionCleared,TResult? Function( String tripId)?  markEnRouteRequested,TResult? Function( String tripId)?  markArrivedRequested,TResult? Function( String tripId)?  resendArrivedNotificationRequested,TResult? Function( String tripId)?  startTripRequested,TResult? Function( String tripId)?  completeTripRequested,TResult? Function()?  clearCompletedSummaryRequested,TResult? Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult? Function( String tripId,  int sequence)?  completeStopRequested,TResult? Function( String tripId)?  adminSelfAssignRequested,TResult? Function( String tripId)?  adminCancelRequested,TResult? Function( String tripId)?  dismissPendingTripRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  getAllRequested,TResult? Function( RealtimeEvent event)?  realtimeEventReceived,TResult? Function( String tripId)?  fetchActiveRequested,TResult? Function()?  activeTripResolveRequested,TResult? Function( String tripId)?  tripSelected,TResult? Function()?  selectionCleared,TResult? Function( String tripId)?  markEnRouteRequested,TResult? Function( String tripId)?  markArrivedRequested,TResult? Function( String tripId)?  resendArrivedNotificationRequested,TResult? Function( String tripId)?  startTripRequested,TResult? Function( String tripId)?  completeTripRequested,TResult? Function()?  clearCompletedSummaryRequested,TResult? Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult? Function( String tripId,  int sequence)?  completeStopRequested,TResult? Function( String tripId)?  adminSelfAssignRequested,TResult? Function( String tripId)?  adminCancelRequested,TResult? Function( String tripId)?  dismissPendingTripRequested,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _GetAllRequested() when getAllRequested != null:
 return getAllRequested();case _RealtimeEventReceived() when realtimeEventReceived != null:
 return realtimeEventReceived(_that.event);case _FetchActiveRequested() when fetchActiveRequested != null:
-return fetchActiveRequested(_that.tripId);case _TripSelected() when tripSelected != null:
+return fetchActiveRequested(_that.tripId);case _ActiveTripResolveRequested() when activeTripResolveRequested != null:
+return activeTripResolveRequested();case _TripSelected() when tripSelected != null:
 return tripSelected(_that.tripId);case _SelectionCleared() when selectionCleared != null:
 return selectionCleared();case _MarkEnRouteRequested() when markEnRouteRequested != null:
 return markEnRouteRequested(_that.tripId);case _MarkArrivedRequested() when markArrivedRequested != null:
@@ -471,6 +477,38 @@ as String,
 
 
 }
+
+/// @nodoc
+
+
+class _ActiveTripResolveRequested implements TripEvent {
+  const _ActiveTripResolveRequested();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActiveTripResolveRequested);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'TripEvent.activeTripResolveRequested()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 

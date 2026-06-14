@@ -18,6 +18,10 @@ class TripFacade {
     return _repository.getTripById(tripId);
   }
 
+  Future<Result<TripEntity?>> getActiveTrip() {
+    return _repository.getActiveTrip();
+  }
+
   Future<Result<void>> markEnRoute(String tripId) {
     return _repository.markEnRoute(tripId);
   }

@@ -188,12 +188,18 @@ class TripWaitingSessionEntity {
     this.minutes,
     this.estimatedFee,
     this.isActive = false,
+    this.ratePerMinute = 0,
+    this.graceMinutes = 10,
+    this.billableMinutes,
   });
 
   final String id;
   final int? minutes;
   final double? estimatedFee;
   final bool isActive;
+  final double ratePerMinute;
+  final int graceMinutes;
+  final int? billableMinutes;
 }
 
 class TripRouteSegmentEntity {

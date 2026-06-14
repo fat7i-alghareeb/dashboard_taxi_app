@@ -24,8 +24,8 @@ abstract interface class RealtimeService {
   /// server (`Trip_{tripId}`) so trip lifecycle and payment pushes for
   /// this trip are routed to this client.
   ///
-  /// No-op if the connection is not currently
-  /// [RealtimeConnectionState.connected].
+  /// If the connection is not currently [RealtimeConnectionState.connected],
+  /// the subscription is queued and replayed after the next successful connect.
   Future<void> joinTripGroup(String tripId);
 
   /// Reverse of [joinTripGroup]. No-op if not connected.

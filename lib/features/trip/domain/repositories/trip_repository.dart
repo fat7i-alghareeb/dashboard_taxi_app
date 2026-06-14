@@ -4,6 +4,7 @@ import '../entities/trip_entity.dart';
 abstract class TripRepository {
   Future<Result<List<TripEntity>>> getAllTrips();
   Future<Result<TripEntity>> getTripById(String tripId);
+  Future<Result<TripEntity?>> getActiveTrip();
   Future<Result<void>> markEnRoute(String tripId);
   Future<Result<void>> markArrived(String tripId);
   Future<Result<void>> resendArrived(String tripId);

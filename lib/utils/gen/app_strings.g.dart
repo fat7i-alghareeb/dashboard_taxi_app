@@ -101,6 +101,24 @@ class AppStrings {
   static String get clientUnprocessableEntity => 'clientUnprocessableEntity'.tr();
   /// Coming Soon - قريباً - Binnenkort beschikbaar - Demnächst verfügbar - Wkrótce dostępne - Незабаром - Bientôt disponible - Próximamente - În curând
   static String get comingSoon => 'comingSoon'.tr();
+  /// These details appear in the footer of customer invoices. - تظهر هذه البيانات في تذييل فواتير العملاء. - Deze gegevens verschijnen in de voettekst van klantfacturen. - Diese Angaben erscheinen in der Fußzeile von Kundenrechnungen. - Te dane pojawiają się w stopce faktur klientów. - Ці дані відображаються в нижньому колонтитулі рахунків клієнтів. - Ces coordonnées apparaissent dans le pied de page des factures clients. - Estos datos aparecen en el pie de las facturas de los clientes. - Aceste date apar în subsolul facturilor clienților.
+  static String get companyInfoDescription => 'companyInfoDescription'.tr();
+  /// Email - البريد الإلكتروني - E-mail - E-Mail - E-mail - Електронна пошта - E-mail - Correo electrónico - E-mail
+  static String get companyInfoFieldEmail => 'companyInfoFieldEmail'.tr();
+  /// Phone - الهاتف - Telefoon - Telefon - Telefon - Телефон - Téléphone - Teléfono - Telefon
+  static String get companyInfoFieldPhone => 'companyInfoFieldPhone'.tr();
+  /// Website - الموقع الإلكتروني - Website - Website - Strona internetowa - Вебсайт - Site web - Sitio web - Site web
+  static String get companyInfoFieldWebsite => 'companyInfoFieldWebsite'.tr();
+  /// Failed to load company info. - فشل تحميل معلومات الشركة. - Bedrijfsgegevens laden mislukt. - Firmeninfo konnte nicht geladen werden. - Nie udało się załadować danych firmy. - Не вдалося завантажити дані компанії. - Échec du chargement des infos entreprise. - Error al cargar la información de la empresa. - Încărcarea informațiilor companiei a eșuat.
+  static String get companyInfoLoadFailed => 'companyInfoLoadFailed'.tr();
+  /// Save Changes - حفظ التغييرات - Wijzigingen opslaan - Änderungen speichern - Zapisz zmiany - Зберегти зміни - Enregistrer les modifications - Guardar cambios - Salvează modificările
+  static String get companyInfoSaveButton => 'companyInfoSaveButton'.tr();
+  /// Company info updated. - تم تحديث معلومات الشركة. - Bedrijfsgegevens bijgewerkt. - Firmeninfo aktualisiert. - Zaktualizowano dane firmy. - Дані компанії оновлено. - Infos entreprise mises à jour. - Información de la empresa actualizada. - Informațiile companiei au fost actualizate.
+  static String get companyInfoSavedSuccess => 'companyInfoSavedSuccess'.tr();
+  /// Details shown on invoices - البيانات الظاهرة على الفواتير - Gegevens op facturen - Auf Rechnungen angezeigte Angaben - Dane widoczne na fakturach - Дані, що відображаються на рахунках - Coordonnées affichées sur les factures - Datos mostrados en las facturas - Date afișate pe facturi
+  static String get companyInfoSubtitle => 'companyInfoSubtitle'.tr();
+  /// Company Info - معلومات الشركة - Bedrijfsgegevens - Firmeninfo - Dane firmy - Дані компанії - Infos entreprise - Información de la empresa - Informații companie
+  static String get companyInfoTitle => 'companyInfoTitle'.tr();
   /// Evidence - الأدلة - Bewijs - Nachweis - Dowód - Доказ - Preuve - Evidencia - Dovadă
   static String get compensationEvidence => 'compensationEvidence'.tr();
   /// Evidence {index} - دليل {index} - Bewijs {index} - Nachweis {index} - Dowód {index} - Доказ {index} - Preuve {index} - Evidencia {index} - Dovadă {index}
@@ -903,6 +921,8 @@ class AppStrings {
   static String get tripActiveRide => 'tripActiveRide'.tr();
   /// Your Trip - رحلتك - Uw Rit - Ihre Fahrt - Twój przejazd - Ваша поїздка - Votre Trajet - Su Viaje - Călătoria ta
   static String get tripActiveTitle => 'tripActiveTitle'.tr();
+  /// Please board within {time} - الرجاء الركوب خلال {time} - Stap binnen {time} in - Bitte innerhalb von {time} einsteigen - Wsiądź w ciągu {time} - Сідайте протягом {time} - Veuillez monter dans {time} - Sube en un plazo de {time} - Te rugăm să urci în {time}
+  static String get tripArrivedBoardWithin => 'tripArrivedBoardWithin'.tr();
   /// Wait for the passenger, then start the ride once they are in the vehicle. - انتظر الراكب، ثم ابدأ الرحلة بعد دخوله المركبة. - Wait for the passenger, then start the ride once they are in the vehicle. - Wait for the passenger, then start the ride once they are in the vehicle. - Wait for the passenger, then start the ride once they are in the vehicle. - Wait for the passenger, then start the ride once they are in the vehicle. - Wait for the passenger, then start the ride once they are in the vehicle. - Wait for the passenger, then start the ride once they are in the vehicle. - Wait for the passenger, then start the ride once they are in the vehicle.
   static String get tripArrivedHint => 'tripArrivedHint'.tr();
   /// Review the pickup and start driving to the passenger. - راجع نقطة الانطلاق وابدأ التوجه إلى الراكب. - Review the pickup and start driving to the passenger. - Review the pickup and start driving to the passenger. - Review the pickup and start driving to the passenger. - Review the pickup and start driving to the passenger. - Review the pickup and start driving to the passenger. - Review the pickup and start driving to the passenger. - Review the pickup and start driving to the passenger.
@@ -1005,6 +1025,10 @@ class AppStrings {
   static String get tripVehicle => 'tripVehicle'.tr();
   /// Vehicle Type - نوع المركبة - Vehicle Type - Vehicle Type - Vehicle Type - Vehicle Type - Vehicle Type - Vehicle Type - Vehicle Type
   static String get tripVehicleType => 'tripVehicleType'.tr();
+  /// Waiting fee: {amount} - رسوم الانتظار: {amount} - Wachttarief: {amount} - Wartegebühr: {amount} - Opłata za oczekiwanie: {amount} - Плата за очікування: {amount} - Frais d'attente : {amount} - Tarifa de espera: {amount} - Taxă de așteptare: {amount}
+  static String get tripWaitingFeeAccruing => 'tripWaitingFeeAccruing'.tr();
+  /// Free waiting time is over. A per-minute fee now applies. - انتهى وقت الانتظار المجاني. تُطبّق الآن رسوم لكل دقيقة. - De gratis wachttijd is voorbij. Er geldt nu een tarief per minuut. - Die kostenlose Wartezeit ist vorbei. Es gilt nun eine Gebühr pro Minute. - Bezpłatny czas oczekiwania się skończył. Obowiązuje opłata za minutę. - Безкоштовний час очікування завершився. Тепер діє плата за хвилину. - Le temps d'attente gratuit est terminé. Des frais à la minute s'appliquent désormais. - El tiempo de espera gratuito ha terminado. Ahora se aplica una tarifa por minuto. - Timpul de așteptare gratuit s-a încheiat. Acum se aplică o taxă pe minut.
+  static String get tripWaitingGraceOver => 'tripWaitingGraceOver'.tr();
   /// Waiting for passenger - بانتظار الراكب - Waiting for passenger - Waiting for passenger - Waiting for passenger - Waiting for passenger - Waiting for passenger - Waiting for passenger - Waiting for passenger
   static String get tripWaitingPassenger => 'tripWaitingPassenger'.tr();
   /// Trips Completed - الرحلات المكتملة - Trips Completed - Trips Completed - Trips Completed - Trips Completed - Trips Completed - Trips Completed - Trips Completed

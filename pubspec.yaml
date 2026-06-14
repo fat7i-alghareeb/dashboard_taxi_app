@@ -1,7 +1,7 @@
 name: "dashboardtaxi"
 description: "A Flutter Clean Architecture project."
 publish_to: "none"
-version: 1.2.3+4
+version: 1.2.4+5
 
 environment:
   sdk: ^3.10.1

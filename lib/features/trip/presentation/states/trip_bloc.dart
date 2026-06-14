@@ -32,6 +32,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     on<_GetAllRequested>(_onGetAllRequested);
     on<_RealtimeEventReceived>(_onRealtimeEventReceived);
     on<_FetchActiveRequested>(_onFetchActiveRequested);
+    on<_ActiveTripResolveRequested>(_onActiveTripResolveRequested);
     on<_TripSelected>(_onTripSelected);
     on<_SelectionCleared>(_onSelectionCleared);
     on<_MarkEnRouteRequested>(_onMarkEnRouteRequested);
@@ -195,6 +196,29 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     Emitter<TripState> emit,
   ) {
     return _loadActiveTrip(event.tripId, emit, joinGroup: true);
+  }
+
+  /// Resolves the driver's current assigned active trip from the backend and
+  /// joins its realtime channel. Triggered when the Home tab is opened so the
+  /// channel is (re)joined even after a cold start.
+  Future<void> _onActiveTripResolveRequested(
+    _ActiveTripResolveRequested event,
+    Emitter<TripState> emit,
+  ) async {
+    printM('[TripBloc] resolve active trip requested');
+    final result = await _facade.getActiveTrip();
+    result.when(
+      success: (trip) {
+        if (trip == null) {
+          printM('[TripBloc] no active trip to resolve');
+          return;
+        }
+        printG('[TripBloc] resolved active trip=${trip.id} status=${trip.status}');
+        add(TripEvent.fetchActiveRequested(trip.id));
+      },
+      failure: (message) =>
+          printY('[TripBloc] resolve active trip failed: $message'),
+    );
   }
 
   /// Explicit selection (e.g. tapping a trip in the Trips tab). Unlike

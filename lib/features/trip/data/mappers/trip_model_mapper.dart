@@ -65,6 +65,9 @@ extension TripWaitingSessionModelMapper on TripWaitingSessionModel {
     minutes: minutes,
     estimatedFee: estimatedFee,
     isActive: isActive,
+    ratePerMinute: ratePerMinute,
+    graceMinutes: graceMinutes,
+    billableMinutes: billableMinutes,
   );
 }
 

@@ -24,11 +24,15 @@ class SignalRRealtimeService implements RealtimeService {
 
   static const String _hubPath = '/hubs/trips';
   static const String _logTag = '[Realtime]';
+  static const int _requestTimeoutMs = 15000;
+  static const Duration _retryDelay = Duration(seconds: 3);
 
   final JwtTokenStorage _tokenStorage;
 
   HubConnection? _connection;
   Future<void>? _pendingConnect;
+  Timer? _retryTimer;
+  bool _connectRequested = false;
   bool _explicitlyDisconnected = false;
   final Set<String> _joinedTripGroups = <String>{};
 
@@ -51,7 +55,10 @@ class SignalRRealtimeService implements RealtimeService {
 
   @override
   Future<void> connect() async {
+    _connectRequested = true;
     _explicitlyDisconnected = false;
+    _retryTimer?.cancel();
+    _retryTimer = null;
 
     if (_state == RealtimeConnectionState.connected ||
         _state == RealtimeConnectionState.connecting) {
@@ -70,6 +77,12 @@ class SignalRRealtimeService implements RealtimeService {
       _wireHandlers(hub);
       _connection = hub;
       await hub.start();
+      if (_connection != hub || !_connectRequested || _explicitlyDisconnected) {
+        await hub.stop();
+        _setState(RealtimeConnectionState.disconnected);
+        completer.complete();
+        return;
+      }
       _setState(RealtimeConnectionState.connected);
       printG('$_logTag connected');
       await _rejoinTripGroups();
@@ -82,13 +95,20 @@ class SignalRRealtimeService implements RealtimeService {
       completer.complete();
     } finally {
       _pendingConnect = null;
+      if (_connectRequested &&
+          !_explicitlyDisconnected &&
+          _state == RealtimeConnectionState.disconnected) {
+        _scheduleRetry();
+      }
     }
   }
 
   @override
   Future<void> disconnect() async {
+    _connectRequested = false;
     _explicitlyDisconnected = true;
-    _joinedTripGroups.clear();
+    _retryTimer?.cancel();
+    _retryTimer = null;
 
     final hub = _connection;
     _connection = null;
@@ -111,7 +131,10 @@ class SignalRRealtimeService implements RealtimeService {
   Future<void> joinTripGroup(String tripId) async {
     _joinedTripGroups.add(tripId);
     final hub = _connection;
-    if (hub == null || _state != RealtimeConnectionState.connected) return;
+    if (hub == null || _state != RealtimeConnectionState.connected) {
+      printC('$_logTag queued Trip_$tripId join until connected');
+      return;
+    }
     try {
       await hub.invoke('JoinTripGroup', args: <Object>[tripId]);
       printG('$_logTag joined Trip_$tripId');
@@ -135,16 +158,32 @@ class SignalRRealtimeService implements RealtimeService {
 
   HubConnection _buildConnection() {
     final url = '${ApiConfig.baseUrl}$_hubPath';
+    final tokenLen = _tokenStorage.cachedToken?.accessToken.length ?? 0;
+    printM(
+      '$_logTag building connection url=$url tokenPresent=${tokenLen > 0} tokenLen=$tokenLen',
+    );
     return HubConnectionBuilder()
         .withUrl(
           url,
           options: HttpConnectionOptions(
             accessTokenFactory: () async =>
                 _tokenStorage.cachedToken?.accessToken ?? '',
+            requestTimeout: _requestTimeoutMs,
           ),
         )
         .withAutomaticReconnect()
         .build();
+  }
+
+  void _scheduleRetry() {
+    if (_retryTimer != null) return;
+    printY('$_logTag scheduling reconnect retry in ${_retryDelay.inSeconds}s');
+    _retryTimer = Timer(_retryDelay, () {
+      _retryTimer = null;
+      if (_connectRequested && !_explicitlyDisconnected) {
+        unawaited(connect());
+      }
+    });
   }
 
   void _wireHandlers(HubConnection hub) {
@@ -227,123 +266,214 @@ class SignalRRealtimeService implements RealtimeService {
 
   void _onTripRequested(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
-    _eventsController.add(RealtimeEvent.tripRequested(
-      tripId: _readString(p, 'tripId'),
-      vehicleTypeId: _readString(p, 'vehicleTypeId'),
-      passengerId: _readString(p, 'passengerId'),
-    ));
+    if (p == null) {
+      printY('$_logTag <= TripRequested (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= TripRequested trip=${_readString(p, 'tripId')} vehicleType=${_readString(p, 'vehicleTypeId')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.tripRequested(
+        tripId: _readString(p, 'tripId'),
+        vehicleTypeId: _readString(p, 'vehicleTypeId'),
+        passengerId: _readString(p, 'passengerId'),
+      ),
+    );
   }
 
   void _onDriverAssigned(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
-    _eventsController.add(RealtimeEvent.driverAssigned(
-      tripId: _readString(p, 'tripId'),
-      passengerId: _readString(p, 'passengerId'),
-      driverId: _readString(p, 'driverId'),
-    ));
+    if (p == null) {
+      printY('$_logTag <= DriverAssigned (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= DriverAssigned trip=${_readString(p, 'tripId')} driver=${_readString(p, 'driverId')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.driverAssigned(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+        driverId: _readString(p, 'driverId'),
+      ),
+    );
   }
 
   void _onTripStarted(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
-    _eventsController.add(RealtimeEvent.tripStarted(
-      tripId: _readString(p, 'tripId'),
-      passengerId: _readString(p, 'passengerId'),
-    ));
+    if (p == null) {
+      printY('$_logTag <= TripStarted (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= TripStarted trip=${_readString(p, 'tripId')} passenger=${_readString(p, 'passengerId')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.tripStarted(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+      ),
+    );
   }
 
   void _onTripCompleted(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
-    _eventsController.add(RealtimeEvent.tripCompleted(
-      tripId: _readString(p, 'tripId'),
-      passengerId: _readString(p, 'passengerId'),
-    ));
+    if (p == null) {
+      printY('$_logTag <= TripCompleted (empty payload, ignored)');
+      return;
+    }
+    printG(
+      '$_logTag <= TripCompleted trip=${_readString(p, 'tripId')} passenger=${_readString(p, 'passengerId')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.tripCompleted(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+      ),
+    );
   }
 
   void _onTripCancelled(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
-    _eventsController.add(RealtimeEvent.tripCancelled(
-      tripId: _readString(p, 'tripId'),
-      passengerId: _readString(p, 'passengerId'),
-    ));
+    if (p == null) {
+      printY('$_logTag <= TripCancelled (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= TripCancelled trip=${_readString(p, 'tripId')} passenger=${_readString(p, 'passengerId')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.tripCancelled(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+      ),
+    );
   }
 
   void _onPaymentConfirmed(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
-    _eventsController.add(RealtimeEvent.paymentConfirmed(
-      tripId: _readString(p, 'tripId'),
-      passengerId: _readString(p, 'passengerId'),
-    ));
+    if (p == null) {
+      printY('$_logTag <= PaymentConfirmed (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= PaymentConfirmed trip=${_readString(p, 'tripId')} passenger=${_readString(p, 'passengerId')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.paymentConfirmed(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+      ),
+    );
   }
 
   void _onPaymentFailed(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
-    _eventsController.add(RealtimeEvent.paymentFailed(
-      tripId: _readString(p, 'tripId'),
-      passengerId: _readString(p, 'passengerId'),
-      reason: _readString(p, 'reason'),
-    ));
+    if (p == null) {
+      printY('$_logTag <= PaymentFailed (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= PaymentFailed trip=${_readString(p, 'tripId')} reason=${_readString(p, 'reason')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.paymentFailed(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+        reason: _readString(p, 'reason'),
+      ),
+    );
   }
 
   void _onTripRefunded(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
-    _eventsController.add(RealtimeEvent.tripRefunded(
-      tripId: _readString(p, 'tripId'),
-      passengerId: _readString(p, 'passengerId'),
-      amount: _readDouble(p, 'amount'),
-    ));
+    if (p == null) {
+      printY('$_logTag <= TripRefunded (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= TripRefunded trip=${_readString(p, 'tripId')} amount=${_readDouble(p, 'amount')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.tripRefunded(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+        amount: _readDouble(p, 'amount'),
+      ),
+    );
   }
 
   void _onDriverEnRoute(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
-    _eventsController.add(RealtimeEvent.driverEnRoute(
-      tripId: _readString(p, 'tripId'),
-      passengerId: _readString(p, 'passengerId'),
-      driverId: _readString(p, 'driverId'),
-    ));
+    if (p == null) {
+      printY('$_logTag <= DriverEnRoute (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= DriverEnRoute trip=${_readString(p, 'tripId')} driver=${_readString(p, 'driverId')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.driverEnRoute(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+        driverId: _readString(p, 'driverId'),
+      ),
+    );
   }
 
   void _onDriverArrived(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
-    _eventsController.add(RealtimeEvent.driverArrived(
-      tripId: _readString(p, 'tripId'),
-      passengerId: _readString(p, 'passengerId'),
-      driverId: _readString(p, 'driverId'),
-    ));
+    if (p == null) {
+      printY('$_logTag <= DriverArrived (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= DriverArrived trip=${_readString(p, 'tripId')} driver=${_readString(p, 'driverId')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.driverArrived(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+        driverId: _readString(p, 'driverId'),
+      ),
+    );
   }
 
   void _onDriverLocationUpdated(List<Object?>? args) {
     final p = _payload(args);
     if (p == null) return;
-    _eventsController.add(RealtimeEvent.driverLocationUpdated(
-      tripId: _readString(p, 'tripId'),
-      driverId: _readString(p, 'driverId'),
-      latitude: _readDouble(p, 'latitude'),
-      longitude: _readDouble(p, 'longitude'),
-    ));
+    // High-frequency event — keep logging terse to avoid flooding the console.
+    _eventsController.add(
+      RealtimeEvent.driverLocationUpdated(
+        tripId: _readString(p, 'tripId'),
+        driverId: _readString(p, 'driverId'),
+        latitude: _readDouble(p, 'latitude'),
+        longitude: _readDouble(p, 'longitude'),
+      ),
+    );
   }
 
   void _onTripStopCompleted(List<Object?>? args) {
     final p = _payload(args);
-    if (p == null) return;
+    if (p == null) {
+      printY('$_logTag <= TripStopCompleted (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= TripStopCompleted trip=${_readString(p, 'tripId')} seq=${p['sequence'] ?? p['Sequence']}',
+    );
     final rawSequence = p['sequence'] ?? p['Sequence'];
     final sequence = rawSequence is num
         ? rawSequence.toInt()
         : int.tryParse(rawSequence?.toString() ?? '') ?? 0;
-    _eventsController.add(RealtimeEvent.tripStopCompleted(
-      tripId: _readString(p, 'tripId'),
-      passengerId: _readString(p, 'passengerId'),
-      driverId: _readString(p, 'driverId'),
-      sequence: sequence,
-    ));
+    _eventsController.add(
+      RealtimeEvent.tripStopCompleted(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+        driverId: _readString(p, 'driverId'),
+        sequence: sequence,
+      ),
+    );
   }
 }

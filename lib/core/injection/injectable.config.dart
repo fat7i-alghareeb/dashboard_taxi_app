@@ -85,6 +85,16 @@ import 'package:dashboardtaxi/features/auth/domain/repositories/auth_repository.
     as _i706;
 import 'package:dashboardtaxi/features/auth/presentation/states/auth_bloc.dart'
     as _i100;
+import 'package:dashboardtaxi/features/company_contact/data/datasources/company_contact_remote_datasource.dart'
+    as _i37;
+import 'package:dashboardtaxi/features/company_contact/data/repositories/company_contact_repository_impl.dart'
+    as _i888;
+import 'package:dashboardtaxi/features/company_contact/domain/facade/company_contact_facade.dart'
+    as _i132;
+import 'package:dashboardtaxi/features/company_contact/domain/repositories/company_contact_repository.dart'
+    as _i991;
+import 'package:dashboardtaxi/features/company_contact/presentation/states/company_contact_bloc.dart'
+    as _i211;
 import 'package:dashboardtaxi/features/compensation/data/datasources/compensation_remote_datasource.dart'
     as _i756;
 import 'package:dashboardtaxi/features/compensation/presentation/states/compensation_cubit.dart'
@@ -300,6 +310,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1012.AuthRemoteDataSource>(
       () => _i1012.AuthRemoteDataSource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i37.CompanyContactRemoteDataSource>(
+      () => _i37.CompanyContactRemoteDataSource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i756.CompensationRemoteDataSource>(
       () => _i756.CompensationRemoteDataSource(gh<_i361.Dio>()),
     );
@@ -360,6 +373,11 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i193.AdminManagementRemoteDataSource>(),
       ),
     );
+    gh.lazySingleton<_i991.CompanyContactRepository>(
+      () => _i888.CompanyContactRepositoryImpl(
+        gh<_i37.CompanyContactRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i356.ProfileBloc>(
       () => _i356.ProfileBloc(gh<_i512.ProfileFacade>()),
     );
@@ -384,6 +402,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i969.DashboardFacade>(
       () => _i969.DashboardFacade(gh<_i574.DashboardRepository>()),
     );
+    gh.lazySingleton<_i132.CompanyContactFacade>(
+      () => _i132.CompanyContactFacade(gh<_i991.CompanyContactRepository>()),
+    );
     gh.lazySingleton<_i625.AdminManagementFacade>(
       () => _i625.AdminManagementFacade(gh<_i392.AdminManagementRepository>()),
     );
@@ -403,6 +424,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i868.RealtimeService>(),
         gh<_i885.RootModeService>(),
       ),
+    );
+    gh.factory<_i211.CompanyContactBloc>(
+      () => _i211.CompanyContactBloc(gh<_i132.CompanyContactFacade>()),
     );
     gh.lazySingleton<_i650.DriverLocationStreamer>(
       () => _i650.DriverLocationStreamer(

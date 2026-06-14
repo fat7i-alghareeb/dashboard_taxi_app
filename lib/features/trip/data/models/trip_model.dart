@@ -184,12 +184,18 @@ class TripWaitingSessionModel {
     this.minutes,
     this.estimatedFee,
     this.isActive = false,
+    this.ratePerMinute = 0,
+    this.graceMinutes = 10,
+    this.billableMinutes,
   });
 
   final String id;
   final int? minutes;
   final double? estimatedFee;
   final bool isActive;
+  final double ratePerMinute;
+  final int graceMinutes;
+  final int? billableMinutes;
 
   factory TripWaitingSessionModel.fromJson(Map<String, dynamic> json) {
     return TripWaitingSessionModel(
@@ -197,6 +203,9 @@ class TripWaitingSessionModel {
       minutes: _readNullableInt(json, 'minutes'),
       estimatedFee: _readNullableDouble(json, 'estimatedFee'),
       isActive: _readBool(json, 'isActive'),
+      ratePerMinute: _readDouble(json, 'ratePerMinute'),
+      graceMinutes: _readNullableInt(json, 'graceMinutes') ?? 10,
+      billableMinutes: _readNullableInt(json, 'billableMinutes'),
     );
   }
 }

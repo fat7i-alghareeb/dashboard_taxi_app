@@ -25,11 +25,16 @@ class TripAtPickupSheet extends StatefulWidget {
 
 class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
   Timer? _cooldownTicker;
+  // Drives the 1-second rebuilds for the live waiting countdown / accruing fee.
+  Timer? _waitingTicker;
 
   @override
   void initState() {
     super.initState();
     _maybeStartCooldownTicker();
+    _waitingTicker = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
@@ -41,7 +46,84 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
   @override
   void dispose() {
     _cooldownTicker?.cancel();
+    _waitingTicker?.cancel();
     super.dispose();
+  }
+
+  /// Shows the 10-minute boarding countdown after arrival, switching to the
+  /// accruing per-minute waiting fee once the free grace window elapses. This
+  /// mirrors what the customer sees; billing is settled server-side.
+  Widget _buildWaitingInfo(BuildContext context) {
+    final arrivedAt = widget.state.arrivedAt;
+    if (arrivedAt == null) return const SizedBox.shrink();
+
+    final session = widget.trip.activeWaitingSession;
+    final graceMinutes = session?.graceMinutes ?? 10;
+    final ratePerMinute = session?.ratePerMinute ?? 0;
+    final elapsed = DateTime.now().difference(arrivedAt);
+    final graceRemaining = Duration(minutes: graceMinutes) - elapsed;
+
+    final Widget content;
+    final Color tint;
+    if (graceRemaining > Duration.zero) {
+      final mm = graceRemaining.inMinutes.remainder(60).toString().padLeft(2, '0');
+      final ss = graceRemaining.inSeconds.remainder(60).toString().padLeft(2, '0');
+      tint = context.primary;
+      content = Row(
+        children: [
+          FaIcon(FontAwesomeIcons.solidClock, color: tint, size: 16.r),
+          AppSpacing.sm.horizontalSpace,
+          Expanded(
+            child: Text(
+              AppStrings.tripArrivedBoardWithin.trParams({'time': '$mm:$ss'}),
+              style: AppTextStyles.s14w600.copyWith(color: context.onSurface),
+            ),
+          ),
+        ],
+      );
+    } else {
+      final overdueSeconds = elapsed.inSeconds - graceMinutes * 60;
+      final billableMinutes = (overdueSeconds / 60).ceil();
+      final fee = billableMinutes * ratePerMinute;
+      final amount = '${fee.toStringAsFixed(2)} ${widget.trip.currencyCode}';
+      tint = AppColors.warning;
+      content = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              FaIcon(FontAwesomeIcons.triangleExclamation, color: tint, size: 16.r),
+              AppSpacing.sm.horizontalSpace,
+              Expanded(
+                child: Text(
+                  AppStrings.tripWaitingGraceOver,
+                  style: AppTextStyles.s12w400.copyWith(color: context.onSurface),
+                ),
+              ),
+            ],
+          ),
+          AppSpacing.xs.verticalSpace,
+          Text(
+            AppStrings.tripWaitingFeeAccruing.trParams({'amount': amount}),
+            style: AppTextStyles.s16w600.copyWith(color: tint),
+          ),
+        ],
+      );
+    }
+
+    return Padding(
+      padding: REdgeInsets.only(top: AppSpacing.md),
+      child: Container(
+        width: double.infinity,
+        padding: REdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: tint.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(AppRadii.md.r),
+          border: Border.all(color: tint.withValues(alpha: 0.30), width: 1.r),
+        ),
+        child: content,
+      ),
+    );
   }
 
   void _maybeStartCooldownTicker() {
@@ -126,6 +208,7 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
               color: context.onSurface.withValues(alpha: 0.60),
             ),
           ),
+          _buildWaitingInfo(context),
           AppSpacing.md.verticalSpace,
           TripRouteCardWidget(trip: trip),
           AppSpacing.sm.verticalSpace,

@@ -8,6 +8,8 @@ class TripEvent with _$TripEvent {
       _RealtimeEventReceived;
   const factory TripEvent.fetchActiveRequested(String tripId) =
       _FetchActiveRequested;
+  const factory TripEvent.activeTripResolveRequested() =
+      _ActiveTripResolveRequested;
   const factory TripEvent.tripSelected(String tripId) = _TripSelected;
   const factory TripEvent.selectionCleared() = _SelectionCleared;
   const factory TripEvent.markEnRouteRequested(String tripId) =

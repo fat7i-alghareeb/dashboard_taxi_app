@@ -27,7 +27,9 @@ class _RootScreenState extends State<RootScreen> {
           create: (_) => getIt<RootBloc>()..add(const RootEvent.started()),
         ),
         BlocProvider<TripBloc>.value(
-          value: getIt<TripBloc>()..add(const TripEvent.started()),
+          value: getIt<TripBloc>()
+            ..add(const TripEvent.started())
+            ..add(const TripEvent.activeTripResolveRequested()),
         ),
       ],
       child: const RootBody(),

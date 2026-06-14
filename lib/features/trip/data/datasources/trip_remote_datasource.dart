@@ -34,6 +34,19 @@ class TripRemoteDataSource {
     });
   }
 
+  /// Returns the driver's current assigned active trip, or null on 204.
+  Future<TripModel?> getActiveTrip() {
+    return rethrowAsAppException(() async {
+      printY('[TripRemoteDataSource] getActiveTrip');
+      final response = await _dio.get<dynamic>(ApiEndpoints.tripActive);
+      final data = response.data;
+      if (response.statusCode == 204 || data == null || data is! Map) {
+        return null;
+      }
+      return TripModel.fromJson(Map<String, dynamic>.from(data));
+    });
+  }
+
   Future<void> markEnRoute(String tripId) {
     return _postAction(tripId, 'en-route');
   }

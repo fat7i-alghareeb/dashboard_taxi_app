@@ -30,6 +30,14 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
+  Future<Result<TripEntity?>> getActiveTrip() {
+    return runAsResult(() async {
+      final model = await _remote.getActiveTrip();
+      return model?.toEntity;
+    });
+  }
+
+  @override
   Future<Result<void>> markEnRoute(String tripId) {
     return runAsResult(() => _remote.markEnRoute(tripId));
   }

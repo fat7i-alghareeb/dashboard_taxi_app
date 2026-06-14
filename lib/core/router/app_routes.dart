@@ -93,6 +93,14 @@ class AppRouteRegistry {
       ),
     ),
     GoRoute(
+      path: CompanyContactScreen.pagePath,
+      name: CompanyContactScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const CompanyContactScreen(),
+      ),
+    ),
+    GoRoute(
       path: CreateAdminScreen.pagePath,
       name: CreateAdminScreen.pageName,
       pageBuilder: (context, state) => AppPageTransitions.build(

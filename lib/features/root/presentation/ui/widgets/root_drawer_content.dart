@@ -8,6 +8,7 @@ import 'package:dashboardtaxi/core/services/session/auth_state_notifier.dart';
 import 'package:dashboardtaxi/core/theme/theme_controller.dart';
 import 'package:dashboardtaxi/features/admin_management/presentation/ui/screens/create_admin_screen.dart';
 import 'package:dashboardtaxi/features/auth/presentation/ui/screens/change_password_screen.dart';
+import 'package:dashboardtaxi/features/company_contact/presentation/ui/screens/company_contact_screen.dart';
 import 'package:dashboardtaxi/features/compensation/presentation/ui/screens/compensation_claims_screen.dart';
 import 'package:dashboardtaxi/features/control_center/presentation/ui/screens/control_center_screen.dart';
 import 'package:dashboardtaxi/features/notifications/presentation/ui/screens/send_notification_screen.dart';
@@ -95,6 +96,14 @@ class RootDrawerContent extends StatelessWidget {
         onTap: () {
           Navigator.maybePop(context);
           context.pushNamed(ControlCenterScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.solidBuilding,
+        label: AppStrings.companyInfoTitle,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(CompanyContactScreen.pageName);
         },
       ),
       DrawerMenuItem(
