@@ -1,4 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/common/widgets/stop_address_actions_widget.dart';
 
 class DashboardTripStopLineWidget extends StatelessWidget {
   const DashboardTripStopLineWidget({
@@ -7,12 +8,16 @@ class DashboardTripStopLineWidget extends StatelessWidget {
     required this.value,
     required this.isPickup,
     required this.isLast,
+    this.latitude,
+    this.longitude,
   });
 
   final String label;
   final String value;
   final bool isPickup;
   final bool isLast;
+  final double? latitude;
+  final double? longitude;
 
   @override
   Widget build(BuildContext context) {
@@ -60,13 +65,27 @@ class DashboardTripStopLineWidget extends StatelessWidget {
                     ),
                   ),
                   AppSpacing.xs.verticalSpace,
-                  Text(
-                    value,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.s14w500.copyWith(
-                      color: context.onSurface,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          value,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.s14w500.copyWith(
+                            color: context.onSurface,
+                          ),
+                        ),
+                      ),
+                      AppSpacing.sm.horizontalSpace,
+                      StopAddressActionsWidget(
+                        address: value,
+                        latitude: latitude,
+                        longitude: longitude,
+                        highlight: isPickup,
+                      ),
+                    ],
                   ),
                 ],
               ),

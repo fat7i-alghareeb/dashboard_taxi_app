@@ -26,8 +26,8 @@ class TripRouteCardWidget extends StatelessWidget {
             label: i == 0
                 ? AppStrings.tripPickup
                 : i == stops.length - 1
-                    ? AppStrings.tripDropoff
-                    : '${AppStrings.tripStop} $i',
+                ? AppStrings.tripDropoff
+                : AppStrings.tripStopNumber.trParams({'number': '$i'}),
             value: stops[i].displayLabel,
             isPickup: i == 0,
             isLast: i == stops.length - 1,

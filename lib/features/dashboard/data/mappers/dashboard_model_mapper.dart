@@ -186,6 +186,20 @@ extension DashboardTripDetailsModelMapper on DashboardTripDetailsModel {
       completedAt: completedAt,
       stops: stops.map((stop) => stop.toEntity).toList(),
       passengerNote: passengerNote,
+      cancellation: cancellation == null
+          ? null
+          : DashboardCancellationEntity(
+              actor: cancellation!.actor,
+              reason: cancellation!.reason,
+              refundPercent: cancellation!.refundPercent,
+              refundAmount: cancellation!.refundAmount,
+              currencyCode: cancellation!.currencyCode,
+              note: cancellation!.note,
+              createdAt: cancellation!.createdAt,
+            ),
+      waitingFeeTotal: waitingFeeTotal,
+      waitingBillableMinutes: waitingBillableMinutes,
+      currencyCode: currencyCode,
     );
   }
 }

@@ -52,6 +52,7 @@ class TripModel {
     this.passengerPhone,
     this.routeSegments = const [],
     this.encodedOverviewPolyline,
+    this.isAirport = false,
   });
 
   final String id;
@@ -75,6 +76,7 @@ class TripModel {
   final String? passengerPhone;
   final List<TripRouteSegmentModel> routeSegments;
   final String? encodedOverviewPolyline;
+  final bool isAirport;
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
     final stopsJson =
@@ -119,6 +121,7 @@ class TripModel {
               .toList() ??
           const [],
       encodedOverviewPolyline: _readNullableString(json, 'encodedOverviewPolyline'),
+      isAirport: (json['isAirport'] ?? json['IsAirport']) as bool? ?? false,
     );
   }
 }

@@ -9,25 +9,36 @@ class DashboardTripStopsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pickup = details.pickup;
-    final dropoff = details.dropoff;
+    final stops = details.stops;
+
+    if (stops.isEmpty) {
+      return DashboardTripStopLineWidget(
+        label: AppStrings.dashboardRouteSummary,
+        value: AppStrings.tripUnknownAddress,
+        isPickup: false,
+        isLast: true,
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DashboardTripStopLineWidget(
-          label: AppStrings.tripPickup,
-          value: pickup?.label ?? AppStrings.tripUnknownAddress,
-          isPickup: true,
-          isLast: false,
-        ),
-        DashboardTripStopLineWidget(
-          label: AppStrings.tripDropoff,
-          value: dropoff?.label ?? AppStrings.tripUnknownAddress,
-          isPickup: false,
-          isLast: true,
-        ),
+        for (var i = 0; i < stops.length; i++)
+          DashboardTripStopLineWidget(
+            label: _labelForStop(i, stops.length),
+            value: stops[i].displayLabel,
+            isPickup: i == 0,
+            isLast: i == stops.length - 1,
+            latitude: stops[i].latitude,
+            longitude: stops[i].longitude,
+          ),
       ],
     );
+  }
+
+  String _labelForStop(int index, int total) {
+    if (index == 0) return AppStrings.tripPickup;
+    if (index == total - 1) return AppStrings.tripDropoff;
+    return AppStrings.tripStopNumber.trParams({'number': '$index'});
   }
 }

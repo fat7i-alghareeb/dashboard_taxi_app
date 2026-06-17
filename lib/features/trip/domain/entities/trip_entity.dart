@@ -87,6 +87,7 @@ class TripEntity {
     this.passengerPhone,
     this.routeSegments = const [],
     this.encodedOverviewPolyline,
+    this.isAirport = false,
   });
 
   final String id;
@@ -110,6 +111,7 @@ class TripEntity {
   final String? passengerPhone;
   final List<TripRouteSegmentEntity> routeSegments;
   final String? encodedOverviewPolyline;
+  final bool isAirport;
 
   TripStopEntity? get pickup => stops.isEmpty ? null : stops.first;
   TripStopEntity? get dropoff => stops.length < 2 ? null : stops.last;
@@ -143,6 +145,7 @@ class TripEntity {
       passengerPhone: passengerPhone,
       routeSegments: routeSegments,
       encodedOverviewPolyline: encodedOverviewPolyline,
+      isAirport: isAirport,
     );
   }
 

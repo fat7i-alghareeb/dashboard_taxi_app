@@ -1,4 +1,6 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/core/domain/extensions/user_role_extensions.dart';
+import 'package:dashboardtaxi/core/services/session/auth_manager.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 
 /// Admin-only "Cancel trip" action. Cancels via the passenger/admin
@@ -16,6 +18,12 @@ class TripAdminCancelButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Defense-in-depth: this admin-only action is also enforced server-side,
+    // but never render it for non-admins.
+    if (getIt<AuthManager>().currentUser?.isAdmin != true) {
+      return const SizedBox.shrink();
+    }
+
     return AppButton.outline(
       variant: AppButtonVariant.error,
       isLoading: isLoading,

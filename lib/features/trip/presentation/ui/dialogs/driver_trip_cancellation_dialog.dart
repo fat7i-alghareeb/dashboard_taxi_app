@@ -3,15 +3,27 @@ import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/dialogs/trip_cancel_reason_row_widget.dart';
 
 class DriverTripCancellationDialog extends StatefulWidget {
-  const DriverTripCancellationDialog({super.key, required this.tripId});
+  const DriverTripCancellationDialog({
+    super.key,
+    required this.tripId,
+    this.isAirport = false,
+  });
 
   final String tripId;
+  final bool isAirport;
 
-  static Future<void> show(BuildContext context, String tripId) {
+  static Future<void> show(
+    BuildContext context,
+    String tripId, {
+    bool isAirport = false,
+  }) {
     return AppDialog.show<void>(
       context,
       dialog: AppDialog.basic(
-        child: DriverTripCancellationDialog(tripId: tripId),
+        child: DriverTripCancellationDialog(
+          tripId: tripId,
+          isAirport: isAirport,
+        ),
       ),
     );
   }
@@ -23,13 +35,15 @@ class DriverTripCancellationDialog extends StatefulWidget {
 
 class _DriverTripCancellationDialogState
     extends State<DriverTripCancellationDialog> {
-  static const _reasons = [
+  late final List<String> _reasons = [
+    // Airport trips surface the policy-specific "declined to keep waiting" reason.
+    if (widget.isAirport) 'AirportWaitDeclined',
     'PassengerLate',
     'PassengerNoShow',
     'PassengerUnreachable',
   ];
 
-  String _selectedReason = _reasons.first;
+  late String _selectedReason = _reasons.first;
   final _noteController = TextEditingController();
 
   @override
@@ -42,6 +56,7 @@ class _DriverTripCancellationDialogState
     'PassengerLate' => AppStrings.passengerLateReason,
     'PassengerNoShow' => AppStrings.passengerNoShowReason,
     'PassengerUnreachable' => AppStrings.passengerUnreachableReason,
+    'AirportWaitDeclined' => AppStrings.airportWaitDeclinedReason,
     _ => reason,
   };
 

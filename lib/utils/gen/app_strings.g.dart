@@ -21,6 +21,8 @@ class AppStrings {
   static String get adminTakeTrip => 'adminTakeTrip'.tr();
   /// more waiting - في الانتظار - wachtend - wartend - oczekujące - очікують - en attente - en espera - în așteptare
   static String get adminWaitingMore => 'adminWaitingMore'.tr();
+  /// Can't continue waiting (airport) - لا يمكن الاستمرار في الانتظار (المطار) - Kan niet langer wachten (luchthaven) - Kann nicht weiter warten (Flughafen) - Nie mogę dłużej czekać (lotnisko) - Не можу далі чекати (аеропорт) - Impossible de continuer à attendre (aéroport) - No puedo seguir esperando (aeropuerto) - Nu pot continua să aștept (aeroport)
+  static String get airportWaitDeclinedReason => 'airportWaitDeclinedReason'.tr();
   /// Fat7i - Fat7i - Fat7i - Fat7i - Fat7i - Fat7i - Fat7i - Fat7i - Fat7i
   static String get appName => 'appName'.tr();
   /// Driver operations - إدارة السائق - Chauffeursbeheer - Fahrerbetrieb - Operacje kierowcy - Операції водія - Espace chauffeur - Operaciones del conductor - Operațiuni șofer
@@ -71,6 +73,18 @@ class AppStrings {
   static String get back => 'back'.tr();
   /// Cancel - إلغاء - Annuleren - Abbrechen - Anuluj - Скасувати - Annuler - Cancelar - Anulează
   static String get cancel => 'cancel'.tr();
+  /// Copy address - نسخ العنوان - Adres kopiëren - Adresse kopieren - Kopiuj adres - Скопіювати адресу - Copier l’adresse - Copiar dirección - Copiază adresa
+  static String get copyAddress => 'copyAddress'.tr();
+  /// Address copied - تم نسخ العنوان - Adres gekopieerd - Adresse kopiert - Adres skopiowany - Адресу скопійовано - Adresse copiée - Dirección copiada - Adresă copiată
+  static String get addressCopied => 'addressCopied'.tr();
+  /// Open in Google Maps - فتح في خرائط Google - Openen in Google Maps - In Google Maps öffnen - Otwórz w Google Maps - Відкрити в Google Maps - Ouvrir dans Google Maps - Abrir en Google Maps - Deschide în Google Maps
+  static String get openInGoogleMaps => 'openInGoogleMaps'.tr();
+  /// Collapse trip sheet - طي لوحة الرحلة - Ritpaneel inklappen - Fahrtbereich einklappen - Zwiń panel przejazdu - Згорнути панель поїздки - Réduire le panneau de trajet - Contraer panel del viaje - Restrânge panoul cursei
+  static String get collapseTripSheet => 'collapseTripSheet'.tr();
+  /// Expand trip sheet - توسيع لوحة الرحلة - Ritpaneel uitklappen - Fahrtbereich ausklappen - Rozwiń panel przejazdu - Розгорнути панель поїздки - Développer le panneau de trajet - Expandir panel del viaje - Extinde panoul cursei
+  static String get expandTripSheet => 'expandTripSheet'.tr();
+  /// Could not open map - تعذر فتح الخريطة - Kan kaart niet openen - Karte konnte nicht geöffnet werden - Nie można otworzyć mapy - Не вдалося відкрити карту - Impossible d’ouvrir la carte - No se pudo abrir el mapa - Harta nu a putut fi deschisă
+  static String get couldNotOpenMap => 'couldNotOpenMap'.tr();
   /// Confirm Cancellation - تأكيد الإلغاء - Annulering bevestigen - Stornierung bestätigen - Potwierdź anulowanie - Підтвердити скасування - Confirmer l'annulation - Confirmar cancelación - Confirmați anularea
   static String get cancelConfirmButton => 'cancelConfirmButton'.tr();
   /// Available 10 minutes after arrival. A 20% refund will be issued to the passenger. - متاح بعد 10 دقائق من الوصول. سيُعاد للراكب 20% من قيمة الرحلة. - Beschikbaar 10 minuten na aankomst. De passagier ontvangt 20% terugbetaling. - Verfügbar 10 Minuten nach Ankunft. Der Fahrgast erhält 20 % Rückerstattung. - Dostępne 10 minut po przyjeździe. Pasażer otrzyma zwrot 20%. - Доступно через 10 хвилин після прибуття. Пасажиру буде повернено 20%. - Disponible 10 minutes après l'arrivée. Le passager recevra un remboursement de 20 %. - Disponible 10 minutos después de llegar. Se emitirá un reembolso del 20% al pasajero. - Disponibil la 10 minute după sosire. Pasagerului i se va rambursa 20%.
@@ -801,6 +815,12 @@ class AppStrings {
   static String get scheduledNotReadyShort => 'scheduledNotReadyShort'.tr();
   /// This trip is scheduled and can only be accepted at {when}. - هذه الرحلة مجدولة ولا يمكن قبولها قبل {when}. - Deze rit is gepland en kan pas op {when} worden geaccepteerd. - Diese Fahrt ist geplant und kann erst um {when} angenommen werden. - Ten przejazd jest zaplanowany i można go przyjąć dopiero o {when}. - Цю поїздку заплановано — її можна прийняти лише о {when}. - Ce trajet est programmé et ne peut être accepté qu'à {when}. - Este viaje está programado y solo puede aceptarse a las {when}. - Această cursă este programată și poate fi acceptată doar la {when}.
   static String get scheduledNotReadyWarning => 'scheduledNotReadyWarning'.tr();
+  /// This trip is scheduled and can only be marked on the way 15 minutes before {when}. - هذه الرحلة مجدولة ولا يمكن وضعها في حالة الطريق إلا قبل {when} بـ 15 دقيقة. - Deze rit is gepland en kan pas 15 minuten voor {when} als onderweg worden gemarkeerd. - Diese Fahrt ist geplant und kann erst 15 Minuten vor {when} als unterwegs markiert werden. - Ten przejazd jest zaplanowany i można go oznaczyć jako w drodze dopiero 15 minut przed {when}. - Цю поїздку заплановано — її можна позначити як у дорозі лише за 15 хвилин до {when}. - Ce trajet est programmé et ne peut être marqué en route que 15 minutes avant {when}. - Este viaje está programado y solo puede marcarse en camino 15 minutos antes de {when}. - Această cursă este programată și poate fi marcată ca în drum doar cu 15 minute înainte de {when}.
+  static String get scheduledEnRouteNotReadyWarning => 'scheduledEnRouteNotReadyWarning'.tr();
+  /// This trip is scheduled and can only be marked arrived at {when}. - هذه الرحلة مجدولة ولا يمكن تسجيل الوصول قبل {when}. - Deze rit is gepland en kan pas op {when} als aangekomen worden gemarkeerd. - Diese Fahrt ist geplant und kann erst um {when} als angekommen markiert werden. - Ten przejazd jest zaplanowany i można go oznaczyć jako przybyły dopiero o {when}. - Цю поїздку заплановано — її можна позначити як прибуття лише о {when}. - Ce trajet est programmé et ne peut être marqué arrivé qu'à {when}. - Este viaje está programado y solo puede marcarse como llegado a las {when}. - Această cursă este programată și poate fi marcată ca sosită doar la {when}.
+  static String get scheduledArrivalNotReadyWarning => 'scheduledArrivalNotReadyWarning'.tr();
+  /// This trip is scheduled and can only be started at {when}. - هذه الرحلة مجدولة ولا يمكن بدؤها قبل {when}. - Deze rit is gepland en kan pas op {when} worden gestart. - Diese Fahrt ist geplant und kann erst um {when} gestartet werden. - Ten przejazd jest zaplanowany i można go rozpocząć dopiero o {when}. - Цю поїздку заплановано — її можна почати лише о {when}. - Ce trajet est programmé et ne peut commencer qu'à {when}. - Este viaje está programado y solo puede iniciarse a las {when}. - Această cursă este programată și poate fi începută doar la {when}.
+  static String get scheduledStartNotReadyWarning => 'scheduledStartNotReadyWarning'.tr();
   /// Search - بحث - Zoeken - Suche - Szukaj - Пошук - Rechercher - Buscar - Căutare
   static String get search => 'search'.tr();
   /// Select date - اختر التاريخ - Datum selecteren - Datum wählen - Wybierz datę - Вибрати дату - Choisir la date - Seleccionar fecha - Selectează data
@@ -1100,4 +1120,3 @@ class AppStrings {
   /// Your journey begins here. - رحلتك تبدأ هنا. - Je reis begint hier. - Deine Reise beginnt hier. - Twoja podróż zaczyna się tutaj. - Ваша подорож починається тут. - Votre voyage commence ici. - Tu viaje comienza aquí. - Călătoria ta începe aici.
   static String get yourJourneyBeginsHere => 'yourJourneyBeginsHere'.tr();
 }
-

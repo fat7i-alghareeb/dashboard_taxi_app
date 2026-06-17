@@ -58,16 +58,24 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
     if (arrivedAt == null) return const SizedBox.shrink();
 
     final session = widget.trip.activeWaitingSession;
-    final graceMinutes = session?.graceMinutes ?? 10;
+    final graceMinutes =
+        session?.graceMinutes ?? (widget.trip.isAirport ? 30 : 10);
     final ratePerMinute = session?.ratePerMinute ?? 0;
-    final elapsed = DateTime.now().difference(arrivedAt);
+    final waitingStart = _effectiveWaitingStart(arrivedAt);
+    final elapsed = DateTime.now().difference(waitingStart);
     final graceRemaining = Duration(minutes: graceMinutes) - elapsed;
 
     final Widget content;
     final Color tint;
     if (graceRemaining > Duration.zero) {
-      final mm = graceRemaining.inMinutes.remainder(60).toString().padLeft(2, '0');
-      final ss = graceRemaining.inSeconds.remainder(60).toString().padLeft(2, '0');
+      final mm = graceRemaining.inMinutes
+          .remainder(60)
+          .toString()
+          .padLeft(2, '0');
+      final ss = graceRemaining.inSeconds
+          .remainder(60)
+          .toString()
+          .padLeft(2, '0');
       tint = context.primary;
       content = Row(
         children: [
@@ -92,12 +100,18 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
         children: [
           Row(
             children: [
-              FaIcon(FontAwesomeIcons.triangleExclamation, color: tint, size: 16.r),
+              FaIcon(
+                FontAwesomeIcons.triangleExclamation,
+                color: tint,
+                size: 16.r,
+              ),
               AppSpacing.sm.horizontalSpace,
               Expanded(
                 child: Text(
                   AppStrings.tripWaitingGraceOver,
-                  style: AppTextStyles.s12w400.copyWith(color: context.onSurface),
+                  style: AppTextStyles.s12w400.copyWith(
+                    color: context.onSurface,
+                  ),
                 ),
               ),
             ],
@@ -152,9 +166,13 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
     final trip = widget.trip;
     final state = widget.state;
     final arrivedAt = state.arrivedAt;
-    final tenMinPassed =
+    // Airport trips give the passenger 30 free minutes before the driver may
+    // decline to keep waiting; regular trips use the 10-minute no-show window.
+    final waitThresholdMinutes = trip.isAirport ? 30 : 10;
+    final waitThresholdPassed =
         arrivedAt != null &&
-        DateTime.now().difference(arrivedAt) >= const Duration(minutes: 10);
+        DateTime.now().difference(_effectiveWaitingStart(arrivedAt)) >=
+            Duration(minutes: waitThresholdMinutes);
     final cooldownRemaining = _remainingCooldownSeconds();
     final resendDisabled =
         cooldownRemaining > 0 || state.resendArrivedNotificationState.isLoading;
@@ -163,6 +181,11 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
             'seconds': cooldownRemaining,
           })
         : AppStrings.notifyCustomerAgain;
+    final scheduledStartAtLocal = trip.scheduledAtUtc?.toLocal();
+    final isScheduledStartNotReady =
+        scheduledStartAtLocal != null &&
+        scheduledStartAtLocal.isAfter(DateTime.now());
+    final scheduledStartLabel = scheduledStartAtLocal?.toSmartDateTime() ?? '';
 
     return MultiBlocListener(
       listeners: [
@@ -216,7 +239,16 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
           AppSpacing.md.verticalSpace,
           AppButton.primary(
             isLoading: state.startTripState.isLoading,
+            isActive: !isScheduledStartNotReady,
             layout: const AppButtonLayout(height: 52),
+            onTapWhenInactive: !isScheduledStartNotReady
+                ? null
+                : () => showErrorOverlay(
+                    context,
+                    AppStrings.scheduledStartNotReadyWarning.trParams({
+                      'when': scheduledStartLabel,
+                    }),
+                  ),
             onTap: () => context.read<TripBloc>().add(
               TripEvent.startTripRequested(trip.id),
             ),
@@ -247,13 +279,17 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
               textStyle: AppTextStyles.s14w500,
             ),
           ),
-          if (tenMinPassed) ...[
+          if (waitThresholdPassed) ...[
             AppSpacing.md.verticalSpace,
             AppButton.outline(
               variant: AppButtonVariant.error,
               isLoading: state.driverCancelState.isLoading,
               layout: const AppButtonLayout(height: 44),
-              onTap: () => DriverTripCancellationDialog.show(context, trip.id),
+              onTap: () => DriverTripCancellationDialog.show(
+                context,
+                trip.id,
+                isAirport: trip.isAirport,
+              ),
               child: AppButtonChild.labelIcon(
                 label: AppStrings.passengerLateNoShowTitle,
                 icon: IconSource.widget(
@@ -272,5 +308,13 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
         ],
       ),
     );
+  }
+
+  DateTime _effectiveWaitingStart(DateTime arrivedAt) {
+    final scheduledAtLocal = widget.trip.scheduledAtUtc?.toLocal();
+    if (scheduledAtLocal != null && scheduledAtLocal.isAfter(arrivedAt)) {
+      return scheduledAtLocal;
+    }
+    return arrivedAt;
   }
 }

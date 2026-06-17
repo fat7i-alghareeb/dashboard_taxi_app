@@ -14,11 +14,12 @@ import 'stages/trip_to_pickup_sheet.dart';
 /// `OrderSheetSection` pattern: a single sheet host that swaps content via
 /// `AnimatedSwitcher` based on the trip lifecycle stage.
 class TripSheetSection extends StatelessWidget {
-  const TripSheetSection({super.key, this.idleBuilder});
+  const TripSheetSection({super.key, this.idleBuilder, this.onCollapse});
 
   /// Rendered while no active or completed trip exists. Drivers see their
   /// online/offline controls here; admins typically render an empty box.
   final WidgetBuilder? idleBuilder;
+  final VoidCallback? onCollapse;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +44,7 @@ class TripSheetSection extends StatelessWidget {
         }
 
         return _TripSheetChrome(
+          onCollapse: stage == TripSheetStage.idle ? null : onCollapse,
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 280),
             switchInCurve: Curves.easeOut,
@@ -118,9 +120,10 @@ class TripSheetSection extends StatelessWidget {
 }
 
 class _TripSheetChrome extends StatelessWidget {
-  const _TripSheetChrome({required this.child});
+  const _TripSheetChrome({required this.child, this.onCollapse});
 
   final Widget child;
+  final VoidCallback? onCollapse;
 
   @override
   Widget build(BuildContext context) {
@@ -145,19 +148,37 @@ class _TripSheetChrome extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  _DragHandle(),
-                  Positioned(
-                    right: 0,
-                    child: _SheetCloseButton(
-                      onPressed: () => context
-                          .read<TripBloc>()
-                          .add(const TripEvent.selectionCleared()),
+              SizedBox(
+                height: 44.r,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    _DragHandle(),
+                    if (onCollapse != null)
+                      PositionedDirectional(
+                        start: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: _SheetHeaderButton(
+                          tooltip: AppStrings.collapseTripSheet,
+                          icon: Icons.keyboard_arrow_down_rounded,
+                          onPressed: onCollapse!,
+                        ),
+                      ),
+                    PositionedDirectional(
+                      end: 0,
+                      top: 0,
+                      bottom: 0,
+                      child: _SheetHeaderButton(
+                        tooltip: AppStrings.cancel,
+                        icon: Icons.close_rounded,
+                        onPressed: () => context.read<TripBloc>().add(
+                          const TripEvent.selectionCleared(),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               AppSpacing.md.verticalSpace,
               child,
@@ -183,27 +204,36 @@ class _DragHandle extends StatelessWidget {
   }
 }
 
-class _SheetCloseButton extends StatelessWidget {
-  const _SheetCloseButton({required this.onPressed});
+class _SheetHeaderButton extends StatelessWidget {
+  const _SheetHeaderButton({
+    required this.tooltip,
+    required this.icon,
+    required this.onPressed,
+  });
 
+  final String tooltip;
+  final IconData icon;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 32.r,
-      height: 32.r,
-      child: Material(
-        color: context.onSurface.withValues(alpha: 0.06),
-        shape: const CircleBorder(),
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: onPressed,
-          child: Center(
-            child: FaIcon(
-              FontAwesomeIcons.xmark,
-              size: 14.r,
-              color: context.onSurface.withValues(alpha: 0.72),
+    return Tooltip(
+      message: tooltip,
+      child: SizedBox(
+        width: 40.r,
+        height: 40.r,
+        child: Material(
+          color: context.onSurface.withValues(alpha: 0.10),
+          shape: const CircleBorder(),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: onPressed,
+            child: Center(
+              child: Icon(
+                icon,
+                size: 24.r,
+                color: context.onSurface.withValues(alpha: 0.88),
+              ),
             ),
           ),
         ),

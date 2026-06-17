@@ -215,6 +215,10 @@ class DashboardTripDetailsEntity {
     required this.completedAt,
     required this.stops,
     this.passengerNote,
+    this.cancellation,
+    this.waitingFeeTotal = 0,
+    this.waitingBillableMinutes = 0,
+    this.currencyCode = 'EUR',
   });
 
   final String id;
@@ -234,9 +238,42 @@ class DashboardTripDetailsEntity {
   final DateTime? completedAt;
   final List<DashboardTripStopEntity> stops;
   final String? passengerNote;
+  final DashboardCancellationEntity? cancellation;
+  final double waitingFeeTotal;
+  final int waitingBillableMinutes;
+  final String currencyCode;
+
+  String? get waitingFeeLabel => waitingFeeTotal > 0
+      ? '${waitingFeeTotal.toStringAsFixed(2)} $currencyCode'
+            '${waitingBillableMinutes > 0 ? ' ($waitingBillableMinutes min)' : ''}'
+      : null;
 
   DashboardTripStopEntity? get pickup => stops.firstOrNull;
   DashboardTripStopEntity? get dropoff => stops.length > 1 ? stops.last : null;
+}
+
+class DashboardCancellationEntity {
+  const DashboardCancellationEntity({
+    required this.actor,
+    required this.reason,
+    required this.refundPercent,
+    required this.refundAmount,
+    required this.currencyCode,
+    this.note,
+    this.createdAt,
+  });
+
+  final String actor;
+  final String reason;
+  final double refundPercent;
+  final double refundAmount;
+  final String currencyCode;
+  final String? note;
+  final DateTime? createdAt;
+
+  String get refundLabel =>
+      '${refundAmount.toStringAsFixed(2)} $currencyCode '
+      '(${refundPercent.toStringAsFixed(0)}%)';
 }
 
 class DashboardTripStopEntity {

@@ -1,4 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/common/widgets/stop_address_actions_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
 
 /// Compact, in-card stop list used by the trips management row. Renders every
@@ -24,11 +25,13 @@ class DashboardTripCardStopsWidget extends StatelessWidget {
             label: fallbackPickup,
             kind: _StopKind.pickup,
             isLast: false,
+            canOpenMap: false,
           ),
           _StopLine(
             label: fallbackDropoff,
             kind: _StopKind.dropoff,
             isLast: true,
+            canOpenMap: false,
           ),
         ],
       );
@@ -43,6 +46,8 @@ class DashboardTripCardStopsWidget extends StatelessWidget {
             kind: _resolveKind(i, stops.length),
             indexLabel: _indexLabel(i, stops.length),
             isLast: i == stops.length - 1,
+            latitude: stops[i].latitude,
+            longitude: stops[i].longitude,
           ),
       ],
     );
@@ -71,12 +76,18 @@ class _StopLine extends StatelessWidget {
     required this.kind,
     required this.isLast,
     this.indexLabel,
+    this.latitude,
+    this.longitude,
+    this.canOpenMap = true,
   });
 
   final String label;
   final _StopKind kind;
   final bool isLast;
   final String? indexLabel;
+  final double? latitude;
+  final double? longitude;
+  final bool canOpenMap;
 
   @override
   Widget build(BuildContext context) {
@@ -132,13 +143,26 @@ class _StopLine extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: REdgeInsets.only(bottom: isLast ? 0 : AppSpacing.sm),
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.s12w400.copyWith(
-                  color: context.onSurface.withValues(alpha: textOpacity),
-                ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.s12w400.copyWith(
+                        color: context.onSurface.withValues(alpha: textOpacity),
+                      ),
+                    ),
+                  ),
+                  AppSpacing.xs.horizontalSpace,
+                  StopAddressActionsWidget(
+                    address: label,
+                    latitude: canOpenMap ? latitude : null,
+                    longitude: canOpenMap ? longitude : null,
+                    highlight: kind == _StopKind.pickup,
+                  ),
+                ],
               ),
             ),
           ),

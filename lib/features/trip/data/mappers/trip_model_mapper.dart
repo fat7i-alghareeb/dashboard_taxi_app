@@ -35,6 +35,7 @@ extension TripModelMapper on TripModel {
     passengerPhone: passengerPhone,
     routeSegments: routeSegments.map((e) => e.toEntity).toList(),
     encodedOverviewPolyline: encodedOverviewPolyline,
+    isAirport: isAirport,
   );
 }
 

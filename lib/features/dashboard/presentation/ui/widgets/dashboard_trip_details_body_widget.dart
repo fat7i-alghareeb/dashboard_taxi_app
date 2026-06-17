@@ -37,6 +37,13 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
           details.fareLabel,
           style: AppTextStyles.s14w500.copyWith(color: context.primary),
         ),
+        if (details.waitingFeeLabel != null) ...[
+          AppSpacing.xs.verticalSpace,
+          Text(
+            'Waiting fee: ${details.waitingFeeLabel}',
+            style: AppTextStyles.s12w500.copyWith(color: AppColors.warning),
+          ),
+        ],
         AppSpacing.lg.verticalSpace,
         const DashboardDividerWidget(),
         AppSpacing.lg.verticalSpace,
@@ -72,6 +79,12 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
             );
           },
         ),
+        if (details.cancellation != null) ...[
+          AppSpacing.xl.verticalSpace,
+          const DashboardOverviewLabelWidget(label: 'Cancellation'),
+          AppSpacing.md.verticalSpace,
+          _CancellationSection(cancellation: details.cancellation!),
+        ],
         AppSpacing.xl.verticalSpace,
         if (details.passengerNote?.trim().isNotEmpty == true) ...[
           DashboardOverviewLabelWidget(
@@ -116,6 +129,66 @@ class _PassengerNoteSection extends StatelessWidget {
           color: context.onSurface,
           height: 1.35,
         ),
+      ),
+    );
+  }
+}
+
+class _CancellationSection extends StatelessWidget {
+  const _CancellationSection({required this.cancellation});
+
+  final DashboardCancellationEntity cancellation;
+
+  static String _humanize(String value) => value.replaceAllMapped(
+        RegExp(r'([a-z])([A-Z])'),
+        (m) => '${m[1]} ${m[2]}',
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = <Widget>[
+      DashboardTripDetailInfoRowWidget(
+        label: 'Cancelled by',
+        value: _humanize(cancellation.actor),
+      ),
+      DashboardTripDetailInfoRowWidget(
+        label: 'Reason',
+        value: _humanize(cancellation.reason),
+      ),
+      DashboardTripDetailInfoRowWidget(
+        label: 'Refund',
+        value: cancellation.refundLabel,
+      ),
+      if (cancellation.createdAt != null)
+        DashboardTripDetailInfoRowWidget(
+          label: 'Cancelled at',
+          value: cancellation.createdAt!.toSmartDateTime(),
+        ),
+    ];
+
+    return Container(
+      width: double.infinity,
+      padding: REdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: context.error.withValues(alpha: 0.07),
+        borderRadius: BorderRadius.circular(AppRadii.md.r),
+        border: Border.all(color: context.error.withValues(alpha: 0.16)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var i = 0; i < rows.length; i++) ...[
+            if (i > 0) AppSpacing.md.verticalSpace,
+            rows[i],
+          ],
+          if (cancellation.note?.trim().isNotEmpty == true) ...[
+            AppSpacing.md.verticalSpace,
+            DashboardTripDetailInfoRowWidget(
+              label: 'Note',
+              value: cancellation.note!.trim(),
+            ),
+          ],
+        ],
       ),
     );
   }

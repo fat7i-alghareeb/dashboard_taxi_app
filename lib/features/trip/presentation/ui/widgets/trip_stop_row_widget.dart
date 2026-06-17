@@ -1,5 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:dashboardtaxi/common/widgets/stop_address_actions_widget.dart';
 
 class TripStopRowWidget extends StatelessWidget {
   const TripStopRowWidget({
@@ -28,8 +28,8 @@ class TripStopRowWidget extends StatelessWidget {
     final dotColor = isCompleted
         ? AppColors.success
         : isNext
-            ? context.primary
-            : context.onSurface.withValues(alpha: 0.45);
+        ? context.primary
+        : context.onSurface.withValues(alpha: 0.45);
 
     final lineColor = isCompleted
         ? AppColors.success.withValues(alpha: 0.4)
@@ -77,7 +77,9 @@ class TripStopRowWidget extends StatelessWidget {
                             color: isNext
                                 ? context.primary
                                 : context.onSurface.withValues(alpha: 0.50),
-                            fontWeight: isNext ? FontWeight.w700 : FontWeight.w500,
+                            fontWeight: isNext
+                                ? FontWeight.w700
+                                : FontWeight.w500,
                             letterSpacing: 1.1,
                           ),
                         ),
@@ -88,45 +90,21 @@ class TripStopRowWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.s14w500.copyWith(
                             color: context.onSurface,
-                            fontWeight: isNext ? FontWeight.w700 : FontWeight.w500,
+                            fontWeight: isNext
+                                ? FontWeight.w700
+                                : FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  if (latitude != null && longitude != null) ...[
-                    AppSpacing.sm.horizontalSpace,
-                    Center(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppRadii.md.r),
-                        child: Material(
-                          color: isNext
-                              ? context.primary.withValues(alpha: 0.12)
-                              : context.onSurface.withValues(alpha: 0.05),
-                          child: InkWell(
-                            onTap: () async {
-                              final url = Uri.parse(
-                                  'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url,
-                                    mode: LaunchMode.externalApplication);
-                              }
-                            },
-                            child: Padding(
-                              padding: REdgeInsets.all(AppSpacing.sm),
-                              child: FaIcon(
-                                FontAwesomeIcons.mapLocationDot,
-                                color: isNext
-                                    ? context.primary
-                                    : context.onSurface.withValues(alpha: 0.6),
-                                size: 16.r,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  AppSpacing.sm.horizontalSpace,
+                  StopAddressActionsWidget(
+                    address: value,
+                    latitude: latitude,
+                    longitude: longitude,
+                    highlight: isNext,
+                  ),
                 ],
               ),
             ),

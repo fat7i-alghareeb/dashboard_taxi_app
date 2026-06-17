@@ -1,4 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/dialogs/driver_trip_cancellation_dialog.dart';
@@ -40,7 +41,9 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
         AppSpacing.md.verticalSpace,
         AppButton.primary(
           isLoading: config.isLoading,
+          isActive: config.isActive,
           layout: const AppButtonLayout(height: 52),
+          onTapWhenInactive: config.onTapWhenInactive,
           onTap: () => context.read<TripBloc>().add(config.event),
           child: AppButtonChild.labelIcon(
             label: config.label,
@@ -56,7 +59,13 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
     final arrivedAt = widget.state.arrivedAt;
     final tenMinPassed =
         arrivedAt != null &&
-        DateTime.now().difference(arrivedAt) >= const Duration(minutes: 10);
+        DateTime.now().difference(_effectiveWaitingStart(arrivedAt)) >=
+            const Duration(minutes: 10);
+    final scheduledStartAtLocal = widget.trip.scheduledAtUtc?.toLocal();
+    final isScheduledStartNotReady =
+        scheduledStartAtLocal != null &&
+        scheduledStartAtLocal.isAfter(DateTime.now());
+    final scheduledStartLabel = scheduledStartAtLocal?.toSmartDateTime() ?? '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -70,7 +79,16 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
         AppSpacing.md.verticalSpace,
         AppButton.primary(
           isLoading: widget.state.startTripState.isLoading,
+          isActive: !isScheduledStartNotReady,
           layout: const AppButtonLayout(height: 52),
+          onTapWhenInactive: !isScheduledStartNotReady
+              ? null
+              : () => showErrorOverlay(
+                  context,
+                  AppStrings.scheduledStartNotReadyWarning.trParams({
+                    'when': scheduledStartLabel,
+                  }),
+                ),
           onTap: () => context.read<TripBloc>().add(
             TripEvent.startTripRequested(widget.trip.id),
           ),
@@ -113,13 +131,39 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
     );
   }
 
+  DateTime _effectiveWaitingStart(DateTime arrivedAt) {
+    final scheduledAtLocal = widget.trip.scheduledAtUtc?.toLocal();
+    if (scheduledAtLocal != null && scheduledAtLocal.isAfter(arrivedAt)) {
+      return scheduledAtLocal;
+    }
+    return arrivedAt;
+  }
+
   _LifecycleConfig get _config {
+    final now = DateTime.now();
+    final scheduledAtLocal = widget.trip.scheduledAtUtc?.toLocal();
+    final scheduledLabel = scheduledAtLocal?.toSmartDateTime() ?? '';
+    final isEnRouteNotReady =
+        scheduledAtLocal != null &&
+        now.isBefore(scheduledAtLocal.subtract(const Duration(minutes: 15)));
+    final isArrivalNotReady =
+        scheduledAtLocal != null && scheduledAtLocal.isAfter(now);
+
     return switch (widget.trip.status) {
       TripStatus.driverAssigned => _LifecycleConfig(
         label: AppStrings.tripStartEnRouteNavigation,
         hint: AppStrings.tripAssignedHint,
         icon: FontAwesomeIcons.route,
         isLoading: widget.state.markEnRouteState.isLoading,
+        isActive: !isEnRouteNotReady,
+        onTapWhenInactive: !isEnRouteNotReady
+            ? null
+            : () => showErrorOverlay(
+                context,
+                AppStrings.scheduledEnRouteNotReadyWarning.trParams({
+                  'when': scheduledLabel,
+                }),
+              ),
         event: TripEvent.markEnRouteRequested(widget.trip.id),
       ),
       TripStatus.driverEnRoute => _LifecycleConfig(
@@ -127,6 +171,15 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
         hint: AppStrings.tripEnRouteHint,
         icon: FontAwesomeIcons.locationDot,
         isLoading: widget.state.markArrivedState.isLoading,
+        isActive: !isArrivalNotReady,
+        onTapWhenInactive: !isArrivalNotReady
+            ? null
+            : () => showErrorOverlay(
+                context,
+                AppStrings.scheduledArrivalNotReadyWarning.trParams({
+                  'when': scheduledLabel,
+                }),
+              ),
         event: TripEvent.markArrivedRequested(widget.trip.id),
       ),
       TripStatus.inProgress => _LifecycleConfig(
@@ -154,6 +207,8 @@ class _LifecycleConfig {
     required this.icon,
     required this.isLoading,
     required this.event,
+    this.isActive = true,
+    this.onTapWhenInactive,
   });
 
   final String label;
@@ -161,4 +216,6 @@ class _LifecycleConfig {
   final FaIconData icon;
   final bool isLoading;
   final TripEvent event;
+  final bool isActive;
+  final VoidCallback? onTapWhenInactive;
 }

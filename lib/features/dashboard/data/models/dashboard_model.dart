@@ -147,6 +147,9 @@ class DashboardTripDetailsModel {
     required this.completedAt,
     required this.stops,
     this.passengerNote,
+    this.cancellation,
+    this.waitingFeeTotal = 0,
+    this.waitingBillableMinutes = 0,
   });
 
   final String id;
@@ -167,6 +170,9 @@ class DashboardTripDetailsModel {
   final DateTime? completedAt;
   final List<DashboardTripStopModel> stops;
   final String? passengerNote;
+  final DashboardCancellationModel? cancellation;
+  final double waitingFeeTotal;
+  final int waitingBillableMinutes;
 
   factory DashboardTripDetailsModel.fromJson(Map<String, dynamic> json) {
     return DashboardTripDetailsModel(
@@ -191,6 +197,46 @@ class DashboardTripDetailsModel {
         'stops',
       ).map((e) => DashboardTripStopModel.fromJson(e)).toList(),
       passengerNote: _readNullableString(json, 'passengerNote'),
+      cancellation: json['cancellation'] is Map
+          ? DashboardCancellationModel.fromJson(
+              Map<String, dynamic>.from(json['cancellation'] as Map),
+            )
+          : null,
+      waitingFeeTotal: (json['waitingFeeTotal'] as num?)?.toDouble() ?? 0,
+      waitingBillableMinutes:
+          (json['waitingBillableMinutes'] as num?)?.toInt() ?? 0,
+    );
+  }
+}
+
+class DashboardCancellationModel {
+  const DashboardCancellationModel({
+    required this.actor,
+    required this.reason,
+    required this.refundPercent,
+    required this.refundAmount,
+    required this.currencyCode,
+    this.note,
+    this.createdAt,
+  });
+
+  final String actor;
+  final String reason;
+  final double refundPercent;
+  final double refundAmount;
+  final String currencyCode;
+  final String? note;
+  final DateTime? createdAt;
+
+  factory DashboardCancellationModel.fromJson(Map<String, dynamic> json) {
+    return DashboardCancellationModel(
+      actor: _readString(json, 'actor'),
+      reason: _readString(json, 'reason'),
+      refundPercent: (json['refundPercent'] as num?)?.toDouble() ?? 0,
+      refundAmount: (json['refundAmount'] as num?)?.toDouble() ?? 0,
+      currencyCode: _readString(json, 'currencyCode', fallback: 'EUR'),
+      note: _readNullableString(json, 'note'),
+      createdAt: DateTime.tryParse(_readString(json, 'createdAtUtc')),
     );
   }
 }
