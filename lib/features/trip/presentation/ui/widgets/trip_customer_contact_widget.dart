@@ -1,5 +1,6 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
+import 'package:dashboardtaxi/features/chat/presentation/ui/widgets/chat_entry_button.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -77,6 +78,10 @@ class TripCustomerContactWidget extends StatelessWidget {
               ],
             ),
           ),
+          if (!trip.status.isTerminal) ...[
+            AppSpacing.sm.horizontalSpace,
+            ChatEntryButton(tripId: trip.id, compact: true),
+          ],
           if (hasPhone) ...[
             AppSpacing.sm.horizontalSpace,
             _CallButton(phone: phone),
@@ -109,7 +114,11 @@ class _CallButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FaIcon(FontAwesomeIcons.phone, size: 12.r, color: AppColors.success),
+            FaIcon(
+              FontAwesomeIcons.phone,
+              size: 12.r,
+              color: AppColors.success,
+            ),
             AppSpacing.sm.horizontalSpace,
             Text(
               phone,

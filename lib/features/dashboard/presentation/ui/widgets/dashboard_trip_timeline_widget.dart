@@ -11,7 +11,10 @@ class DashboardTripTimelineWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final rows = [
       (AppStrings.tripCreatedAt, details.createdAt?.toSmartDateTime()),
-      (AppStrings.dashboardAssignedAt, details.assignedAt?.toSmartDateTime()),
+      (
+        AppStrings.dashboardAssignedAt,
+        (details.acceptedAt ?? details.assignedAt)?.toSmartDateTime(),
+      ),
       (AppStrings.dashboardArrivedAt, details.arrivedAt?.toSmartDateTime()),
       (AppStrings.dashboardStartedAt, details.startedAt?.toSmartDateTime()),
       (AppStrings.dashboardCompletedAt, details.completedAt?.toSmartDateTime()),

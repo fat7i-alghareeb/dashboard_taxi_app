@@ -46,7 +46,8 @@ class TripAdminCancelButton extends StatelessWidget {
       context,
       dialog: AppDialog.basic(
         title: 'Cancel trip',
-        message: 'Cancel this trip? The customer will be refunded per the '
+        message:
+            'Cancel this trip? The customer will be refunded per the '
             'cancellation policy.',
         secondaryAction: AppDialogAction.secondary(
           label: AppStrings.cancel,

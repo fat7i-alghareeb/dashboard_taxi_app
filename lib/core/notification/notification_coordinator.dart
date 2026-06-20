@@ -39,6 +39,7 @@ class NotificationCoordinator {
   AppNotificationConfig? _config;
   NotificationInitOptions _options = const NotificationInitOptions();
   bool _initialized = false;
+  final Set<String> _seenEventIds = <String>{};
 
   bool get isInitialized => _initialized;
 
@@ -140,6 +141,7 @@ class NotificationCoordinator {
             config: config,
             onNotificationTap: onNotificationTap,
             onForegroundMessage: (payload) async {
+              if (!_shouldDeliver(payload)) return;
               await _localService.showFromPayload(
                 config: config,
                 payload: payload,
@@ -191,6 +193,14 @@ class NotificationCoordinator {
     if (config.enableDebugLogs) {
       printG('[Notifications] initialized');
     }
+  }
+
+  bool _shouldDeliver(AppNotificationPayload payload) {
+    final raw = payload.data['eventId'] ?? payload.data['EventId'];
+    final eventId = raw?.toString().trim();
+    if (eventId == null || eventId.isEmpty) return true;
+    if (_seenEventIds.length > 256) _seenEventIds.clear();
+    return _seenEventIds.add(eventId);
   }
 
   /// Subscribes this device to the given FCM [topics].

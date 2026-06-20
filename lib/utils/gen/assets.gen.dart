@@ -22,6 +22,9 @@ class $AssetsImagesGen {
   AssetGenImage get oranjeLogo =>
       const AssetGenImage('assets/images/oranje_logo.png');
 
+  /// File path: assets/images/splash.png
+  AssetGenImage get splash => const AssetGenImage('assets/images/splash.png');
+
   /// File path: assets/images/splash_dark.png
   AssetGenImage get splashDark =>
       const AssetGenImage('assets/images/splash_dark.png');
@@ -34,6 +37,7 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [
     logoLauncher,
     oranjeLogo,
+    splash,
     splashDark,
     splashLight,
   ];

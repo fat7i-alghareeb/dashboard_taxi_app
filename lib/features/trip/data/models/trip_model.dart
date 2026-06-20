@@ -23,8 +23,9 @@ class TripStopModel {
       label: (json['label'] ?? json['Label'])?.toString(),
       sequence: ((json['sequence'] ?? json['Sequence']) as num?)?.toInt() ?? 0,
       isCompleted: (json['isCompleted'] ?? json['IsCompleted']) == true,
-      completedAtUtc:
-          completedRaw is String ? DateTime.tryParse(completedRaw) : null,
+      completedAtUtc: completedRaw is String
+          ? DateTime.tryParse(completedRaw)
+          : null,
     );
   }
 }
@@ -53,6 +54,14 @@ class TripModel {
     this.routeSegments = const [],
     this.encodedOverviewPolyline,
     this.isAirport = false,
+    this.flightNumber,
+    this.acceptedByAdminId,
+    this.acceptedAdminName,
+    this.acceptedAtUtc,
+    this.isScheduled = false,
+    this.dispatchWindowOpensAtUtc,
+    this.canMarkEnRoute = false,
+    this.attentionState = 'Normal',
   });
 
   final String id;
@@ -77,6 +86,14 @@ class TripModel {
   final List<TripRouteSegmentModel> routeSegments;
   final String? encodedOverviewPolyline;
   final bool isAirport;
+  final String? flightNumber;
+  final String? acceptedByAdminId;
+  final String? acceptedAdminName;
+  final DateTime? acceptedAtUtc;
+  final bool isScheduled;
+  final DateTime? dispatchWindowOpensAtUtc;
+  final bool canMarkEnRoute;
+  final String attentionState;
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
     final stopsJson =
@@ -115,13 +132,36 @@ class TripModel {
             ),
       passengerName: _readNullableString(json, 'passengerName'),
       passengerPhone: _readNullableString(json, 'passengerPhone'),
-      routeSegments: ((json['routeSegments'] ?? json['RouteSegments']) as List<dynamic>?)
+      routeSegments:
+          ((json['routeSegments'] ?? json['RouteSegments']) as List<dynamic>?)
               ?.whereType<Map>()
-              .map((e) => TripRouteSegmentModel.fromJson(Map<String, dynamic>.from(e)))
+              .map(
+                (e) => TripRouteSegmentModel.fromJson(
+                  Map<String, dynamic>.from(e),
+                ),
+              )
               .toList() ??
           const [],
-      encodedOverviewPolyline: _readNullableString(json, 'encodedOverviewPolyline'),
+      encodedOverviewPolyline: _readNullableString(
+        json,
+        'encodedOverviewPolyline',
+      ),
       isAirport: (json['isAirport'] ?? json['IsAirport']) as bool? ?? false,
+      flightNumber: _readNullableString(json, 'flightNumber'),
+      acceptedByAdminId: _readNullableString(json, 'acceptedByAdminId'),
+      acceptedAdminName: _readNullableString(json, 'acceptedAdminName'),
+      acceptedAtUtc: _readDate(json, 'acceptedAtUtc'),
+      isScheduled:
+          (json['isScheduled'] ?? json['IsScheduled']) as bool? ??
+          _readDate(json, 'scheduledAtUtc') != null,
+      dispatchWindowOpensAtUtc: _readDate(json, 'dispatchWindowOpensAtUtc'),
+      canMarkEnRoute:
+          (json['canMarkEnRoute'] ?? json['CanMarkEnRoute']) as bool? ?? false,
+      attentionState: _readString(
+        json,
+        'attentionState',
+        fallback: 'Normal',
+      ),
     );
   }
 }

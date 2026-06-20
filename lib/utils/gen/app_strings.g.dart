@@ -11,6 +11,8 @@ class AppStrings {
   static String get activeTripDriverOutside => 'activeTripDriverOutside'.tr();
   /// Look for the {color} {make} {model} ({plate}) - ابحث عن سيارة {color} {make} {model} ({plate}) - Zoek naar de {color}e {make} {model} ({plate}) - Achten Sie auf den {color}en {make} {model} ({plate}) - Szukaj {color} {make} {model} ({plate}) - Шукайте {color} {make} {model} ({plate}) - Recherchez le véhicule {color} {make} {model} ({plate}) - Busque el {color} {make} {model} ({plate}) - Căutați un {make} {model} {color} ({plate})
   static String get activeTripLookForCar => 'activeTripLookForCar'.tr();
+  /// Address copied - تم نسخ العنوان - Adres gekopieerd - Adresse kopiert - Adres skopiowany - Адресу скопійовано - Adresse copiée - Dirección copiada - Adresă copiată
+  static String get addressCopied => 'addressCopied'.tr();
   /// Dismiss - تجاهل - Sluiten - Schließen - Odrzuć - Відхилити - Ignorer - Descartar - Ignoră
   static String get adminDismissPendingTrip => 'adminDismissPendingTrip'.tr();
   /// A new trip has arrived. Tap to take it. - وصل طلب رحلة جديدة. اضغط للاستلام. - Er is een nieuwe rit binnengekomen. Tik om te accepteren. - Eine neue Fahrt ist eingegangen. Tippen zum Annehmen. - Nadszedł nowy kurs. Dotknij, aby przyjąć. - Надійшов новий запит на поїздку. Торкніться, щоб прийняти. - Une nouvelle course est arrivée. Appuyez pour la prendre. - Ha llegado un nuevo viaje. Toca para tomarlo. - A sosit o cursă nouă. Apasă pentru a o prelua.
@@ -21,6 +23,8 @@ class AppStrings {
   static String get adminTakeTrip => 'adminTakeTrip'.tr();
   /// more waiting - في الانتظار - wachtend - wartend - oczekujące - очікують - en attente - en espera - în așteptare
   static String get adminWaitingMore => 'adminWaitingMore'.tr();
+  /// Airport pickup - استلام من المطار - Ophalen op luchthaven - Flughafenabholung - Odbiór z lotniska - Зустріч в аеропорту - Prise en charge à l'aéroport - Recogida en aeropuerto - Preluare de la aeroport
+  static String get airportPickup => 'airportPickup'.tr();
   /// Can't continue waiting (airport) - لا يمكن الاستمرار في الانتظار (المطار) - Kan niet langer wachten (luchthaven) - Kann nicht weiter warten (Flughafen) - Nie mogę dłużej czekać (lotnisko) - Не можу далі чекати (аеропорт) - Impossible de continuer à attendre (aéroport) - No puedo seguir esperando (aeropuerto) - Nu pot continua să aștept (aeroport)
   static String get airportWaitDeclinedReason => 'airportWaitDeclinedReason'.tr();
   /// Fat7i - Fat7i - Fat7i - Fat7i - Fat7i - Fat7i - Fat7i - Fat7i - Fat7i
@@ -73,18 +77,6 @@ class AppStrings {
   static String get back => 'back'.tr();
   /// Cancel - إلغاء - Annuleren - Abbrechen - Anuluj - Скасувати - Annuler - Cancelar - Anulează
   static String get cancel => 'cancel'.tr();
-  /// Copy address - نسخ العنوان - Adres kopiëren - Adresse kopieren - Kopiuj adres - Скопіювати адресу - Copier l’adresse - Copiar dirección - Copiază adresa
-  static String get copyAddress => 'copyAddress'.tr();
-  /// Address copied - تم نسخ العنوان - Adres gekopieerd - Adresse kopiert - Adres skopiowany - Адресу скопійовано - Adresse copiée - Dirección copiada - Adresă copiată
-  static String get addressCopied => 'addressCopied'.tr();
-  /// Open in Google Maps - فتح في خرائط Google - Openen in Google Maps - In Google Maps öffnen - Otwórz w Google Maps - Відкрити в Google Maps - Ouvrir dans Google Maps - Abrir en Google Maps - Deschide în Google Maps
-  static String get openInGoogleMaps => 'openInGoogleMaps'.tr();
-  /// Collapse trip sheet - طي لوحة الرحلة - Ritpaneel inklappen - Fahrtbereich einklappen - Zwiń panel przejazdu - Згорнути панель поїздки - Réduire le panneau de trajet - Contraer panel del viaje - Restrânge panoul cursei
-  static String get collapseTripSheet => 'collapseTripSheet'.tr();
-  /// Expand trip sheet - توسيع لوحة الرحلة - Ritpaneel uitklappen - Fahrtbereich ausklappen - Rozwiń panel przejazdu - Розгорнути панель поїздки - Développer le panneau de trajet - Expandir panel del viaje - Extinde panoul cursei
-  static String get expandTripSheet => 'expandTripSheet'.tr();
-  /// Could not open map - تعذر فتح الخريطة - Kan kaart niet openen - Karte konnte nicht geöffnet werden - Nie można otworzyć mapy - Не вдалося відкрити карту - Impossible d’ouvrir la carte - No se pudo abrir el mapa - Harta nu a putut fi deschisă
-  static String get couldNotOpenMap => 'couldNotOpenMap'.tr();
   /// Confirm Cancellation - تأكيد الإلغاء - Annulering bevestigen - Stornierung bestätigen - Potwierdź anulowanie - Підтвердити скасування - Confirmer l'annulation - Confirmar cancelación - Confirmați anularea
   static String get cancelConfirmButton => 'cancelConfirmButton'.tr();
   /// Available 10 minutes after arrival. A 20% refund will be issued to the passenger. - متاح بعد 10 دقائق من الوصول. سيُعاد للراكب 20% من قيمة الرحلة. - Beschikbaar 10 minuten na aankomst. De passagier ontvangt 20% terugbetaling. - Verfügbar 10 Minuten nach Ankunft. Der Fahrgast erhält 20 % Rückerstattung. - Dostępne 10 minut po przyjeździe. Pasażer otrzyma zwrot 20%. - Доступно через 10 хвилин після прибуття. Пасажиру буде повернено 20%. - Disponible 10 minutes après l'arrivée. Le passager recevra un remboursement de 20 %. - Disponible 10 minutos después de llegar. Se emitirá un reembolso del 20% al pasajero. - Disponibil la 10 minute după sosire. Pasagerului i se va rambursa 20%.
@@ -103,6 +95,20 @@ class AppStrings {
   static String get changePasswordSuccess => 'changePasswordSuccess'.tr();
   /// Change Password - تغيير كلمة المرور - Wachtwoord wijzigen - Passwort ändern - Zmień hasło - Змінити пароль - Changer le mot de passe - Cambiar contraseña - Schimbă parola
   static String get changePasswordTitle => 'changePasswordTitle'.tr();
+  /// Camera - الكاميرا - Camera - Kamera - Aparat - Камера - Appareil photo - Cámara - Cameră
+  static String get chatChooseCamera => 'chatChooseCamera'.tr();
+  /// Gallery - المعرض - Galerij - Galerie - Galeria - Галерея - Galerie - Galería - Galerie
+  static String get chatChooseGallery => 'chatChooseGallery'.tr();
+  /// This chat has ended. - انتهت هذه الدردشة. - Deze chat is beëindigd. - Dieser Chat ist beendet. - Ten czat został zakończony. - Цей чат завершено. - Cette conversation est terminée. - Este chat ha finalizado. - Acest chat s-a încheiat.
+  static String get chatClosedNotice => 'chatClosedNotice'.tr();
+  /// No messages yet. Say hello! - لا توجد رسائل بعد. ابدأ بالتحية! - Nog geen berichten. Zeg hallo! - Noch keine Nachrichten. Sag Hallo! - Brak wiadomości. Przywitaj się! - Повідомлень ще немає. Привітайтеся! - Aucun message pour l'instant. Dites bonjour ! - Aún no hay mensajes. ¡Saluda! - Niciun mesaj încă. Salută!
+  static String get chatEmptyState => 'chatEmptyState'.tr();
+  /// Type a message… - اكتب رسالة… - Typ een bericht… - Nachricht schreiben… - Napisz wiadomość… - Введіть повідомлення… - Écrivez un message… - Escribe un mensaje… - Scrie un mesaj…
+  static String get chatInputHint => 'chatInputHint'.tr();
+  /// Couldn't send message. Please try again. - تعذّر إرسال الرسالة. حاول مرة أخرى. - Bericht kon niet worden verzonden. Probeer het opnieuw. - Nachricht konnte nicht gesendet werden. Bitte erneut versuchen. - Nie udało się wysłać wiadomości. Spróbuj ponownie. - Не вдалося надіслати повідомлення. Спробуйте ще раз. - Échec de l'envoi du message. Veuillez réessayer. - No se pudo enviar el mensaje. Inténtalo de nuevo. - Mesajul nu a putut fi trimis. Încearcă din nou.
+  static String get chatSendFailed => 'chatSendFailed'.tr();
+  /// Chat - الدردشة - Chat - Chat - Czat - Чат - Chat - Chat - Chat
+  static String get chatTitle => 'chatTitle'.tr();
   /// Clear - مسح - Wissen - Löschen - Wyczyść - Очистити - Effacer - Limpiar - Șterge
   static String get clear => 'clear'.tr();
   /// The request was invalid. - الطلب غير صالح. - De aanvraag was ongeldig. - Die Anfrage war ungültig. - Nieprawidłowe żądanie. - Неправильний запит. - La demande était invalide. - La solicitud no era válida. - Solicitarea a fost invalidă.
@@ -113,6 +119,8 @@ class AppStrings {
   static String get clientNotFound => 'clientNotFound'.tr();
   /// The data you sent could not be processed. - لا يمكن معالجة البيانات المرسلة. - De verzonden gegevens konden niet worden verwerkt. - Die gesendeten Daten konnten nicht verarbeitet werden. - Dane nie mogły zostać przetworzone. - Дані не вдалося обробити. - Les données envoyées n'ont pas pu être traitées. - Los datos enviados no pudieron ser procesados. - Datele trimise nu au putut fi procesate.
   static String get clientUnprocessableEntity => 'clientUnprocessableEntity'.tr();
+  /// Collapse trip sheet - طي لوحة الرحلة - Ritpaneel inklappen - Fahrtbereich einklappen - Zwiń panel przejazdu - Згорнути панель поїздки - Réduire le panneau de trajet - Contraer panel del viaje - Restrânge panoul cursei
+  static String get collapseTripSheet => 'collapseTripSheet'.tr();
   /// Coming Soon - قريباً - Binnenkort beschikbaar - Demnächst verfügbar - Wkrótce dostępne - Незабаром - Bientôt disponible - Próximamente - În curând
   static String get comingSoon => 'comingSoon'.tr();
   /// These details appear in the footer of customer invoices. - تظهر هذه البيانات في تذييل فواتير العملاء. - Deze gegevens verschijnen in de voettekst van klantfacturen. - Diese Angaben erscheinen in der Fußzeile von Kundenrechnungen. - Te dane pojawiają się w stopce faktur klientów. - Ці дані відображаються в нижньому колонтитулі рахунків клієнтів. - Ces coordonnées apparaissent dans le pied de page des factures clients. - Estos datos aparecen en el pie de las facturas de los clientes. - Aceste date apar în subsolul facturilor clienților.
@@ -167,6 +175,10 @@ class AppStrings {
   static String get controlCenterSubtitle => 'controlCenterSubtitle'.tr();
   /// Types - الأنواع - Types - Typen - Typy - Типи - Types - Tipos - Tipuri
   static String get controlCenterTypes => 'controlCenterTypes'.tr();
+  /// Copy address - نسخ العنوان - Adres kopiëren - Adresse kopieren - Kopiuj adres - Скопіювати адресу - Copier l’adresse - Copiar dirección - Copiază adresa
+  static String get copyAddress => 'copyAddress'.tr();
+  /// Could not open map - تعذر فتح الخريطة - Kan kaart niet openen - Karte konnte nicht geöffnet werden - Nie można otworzyć mapy - Не вдалося відкрити карту - Impossible d’ouvrir la carte - No se pudo abrir el mapa - Harta nu a putut fi deschisă
+  static String get couldNotOpenMap => 'couldNotOpenMap'.tr();
   /// Could not create admin - تعذّر إنشاء المشرف - Kon beheerder niet aanmaken - Admin konnte nicht erstellt werden - Nie udało się utworzyć administratora - Не вдалося створити адміністратора - Impossible de créer l'administrateur - No se pudo crear el administrador - Administratorul nu a putut fi creat
   static String get createAdminFailed => 'createAdminFailed'.tr();
   /// Note: The new admin will be required to change their password upon their first login. - ملاحظة: سيُطلب من المشرف الجديد تغيير كلمة المرور عند تسجيل الدخول الأول. - Opmerking: De nieuwe beheerder moet zijn wachtwoord wijzigen bij de eerste keer inloggen. - Hinweis: Der neue Administrator muss sein Passwort bei der ersten Anmeldung ändern. - Uwaga: Nowy administrator będzie musiał zmienić swoje hasło przy pierwszym logowaniu. - Примітка: Новий адміністратор повинен буде змінити свій пароль при першому вході. - Remarque : Le nouvel administrateur devra changer son mot de passe lors de sa première connexion. - Nota: El nuevo administrador deberá cambiar su contraseña en su primer inicio de sesión. - Notă: Noul administrator va trebui să își schimbe parola la prima conectare.
@@ -543,12 +555,16 @@ class AppStrings {
   static String get enterOtp => 'enterOtp'.tr();
   /// Enter phone number - أدخل رقم الهاتف - Voer telefoonnummer in - Telefonnummer eingeben - Wpisz numer telefonu - Введіть номер телефону - Entrez votre numéro - Introduzca el número de teléfono - Introduceți numărul de telefon
   static String get enterPhone => 'enterPhone'.tr();
+  /// Expand trip sheet - توسيع لوحة الرحلة - Ritpaneel uitklappen - Fahrtbereich ausklappen - Rozwiń panel przejazdu - Розгорнути панель поїздки - Développer le panneau de trajet - Expandir panel del viaje - Extinde panoul cursei
+  static String get expandTripSheet => 'expandTripSheet'.tr();
   /// Feb - فبر - Feb - Feb - Lut - Лют - Févr - Feb - Feb
   static String get feb => 'feb'.tr();
   /// February - فبراير - Februari - Februar - Luty - Лютий - Février - Febrero - Februarie
   static String get february => 'february'.tr();
   /// Scheduled - مجدولة - Gepland - Geplant - Zaplanowane - Заплановано - Programmé - Programado - Programat
   static String get filterScheduled => 'filterScheduled'.tr();
+  /// Flight number - رقم الرحلة - Vluchtnummer - Flugnummer - Numer lotu - Номер рейсу - Numéro de vol - Número de vuelo - Numărul zborului
+  static String get flightNumber => 'flightNumber'.tr();
   /// Password reset required - إعادة تعيين كلمة المرور مطلوبة - Password reset required - Password reset required - Password reset required - Password reset required - Password reset required - Password reset required - Password reset required
   static String get forcePasswordReset => 'forcePasswordReset'.tr();
   /// Set a new password before entering the dashboard. - قم بتعيين كلمة مرور جديدة قبل الدخول إلى لوحة التحكم. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard. - Set a new password before entering the dashboard.
@@ -699,6 +715,8 @@ class AppStrings {
   static String get oct => 'oct'.tr();
   /// October - أكتوبر - Oktober - Oktober - Październik - Жовтень - Octobre - Octubre - Octombrie
   static String get october => 'october'.tr();
+  /// Open in Google Maps - فتح في خرائط Google - Openen in Google Maps - In Google Maps öffnen - Otwórz w Google Maps - Відкрити в Google Maps - Ouvrir dans Google Maps - Abrir en Google Maps - Deschide în Google Maps
+  static String get openInGoogleMaps => 'openInGoogleMaps'.tr();
   /// Open Settings - فتح الإعدادات - Instellingen openen - Einstellungen öffnen - Otwórz ustawienia - Відкрити налаштування - Ouvrir les paramètres - Abrir configuración - Deschide setările
   static String get openSettings => 'openSettings'.tr();
   /// Verification - التحقق - Verificatie - Verifizierung - Weryfikacja - Верифікація - Vérification - Verificación - Verificare
@@ -809,16 +827,16 @@ class AppStrings {
   static String get saturday => 'saturday'.tr();
   /// Save - حفظ - Opslaan - Speichern - Zapisz - Зберегти - Enregistrer - Guardar - Salvează
   static String get save => 'save'.tr();
+  /// This trip is scheduled and can only be marked arrived at {when}. - هذه الرحلة مجدولة ولا يمكن تسجيل الوصول قبل {when}. - Deze rit is gepland en kan pas op {when} als aangekomen worden gemarkeerd. - Diese Fahrt ist geplant und kann erst um {when} als angekommen markiert werden. - Ten przejazd jest zaplanowany i można go oznaczyć jako przybyły dopiero o {when}. - Цю поїздку заплановано — її можна позначити як прибуття лише о {when}. - Ce trajet est programmé et ne peut être marqué arrivé qu'à {when}. - Este viaje está programado y solo puede marcarse como llegado a las {when}. - Această cursă este programată și poate fi marcată ca sosită doar la {when}.
+  static String get scheduledArrivalNotReadyWarning => 'scheduledArrivalNotReadyWarning'.tr();
+  /// This trip is scheduled and can only be marked on the way 15 minutes before {when}. - هذه الرحلة مجدولة ولا يمكن وضعها في حالة الطريق إلا قبل {when} بـ 15 دقيقة. - Deze rit is gepland en kan pas 15 minuten voor {when} als onderweg worden gemarkeerd. - Diese Fahrt ist geplant und kann erst 15 Minuten vor {when} als unterwegs markiert werden. - Ten przejazd jest zaplanowany i można go oznaczyć jako w drodze dopiero 15 minut przed {when}. - Цю поїздку заплановано — її можна позначити як у дорозі лише за 15 хвилин до {when}. - Ce trajet est programmé et ne peut être marqué en route que 15 minutes avant {when}. - Este viaje está programado y solo puede marcarse en camino 15 minutos antes de {when}. - Această cursă este programată și poate fi marcată ca în drum doar cu 15 minute înainte de {when}.
+  static String get scheduledEnRouteNotReadyWarning => 'scheduledEnRouteNotReadyWarning'.tr();
   /// Scheduled for {when} - مجدولة في {when} - Gepland voor {when} - Geplant für {when} - Zaplanowane na {when} - Заплановано на {when} - Programmé pour {when} - Programado para {when} - Programat pentru {when}
   static String get scheduledForLabel => 'scheduledForLabel'.tr();
   /// Scheduled — can be taken at {when} - مجدولة — يمكن استلامها في {when} - Gepland — beschikbaar om {when} - Geplant — annehmbar um {when} - Zaplanowane — dostępne o {when} - Заплановано — можна прийняти о {when} - Programmé — disponible à {when} - Programado — disponible a las {when} - Programat — disponibil la {when}
   static String get scheduledNotReadyShort => 'scheduledNotReadyShort'.tr();
   /// This trip is scheduled and can only be accepted at {when}. - هذه الرحلة مجدولة ولا يمكن قبولها قبل {when}. - Deze rit is gepland en kan pas op {when} worden geaccepteerd. - Diese Fahrt ist geplant und kann erst um {when} angenommen werden. - Ten przejazd jest zaplanowany i można go przyjąć dopiero o {when}. - Цю поїздку заплановано — її можна прийняти лише о {when}. - Ce trajet est programmé et ne peut être accepté qu'à {when}. - Este viaje está programado y solo puede aceptarse a las {when}. - Această cursă este programată și poate fi acceptată doar la {when}.
   static String get scheduledNotReadyWarning => 'scheduledNotReadyWarning'.tr();
-  /// This trip is scheduled and can only be marked on the way 15 minutes before {when}. - هذه الرحلة مجدولة ولا يمكن وضعها في حالة الطريق إلا قبل {when} بـ 15 دقيقة. - Deze rit is gepland en kan pas 15 minuten voor {when} als onderweg worden gemarkeerd. - Diese Fahrt ist geplant und kann erst 15 Minuten vor {when} als unterwegs markiert werden. - Ten przejazd jest zaplanowany i można go oznaczyć jako w drodze dopiero 15 minut przed {when}. - Цю поїздку заплановано — її можна позначити як у дорозі лише за 15 хвилин до {when}. - Ce trajet est programmé et ne peut être marqué en route que 15 minutes avant {when}. - Este viaje está programado y solo puede marcarse en camino 15 minutos antes de {when}. - Această cursă este programată și poate fi marcată ca în drum doar cu 15 minute înainte de {when}.
-  static String get scheduledEnRouteNotReadyWarning => 'scheduledEnRouteNotReadyWarning'.tr();
-  /// This trip is scheduled and can only be marked arrived at {when}. - هذه الرحلة مجدولة ولا يمكن تسجيل الوصول قبل {when}. - Deze rit is gepland en kan pas op {when} als aangekomen worden gemarkeerd. - Diese Fahrt ist geplant und kann erst um {when} als angekommen markiert werden. - Ten przejazd jest zaplanowany i można go oznaczyć jako przybyły dopiero o {when}. - Цю поїздку заплановано — її можна позначити як прибуття лише о {when}. - Ce trajet est programmé et ne peut être marqué arrivé qu'à {when}. - Este viaje está programado y solo puede marcarse como llegado a las {when}. - Această cursă este programată și poate fi marcată ca sosită doar la {when}.
-  static String get scheduledArrivalNotReadyWarning => 'scheduledArrivalNotReadyWarning'.tr();
   /// This trip is scheduled and can only be started at {when}. - هذه الرحلة مجدولة ولا يمكن بدؤها قبل {when}. - Deze rit is gepland en kan pas op {when} worden gestart. - Diese Fahrt ist geplant und kann erst um {when} gestartet werden. - Ten przejazd jest zaplanowany i można go rozpocząć dopiero o {when}. - Цю поїздку заплановано — її можна почати лише о {when}. - Ce trajet est programmé et ne peut commencer qu'à {when}. - Este viaje está programado y solo puede iniciarse a las {when}. - Această cursă este programată și poate fi începută doar la {when}.
   static String get scheduledStartNotReadyWarning => 'scheduledStartNotReadyWarning'.tr();
   /// Search - بحث - Zoeken - Suche - Szukaj - Пошук - Rechercher - Buscar - Căutare
@@ -1120,3 +1138,4 @@ class AppStrings {
   /// Your journey begins here. - رحلتك تبدأ هنا. - Je reis begint hier. - Deine Reise beginnt hier. - Twoja podróż zaczyna się tutaj. - Ваша подорож починається тут. - Votre voyage commence ici. - Tu viaje comienza aquí. - Călătoria ta începe aici.
   static String get yourJourneyBeginsHere => 'yourJourneyBeginsHere'.tr();
 }
+

@@ -113,6 +113,9 @@ Future<void> _initializeNotifications() async {
         await _handleNotificationTap(payload);
       },
       onForegroundNotification: (payload) async {
+        // Chat messages: the coordinator already showed the banner and the open
+        // chat updates live over SignalR — don't refetch the active trip.
+        if (_typeFromPayload(payload) == 'chat_message') return;
         _routeTripPayloadToBloc(payload);
       },
       onTokenRefresh: (token) async {
@@ -134,6 +137,18 @@ Future<void> _initializeNotifications() async {
 /// 2) Navigate to the route/deep-link if provided, falling back to the
 ///    root screen when the payload only carries a trip id.
 Future<void> _handleNotificationTap(AppNotificationPayload payload) async {
+  // Chat message tapped — open the active trip so the user can read/reply.
+  if (_typeFromPayload(payload) == 'chat_message') {
+    final chatTripId = _tripIdFromPayload(payload);
+    if (chatTripId != null) _routeTripPayloadToBloc(payload);
+    try {
+      getIt<AppRouterConfig>().router.go(RootScreen.pagePath);
+    } catch (e) {
+      printY('[Notifications] chat navigation failed: $e');
+    }
+    return;
+  }
+
   final tripId = _tripIdFromPayload(payload);
   if (tripId != null) {
     _routeTripPayloadToBloc(payload);
@@ -170,6 +185,12 @@ void _routeTripPayloadToBloc(AppNotificationPayload payload) {
   } catch (e) {
     printY('[Notifications] Trip routing failed: $e');
   }
+}
+
+String? _typeFromPayload(AppNotificationPayload payload) {
+  final raw = payload.data['type'] ?? payload.data['Type'];
+  if (raw is String && raw.trim().isNotEmpty) return raw.trim().toLowerCase();
+  return null;
 }
 
 String? _tripIdFromPayload(AppNotificationPayload payload) {

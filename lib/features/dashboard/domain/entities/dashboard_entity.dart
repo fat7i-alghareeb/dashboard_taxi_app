@@ -124,7 +124,6 @@ class DashboardAdminProfileEntity {
   final bool isActive;
 }
 
-
 class DashboardTripEntity {
   const DashboardTripEntity({
     required this.id,
@@ -144,6 +143,14 @@ class DashboardTripEntity {
     this.startedAt,
     this.completedAt,
     this.passengerNote,
+    this.isAirport = false,
+    this.flightNumber,
+    this.acceptedByAdminId,
+    this.acceptedAdminName,
+    this.acceptedAt,
+    this.dispatchWindowOpensAt,
+    this.canMarkEnRoute = false,
+    this.attentionState = 'Normal',
   });
 
   final String id;
@@ -166,12 +173,19 @@ class DashboardTripEntity {
   final DateTime? startedAt;
   final DateTime? completedAt;
   final String? passengerNote;
+  final bool isAirport;
+  final String? flightNumber;
+  final String? acceptedByAdminId;
+  final String? acceptedAdminName;
+  final DateTime? acceptedAt;
+  final DateTime? dispatchWindowOpensAt;
+  final bool canMarkEnRoute;
+  final String attentionState;
 
   bool get hasPickupLocation =>
       pickupLatitude != null && pickupLongitude != null;
 
-  bool get isScheduled =>
-      status.toLowerCase() == 'scheduled' && scheduledAt != null;
+  bool get isScheduled => scheduledAt != null;
 
   DashboardTripEntity copyWithStatus(String newStatus) {
     return DashboardTripEntity(
@@ -192,6 +206,14 @@ class DashboardTripEntity {
       startedAt: startedAt,
       completedAt: completedAt,
       passengerNote: passengerNote,
+      isAirport: isAirport,
+      flightNumber: flightNumber,
+      acceptedByAdminId: acceptedByAdminId,
+      acceptedAdminName: acceptedAdminName,
+      acceptedAt: acceptedAt,
+      dispatchWindowOpensAt: dispatchWindowOpensAt,
+      canMarkEnRoute: canMarkEnRoute,
+      attentionState: attentionState,
     );
   }
 }
@@ -219,6 +241,14 @@ class DashboardTripDetailsEntity {
     this.waitingFeeTotal = 0,
     this.waitingBillableMinutes = 0,
     this.currencyCode = 'EUR',
+    this.isAirport = false,
+    this.flightNumber,
+    this.acceptedByAdminId,
+    this.acceptedAdminName,
+    this.acceptedAt,
+    this.dispatchWindowOpensAt,
+    this.canMarkEnRoute = false,
+    this.attentionState = 'Normal',
   });
 
   final String id;
@@ -242,6 +272,14 @@ class DashboardTripDetailsEntity {
   final double waitingFeeTotal;
   final int waitingBillableMinutes;
   final String currencyCode;
+  final bool isAirport;
+  final String? flightNumber;
+  final String? acceptedByAdminId;
+  final String? acceptedAdminName;
+  final DateTime? acceptedAt;
+  final DateTime? dispatchWindowOpensAt;
+  final bool canMarkEnRoute;
+  final String attentionState;
 
   String? get waitingFeeLabel => waitingFeeTotal > 0
       ? '${waitingFeeTotal.toStringAsFixed(2)} $currencyCode'

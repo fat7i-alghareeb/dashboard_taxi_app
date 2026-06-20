@@ -4,10 +4,9 @@ import '../models/dashboard_model.dart';
 extension DashboardModelMapper on DashboardModel {
   DashboardEntity get toEntity {
     final activeTripStatuses = {
-      'pendingdriver',
-      'driverassigned',
-      'driverenroute',
-      'driverarrived',
+      'accepted',
+      'enroute',
+      'arrived',
       'inprogress',
     };
 
@@ -19,7 +18,7 @@ extension DashboardModelMapper on DashboardModel {
     final pendingTrips = trips
         .where((trip) {
           final status = trip.status.toLowerCase();
-          return status == 'pendingdriver' || status == 'scheduled';
+          return status == 'awaitingadminacceptance';
         })
         .take(5)
         .map((trip) => trip.toEntity)
@@ -126,7 +125,6 @@ extension DashboardAdminProfileModelMapper on DashboardAdminProfileModel {
   }
 }
 
-
 extension DashboardTripModelMapper on DashboardTripModel {
   DashboardTripEntity get toEntity {
     final ordered = List<DashboardTripStopModel>.of(stops)
@@ -151,6 +149,14 @@ extension DashboardTripModelMapper on DashboardTripModel {
       startedAt: startedAt,
       completedAt: completedAt,
       passengerNote: passengerNote,
+      isAirport: isAirport,
+      flightNumber: flightNumber,
+      acceptedByAdminId: acceptedByAdminId,
+      acceptedAdminName: acceptedAdminName,
+      acceptedAt: acceptedAt,
+      dispatchWindowOpensAt: dispatchWindowOpensAt,
+      canMarkEnRoute: canMarkEnRoute,
+      attentionState: attentionState,
     );
   }
 }
@@ -200,6 +206,14 @@ extension DashboardTripDetailsModelMapper on DashboardTripDetailsModel {
       waitingFeeTotal: waitingFeeTotal,
       waitingBillableMinutes: waitingBillableMinutes,
       currencyCode: currencyCode,
+      isAirport: isAirport,
+      flightNumber: flightNumber,
+      acceptedByAdminId: acceptedByAdminId,
+      acceptedAdminName: acceptedAdminName,
+      acceptedAt: acceptedAt,
+      dispatchWindowOpensAt: dispatchWindowOpensAt,
+      canMarkEnRoute: canMarkEnRoute,
+      attentionState: attentionState,
     );
   }
 }

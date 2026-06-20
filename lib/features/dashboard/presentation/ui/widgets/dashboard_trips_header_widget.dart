@@ -5,10 +5,7 @@ import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboa
 class DashboardTripsHeaderWidget extends StatelessWidget {
   final bool showBackButton;
 
-  const DashboardTripsHeaderWidget({
-    super.key,
-    this.showBackButton = true,
-  });
+  const DashboardTripsHeaderWidget({super.key, this.showBackButton = true});
 
   @override
   Widget build(BuildContext context) {

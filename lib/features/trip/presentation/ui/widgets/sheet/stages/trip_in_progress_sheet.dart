@@ -67,9 +67,9 @@ class TripInProgressSheet extends StatelessWidget {
         Text(
           hasMultiStop && !onFinalLeg
               ? AppStrings.tripStopProgress.trParams({
-                    'current': currentNumber,
-                    'total': totalIntermediate,
-                  })
+                  'current': currentNumber,
+                  'total': totalIntermediate,
+                })
               : AppStrings.tripInProgressHint,
           style: AppTextStyles.s12w400.copyWith(
             color: context.onSurface.withValues(alpha: 0.60),

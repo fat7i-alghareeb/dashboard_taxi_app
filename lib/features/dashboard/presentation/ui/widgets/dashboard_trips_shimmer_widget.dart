@@ -90,8 +90,9 @@ class DashboardTripsShimmerWidget extends StatelessWidget {
                                           height: 1.5.r,
                                           color: j == 0
                                               ? Colors.transparent
-                                              : context.onSurface
-                                                  .withValues(alpha: 0.08),
+                                              : context.onSurface.withValues(
+                                                  alpha: 0.08,
+                                                ),
                                         ),
                                       ),
                                       AppShimmer.circle(size: 10),
@@ -100,8 +101,9 @@ class DashboardTripsShimmerWidget extends StatelessWidget {
                                           height: 1.5.r,
                                           color: j == 4
                                               ? Colors.transparent
-                                              : context.onSurface
-                                                  .withValues(alpha: 0.08),
+                                              : context.onSurface.withValues(
+                                                  alpha: 0.08,
+                                                ),
                                         ),
                                       ),
                                     ],

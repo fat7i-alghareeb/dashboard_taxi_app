@@ -1,4 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/features/chat/presentation/ui/widgets/chat_entry_button.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_divider_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_overview_label_widget.dart';
@@ -11,6 +12,13 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
   const DashboardTripDetailsBodyWidget({super.key, required this.details});
 
   final DashboardTripDetailsEntity details;
+
+  /// The admin can chat only while the trip is live. Status is the backend
+  /// TripStatus enum name (e.g. "InProgress", "Completed").
+  static bool _isActiveTrip(String status) {
+    const terminal = {'completed', 'cancelled', 'refunded', 'paymentfailed'};
+    return !terminal.contains(status.toLowerCase());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +45,78 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
           details.fareLabel,
           style: AppTextStyles.s14w500.copyWith(color: context.primary),
         ),
+        if (details.scheduledAt != null) ...[
+          AppSpacing.sm.verticalSpace,
+          Wrap(
+            spacing: AppSpacing.sm.w,
+            runSpacing: AppSpacing.xs.h,
+            children: [
+              DashboardStatusChipWidget(
+                label: AppStrings.scheduledForLabel.trParams({
+                  'when': details.scheduledAt!.toLocal().toSmartDateTime(),
+                }),
+                tone: _attentionTone(details.attentionState),
+                icon: FontAwesomeIcons.clock,
+                dense: true,
+              ),
+              if (details.status.toLowerCase() == 'accepted')
+                DashboardStatusChipWidget(
+                  label: details.canMarkEnRoute
+                      ? AppStrings.tripStartEnRouteNavigation
+                      : AppStrings.scheduledNotReadyShort.trParams({
+                          'when':
+                              (details.dispatchWindowOpensAt ??
+                                      details.scheduledAt!)
+                                  .toLocal()
+                                  .toSmartDateTime(),
+                        }),
+                  tone: details.canMarkEnRoute
+                      ? DashboardStatusTone.success
+                      : DashboardStatusTone.info,
+                  dense: true,
+                ),
+            ],
+          ),
+        ],
+        if (_isActiveTrip(details.status)) ...[
+          AppSpacing.md.verticalSpace,
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: ChatEntryButton(tripId: details.id),
+          ),
+        ],
         if (details.waitingFeeLabel != null) ...[
           AppSpacing.xs.verticalSpace,
           Text(
             'Waiting fee: ${details.waitingFeeLabel}',
             style: AppTextStyles.s12w500.copyWith(color: AppColors.warning),
+          ),
+        ],
+        if (details.isAirport &&
+            details.flightNumber?.trim().isNotEmpty == true) ...[
+          AppSpacing.md.verticalSpace,
+          Container(
+            padding: REdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: context.primary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(AppRadii.md.r),
+              border: Border.all(
+                color: context.primary.withValues(alpha: 0.20),
+              ),
+            ),
+            child: Row(
+              children: [
+                FaIcon(FontAwesomeIcons.planeArrival, color: context.primary),
+                AppSpacing.md.horizontalSpace,
+                Expanded(
+                  child: DashboardTripDetailInfoRowWidget(
+                    label: AppStrings.airportPickup,
+                    value:
+                        '${AppStrings.flightNumber}: ${details.flightNumber!.trim()}',
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
         AppSpacing.lg.verticalSpace,
@@ -61,9 +136,13 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
                 value: details.passengerPhone,
               ),
               DashboardTripDetailInfoRowWidget(
-                label: AppStrings.dashboardDriver,
+                label: details.acceptedAdminName != null
+                    ? 'Accepted owner'
+                    : AppStrings.dashboardDriver,
                 value:
-                    details.driverName ?? AppStrings.dashboardUnknownDriver,
+                    details.acceptedAdminName ??
+                    details.driverName ??
+                    AppStrings.dashboardUnknownDriver,
               ),
               DashboardTripDetailInfoRowWidget(
                 label: AppStrings.tripVehicleType,
@@ -104,6 +183,15 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
       ],
     );
   }
+
+  DashboardStatusTone _attentionTone(String attentionState) {
+    return switch (attentionState.toLowerCase()) {
+      'overdue' => DashboardStatusTone.error,
+      'urgent' => DashboardStatusTone.warning,
+      'duesoon' => DashboardStatusTone.info,
+      _ => DashboardStatusTone.neutral,
+    };
+  }
 }
 
 class _PassengerNoteSection extends StatelessWidget {
@@ -119,9 +207,7 @@ class _PassengerNoteSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.primary.withValues(alpha: 0.07),
         borderRadius: BorderRadius.circular(AppRadii.md.r),
-        border: Border.all(
-          color: context.primary.withValues(alpha: 0.14),
-        ),
+        border: Border.all(color: context.primary.withValues(alpha: 0.14)),
       ),
       child: Text(
         note,
@@ -140,9 +226,9 @@ class _CancellationSection extends StatelessWidget {
   final DashboardCancellationEntity cancellation;
 
   static String _humanize(String value) => value.replaceAllMapped(
-        RegExp(r'([a-z])([A-Z])'),
-        (m) => '${m[1]} ${m[2]}',
-      );
+    RegExp(r'([a-z])([A-Z])'),
+    (m) => '${m[1]} ${m[2]}',
+  );
 
   @override
   Widget build(BuildContext context) {

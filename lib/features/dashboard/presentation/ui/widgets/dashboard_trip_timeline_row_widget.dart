@@ -18,9 +18,7 @@ class DashboardTripTimelineRowWidget extends StatelessWidget {
     final dotColor = isComplete
         ? AppColors.success
         : context.onSurface.withValues(alpha: 0.25);
-    final fillColor = isComplete
-        ? AppColors.success
-        : Colors.transparent;
+    final fillColor = isComplete ? AppColors.success : Colors.transparent;
 
     return IntrinsicHeight(
       child: Row(

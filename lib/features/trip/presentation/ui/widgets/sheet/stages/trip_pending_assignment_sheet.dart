@@ -7,9 +7,7 @@ import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_custome
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_route_card_widget.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_status_chip_widget.dart';
 
-/// Selected trip that is not yet assigned (`pendingDriver`/`scheduled`).
-/// The admin can take the trip themselves; driver assignment to a specific
-/// driver remains available from the dashboard overview/live map.
+/// Paid trip waiting for an admin to take ownership.
 class TripPendingAssignmentSheet extends StatelessWidget {
   const TripPendingAssignmentSheet({
     super.key,
@@ -40,8 +38,7 @@ class TripPendingAssignmentSheet extends StatelessWidget {
             TripStatusChipWidget(status: trip.status),
           ],
         ),
-        if (trip.status == TripStatus.scheduled &&
-            trip.scheduledAtUtc != null) ...[
+        if (trip.scheduledAtUtc != null) ...[
           AppSpacing.sm.verticalSpace,
           Row(
             children: [

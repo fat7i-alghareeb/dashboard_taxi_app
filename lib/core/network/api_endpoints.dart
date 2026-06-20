@@ -32,6 +32,7 @@ class ApiEndpoints {
   static const String adminTrips = '/api/v1/trips/admin';
   static String adminTripDetails(String tripId) =>
       '/api/v1/trips/$tripId/details';
+  static String tripMessages(String tripId) => '/api/v1/trips/$tripId/messages';
 
   // Admin dashboard
   static const String drivers = '/api/v1/drivers';

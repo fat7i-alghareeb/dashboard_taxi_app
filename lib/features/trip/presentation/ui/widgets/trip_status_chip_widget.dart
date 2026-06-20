@@ -9,9 +9,9 @@ class TripStatusChipWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = switch (status) {
-      TripStatus.driverAssigned => context.primary,
-      TripStatus.driverEnRoute => AppColors.warning,
-      TripStatus.driverArrived ||
+      TripStatus.accepted => context.primary,
+      TripStatus.enRoute => AppColors.warning,
+      TripStatus.arrived ||
       TripStatus.inProgress ||
       TripStatus.completed => AppColors.success,
       TripStatus.cancelled ||
@@ -40,9 +40,10 @@ class TripStatusChipWidget extends StatelessWidget {
 
   String get _label {
     return switch (status) {
-      TripStatus.driverAssigned => AppStrings.tripStatusDriverAssigned,
-      TripStatus.driverEnRoute => AppStrings.tripStatusDriverEnRoute,
-      TripStatus.driverArrived => AppStrings.tripStatusDriverArrived,
+      TripStatus.awaitingAdminAcceptance => AppStrings.tripStatusPendingDriver,
+      TripStatus.accepted => AppStrings.tripStatusDriverAssigned,
+      TripStatus.enRoute => AppStrings.tripStatusDriverEnRoute,
+      TripStatus.arrived => AppStrings.tripStatusDriverArrived,
       TripStatus.inProgress => AppStrings.tripStatusInProgress,
       TripStatus.completed => AppStrings.tripStatusCompleted,
       TripStatus.cancelled => AppStrings.tripStatusCancelled,

@@ -14,7 +14,7 @@ class DashboardTripCardTimelineWidget extends StatelessWidget {
       (AppStrings.tripCreatedAt, trip.createdAt),
       if (trip.scheduledAt != null)
         (AppStrings.tripStatusScheduled, trip.scheduledAt),
-      (AppStrings.dashboardAssignedAt, trip.assignedAt),
+      (AppStrings.dashboardAssignedAt, trip.acceptedAt ?? trip.assignedAt),
       (AppStrings.dashboardArrivedAt, trip.arrivedAt),
       (AppStrings.dashboardStartedAt, trip.startedAt),
       (AppStrings.dashboardCompletedAt, trip.completedAt),
@@ -92,7 +92,9 @@ class _TimelineStep extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
           style: AppTextStyles.s11w500.copyWith(
-            color: context.onSurface.withValues(alpha: isComplete ? 0.80 : 0.45),
+            color: context.onSurface.withValues(
+              alpha: isComplete ? 0.80 : 0.45,
+            ),
           ),
         ),
         Text(
@@ -101,7 +103,9 @@ class _TimelineStep extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
           style: AppTextStyles.s11w500.copyWith(
-            color: context.onSurface.withValues(alpha: isComplete ? 0.60 : 0.30),
+            color: context.onSurface.withValues(
+              alpha: isComplete ? 0.60 : 0.30,
+            ),
           ),
         ),
       ],

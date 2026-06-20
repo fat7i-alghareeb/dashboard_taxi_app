@@ -39,10 +39,7 @@ class DashboardTripFilterPillWidget extends StatelessWidget {
             horizontal: AppSpacing.lg,
             vertical: AppSpacing.sm,
           ),
-          child: Text(
-            label,
-            style: AppTextStyles.s12w500.copyWith(color: fg),
-          ),
+          child: Text(label, style: AppTextStyles.s12w500.copyWith(color: fg)),
         ),
       ),
     );

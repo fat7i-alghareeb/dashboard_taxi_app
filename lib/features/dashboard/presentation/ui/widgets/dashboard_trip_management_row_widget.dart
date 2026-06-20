@@ -60,6 +60,82 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
               ),
               AppSpacing.sm.verticalSpace,
               DashboardTripCardStopsWidget(trip: trip),
+              if (trip.scheduledAt != null) ...[
+                AppSpacing.sm.verticalSpace,
+                Wrap(
+                  spacing: AppSpacing.sm.w,
+                  runSpacing: AppSpacing.xs.h,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    DashboardStatusChipWidget(
+                      label: _countdownLabel(trip.scheduledAt!),
+                      tone: _attentionTone(trip.attentionState),
+                      icon: FontAwesomeIcons.clock,
+                      dense: true,
+                    ),
+                    if (trip.status.toLowerCase() == 'accepted')
+                      DashboardStatusChipWidget(
+                        label: trip.canMarkEnRoute
+                            ? AppStrings.tripStartEnRouteNavigation
+                            : AppStrings.scheduledNotReadyShort.trParams({
+                                'when': (trip.dispatchWindowOpensAt ??
+                                        trip.scheduledAt!)
+                                    .toLocal()
+                                    .toSmartDateTime(),
+                              }),
+                        tone: trip.canMarkEnRoute
+                            ? DashboardStatusTone.success
+                            : DashboardStatusTone.info,
+                        dense: true,
+                      ),
+                  ],
+                ),
+              ],
+              if (trip.acceptedAdminName?.trim().isNotEmpty == true) ...[
+                AppSpacing.sm.verticalSpace,
+                Row(
+                  children: [
+                    FaIcon(
+                      FontAwesomeIcons.userShield,
+                      size: 12.r,
+                      color: context.primary,
+                    ),
+                    AppSpacing.xs.horizontalSpace,
+                    Expanded(
+                      child: Text(
+                        trip.acceptedAdminName!.trim(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.s12w500.copyWith(
+                          color: context.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              if (trip.isAirport &&
+                  trip.flightNumber?.trim().isNotEmpty == true) ...[
+                AppSpacing.sm.verticalSpace,
+                Row(
+                  children: [
+                    FaIcon(
+                      FontAwesomeIcons.planeArrival,
+                      size: 12.r,
+                      color: context.primary,
+                    ),
+                    AppSpacing.xs.horizontalSpace,
+                    Text(
+                      '${AppStrings.flightNumber}: ${trip.flightNumber!.trim()}',
+                      style: AppTextStyles.s12w500.copyWith(
+                        color: context.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
               if (trip.passengerNote?.trim().isNotEmpty == true) ...[
                 AppSpacing.sm.verticalSpace,
                 _PassengerNotePreview(note: trip.passengerNote!.trim()),
@@ -88,6 +164,25 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
       ),
     );
   }
+
+  String _countdownLabel(DateTime scheduledUtc) {
+    final difference = scheduledUtc.toLocal().difference(DateTime.now());
+    final overdue = difference.isNegative;
+    final absolute = difference.abs();
+    final hours = absolute.inHours;
+    final minutes = absolute.inMinutes.remainder(60);
+    final value = hours > 0 ? '${hours}h ${minutes}m' : '${minutes}m';
+    return overdue ? 'Overdue $value' : 'T−$value';
+  }
+
+  DashboardStatusTone _attentionTone(String attentionState) {
+    return switch (attentionState.toLowerCase()) {
+      'overdue' => DashboardStatusTone.error,
+      'urgent' => DashboardStatusTone.warning,
+      'duesoon' => DashboardStatusTone.info,
+      _ => DashboardStatusTone.neutral,
+    };
+  }
 }
 
 class _PassengerNotePreview extends StatelessWidget {
@@ -109,11 +204,7 @@ class _PassengerNotePreview extends StatelessWidget {
       ),
       child: Row(
         children: [
-          FaIcon(
-            FontAwesomeIcons.message,
-            size: 12.r,
-            color: context.primary,
-          ),
+          FaIcon(FontAwesomeIcons.message, size: 12.r, color: context.primary),
           AppSpacing.xs.horizontalSpace,
           Expanded(
             child: Text(

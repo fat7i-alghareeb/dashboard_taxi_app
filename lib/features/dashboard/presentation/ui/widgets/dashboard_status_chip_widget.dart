@@ -53,10 +53,7 @@ class DashboardStatusChipWidget extends StatelessWidget {
               FaIcon(icon, size: (dense ? 10 : 11).r, color: color),
               AppSpacing.xs.horizontalSpace,
             ],
-            Text(
-              label,
-              style: AppTextStyles.s12w500.copyWith(color: color),
-            ),
+            Text(label, style: AppTextStyles.s12w500.copyWith(color: color)),
           ],
         ),
       ),
@@ -69,18 +66,15 @@ DashboardStatusTone dashboardToneFromTripStatus(String status) {
     case 'completed':
     case 'arrived':
       return DashboardStatusTone.success;
-    case 'pending':
-    case 'requested':
+    case 'awaitingadminacceptance':
       return DashboardStatusTone.warning;
     case 'cancelled':
     case 'canceled':
     case 'failed':
       return DashboardStatusTone.error;
-    case 'active':
-    case 'started':
     case 'enroute':
-    case 'en_route':
-    case 'assigned':
+    case 'accepted':
+    case 'inprogress':
       return DashboardStatusTone.primary;
     default:
       return DashboardStatusTone.neutral;

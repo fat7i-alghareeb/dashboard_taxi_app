@@ -64,6 +64,15 @@ class DashboardTripModel {
     this.startedAt,
     this.completedAt,
     this.passengerNote,
+    this.isAirport = false,
+    this.flightNumber,
+    this.acceptedByAdminId,
+    this.acceptedAdminName,
+    this.acceptedAt,
+    this.isScheduled = false,
+    this.dispatchWindowOpensAt,
+    this.canMarkEnRoute = false,
+    this.attentionState = 'Normal',
   });
 
   final String id;
@@ -80,6 +89,15 @@ class DashboardTripModel {
   final DateTime? startedAt;
   final DateTime? completedAt;
   final String? passengerNote;
+  final bool isAirport;
+  final String? flightNumber;
+  final String? acceptedByAdminId;
+  final String? acceptedAdminName;
+  final DateTime? acceptedAt;
+  final bool isScheduled;
+  final DateTime? dispatchWindowOpensAt;
+  final bool canMarkEnRoute;
+  final String attentionState;
 
   factory DashboardTripModel.fromJson(Map<String, dynamic> json) {
     return DashboardTripModel(
@@ -100,6 +118,24 @@ class DashboardTripModel {
       startedAt: DateTime.tryParse(_readString(json, 'startedAtUtc')),
       completedAt: DateTime.tryParse(_readString(json, 'completedAtUtc')),
       passengerNote: _readNullableString(json, 'passengerNote'),
+      isAirport: (json['isAirport'] ?? json['IsAirport']) == true,
+      flightNumber: _readNullableString(json, 'flightNumber'),
+      acceptedByAdminId: _readNullableString(json, 'acceptedByAdminId'),
+      acceptedAdminName: _readNullableString(json, 'acceptedAdminName'),
+      acceptedAt: DateTime.tryParse(_readString(json, 'acceptedAtUtc')),
+      isScheduled:
+          (json['isScheduled'] ?? json['IsScheduled']) == true ||
+          DateTime.tryParse(_readString(json, 'scheduledAtUtc')) != null,
+      dispatchWindowOpensAt: DateTime.tryParse(
+        _readString(json, 'dispatchWindowOpensAtUtc'),
+      ),
+      canMarkEnRoute:
+          (json['canMarkEnRoute'] ?? json['CanMarkEnRoute']) == true,
+      attentionState: _readString(
+        json,
+        'attentionState',
+        fallback: 'Normal',
+      ),
     );
   }
 }
@@ -150,6 +186,15 @@ class DashboardTripDetailsModel {
     this.cancellation,
     this.waitingFeeTotal = 0,
     this.waitingBillableMinutes = 0,
+    this.isAirport = false,
+    this.flightNumber,
+    this.acceptedByAdminId,
+    this.acceptedAdminName,
+    this.acceptedAt,
+    this.isScheduled = false,
+    this.dispatchWindowOpensAt,
+    this.canMarkEnRoute = false,
+    this.attentionState = 'Normal',
   });
 
   final String id;
@@ -173,6 +218,15 @@ class DashboardTripDetailsModel {
   final DashboardCancellationModel? cancellation;
   final double waitingFeeTotal;
   final int waitingBillableMinutes;
+  final bool isAirport;
+  final String? flightNumber;
+  final String? acceptedByAdminId;
+  final String? acceptedAdminName;
+  final DateTime? acceptedAt;
+  final bool isScheduled;
+  final DateTime? dispatchWindowOpensAt;
+  final bool canMarkEnRoute;
+  final String attentionState;
 
   factory DashboardTripDetailsModel.fromJson(Map<String, dynamic> json) {
     return DashboardTripDetailsModel(
@@ -205,6 +259,24 @@ class DashboardTripDetailsModel {
       waitingFeeTotal: (json['waitingFeeTotal'] as num?)?.toDouble() ?? 0,
       waitingBillableMinutes:
           (json['waitingBillableMinutes'] as num?)?.toInt() ?? 0,
+      isAirport: (json['isAirport'] ?? json['IsAirport']) == true,
+      flightNumber: _readNullableString(json, 'flightNumber'),
+      acceptedByAdminId: _readNullableString(json, 'acceptedByAdminId'),
+      acceptedAdminName: _readNullableString(json, 'acceptedAdminName'),
+      acceptedAt: DateTime.tryParse(_readString(json, 'acceptedAtUtc')),
+      isScheduled:
+          (json['isScheduled'] ?? json['IsScheduled']) == true ||
+          DateTime.tryParse(_readString(json, 'scheduledAtUtc')) != null,
+      dispatchWindowOpensAt: DateTime.tryParse(
+        _readString(json, 'dispatchWindowOpensAtUtc'),
+      ),
+      canMarkEnRoute:
+          (json['canMarkEnRoute'] ?? json['CanMarkEnRoute']) == true,
+      attentionState: _readString(
+        json,
+        'attentionState',
+        fallback: 'Normal',
+      ),
     );
   }
 }
@@ -478,7 +550,6 @@ class DashboardSystemConfigModel {
     );
   }
 }
-
 
 String _readString(
   Map<String, dynamic> json,

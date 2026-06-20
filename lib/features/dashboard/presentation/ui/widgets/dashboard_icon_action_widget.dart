@@ -20,9 +20,7 @@ class DashboardIconActionWidget extends StatelessWidget {
         color: context.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadii.sm.r),
-          side: BorderSide(
-            color: context.onSurface.withValues(alpha: 0.10),
-          ),
+          side: BorderSide(color: context.onSurface.withValues(alpha: 0.10)),
         ),
         child: InkWell(
           onTap: onTap,

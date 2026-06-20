@@ -26,7 +26,6 @@ abstract class DashboardRepository {
 
   Future<Result<List<DashboardAuditLogEntity>>> getAdminAuditLogs();
 
-
   Future<Result<void>> suspendDriver(String driverId);
 
   Future<Result<void>> assignDriverVehicleType({
@@ -34,7 +33,9 @@ abstract class DashboardRepository {
     required String vehicleTypeId,
   });
 
-  Future<Result<void>> updateVehicleType(DashboardVehicleTypeEntity vehicleType);
+  Future<Result<void>> updateVehicleType(
+    DashboardVehicleTypeEntity vehicleType,
+  );
 
   Future<Result<void>> createVehicleType({
     required String code,

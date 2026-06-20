@@ -57,14 +57,9 @@ class _TripCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg.r),
-        border: Border.all(
-          color: context.onSurface.withValues(alpha: 0.08),
-        ),
+        border: Border.all(color: context.onSurface.withValues(alpha: 0.08)),
       ),
-      child: Padding(
-        padding: REdgeInsets.all(AppSpacing.lg),
-        child: child,
-      ),
+      child: Padding(padding: REdgeInsets.all(AppSpacing.lg), child: child),
     );
   }
 }

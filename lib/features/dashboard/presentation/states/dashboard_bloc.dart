@@ -58,21 +58,28 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               longitude: longitude,
             ),
           );
-        // A brand-new trip appeared. Refresh the admin trips list and the
-        // overview counters; admins live in the "Admins" SignalR group so they
-        // already receive the TripRequested broadcast.
+        // Legacy pre-payment event; retained only for compatibility.
         case RealtimeTripRequested():
+          _scheduleAdminTripsRefresh();
+          _scheduleOverviewRefresh();
+        // Paid trip is now eligible for admin acceptance.
+        case RealtimeTripAwaitingAdminAcceptance():
+          _scheduleAdminTripsRefresh();
+          _scheduleOverviewRefresh();
+        // Refresh instead of only patching so owner and dispatch fields are
+        // immediately authoritative for every admin.
+        case RealtimeTripAccepted():
           _scheduleAdminTripsRefresh();
           _scheduleOverviewRefresh();
         // Status transitions: patch the in-memory list in-place to avoid a
         // flicker. The overview counters also need a refresh.
         case RealtimeDriverAssigned(:final tripId):
-          _applyTripStatusInPlace(tripId, 'DriverAssigned');
+          _applyTripStatusInPlace(tripId, 'Accepted');
           _scheduleOverviewRefresh();
         case RealtimeDriverEnRoute(:final tripId):
-          _applyTripStatusInPlace(tripId, 'DriverEnRoute');
+          _applyTripStatusInPlace(tripId, 'EnRoute');
         case RealtimeDriverArrived(:final tripId):
-          _applyTripStatusInPlace(tripId, 'DriverArrived');
+          _applyTripStatusInPlace(tripId, 'Arrived');
         case RealtimeTripStarted(:final tripId):
           _applyTripStatusInPlace(tripId, 'InProgress');
         case RealtimeTripStopCompleted():
@@ -86,6 +93,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         case RealtimePaymentConfirmed():
         case RealtimePaymentFailed():
         case RealtimeTripRefunded():
+        // Chat events are handled by ChatBloc, not the dashboard.
+        case RealtimeTripMessageReceived():
+        case RealtimeChatClosed():
           break;
       }
     });
@@ -102,10 +112,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   void _applyTripStatusInPlace(String tripId, String newStatus) {
     if (isClosed) return;
-    add(DashboardEvent.adminTripStatusPatched(
-      tripId: tripId,
-      newStatus: newStatus,
-    ));
+    add(
+      DashboardEvent.adminTripStatusPatched(
+        tripId: tripId,
+        newStatus: newStatus,
+      ),
+    );
   }
 
   void _onAdminTripStatusPatched(
@@ -438,9 +450,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     Emitter<DashboardState> emit,
   ) async {
     printM('[DashboardBloc] admin vehicle types requested');
-    emit(
-      state.copyWith(adminVehicleTypesState: const BlocStatus.loading()),
-    );
+    emit(state.copyWith(adminVehicleTypesState: const BlocStatus.loading()));
     final result = await _facade.getAdminVehicleTypes();
     result.when(
       success: (data) {
@@ -452,9 +462,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       failure: (message) {
         printY('[DashboardBloc] admin vehicle types failed: $message');
         emit(
-          state.copyWith(
-            adminVehicleTypesState: BlocStatus.failure(message),
-          ),
+          state.copyWith(adminVehicleTypesState: BlocStatus.failure(message)),
         );
       },
     );
@@ -471,7 +479,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     required String actionName,
     required Future<Result<void>> Function() action,
     required DashboardState Function(DashboardState s, BlocStatus<void> status)
-        applyActionState,
+    applyActionState,
     required List<DashboardEvent> reloadEvents,
   }) async {
     printM('[DashboardBloc] admin action requested action=$actionName');
@@ -580,8 +588,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit: emit,
       actionName: 'updateTripDiscount:${event.discountPercent}',
       action: () => _facade.updateTripDiscount(event.discountPercent),
-      applyActionState: (s, status) =>
-          s.copyWith(configActionState: status),
+      applyActionState: (s, status) => s.copyWith(configActionState: status),
       reloadEvents: [const DashboardEvent.adminConfigRequested()],
     );
   }
@@ -594,8 +601,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit: emit,
       actionName: 'updateCurrency:${event.currencyCode}',
       action: () => _facade.updateCurrency(event.currencyCode),
-      applyActionState: (s, status) =>
-          s.copyWith(configActionState: status),
+      applyActionState: (s, status) => s.copyWith(configActionState: status),
       reloadEvents: [const DashboardEvent.adminConfigRequested()],
     );
   }

@@ -1,11 +1,10 @@
 enum TripStatus {
   pendingQuote,
   awaitingPayment,
-  scheduled,
-  pendingDriver,
-  driverAssigned,
-  driverEnRoute,
-  driverArrived,
+  awaitingAdminAcceptance,
+  accepted,
+  enRoute,
+  arrived,
   inProgress,
   completed,
   cancelled,
@@ -15,9 +14,9 @@ enum TripStatus {
 
   bool get isActiveDriverFlow {
     return switch (this) {
-      TripStatus.driverAssigned ||
-      TripStatus.driverEnRoute ||
-      TripStatus.driverArrived ||
+      TripStatus.accepted ||
+      TripStatus.enRoute ||
+      TripStatus.arrived ||
       TripStatus.inProgress => true,
       _ => false,
     };
@@ -88,6 +87,14 @@ class TripEntity {
     this.routeSegments = const [],
     this.encodedOverviewPolyline,
     this.isAirport = false,
+    this.flightNumber,
+    this.acceptedByAdminId,
+    this.acceptedAdminName,
+    this.acceptedAtUtc,
+    this.isScheduled = false,
+    this.dispatchWindowOpensAtUtc,
+    this.canMarkEnRoute = false,
+    this.attentionState = 'Normal',
   });
 
   final String id;
@@ -112,6 +119,14 @@ class TripEntity {
   final List<TripRouteSegmentEntity> routeSegments;
   final String? encodedOverviewPolyline;
   final bool isAirport;
+  final String? flightNumber;
+  final String? acceptedByAdminId;
+  final String? acceptedAdminName;
+  final DateTime? acceptedAtUtc;
+  final bool isScheduled;
+  final DateTime? dispatchWindowOpensAtUtc;
+  final bool canMarkEnRoute;
+  final String attentionState;
 
   TripStopEntity? get pickup => stops.isEmpty ? null : stops.first;
   TripStopEntity? get dropoff => stops.length < 2 ? null : stops.last;
@@ -146,9 +161,16 @@ class TripEntity {
       routeSegments: routeSegments,
       encodedOverviewPolyline: encodedOverviewPolyline,
       isAirport: isAirport,
+      flightNumber: flightNumber,
+      acceptedByAdminId: acceptedByAdminId,
+      acceptedAdminName: acceptedAdminName,
+      acceptedAtUtc: acceptedAtUtc,
+      isScheduled: isScheduled,
+      dispatchWindowOpensAtUtc: dispatchWindowOpensAtUtc,
+      canMarkEnRoute: canMarkEnRoute,
+      attentionState: attentionState,
     );
   }
-
 }
 
 class TripCancellationEntity {

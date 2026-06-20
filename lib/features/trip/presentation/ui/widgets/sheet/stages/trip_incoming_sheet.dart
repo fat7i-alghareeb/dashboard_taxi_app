@@ -8,8 +8,7 @@ import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_custome
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_route_card_widget.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_status_chip_widget.dart';
 
-/// Stage 1: a new trip has just been assigned to this driver. Show pickup,
-/// dropoff, fare; primary action starts the en-route flow.
+/// Accepted reservation owned by the current admin.
 class TripIncomingSheet extends StatelessWidget {
   const TripIncomingSheet({super.key, required this.trip, required this.state});
 
@@ -18,13 +17,12 @@ class TripIncomingSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheduledAtLocal = trip.scheduledAtUtc?.toLocal();
-    final isEnRouteNotReady =
-        scheduledAtLocal != null &&
-        DateTime.now().isBefore(
-          scheduledAtLocal.subtract(const Duration(minutes: 15)),
-        );
-    final scheduledLabel = scheduledAtLocal?.toSmartDateTime() ?? '';
+    final dispatchWindowLocal = trip.dispatchWindowOpensAtUtc?.toLocal();
+    final isEnRouteNotReady = !trip.canMarkEnRoute;
+    final scheduledLabel =
+        trip.scheduledAtUtc?.toLocal().toSmartDateTime() ??
+        dispatchWindowLocal?.toSmartDateTime() ??
+        '';
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -42,7 +40,7 @@ class TripIncomingSheet extends StatelessWidget {
             ),
             AppSpacing.sm.horizontalSpace,
             Text(
-              AppStrings.tripAssignmentTitle.toUpperCase(),
+              AppStrings.tripStatusDriverAssigned.toUpperCase(),
               style: AppTextStyles.s11w500.copyWith(
                 color: context.primary,
                 letterSpacing: 1.4,

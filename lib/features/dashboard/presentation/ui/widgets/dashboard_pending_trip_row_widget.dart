@@ -1,7 +1,8 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
-import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_assign_driver_sheet.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_status_chip_widget.dart';
+import 'package:dashboardtaxi/features/root/domain/services/root_tab_controller.dart';
+import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 
 class DashboardPendingTripRowWidget extends StatelessWidget {
   const DashboardPendingTripRowWidget({
@@ -108,15 +109,21 @@ class DashboardPendingTripRowWidget extends StatelessWidget {
               ),
             ),
           ],
+          if (trip.isAirport &&
+              trip.flightNumber?.trim().isNotEmpty == true) ...[
+            AppSpacing.sm.verticalSpace,
+            _AirportFlightSummary(flightNumber: trip.flightNumber!.trim()),
+          ],
           AppSpacing.md.verticalSpace,
           Align(
             alignment: AlignmentDirectional.centerEnd,
             child: AppButton.outline(
-              onTap: () => DashboardAssignDriverSheet.show(
-                context,
-                trip: trip,
-                drivers: drivers,
-              ),
+              onTap: () {
+                getIt<TripBloc>().add(
+                  TripEvent.adminSelfAssignRequested(trip.id),
+                );
+                getIt<RootTabController>().goToHome();
+              },
               layout: AppButtonLayout(
                 height: 36,
                 contentPadding: REdgeInsets.symmetric(
@@ -125,13 +132,40 @@ class DashboardPendingTripRowWidget extends StatelessWidget {
                 ),
               ),
               child: AppButtonChild.label(
-                AppStrings.dashboardAssignDriver,
+                AppStrings.adminTakeTrip,
                 maxLines: 1,
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _AirportFlightSummary extends StatelessWidget {
+  const _AirportFlightSummary({required this.flightNumber});
+
+  final String flightNumber;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        FaIcon(
+          FontAwesomeIcons.planeArrival,
+          size: 12.r,
+          color: context.primary,
+        ),
+        AppSpacing.sm.horizontalSpace,
+        Text(
+          '${AppStrings.flightNumber}: $flightNumber',
+          style: AppTextStyles.s12w500.copyWith(
+            color: context.primary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -45,9 +45,8 @@ class TripReadonlySheet extends StatelessWidget {
           variant: AppButtonVariant.grey,
           fill: AppButtonFill.outline,
           layout: const AppButtonLayout(height: 44),
-          onTap: () => context.read<TripBloc>().add(
-            const TripEvent.selectionCleared(),
-          ),
+          onTap: () =>
+              context.read<TripBloc>().add(const TripEvent.selectionCleared()),
           child: AppButtonChild.label(
             AppStrings.back,
             textStyle: AppTextStyles.s14w500,

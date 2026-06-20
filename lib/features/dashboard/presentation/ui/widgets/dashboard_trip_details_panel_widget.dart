@@ -15,9 +15,8 @@ class DashboardTripDetailsPanelWidget extends StatelessWidget {
       icon: FontAwesomeIcons.clipboardList,
       child: StatusBuilder<DashboardTripDetailsEntity>(
         state: state,
-        init: () => EmptyStateWidget(
-          text: AppStrings.dashboardTripDetailsEmpty,
-        ),
+        init: () =>
+            EmptyStateWidget(text: AppStrings.dashboardTripDetailsEmpty),
         loading: () => AppShimmer.box(
           width: double.infinity,
           height: 280,

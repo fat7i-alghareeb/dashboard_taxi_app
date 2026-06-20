@@ -36,6 +36,14 @@ extension TripModelMapper on TripModel {
     routeSegments: routeSegments.map((e) => e.toEntity).toList(),
     encodedOverviewPolyline: encodedOverviewPolyline,
     isAirport: isAirport,
+    flightNumber: flightNumber,
+    acceptedByAdminId: acceptedByAdminId,
+    acceptedAdminName: acceptedAdminName,
+    acceptedAtUtc: acceptedAtUtc,
+    isScheduled: isScheduled,
+    dispatchWindowOpensAtUtc: dispatchWindowOpensAtUtc,
+    canMarkEnRoute: canMarkEnRoute,
+    attentionState: attentionState,
   );
 }
 
@@ -89,11 +97,12 @@ TripStatus _mapStatus(String value) {
   return switch (normalized) {
     'pendingquote' => TripStatus.pendingQuote,
     'awaitingpayment' => TripStatus.awaitingPayment,
-    'scheduled' => TripStatus.scheduled,
-    'pendingdriver' => TripStatus.pendingDriver,
-    'driverassigned' => TripStatus.driverAssigned,
-    'driverenroute' => TripStatus.driverEnRoute,
-    'driverarrived' => TripStatus.driverArrived,
+    'awaitingadminacceptance' ||
+    'scheduled' ||
+    'pendingdriver' => TripStatus.awaitingAdminAcceptance,
+    'accepted' || 'driverassigned' => TripStatus.accepted,
+    'enroute' || 'driverenroute' => TripStatus.enRoute,
+    'arrived' || 'driverarrived' => TripStatus.arrived,
     'inprogress' => TripStatus.inProgress,
     'completed' => TripStatus.completed,
     'cancelled' => TripStatus.cancelled,

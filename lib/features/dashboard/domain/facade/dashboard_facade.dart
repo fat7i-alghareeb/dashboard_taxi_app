@@ -56,7 +56,6 @@ class DashboardFacade {
     return _repository.getAdminAuditLogs();
   }
 
-
   Future<Result<void>> suspendDriver(String driverId) {
     return _repository.suspendDriver(driverId);
   }

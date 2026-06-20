@@ -1,7 +1,8 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
-import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_assign_driver_sheet.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_status_chip_widget.dart';
+import 'package:dashboardtaxi/features/root/domain/services/root_tab_controller.dart';
+import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 
 class DashboardPendingPickupCardWidget extends StatelessWidget {
   const DashboardPendingPickupCardWidget({
@@ -20,8 +21,6 @@ class DashboardPendingPickupCardWidget extends StatelessWidget {
     final pickup = trip.pickupLabel == null || trip.pickupLabel!.isEmpty
         ? AppStrings.dashboardNoPickupLocation
         : trip.pickupLabel!;
-    final distances = _driverDistancesById();
-
     return DecoratedBox(
       decoration: BoxDecoration(
         color: context.surface,
@@ -97,14 +96,14 @@ class DashboardPendingPickupCardWidget extends StatelessWidget {
             ),
             AppSpacing.lg.verticalSpace,
             AppButton.primary(
-              onTap: () => DashboardAssignDriverSheet.show(
-                context,
-                trip: trip,
-                drivers: drivers,
-                driverDistances: distances,
-              ),
+              onTap: () {
+                getIt<TripBloc>().add(
+                  TripEvent.adminSelfAssignRequested(trip.id),
+                );
+                getIt<RootTabController>().goToHome();
+              },
               layout: const AppButtonLayout(height: 40),
-              child: AppButtonChild.label(AppStrings.dashboardAssignDriver),
+              child: AppButtonChild.label(AppStrings.adminTakeTrip),
             ),
           ],
         ),
@@ -112,49 +111,4 @@ class DashboardPendingPickupCardWidget extends StatelessWidget {
     ).animate().fadeIn(duration: 280.ms).slideY(begin: 0.05, end: 0);
   }
 
-  Map<String, double> _driverDistancesById() {
-    if (!trip.hasPickupLocation) return const {};
-    final assignableIds = drivers
-        .where((driver) => driver.vehicleTypeId == trip.vehicleTypeId)
-        .map((driver) => driver.id)
-        .toSet();
-    final distances = <String, double>{};
-
-    for (final driver in liveDrivers) {
-      if (!assignableIds.contains(driver.driverId) || !driver.hasLocation) {
-        continue;
-      }
-      distances[driver.driverId] = _distanceKm(
-        trip.pickupLatitude!,
-        trip.pickupLongitude!,
-        driver.latitude!,
-        driver.longitude!,
-      );
-    }
-
-    return distances;
-  }
-
-  double _distanceKm(
-    double startLatitude,
-    double startLongitude,
-    double endLatitude,
-    double endLongitude,
-  ) {
-    const earthRadiusKm = 6371.0;
-    final startLatRadians = _toRadians(startLatitude);
-    final endLatRadians = _toRadians(endLatitude);
-    final deltaLat = _toRadians(endLatitude - startLatitude);
-    final deltaLng = _toRadians(endLongitude - startLongitude);
-    final a =
-        sin(deltaLat / 2) * sin(deltaLat / 2) +
-        cos(startLatRadians) *
-            cos(endLatRadians) *
-            sin(deltaLng / 2) *
-            sin(deltaLng / 2);
-    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    return earthRadiusKm * c;
-  }
-
-  double _toRadians(double degrees) => degrees * pi / 180;
 }

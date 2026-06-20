@@ -10,10 +10,7 @@ import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboa
 class DashboardTripsBody extends StatefulWidget {
   final bool showBackButton;
 
-  const DashboardTripsBody({
-    super.key,
-    this.showBackButton = true,
-  });
+  const DashboardTripsBody({super.key, this.showBackButton = true});
 
   @override
   State<DashboardTripsBody> createState() => _DashboardTripsBodyState();
@@ -25,8 +22,9 @@ class _DashboardTripsBodyState extends State<DashboardTripsBody> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<DashboardBloc>()
-        ..add(const DashboardEvent.adminTripsRequested()),
+      create: (context) =>
+          getIt<DashboardBloc>()
+            ..add(const DashboardEvent.adminTripsRequested()),
       child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
           return RefreshIndicator(
@@ -42,7 +40,9 @@ class _DashboardTripsBodyState extends State<DashboardTripsBody> {
                 vertical: AppSpacing.lg,
               ),
               children: [
-                DashboardTripsHeaderWidget(showBackButton: widget.showBackButton),
+                DashboardTripsHeaderWidget(
+                  showBackButton: widget.showBackButton,
+                ),
                 AppSpacing.lg.verticalSpace,
                 DashboardTripFilterPillsWidget(
                   selected: _filter,

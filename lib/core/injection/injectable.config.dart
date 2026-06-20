@@ -85,6 +85,14 @@ import 'package:dashboardtaxi/features/auth/domain/repositories/auth_repository.
     as _i706;
 import 'package:dashboardtaxi/features/auth/presentation/states/auth_bloc.dart'
     as _i100;
+import 'package:dashboardtaxi/features/chat/data/datasources/chat_remote_datasource.dart'
+    as _i770;
+import 'package:dashboardtaxi/features/chat/data/repositories/chat_repository_impl.dart'
+    as _i496;
+import 'package:dashboardtaxi/features/chat/domain/repositories/chat_repository.dart'
+    as _i832;
+import 'package:dashboardtaxi/features/chat/presentation/states/chat_bloc.dart'
+    as _i639;
 import 'package:dashboardtaxi/features/company_contact/data/datasources/company_contact_remote_datasource.dart'
     as _i37;
 import 'package:dashboardtaxi/features/company_contact/data/repositories/company_contact_repository_impl.dart'
@@ -310,6 +318,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1012.AuthRemoteDataSource>(
       () => _i1012.AuthRemoteDataSource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i770.ChatRemoteDataSource>(
+      () => _i770.ChatRemoteDataSource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i37.CompanyContactRemoteDataSource>(
       () => _i37.CompanyContactRemoteDataSource(gh<_i361.Dio>()),
     );
@@ -360,6 +371,16 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i973.NotificationFacade>(
       () => _i973.NotificationFacade(gh<_i248.NotificationRepository>()),
+    );
+    gh.lazySingleton<_i832.ChatRepository>(
+      () => _i496.ChatRepositoryImpl(gh<_i770.ChatRemoteDataSource>()),
+    );
+    gh.factory<_i639.ChatBloc>(
+      () => _i639.ChatBloc(
+        gh<_i832.ChatRepository>(),
+        gh<_i868.RealtimeService>(),
+        gh<_i322.AuthManager>(),
+      ),
     );
     gh.lazySingleton<_i706.AuthRepository>(
       () => _i174.AuthRepositoryImpl(
@@ -428,6 +449,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i211.CompanyContactBloc>(
       () => _i211.CompanyContactBloc(gh<_i132.CompanyContactFacade>()),
     );
+    gh.lazySingleton<_i540.TripBloc>(
+      () => _i540.TripBloc(
+        gh<_i931.TripFacade>(),
+        gh<_i868.RealtimeService>(),
+        gh<_i322.AuthManager>(),
+      ),
+    );
     gh.lazySingleton<_i650.DriverLocationStreamer>(
       () => _i650.DriverLocationStreamer(
         gh<_i113.LocationService>(),
@@ -444,14 +472,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i650.DriverLocationStreamer>(),
         gh<_i868.RealtimeService>(),
         gh<_i322.AuthManager>(),
-      ),
-    );
-    gh.lazySingleton<_i540.TripBloc>(
-      () => _i540.TripBloc(
-        gh<_i931.TripFacade>(),
-        gh<_i868.RealtimeService>(),
-        gh<_i322.AuthManager>(),
-        gh<_i17.NotificationCoordinator>(),
       ),
     );
     return this;

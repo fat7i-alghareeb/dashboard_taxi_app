@@ -10,17 +10,16 @@ enum TripSheetStage {
   /// No selected trip and no recent completion — idle map.
   idle,
 
-  /// Selected trip not yet assigned (`pendingDriver`/`scheduled`): admin can
-  /// take it or assign a driver.
+  /// Paid trip waiting for an admin to take ownership.
   pendingAssignment,
 
-  /// Trip assigned, awaiting accept (`driverAssigned`).
+  /// Trip accepted by the current admin, waiting for the dispatch window.
   incoming,
 
-  /// Driver heading to pickup (`driverEnRoute`).
+  /// Admin is heading to pickup (`enRoute`).
   toPickup,
 
-  /// Driver waiting at pickup, customer not yet on board (`driverArrived`).
+  /// Admin is waiting at pickup, customer not yet on board (`arrived`).
   atPickup,
 
   /// Trip in progress towards stops/destination (`inProgress`).
@@ -45,11 +44,10 @@ extension TripSheetStageX on TripState {
     if (trip == null) return TripSheetStage.idle;
 
     return switch (trip.status) {
-      TripStatus.pendingDriver ||
-      TripStatus.scheduled => TripSheetStage.pendingAssignment,
-      TripStatus.driverAssigned => TripSheetStage.incoming,
-      TripStatus.driverEnRoute => TripSheetStage.toPickup,
-      TripStatus.driverArrived => TripSheetStage.atPickup,
+      TripStatus.awaitingAdminAcceptance => TripSheetStage.pendingAssignment,
+      TripStatus.accepted => TripSheetStage.incoming,
+      TripStatus.enRoute => TripSheetStage.toPickup,
+      TripStatus.arrived => TripSheetStage.atPickup,
       TripStatus.inProgress => TripSheetStage.inProgress,
       _ => TripSheetStage.readonly,
     };

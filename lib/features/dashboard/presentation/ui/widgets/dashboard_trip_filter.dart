@@ -32,21 +32,13 @@ enum DashboardTripFilter {
       case DashboardTripFilter.all:
         return true;
       case DashboardTripFilter.scheduled:
-        return s == 'scheduled';
+        return trip.scheduledAt != null;
       case DashboardTripFilter.pending:
-        return s == 'pending' ||
-            s == 'requested' ||
-            s == 'pendingdriver';
+        return s == 'awaitingadminacceptance';
       case DashboardTripFilter.active:
-        return s == 'active' ||
-            s == 'started' ||
-            s == 'assigned' ||
-            s == 'driverassigned' ||
+        return s == 'accepted' ||
             s == 'enroute' ||
-            s == 'en_route' ||
-            s == 'driverenroute' ||
             s == 'arrived' ||
-            s == 'driverarrived' ||
             s == 'inprogress';
       case DashboardTripFilter.completed:
         return s == 'completed';

@@ -188,6 +188,11 @@ class SignalRRealtimeService implements RealtimeService {
 
   void _wireHandlers(HubConnection hub) {
     hub.on(RealtimeMethodNames.tripRequested, _onTripRequested);
+    hub.on(
+      RealtimeMethodNames.tripAwaitingAdminAcceptance,
+      _onTripAwaitingAdminAcceptance,
+    );
+    hub.on(RealtimeMethodNames.tripAccepted, _onTripAccepted);
     hub.on(RealtimeMethodNames.driverAssigned, _onDriverAssigned);
     hub.on(RealtimeMethodNames.tripStarted, _onTripStarted);
     hub.on(RealtimeMethodNames.tripCompleted, _onTripCompleted);
@@ -199,6 +204,8 @@ class SignalRRealtimeService implements RealtimeService {
     hub.on(RealtimeMethodNames.driverArrived, _onDriverArrived);
     hub.on(RealtimeMethodNames.driverLocationUpdated, _onDriverLocationUpdated);
     hub.on(RealtimeMethodNames.tripStopCompleted, _onTripStopCompleted);
+    hub.on(RealtimeMethodNames.tripMessageReceived, _onTripMessageReceived);
+    hub.on(RealtimeMethodNames.chatClosed, _onChatClosed);
 
     hub.onclose(({Exception? error}) {
       printY('$_logTag connection closed (error=$error)');
@@ -254,6 +261,12 @@ class SignalRRealtimeService implements RealtimeService {
     return value?.toString() ?? '';
   }
 
+  String? _readNullableString(Map<String, dynamic> map, String camel) {
+    final value = map[camel] ?? map[_pascal(camel)];
+    final text = value?.toString();
+    return (text == null || text.isEmpty) ? null : text;
+  }
+
   double _readDouble(Map<String, dynamic> map, String camel) {
     final value = map[camel] ?? map[_pascal(camel)];
     if (value is num) return value.toDouble();
@@ -278,6 +291,31 @@ class SignalRRealtimeService implements RealtimeService {
         tripId: _readString(p, 'tripId'),
         vehicleTypeId: _readString(p, 'vehicleTypeId'),
         passengerId: _readString(p, 'passengerId'),
+      ),
+    );
+  }
+
+  void _onTripAwaitingAdminAcceptance(List<Object?>? args) {
+    final p = _payload(args);
+    if (p == null) return;
+    _eventsController.add(
+      RealtimeEvent.tripAwaitingAdminAcceptance(
+        tripId: _readString(p, 'tripId'),
+        vehicleTypeId: _readString(p, 'vehicleTypeId'),
+        passengerId: _readString(p, 'passengerId'),
+        scheduledAtUtc: _readNullableString(p, 'scheduledAtUtc'),
+      ),
+    );
+  }
+
+  void _onTripAccepted(List<Object?>? args) {
+    final p = _payload(args);
+    if (p == null) return;
+    _eventsController.add(
+      RealtimeEvent.tripAccepted(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+        adminId: _readString(p, 'adminId'),
       ),
     );
   }
@@ -474,6 +512,40 @@ class SignalRRealtimeService implements RealtimeService {
         driverId: _readString(p, 'driverId'),
         sequence: sequence,
       ),
+    );
+  }
+
+  void _onTripMessageReceived(List<Object?>? args) {
+    final p = _payload(args);
+    if (p == null) {
+      printY('$_logTag <= TripMessageReceived (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= TripMessageReceived trip=${_readString(p, 'tripId')} sender=${_readString(p, 'senderId')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.tripMessageReceived(
+        tripId: _readString(p, 'tripId'),
+        messageId: _readString(p, 'messageId'),
+        senderId: _readString(p, 'senderId'),
+        senderRole: _readString(p, 'senderRole'),
+        content: _readNullableString(p, 'content'),
+        photoUrl: _readNullableString(p, 'photoUrl'),
+        sentAtUtc: _readString(p, 'sentAtUtc'),
+      ),
+    );
+  }
+
+  void _onChatClosed(List<Object?>? args) {
+    final p = _payload(args);
+    if (p == null) {
+      printY('$_logTag <= ChatClosed (empty payload, ignored)');
+      return;
+    }
+    printM('$_logTag <= ChatClosed trip=${_readString(p, 'tripId')}');
+    _eventsController.add(
+      RealtimeEvent.chatClosed(tripId: _readString(p, 'tripId')),
     );
   }
 }

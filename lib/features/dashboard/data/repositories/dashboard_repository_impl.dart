@@ -104,7 +104,6 @@ class DashboardRepositoryImpl implements DashboardRepository {
     });
   }
 
-
   @override
   Future<Result<void>> suspendDriver(String driverId) {
     return runAsResult(() => _remote.suspendDriver(driverId));

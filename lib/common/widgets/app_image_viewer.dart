@@ -64,6 +64,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../core/network/api_config.dart';
 import '../../utils/extensions/context_extensions.dart';
 
 import '../../utils/extensions/theme_extensions.dart';
@@ -192,10 +193,15 @@ class AppImageViewer extends StatelessWidget {
 
     Color? fullScreenBackgroundColor,
   }) {
+    // Resolve backend-relative URLs (e.g. "/chat/..", "/photos/..") against the
+    // API host so callers can pass whatever the backend returns. Absolute URLs
+    // (http/https) are used as-is.
+    final effectiveUrl = url.startsWith('/') ? '${ApiConfig.baseUrl}$url' : url;
+
     return AppImageViewer._(
       key: key,
 
-      source: url,
+      source: effectiveUrl,
 
       sourceType: AppImageViewerSourceType.network,
 

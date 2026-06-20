@@ -5,13 +5,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/domain/extensions/user_role_extensions.dart';
-import '../../../../core/notification/notification_coordinator.dart';
 import '../../../../core/services/realtime/realtime_event.dart';
 import '../../../../core/services/realtime/realtime_service.dart';
 import '../../../../core/services/session/auth_manager.dart';
 import '../../../../core/utils/bloc_status.dart';
 import '../../../../core/utils/result.dart';
-import '../../../../utils/helpers/app_strings.dart';
 import '../../../../utils/helpers/colored_print.dart';
 import '../../domain/entities/trip_entity.dart';
 import '../../domain/facade/trip_facade.dart';
@@ -26,7 +24,6 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     this._facade,
     this._realtimeService,
     this._authManager,
-    this._notifications,
   ) : super(const TripState()) {
     on<_Started>(_onStarted);
     on<_GetAllRequested>(_onGetAllRequested);
@@ -37,7 +34,9 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     on<_SelectionCleared>(_onSelectionCleared);
     on<_MarkEnRouteRequested>(_onMarkEnRouteRequested);
     on<_MarkArrivedRequested>(_onMarkArrivedRequested);
-    on<_ResendArrivedNotificationRequested>(_onResendArrivedNotificationRequested);
+    on<_ResendArrivedNotificationRequested>(
+      _onResendArrivedNotificationRequested,
+    );
     on<_StartTripRequested>(_onStartTripRequested);
     on<_CompleteTripRequested>(_onCompleteTripRequested);
     on<_ClearCompletedSummaryRequested>(_onClearCompletedSummaryRequested);
@@ -55,7 +54,6 @@ class TripBloc extends Bloc<TripEvent, TripState> {
   final TripFacade _facade;
   final RealtimeService _realtimeService;
   final AuthManager _authManager;
-  final NotificationCoordinator _notifications;
   StreamSubscription<RealtimeEvent>? _eventsSub;
 
   Future<void> _onStarted(_Started event, Emitter<TripState> emit) {
@@ -89,10 +87,10 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     switch (event.event) {
       case RealtimeDriverEnRoute(:final tripId):
         printC('[TripBloc] realtime DriverEnRoute trip=$tripId');
-        await _refreshOrAdvance(tripId, TripStatus.driverEnRoute, emit);
+        await _refreshOrAdvance(tripId, TripStatus.enRoute, emit);
       case RealtimeDriverArrived(:final tripId):
         printC('[TripBloc] realtime DriverArrived trip=$tripId');
-        await _refreshOrAdvance(tripId, TripStatus.driverArrived, emit);
+        await _refreshOrAdvance(tripId, TripStatus.arrived, emit);
       case RealtimeTripStarted(:final tripId):
         printC('[TripBloc] realtime TripStarted trip=$tripId');
         await _refreshOrAdvance(tripId, TripStatus.inProgress, emit);
@@ -118,9 +116,32 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         );
         await _onStopCompletedFromRealtime(tripId, sequence, emit);
       case RealtimeTripRequested(:final tripId):
+        // Legacy compatibility only. New paid trips use
+        // TripAwaitingAdminAcceptance after payment succeeds.
         if (_authManager.currentUser?.isAdmin == true) {
           printC('[TripBloc] realtime TripRequested (admin) trip=$tripId');
           await _onAdminTripArrived(tripId, emit);
+        }
+      case RealtimeTripAwaitingAdminAcceptance(:final tripId):
+        if (_authManager.currentUser?.isAdmin == true) {
+          printC(
+            '[TripBloc] realtime TripAwaitingAdminAcceptance trip=$tripId',
+          );
+          await _onAdminTripArrived(tripId, emit);
+        }
+      case RealtimeTripAccepted(:final tripId, :final adminId):
+        emit(
+          state.copyWith(
+            pendingTrips: state.pendingTrips
+                .where((trip) => trip.id != tripId)
+                .toList(),
+          ),
+        );
+        if (_authManager.currentUser?.id == adminId) {
+          await _loadActiveTrip(tripId, emit, joinGroup: true);
+        } else if (state.activeTrip?.id == tripId) {
+          await _realtimeService.leaveTripGroup(tripId);
+          emit(state.copyWith(activeTrip: null));
         }
       case RealtimeDriverAssigned(:final tripId):
         printC('[TripBloc] realtime DriverAssigned trip=$tripId');
@@ -135,11 +156,14 @@ class TripBloc extends Bloc<TripEvent, TripState> {
             ),
           );
         }
-        await _loadActiveTrip(tripId, emit, joinGroup: true);
+        await _refreshOrAdvance(tripId, TripStatus.accepted, emit);
       case RealtimeDriverLocationUpdated():
       case RealtimePaymentConfirmed():
       case RealtimePaymentFailed():
       case RealtimeTripRefunded():
+      // Chat events are handled by ChatBloc, not the trip lifecycle bloc.
+      case RealtimeTripMessageReceived():
+      case RealtimeChatClosed():
         break;
     }
   }
@@ -151,11 +175,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
   ) async {
     final active = state.activeTrip;
     if (active == null || active.id != tripId) return;
-    emit(
-      state.copyWith(
-        completedStops: {...state.completedStops, sequence},
-      ),
-    );
+    emit(state.copyWith(completedStops: {...state.completedStops, sequence}));
   }
 
   Future<void> _onCompleteStopRequested(
@@ -213,7 +233,9 @@ class TripBloc extends Bloc<TripEvent, TripState> {
           printM('[TripBloc] no active trip to resolve');
           return;
         }
-        printG('[TripBloc] resolved active trip=${trip.id} status=${trip.status}');
+        printG(
+          '[TripBloc] resolved active trip=${trip.id} status=${trip.status}',
+        );
         add(TripEvent.fetchActiveRequested(trip.id));
       },
       failure: (message) =>
@@ -244,14 +266,16 @@ class TripBloc extends Bloc<TripEvent, TripState> {
             activeTripState: BlocStatus.success(trip),
             activeTrip: trip,
             completedTrip: null,
-            arrivedAt: trip.status == TripStatus.driverArrived
+            arrivedAt: trip.status == TripStatus.arrived
                 ? (state.arrivedAt ?? DateTime.now())
                 : null,
           ),
         );
       },
       failure: (message) {
-        printY('[TripBloc] trip selected failed trip=${event.tripId}: $message');
+        printY(
+          '[TripBloc] trip selected failed trip=${event.tripId}: $message',
+        );
         emit(state.copyWith(activeTripState: BlocStatus.failure(message)));
       },
     );
@@ -265,7 +289,9 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     if (tripId != null) {
       await _realtimeService.leaveTripGroup(tripId);
     }
-    emit(state.copyWith(activeTrip: null, completedTrip: null, arrivedAt: null));
+    emit(
+      state.copyWith(activeTrip: null, completedTrip: null, arrivedAt: null),
+    );
   }
 
   Future<void> _onMarkEnRouteRequested(
@@ -283,7 +309,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
           state.copyWith(
             markEnRouteState: const BlocStatus.success(null),
             activeTrip: state.activeTrip?.copyWithStatus(
-              TripStatus.driverEnRoute,
+              TripStatus.enRoute,
             ),
           ),
         );
@@ -313,7 +339,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
             markArrivedState: const BlocStatus.success(null),
             arrivedAt: DateTime.now(),
             activeTrip: state.activeTrip?.copyWithStatus(
-              TripStatus.driverArrived,
+              TripStatus.arrived,
             ),
           ),
         );
@@ -335,7 +361,9 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     final lastSent = state.lastArrivedResendAt;
     if (lastSent != null &&
         DateTime.now().difference(lastSent) < _resendArrivedCooldown) {
-      printC('[TripBloc] resend arrived blocked by cooldown trip=${event.tripId}');
+      printC(
+        '[TripBloc] resend arrived blocked by cooldown trip=${event.tripId}',
+      );
       return;
     }
     printM('[TripBloc] resend arrived requested trip=${event.tripId}');
@@ -356,7 +384,9 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         );
       },
       failure: (message) {
-        printY('[TripBloc] resend arrived failed trip=${event.tripId}: $message');
+        printY(
+          '[TripBloc] resend arrived failed trip=${event.tripId}: $message',
+        );
         emit(
           state.copyWith(
             resendArrivedNotificationState: BlocStatus.failure(message),
@@ -435,7 +465,9 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     _DriverCancelRequested event,
     Emitter<TripState> emit,
   ) async {
-    printM('[TripBloc] driver cancel requested trip=${event.tripId} reason=${event.reason}');
+    printM(
+      '[TripBloc] driver cancel requested trip=${event.tripId} reason=${event.reason}',
+    );
     emit(state.copyWith(driverCancelState: const BlocStatus.loading()));
     final result = await _facade.driverCancelTrip(
       event.tripId,
@@ -445,7 +477,9 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     await result.when(
       success: (_) async {
         printG('[TripBloc] driver cancel success trip=${event.tripId}');
-        final cancelledTrip = state.activeTrip?.copyWithStatus(TripStatus.cancelled);
+        final cancelledTrip = state.activeTrip?.copyWithStatus(
+          TripStatus.cancelled,
+        );
         await _realtimeService.leaveTripGroup(event.tripId);
         emit(
           state.copyWith(
@@ -457,7 +491,9 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         );
       },
       failure: (message) async {
-        printY('[TripBloc] driver cancel failed trip=${event.tripId}: $message');
+        printY(
+          '[TripBloc] driver cancel failed trip=${event.tripId}: $message',
+        );
         emit(state.copyWith(driverCancelState: BlocStatus.failure(message)));
       },
     );
@@ -536,11 +572,6 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         }
         printG('[TripBloc] admin pending trip queued trip=$tripId');
         emit(state.copyWith(pendingTrips: [...state.pendingTrips, trip]));
-        _notifications.showLocal(
-          title: AppStrings.adminNewTripArrivedTitle,
-          body: AppStrings.adminNewTripArrivedBody,
-          data: {'tripId': tripId},
-        );
       },
       failure: (message) {
         printY('[TripBloc] admin pending trip load failed: $message');
@@ -571,9 +602,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
       },
       failure: (message) async {
         printY('[TripBloc] admin take failed: $message');
-        emit(
-          state.copyWith(adminSelfAssignState: BlocStatus.failure(message)),
-        );
+        emit(state.copyWith(adminSelfAssignState: BlocStatus.failure(message)));
       },
     );
   }

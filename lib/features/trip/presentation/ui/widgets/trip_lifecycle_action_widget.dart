@@ -22,7 +22,7 @@ class TripLifecycleActionWidget extends StatefulWidget {
 class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
   @override
   Widget build(BuildContext context) {
-    if (widget.trip.status == TripStatus.driverArrived) {
+    if (widget.trip.status == TripStatus.arrived) {
       return _buildArrivedActions(context);
     }
     return _buildPrimaryAction(context, _config);
@@ -143,14 +143,12 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
     final now = DateTime.now();
     final scheduledAtLocal = widget.trip.scheduledAtUtc?.toLocal();
     final scheduledLabel = scheduledAtLocal?.toSmartDateTime() ?? '';
-    final isEnRouteNotReady =
-        scheduledAtLocal != null &&
-        now.isBefore(scheduledAtLocal.subtract(const Duration(minutes: 15)));
+    final isEnRouteNotReady = !widget.trip.canMarkEnRoute;
     final isArrivalNotReady =
         scheduledAtLocal != null && scheduledAtLocal.isAfter(now);
 
     return switch (widget.trip.status) {
-      TripStatus.driverAssigned => _LifecycleConfig(
+      TripStatus.accepted => _LifecycleConfig(
         label: AppStrings.tripStartEnRouteNavigation,
         hint: AppStrings.tripAssignedHint,
         icon: FontAwesomeIcons.route,
@@ -166,7 +164,7 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
               ),
         event: TripEvent.markEnRouteRequested(widget.trip.id),
       ),
-      TripStatus.driverEnRoute => _LifecycleConfig(
+      TripStatus.enRoute => _LifecycleConfig(
         label: AppStrings.tripHaveArrived,
         hint: AppStrings.tripEnRouteHint,
         icon: FontAwesomeIcons.locationDot,
