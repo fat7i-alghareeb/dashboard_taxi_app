@@ -1,7 +1,7 @@
 name: "dashboardtaxi"
 description: "A Flutter Clean Architecture project."
 publish_to: "none"
-version: 1.2.5+6
+version: 1.2.6+7
 
 environment:
   sdk: ^3.10.1
@@ -105,7 +105,6 @@ flutter:
     - path: assets/svgIcons/
       transformers:
         - package: vector_graphics_compiler
-
 
 flutter_gen:
   output: lib/utils/gen/
