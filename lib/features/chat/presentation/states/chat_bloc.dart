@@ -43,7 +43,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   String? get _myUserId => _authManager.currentUser?.id;
 
   Future<void> _onOpened(_Opened event, Emitter<ChatState> emit) async {
-    if (_tripId == event.tripId) return;
     _tripId = event.tripId;
     printC('[ChatBloc] opened trip=${event.tripId}');
 
@@ -155,7 +154,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     );
   }
 
-  void _onChatClosedReceived(_ChatClosedReceived event, Emitter<ChatState> emit) {
+  void _onChatClosedReceived(
+    _ChatClosedReceived event,
+    Emitter<ChatState> emit,
+  ) {
     printC('[ChatBloc] chat closed trip=$_tripId');
     emit(state.copyWith(isClosed: true));
   }

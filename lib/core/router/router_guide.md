@@ -57,6 +57,10 @@ Key parts:
 
 Central registry of app routes (`List<GoRoute>`). This is where you add/remove screens.
 
+Notification-driven trip chat uses `TripChatScreenArgs(tripId: ...)` so
+foreground, background, and terminated notification taps open the exact
+conversation without encoding identifiers in query strings.
+
 Responsibilities:
 
 - Own route `path` and `name` constants (usually on the screen).

@@ -62,7 +62,7 @@ class DashboardPendingTripRowWidget extends StatelessWidget {
                         ),
                         AppSpacing.sm.horizontalSpace,
                         DashboardStatusChipWidget(
-                          label: trip.status,
+                          label: dashboardTripStatusLabel(trip.status),
                           tone: dashboardToneFromTripStatus(trip.status),
                           dense: true,
                         ),

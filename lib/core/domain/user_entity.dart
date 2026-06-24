@@ -15,6 +15,7 @@ class UserEntity {
     this.preferredLanguage,
     this.driverId,
     this.approvalStatus,
+    this.vehicleTypeId,
   });
 
   final String? id;
@@ -28,6 +29,7 @@ class UserEntity {
   final String? preferredLanguage;
   final String? driverId;
   final String? approvalStatus;
+  final String? vehicleTypeId;
 
   UserEntity copyWith({
     String? id,
@@ -41,6 +43,7 @@ class UserEntity {
     String? preferredLanguage,
     String? driverId,
     String? approvalStatus,
+    String? vehicleTypeId,
   }) {
     return UserEntity(
       id: id ?? this.id,
@@ -55,6 +58,7 @@ class UserEntity {
       preferredLanguage: preferredLanguage ?? this.preferredLanguage,
       driverId: driverId ?? this.driverId,
       approvalStatus: approvalStatus ?? this.approvalStatus,
+      vehicleTypeId: vehicleTypeId ?? this.vehicleTypeId,
     );
   }
 
@@ -70,6 +74,7 @@ class UserEntity {
     'preferredLanguage': preferredLanguage,
     'driverId': driverId,
     'approvalStatus': approvalStatus,
+    'vehicleTypeId': vehicleTypeId,
   };
 
   factory UserEntity.fromJson(Map<String, dynamic> json) => UserEntity(
@@ -87,5 +92,6 @@ class UserEntity {
     preferredLanguage: json['preferredLanguage'] as String?,
     driverId: json['driverId'] as String?,
     approvalStatus: json['approvalStatus'] as String?,
+    vehicleTypeId: json['vehicleTypeId'] as String?,
   );
 }

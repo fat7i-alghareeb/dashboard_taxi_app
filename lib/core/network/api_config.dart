@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import '../../flavors.dart';
 import '../../utils/helpers/colored_print.dart';
 

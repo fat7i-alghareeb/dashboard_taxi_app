@@ -833,7 +833,7 @@ class AppStrings {
   static String get scheduledEnRouteNotReadyWarning => 'scheduledEnRouteNotReadyWarning'.tr();
   /// Scheduled for {when} - مجدولة في {when} - Gepland voor {when} - Geplant für {when} - Zaplanowane na {when} - Заплановано на {when} - Programmé pour {when} - Programado para {when} - Programat pentru {when}
   static String get scheduledForLabel => 'scheduledForLabel'.tr();
-  /// Scheduled — can be taken at {when} - مجدولة — يمكن استلامها في {when} - Gepland — beschikbaar om {when} - Geplant — annehmbar um {when} - Zaplanowane — dostępne o {when} - Заплановано — можна прийняти о {when} - Programmé — disponible à {when} - Programado — disponible a las {when} - Programat — disponibil la {when}
+  /// Dispatch opens at {when} - تفتح نافذة الانطلاق في {when} - Vertrek mogelijk vanaf {when} - Abfahrt möglich ab {when} - Wyjazd możliwy od {when} - Виїзд доступний з {when} - Départ possible à {when} - La salida se habilita a las {when} - Plecarea este disponibilă la {when}
   static String get scheduledNotReadyShort => 'scheduledNotReadyShort'.tr();
   /// This trip is scheduled and can only be accepted at {when}. - هذه الرحلة مجدولة ولا يمكن قبولها قبل {when}. - Deze rit is gepland en kan pas op {when} worden geaccepteerd. - Diese Fahrt ist geplant und kann erst um {when} angenommen werden. - Ten przejazd jest zaplanowany i można go przyjąć dopiero o {when}. - Цю поїздку заплановано — її можна прийняти лише о {when}. - Ce trajet est programmé et ne peut être accepté qu'à {when}. - Este viaje está programado y solo puede aceptarse a las {when}. - Această cursă este programată și poate fi acceptată doar la {when}.
   static String get scheduledNotReadyWarning => 'scheduledNotReadyWarning'.tr();
@@ -939,6 +939,20 @@ class AppStrings {
   static String get sun => 'sun'.tr();
   /// Sunday - الأحد - Zondag - Sonntag - Niedziela - Неділя - Dimanche - Domingo - Duminică
   static String get sunday => 'sunday'.tr();
+  /// The WhatsApp number passengers reach when they tap "Report problem" during a trip. Use international format, e.g. 31639550352. - رقم واتساب الذي يصل إليه الركاب عند الضغط على "الإبلاغ عن مشكلة" أثناء الرحلة. استخدم الصيغة الدولية، مثل 31639550352. - Het WhatsApp-nummer dat passagiers bereiken wanneer ze tijdens een rit op "Probleem melden" tikken. Gebruik een internationaal formaat, bijv. 31639550352. - Die WhatsApp-Nummer, die Fahrgäste erreichen, wenn sie während der Fahrt auf "Problem melden" tippen. Internationales Format verwenden, z. B. 31639550352. - Numer WhatsApp, z którym łączą się pasażerowie po dotknięciu "Zgłoś problem" podczas przejazdu. Użyj formatu międzynarodowego, np. 31639550352. - Номер WhatsApp, на який звертаються пасажири, коли натискають "Повідомити про проблему" під час поїздки. Використовуйте міжнародний формат, напр. 31639550352. - Le numéro WhatsApp que les passagers contactent lorsqu'ils appuient sur "Signaler un problème" pendant un trajet. Utilisez le format international, par ex. 31639550352. - El número de WhatsApp al que llegan los pasajeros cuando tocan "Informar de un problema" durante un viaje. Usa formato internacional, p. ej. 31639550352. - Numărul de WhatsApp pe care îl contactează pasagerii când apasă "Raportează o problemă" în timpul cursei. Folosește format internațional, ex. 31639550352.
+  static String get supportContactDescription => 'supportContactDescription'.tr();
+  /// WhatsApp number - رقم واتساب - WhatsApp-nummer - WhatsApp-Nummer - Numer WhatsApp - Номер WhatsApp - Numéro WhatsApp - Número de WhatsApp - Număr WhatsApp
+  static String get supportContactFieldWhatsApp => 'supportContactFieldWhatsApp'.tr();
+  /// Couldn't load the support contact. - تعذّر تحميل جهة اتصال الدعم. - Kon het ondersteuningscontact niet laden. - Support-Kontakt konnte nicht geladen werden. - Nie udało się wczytać kontaktu pomocy. - Не вдалося завантажити контакт підтримки. - Impossible de charger le contact d'assistance. - No se pudo cargar el contacto de soporte. - Nu s-a putut încărca contactul de asistență.
+  static String get supportContactLoadFailed => 'supportContactLoadFailed'.tr();
+  /// Save - حفظ - Opslaan - Speichern - Zapisz - Зберегти - Enregistrer - Guardar - Salvează
+  static String get supportContactSaveButton => 'supportContactSaveButton'.tr();
+  /// Support contact saved - تم حفظ جهة اتصال الدعم - Ondersteuningscontact opgeslagen - Support-Kontakt gespeichert - Kontakt pomocy zapisany - Контакт підтримки збережено - Contact d'assistance enregistré - Contacto de soporte guardado - Contact asistență salvat
+  static String get supportContactSavedSuccess => 'supportContactSavedSuccess'.tr();
+  /// In-trip report number - رقم الإبلاغ أثناء الرحلة - Meldnummer tijdens rit - Meldenummer während der Fahrt - Numer zgłoszeń w trakcie przejazdu - Номер для звернень під час поїздки - Numéro de signalement en course - Número de reporte en viaje - Număr de raportare în cursă
+  static String get supportContactSubtitle => 'supportContactSubtitle'.tr();
+  /// Support contact - جهة اتصال الدعم - Ondersteuningscontact - Support-Kontakt - Kontakt pomocy - Контакт підтримки - Contact d'assistance - Contacto de soporte - Contact asistență
+  static String get supportContactTitle => 'supportContactTitle'.tr();
   /// Account - الحساب - Account - Konto - Konto - Акаунт - Compte - Cuenta - Cont
   static String get tabAccount => 'tabAccount'.tr();
   /// Home - الرئيسية - Home - Start - Start - Головна - Accueil - Inicio - Acasă
@@ -1025,20 +1039,28 @@ class AppStrings {
   static String get tripStartRide => 'tripStartRide'.tr();
   /// Status - الحالة - Status - Status - Status - Статус - Statut - Estado - Status
   static String get tripStatus => 'tripStatus'.tr();
+  /// Awaiting Payment - بانتظار الدفع - Wacht op betaling - Zahlung ausstehend - Oczekuje na płatność - Очікує оплати - Paiement en attente - Pago pendiente - În așteptarea plății
+  static String get tripStatusAwaitingPayment => 'tripStatusAwaitingPayment'.tr();
   /// Cancelled - ملغاة - Geannuleerd - Storniert - Anulowany - Скасовано - Annulé - Cancelado - Anulată
   static String get tripStatusCancelled => 'tripStatusCancelled'.tr();
   /// Completed - مكتملة - Voltooid - Abgeschlossen - Zakończony - Завершено - Terminé - Completado - Finalizată
   static String get tripStatusCompleted => 'tripStatusCompleted'.tr();
-  /// Driver Arrived - وصل السائق - Chauffeur gearriveerd - Fahrer angekommen - Kierowca dojechał - Водій прибув - Chauffeur arrivé - Conductor ha llegado - Șofer sosit
+  /// Arrived - وصلت الرحلة - Aangekomen - Angekommen - Na miejscu - Прибув - Arrivé - Ha llegado - Ajunsă
   static String get tripStatusDriverArrived => 'tripStatusDriverArrived'.tr();
-  /// Driver Assigned - تم تعيين سائق - Chauffeur toegewezen - Fahrer zugewiesen - Kierowca przypisany - Водія призначено - Chauffeur assigné - Conductor asignado - Șofer alocat
+  /// Accepted - تم القبول - Geaccepteerd - Angenommen - Przyjęto - Прийнято - Accepté - Aceptado - Acceptată
   static String get tripStatusDriverAssigned => 'tripStatusDriverAssigned'.tr();
-  /// Driver En Route - سائق في الطريق - Chauffeur onderweg - Fahrer auf dem Weg - Kierowca w drodze - Водій в дорозі - Chauffeur en route - Conductor en camino - Șofer pe drum
+  /// On the Way - في الطريق - Onderweg - Unterwegs - W drodze - У дорозі - En route - En camino - În drum
   static String get tripStatusDriverEnRoute => 'tripStatusDriverEnRoute'.tr();
   /// In Progress - في الطريق - Onderweg - Unterwegs - W trasie - У дорозі - En cours - En curso - În desfășurare
   static String get tripStatusInProgress => 'tripStatusInProgress'.tr();
-  /// Finding Driver - جاري البحث عن سائق - Chauffeur zoeken - Fahrer wird gesucht - Szukanie kierowcy - Пошук водія - Recherche de chauffeur - Buscando conductor - Se caută șofer
+  /// Payment Failed - فشل الدفع - Betaling mislukt - Zahlung fehlgeschlagen - Płatność nieudana - Помилка оплати - Paiement échoué - Pago fallido - Plată eșuată
+  static String get tripStatusPaymentFailed => 'tripStatusPaymentFailed'.tr();
+  /// Awaiting Acceptance - بانتظار القبول - Wacht op acceptatie - Wartet auf Annahme - Oczekuje na przyjęcie - Очікує прийняття - En attente d’acceptation - Pendiente de aceptación - În așteptarea acceptării
   static String get tripStatusPendingDriver => 'tripStatusPendingDriver'.tr();
+  /// Pending Quote - بانتظار التسعير - Offerte in behandeling - Angebot ausstehend - Oczekująca wycena - Очікує оцінки - Devis en attente - Cotización pendiente - Ofertă în așteptare
+  static String get tripStatusPendingQuote => 'tripStatusPendingQuote'.tr();
+  /// Refunded - تم الاسترداد - Terugbetaald - Erstattet - Zwrócono - Повернено - Remboursé - Reembolsado - Rambursat
+  static String get tripStatusRefunded => 'tripStatusRefunded'.tr();
   /// Scheduled - مجدولة - Ingepland - Geplant - Zaplanowany - Заплановано - Planifié - Programado - Programată
   static String get tripStatusScheduled => 'tripStatusScheduled'.tr();
   /// Stop - محطة - Stop - Stop - Stop - Stop - Stop - Stop - Stop

@@ -35,7 +35,7 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
             ),
             AppSpacing.sm.horizontalSpace,
             DashboardStatusChipWidget(
-              label: details.status,
+              label: dashboardTripStatusLabel(details.status),
               tone: dashboardToneFromTripStatus(details.status),
             ),
           ],

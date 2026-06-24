@@ -87,8 +87,7 @@ class NotificationFcmService {
 
     _tokenRefreshSub ??= _messaging.onTokenRefresh.listen((token) {
       _cachedToken = token;
-      final preview = token.length > 12 ? '${token.substring(0, 8)}…(len=${token.length})' : token;
-      printG('[FCM] onTokenRefresh: token=$preview');
+      printG('[FCM] onTokenRefresh: token rotated');
       if (config.enableDebugLogs) {
         printG('[Notifications] token refreshed');
       }
@@ -102,14 +101,12 @@ class NotificationFcmService {
 
   Future<String?> getDeviceToken() async {
     if (_cachedToken != null) {
-      final preview = _cachedToken!.length > 12 ? '${_cachedToken!.substring(0, 8)}…(len=${_cachedToken!.length})' : _cachedToken!;
-      printG('[FCM] getDeviceToken: returning cached token=$preview');
+      printG('[FCM] getDeviceToken: returning cached token');
       return _cachedToken;
     }
     _cachedToken = await _messaging.getToken();
     if (_cachedToken != null) {
-      final preview = _cachedToken!.length > 12 ? '${_cachedToken!.substring(0, 8)}…(len=${_cachedToken!.length})' : _cachedToken!;
-      printG('[FCM] getDeviceToken: fetched new token=$preview');
+      printG('[FCM] getDeviceToken: fetched new token');
     } else {
       printY('[FCM] getDeviceToken: token is NULL (Firebase not ready or permission denied?)');
     }

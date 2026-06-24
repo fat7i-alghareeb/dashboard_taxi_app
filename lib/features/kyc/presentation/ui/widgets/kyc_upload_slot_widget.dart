@@ -1,5 +1,6 @@
-import 'package:image_picker/image_picker.dart';
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
+import 'package:dashboardtaxi/core/services/media/media_picker_service.dart';
 import 'package:dashboardtaxi/features/kyc/presentation/states/kyc_bloc.dart';
 import 'package:dashboardtaxi/features/kyc/presentation/ui/widgets/kyc_image_source_sheet.dart';
 
@@ -22,30 +23,25 @@ class KycUploadSlotWidget extends StatefulWidget {
 }
 
 class _KycUploadSlotWidgetState extends State<KycUploadSlotWidget> {
-  final ImagePicker _picker = ImagePicker();
-
   Future<void> _pickImage(BuildContext context) async {
     final KycBloc bloc = context.read<KycBloc>();
 
     final source = await KycImageSourceSheet.show(context, title: widget.label);
     if (source == null || !mounted) return;
 
-    try {
-      final pickedFile = await _picker.pickImage(
-        source: source,
-        imageQuality: 70,
-      );
-      if (pickedFile != null) {
-        bloc.add(
-          KycEvent.uploadDocumentRequested(
-            type: widget.type,
-            filePath: pickedFile.path,
-          ),
-        );
-      }
-    } catch (e) {
-      printC('KycUploadSlot: image pick error $e');
+    final result = await appMediaPickerService.pickSingle(source);
+    if (!context.mounted) return;
+    if (result.failure != null) {
+      showErrorOverlay(context, AppStrings.profilePhotoUploadError);
+      return;
     }
+    if (!result.isSuccess) return;
+    bloc.add(
+      KycEvent.uploadDocumentRequested(
+        type: widget.type,
+        filePath: result.files.single.path,
+      ),
+    );
   }
 
   @override

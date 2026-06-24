@@ -28,7 +28,6 @@ analyzer:
     - ".dart_tool/**"
     - "node_modules/**"
     - "assets/**"
-    - "test/**"
     - "**/*.pbxproj"
     - "**/*.plist"
     - "**/*.xcconfig"

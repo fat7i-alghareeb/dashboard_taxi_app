@@ -11,6 +11,7 @@ import 'package:dashboardtaxi/features/auth/presentation/ui/screens/change_passw
 import 'package:dashboardtaxi/features/company_contact/presentation/ui/screens/company_contact_screen.dart';
 import 'package:dashboardtaxi/features/compensation/presentation/ui/screens/compensation_claims_screen.dart';
 import 'package:dashboardtaxi/features/control_center/presentation/ui/screens/control_center_screen.dart';
+import 'package:dashboardtaxi/features/support_contact/presentation/ui/screens/support_contact_screen.dart';
 import 'package:dashboardtaxi/features/notifications/presentation/ui/screens/send_notification_screen.dart';
 // import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
 // import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_screen.dart';
@@ -104,6 +105,14 @@ class RootDrawerContent extends StatelessWidget {
         onTap: () {
           Navigator.maybePop(context);
           context.pushNamed(CompanyContactScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.whatsapp,
+        label: AppStrings.supportContactTitle,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(SupportContactScreen.pageName);
         },
       ),
       DrawerMenuItem(

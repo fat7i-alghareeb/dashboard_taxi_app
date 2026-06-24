@@ -5,7 +5,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/domain/extensions/user_role_extensions.dart';
+import '../../../../core/services/location/driver_location_streamer.dart';
 import '../../../../core/services/realtime/realtime_event.dart';
+import '../../../../core/services/realtime/realtime_connection_state.dart';
 import '../../../../core/services/realtime/realtime_service.dart';
 import '../../../../core/services/session/auth_manager.dart';
 import '../../../../core/utils/bloc_status.dart';
@@ -24,6 +26,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     this._facade,
     this._realtimeService,
     this._authManager,
+    this._locationStreamer,
   ) : super(const TripState()) {
     on<_Started>(_onStarted);
     on<_GetAllRequested>(_onGetAllRequested);
@@ -49,12 +52,50 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     _eventsSub = _realtimeService.events.listen((event) {
       add(TripEvent.realtimeEventReceived(event));
     });
+    _connectionSub = _realtimeService.connectionState.listen((connectionState) {
+      if (connectionState != RealtimeConnectionState.connected || isClosed) {
+        return;
+      }
+      final activeTripId = state.activeTrip?.id;
+      if (activeTripId != null) {
+        add(TripEvent.fetchActiveRequested(activeTripId));
+      } else {
+        add(const TripEvent.activeTripResolveRequested());
+      }
+    });
   }
 
   final TripFacade _facade;
   final RealtimeService _realtimeService;
   final AuthManager _authManager;
+  final DriverLocationStreamer _locationStreamer;
   StreamSubscription<RealtimeEvent>? _eventsSub;
+  StreamSubscription<RealtimeConnectionState>? _connectionSub;
+
+  /// Starts or stops broadcasting the driver's GPS based on the active trip status.
+  /// Streaming begins once the driver is moving toward the customer (EnRoute) and
+  /// continues through Arrived/InProgress; any other state clears the trip reason.
+  /// Reference-counted in the streamer so this never disturbs the Online radar.
+  void _syncTripTracking(TripStatus status) {
+    final shouldStream =
+        status == TripStatus.enRoute ||
+        status == TripStatus.arrived ||
+        status == TripStatus.inProgress;
+
+    if (shouldStream) {
+      unawaited(
+        _locationStreamer.startTracking(
+          reason: LocationTrackingReason.activeTrip,
+        ),
+      );
+    } else {
+      unawaited(
+        _locationStreamer.stopTracking(
+          reason: LocationTrackingReason.activeTrip,
+        ),
+      );
+    }
+  }
 
   Future<void> _onStarted(_Started event, Emitter<TripState> emit) {
     return _onGetAllRequested(const _GetAllRequested(), emit);
@@ -308,9 +349,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         emit(
           state.copyWith(
             markEnRouteState: const BlocStatus.success(null),
-            activeTrip: state.activeTrip?.copyWithStatus(
-              TripStatus.enRoute,
-            ),
+            activeTrip: state.activeTrip?.copyWithStatus(TripStatus.enRoute),
           ),
         );
         await _loadActiveTrip(event.tripId, emit);
@@ -338,9 +377,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
           state.copyWith(
             markArrivedState: const BlocStatus.success(null),
             arrivedAt: DateTime.now(),
-            activeTrip: state.activeTrip?.copyWithStatus(
-              TripStatus.arrived,
-            ),
+            activeTrip: state.activeTrip?.copyWithStatus(TripStatus.arrived),
           ),
         );
         await _loadActiveTrip(event.tripId, emit);
@@ -435,6 +472,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
           TripStatus.completed,
         );
         await _realtimeService.leaveTripGroup(event.tripId);
+        _syncTripTracking(TripStatus.completed);
         emit(
           state.copyWith(
             completeTripState: const BlocStatus.success(null),
@@ -481,6 +519,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
           TripStatus.cancelled,
         );
         await _realtimeService.leaveTripGroup(event.tripId);
+        _syncTripTracking(TripStatus.cancelled);
         emit(
           state.copyWith(
             driverCancelState: const BlocStatus.success(null),
@@ -544,6 +583,8 @@ class TripBloc extends Bloc<TripEvent, TripState> {
                 : state.completedTrip,
           ),
         );
+        // Reconcile GPS broadcasting with the freshly-loaded trip status.
+        _syncTripTracking(trip.status);
       },
       failure: (message) {
         printY('[TripBloc] active trip failed trip=$tripId: $message');
@@ -619,6 +660,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
       success: (_) async {
         printG('[TripBloc] admin cancel success trip=${event.tripId}');
         await _realtimeService.leaveTripGroup(event.tripId);
+        _syncTripTracking(TripStatus.cancelled);
         emit(
           state.copyWith(
             adminCancelState: const BlocStatus.success(null),
@@ -652,6 +694,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
   @override
   Future<void> close() {
     _eventsSub?.cancel();
+    _connectionSub?.cancel();
     return super.close();
   }
 }

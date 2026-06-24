@@ -48,6 +48,8 @@ This folder should remain **feature-agnostic**. If code is specific to one produ
 
 - **`notification/`**
   - Push/local notification infrastructure, configuration, payload normalization, and background hooks.
+- **`services/media/`**
+  - Shared image selection, Android lost-data recovery, image resizing, and upload validation.
   - Includes dedicated documentation files already present in this folder.
 
 - **`router/`**

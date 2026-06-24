@@ -13,11 +13,27 @@ import '../session/jwt_token_storage.dart';
 import 'location_service.dart';
 import 'package:dashboardtaxi/features/driver/domain/facade/driver_facade.dart';
 
-/// Service responsible for high-frequency location streaming while the driver is Online.
+/// Why location is currently being streamed. Multiple reasons can be active at
+/// once (e.g. an online driver who also has an active trip); streaming stops only
+/// once every reason has been cleared so one concern never cancels another.
+enum LocationTrackingReason {
+  /// Driver toggled Online and is broadcasting for the dispatch radar.
+  online,
+
+  /// An active trip is in a moving state (EnRoute/Arrived/InProgress) and the
+  /// customer must see the driver. Enables background (foreground-service) survival.
+  activeTrip,
+}
+
+/// Service responsible for high-frequency location streaming.
 ///
 /// Automatically establishes a SignalR connection to `LocationTrackingHub` at `/hubs/location`.
 /// Periodically streams GPS coordinates every 10 seconds.
 /// If SignalR is disconnected or fails, it automatically falls back to HTTP REST API updates.
+///
+/// Streaming is reference-counted by [LocationTrackingReason]. While an active trip
+/// is being tracked the position stream runs as an Android foreground service / iOS
+/// background updates so it keeps broadcasting when the app is minimized.
 @lazySingleton
 class DriverLocationStreamer {
   DriverLocationStreamer(
@@ -29,6 +45,14 @@ class DriverLocationStreamer {
   static const String _hubPath = '/hubs/location';
   static const String _logTag = '[DriverLocationStreamer]';
 
+  /// Minimum gap between consecutive sends. Keeps the customer's map updating
+  /// near-continuously (~1 Hz) while the driver moves, without flooding the hub.
+  static const Duration _minSendInterval = Duration(milliseconds: 1000);
+
+  /// Heartbeat that re-sends the last position while the driver is stationary
+  /// (the GPS stream goes quiet) and keeps the hub connection warm.
+  static const Duration _heartbeatInterval = Duration(seconds: 4);
+
   final LocationService _locationService;
   final JwtTokenStorage _tokenStorage;
   final DriverFacade _driverFacade;
@@ -37,61 +61,124 @@ class DriverLocationStreamer {
   StreamSubscription<Position>? _positionSub;
   Timer? _streamTimer;
   Position? _lastPosition;
-  bool _isTracking = false;
+  DateTime? _lastSentAt;
+  final Set<LocationTrackingReason> _reasons = <LocationTrackingReason>{};
+  bool _backgroundEnabled = false;
 
-  bool get isTracking => _isTracking;
+  bool get isTracking => _reasons.isNotEmpty;
 
-  /// Starts the tracking flow.
+  /// True when the driver is broadcasting for the Online dispatch radar.
+  bool get isOnlineTracking => _reasons.contains(LocationTrackingReason.online);
+
+  /// Starts (or augments) the tracking flow for the given [reason].
   ///
-  /// Connects to SignalR `LocationTrackingHub`, starts listening to Geolocator
-  /// and initiates the 10-second streaming timer.
-  Future<void> startTracking() async {
-    if (_isTracking) return;
-    _isTracking = true;
-    printG('$_logTag starting location tracking...');
+  /// Connects to SignalR `LocationTrackingHub`, listens to Geolocator and runs the
+  /// 10-second streaming timer. Idempotent per reason. Adding the [activeTrip] reason
+  /// (re)configures the position stream to survive backgrounding.
+  Future<void> startTracking({required LocationTrackingReason reason}) async {
+    final alreadyTracking = _reasons.isNotEmpty;
+    _reasons.add(reason);
 
-    // 1. Clear any active states
+    final needsBackground = _reasons.contains(
+      LocationTrackingReason.activeTrip,
+    );
+
+    // Already running with the required background mode — nothing to do.
+    if (alreadyTracking && needsBackground == _backgroundEnabled) {
+      return;
+    }
+
+    printG('$_logTag starting location tracking (reasons=$_reasons)...');
+    _backgroundEnabled = needsBackground;
+
+    // 1. Clear any active component state (we re-create the geolocator subscription
+    //    so a newly-required background/foreground mode takes effect).
     _stopComponents();
 
-    // 2. Start Geolocator listening to collect live updates
-    _positionSub = _locationService.getPositionStream(
-      distanceFilter: 5, // update last known position if driver moves 5 meters
-    ).listen((position) {
-      _lastPosition = position;
-    }, onError: (Object error) {
-      printR('$_logTag geolocator error: $error');
-    });
+    // 2. Start Geolocator listening and stream every movement (continuous).
+    //    distanceFilter:0 emits on each fix (~1 Hz while moving); _maybeSend
+    //    throttles to _minSendInterval so the hub isn't flooded.
+    _positionSub = _locationService
+        .getPositionStream(
+          distanceFilter:
+              5, // update last known position if driver moves 5 meters
+          keepAliveInBackground: needsBackground,
+          foregroundNotificationText:
+              'Sharing your live location with the rider',
+        )
+        .listen(
+          (position) {
+            _lastPosition = position;
+            unawaited(_maybeSend(position.latitude, position.longitude));
+          },
+          onError: (Object error) {
+            printR('$_logTag geolocator error: $error');
+          },
+        );
 
-    // 3. Connect to SignalR LocationTrackingHub
-    await _connectHub();
+    // 3. Connect to SignalR LocationTrackingHub (skip if already connected)
+    if (_connection == null) {
+      await _connectHub();
+    }
 
     // 4. Send initial position immediately if possible
     try {
       final initialPosition = await _locationService.getCurrentPosition();
       _lastPosition = initialPosition;
       await _sendLocation(initialPosition.latitude, initialPosition.longitude);
+      _lastSentAt = DateTime.now();
     } catch (e) {
       printY('$_logTag failed to send initial position: $e');
     }
 
-    // 5. Start the throttled 10-second periodic streamer
-    _streamTimer = Timer.periodic(const Duration(seconds: 10), (_) async {
+    // 5. Heartbeat: keep streaming the last position while the driver is
+    //    stationary (no GPS movement events) and keep the socket warm.
+    _streamTimer?.cancel();
+    _streamTimer = Timer.periodic(_heartbeatInterval, (_) async {
       final pos = _lastPosition;
       if (pos == null) {
-        printY('$_logTag no position recorded yet, skipping periodic update');
+        printY('$_logTag no position recorded yet, skipping heartbeat');
         return;
       }
-      await _sendLocation(pos.latitude, pos.longitude);
+      await _maybeSend(pos.latitude, pos.longitude);
     });
   }
 
-  /// Stops tracking, cancels streams and disconnects the SignalR socket.
-  Future<void> stopTracking() async {
-    if (!_isTracking) return;
-    _isTracking = false;
+  /// Sends the coordinate unless one was sent within [_minSendInterval] — keeps
+  /// updates near-continuous while moving without overwhelming the hub.
+  Future<void> _maybeSend(double lat, double lng) async {
+    final now = DateTime.now();
+    final last = _lastSentAt;
+    if (last != null && now.difference(last) < _minSendInterval) return;
+    _lastSentAt = now;
+    await _sendLocation(lat, lng);
+  }
+
+  /// Clears the given [reason]. Streaming fully stops only when no reason remains,
+  /// so ending a trip never tears down an online driver's radar (and vice versa).
+  Future<void> stopTracking({required LocationTrackingReason reason}) async {
+    if (!_reasons.remove(reason)) return;
+
+    if (_reasons.isNotEmpty) {
+      printY(
+        '$_logTag cleared reason=$reason; still tracking (reasons=$_reasons)',
+      );
+      // The background foreground-service is only needed for active trips. If the
+      // active-trip reason is gone but online remains, downgrade to a normal stream.
+      final needsBackground = _reasons.contains(
+        LocationTrackingReason.activeTrip,
+      );
+      if (needsBackground != _backgroundEnabled) {
+        await startTracking(reason: _reasons.first);
+      }
+      return;
+    }
+
     printY('$_logTag stopping location tracking...');
     _stopComponents();
     _lastPosition = null;
+    _lastSentAt = null;
+    _backgroundEnabled = false;
   }
 
   void _stopComponents() {
@@ -112,14 +199,14 @@ class DriverLocationStreamer {
 
   Future<void> _connectHub() async {
     final url = '${ApiConfig.baseUrl}$_hubPath';
-    final token = _tokenStorage.cachedToken?.accessToken ?? '';
 
     try {
       _connection = HubConnectionBuilder()
           .withUrl(
             url,
             options: HttpConnectionOptions(
-              accessTokenFactory: () async => token,
+              accessTokenFactory: () async =>
+                  _tokenStorage.cachedToken?.accessToken ?? '',
             ),
           )
           .withAutomaticReconnect()
@@ -140,7 +227,9 @@ class DriverLocationStreamer {
       await _connection?.start();
       printG('$_logTag SignalR connection established');
     } catch (e) {
-      printR('$_logTag SignalR start failed: $e. Fallback REST updates will trigger.');
+      printR(
+        '$_logTag SignalR start failed: $e. Fallback REST updates will trigger.',
+      );
     }
   }
 

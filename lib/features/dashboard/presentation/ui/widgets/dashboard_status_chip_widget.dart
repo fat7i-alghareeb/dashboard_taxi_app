@@ -61,6 +61,40 @@ class DashboardStatusChipWidget extends StatelessWidget {
   }
 }
 
+/// Maps a raw backend [TripStatus] enum string (e.g. `Accepted`, `EnRoute`,
+/// `InProgress`) to a localized label. Falls back to the raw value for unknown
+/// statuses so the chip is never blank.
+String dashboardTripStatusLabel(String status) {
+  switch (status.toLowerCase()) {
+    case 'pendingquote':
+      return AppStrings.tripStatusPendingQuote;
+    case 'awaitingadminacceptance':
+      return AppStrings.tripStatusPendingDriver;
+    case 'accepted':
+      return AppStrings.tripStatusDriverAssigned;
+    case 'enroute':
+      return AppStrings.tripStatusDriverEnRoute;
+    case 'arrived':
+      return AppStrings.tripStatusDriverArrived;
+    case 'inprogress':
+      return AppStrings.tripStatusInProgress;
+    case 'completed':
+      return AppStrings.tripStatusCompleted;
+    case 'cancelled':
+    case 'canceled':
+      return AppStrings.tripStatusCancelled;
+    case 'awaitingpayment':
+      return AppStrings.tripStatusAwaitingPayment;
+    case 'paymentfailed':
+    case 'failed':
+      return AppStrings.tripStatusPaymentFailed;
+    case 'refunded':
+      return AppStrings.tripStatusRefunded;
+    default:
+      return status;
+  }
+}
+
 DashboardStatusTone dashboardToneFromTripStatus(String status) {
   switch (status.toLowerCase()) {
     case 'completed':

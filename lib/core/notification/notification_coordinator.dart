@@ -174,8 +174,7 @@ class NotificationCoordinator {
             await onTokenRefresh?.call(token);
 
             if (config.enableDebugLogs) {
-              final preview = token.length > 12 ? '${token.substring(0, 8)}…(len=${token.length})' : token;
-              printG('[Notifications] token ready: $preview');
+              printG('[Notifications] token ready');
             }
           } else {
             printY('[Notifications] WARNING: getDeviceToken returned null/empty — FCM token not available');

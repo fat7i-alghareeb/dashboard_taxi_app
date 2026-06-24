@@ -324,9 +324,6 @@ class AuthManager {
     if (user.isDriver) {
       topics.add(NotificationTopics.drivers);
     }
-    if (user.isAdmin) {
-      topics.add(NotificationTopics.admins);
-    }
     return topics;
   }
 

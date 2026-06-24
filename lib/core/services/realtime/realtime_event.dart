@@ -89,7 +89,7 @@ sealed class RealtimeEvent with _$RealtimeEvent {
   const factory RealtimeEvent.tripStopCompleted({
     required String tripId,
     required String passengerId,
-    required String driverId,
+    String? driverId,
     required int sequence,
   }) = RealtimeTripStopCompleted;
 

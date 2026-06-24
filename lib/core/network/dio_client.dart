@@ -205,9 +205,8 @@ void _configureJwtFlow({
       // Build Authorization header for every request when a token exists.
       tokenHeaderBuilder: (token) {
         final raw = token.accessToken;
-        final preview = raw.length > 10 ? '${raw.substring(0, 10)}...' : raw;
         printG(
-          '[DioClient] Attaching Authorization: Bearer $preview',
+          '[DioClient] Attaching authenticated request',
           tag: false,
         );
         return <String, String>{'Authorization': 'Bearer $raw'};

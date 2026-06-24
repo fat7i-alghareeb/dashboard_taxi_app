@@ -74,7 +74,7 @@ class DashboardPendingPickupCardWidget extends StatelessWidget {
                           ),
                           AppSpacing.sm.horizontalSpace,
                           DashboardStatusChipWidget(
-                            label: trip.status,
+                            label: dashboardTripStatusLabel(trip.status),
                             tone: DashboardStatusTone.warning,
                             dense: true,
                           ),

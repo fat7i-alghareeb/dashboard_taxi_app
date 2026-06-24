@@ -16,11 +16,12 @@ import 'core/notification/notification_init_options.dart';
 import 'core/notification/notification_payload.dart';
 import 'core/router/router_config.dart';
 import 'core/services/localization/locale_service.dart';
+import 'core/services/media/media_picker_service.dart';
 import 'core/services/session/auth_manager.dart';
 import 'package:dashboardtaxi/core/services/realtime/realtime_lifecycle_coordinator.dart';
 import 'package:dashboardtaxi/core/utils/result.dart';
-import 'package:dashboardtaxi/core/domain/extensions/user_role_extensions.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
+import 'features/chat/presentation/ui/screens/trip_chat_screen.dart';
 import 'features/root/presentation/ui/screens/root_screen.dart';
 import 'features/trip/presentation/states/trip_bloc.dart';
 import 'core/theme/theme_controller.dart';
@@ -48,6 +49,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       //    plugins or framework APIs are used.
       WidgetsFlutterBinding.ensureInitialized();
       await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      await appMediaPickerService.initialize();
 
       // Select the active flavor (stage / production) based on the
       // compile-time value provided by the native layer.
@@ -141,10 +143,8 @@ Future<void> _handleNotificationTap(AppNotificationPayload payload) async {
   if (_typeFromPayload(payload) == 'chat_message') {
     final chatTripId = _tripIdFromPayload(payload);
     if (chatTripId != null) _routeTripPayloadToBloc(payload);
-    try {
-      getIt<AppRouterConfig>().router.go(RootScreen.pagePath);
-    } catch (e) {
-      printY('[Notifications] chat navigation failed: $e');
+    if (chatTripId != null) {
+      await _navigateToChatWhenReady(chatTripId);
     }
     return;
   }
@@ -171,6 +171,23 @@ Future<void> _handleNotificationTap(AppNotificationPayload payload) async {
   } catch (e) {
     printY('[Notifications] Navigation failed: $e (location=$location)');
   }
+}
+
+Future<void> _navigateToChatWhenReady(String tripId) async {
+  for (var attempt = 0; attempt < 30; attempt++) {
+    final authManager = getIt<AuthManager>();
+    final router = getIt<AppRouterConfig>().router;
+    if (authManager.isAuthenticated &&
+        router.routerDelegate.navigatorKey.currentContext != null) {
+      router.goNamed(
+        TripChatScreen.pageName,
+        extra: TripChatScreenArgs(tripId: tripId),
+      );
+      return;
+    }
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+  }
+  getIt<AppRouterConfig>().router.go(RootScreen.pagePath);
 }
 
 /// If the payload contains a `tripId`, ask the singleton [TripBloc] to fetch
@@ -215,13 +232,6 @@ Future<void> _syncFcmTokenToBackend(String token) async {
 
   await authManager.syncNotificationTopicsForCurrentUser();
 
-  if (authManager.currentUser?.isAdmin == true) {
-    printC(
-      '[Notifications] FCM token refreshed; deferred '
-      '(admin user does not support FCM token sync)',
-    );
-    return;
-  }
   try {
     await getIt<AuthRepository>().updateFcmToken(token);
     printG('[Notifications] FCM token synced to backend');
@@ -250,8 +260,7 @@ Future<void> _initializeAuthAndNetwork() async {
   //     callback fired in that window).
   //   - A prior on-login submission silently failed.
   // The runtime onTokenRefresh callback still handles in-session rotations.
-  // Note: We bypass this for Admin users since they do not support FCM tokens or preferred language synchronization.
-  if (authManager.isAuthenticated && authManager.currentUser?.isAdmin != true) {
+  if (authManager.isAuthenticated) {
     try {
       final coordinator = getIt<NotificationCoordinator>();
       final token = await coordinator.getDeviceToken();

@@ -50,7 +50,7 @@ class DriverHomeBloc extends Bloc<DriverHomeEvent, DriverHomeState> {
     // Sync the initial tracking status
     emit(
       state.copyWith(
-        isOnline: _locationStreamer.isTracking,
+        isOnline: _locationStreamer.isOnlineTracking,
         connectionState: _realtimeService.currentConnectionState,
       ),
     );
@@ -102,11 +102,17 @@ class DriverHomeBloc extends Bloc<DriverHomeEvent, DriverHomeState> {
         printG(
           '[DriverHomeBloc] status update success online=${event.isOnline}',
         );
-        // 2. Toggled status on backend succeeded. Now activate/deactivate the local coordinate tracking system
+        // 2. Toggled status on backend succeeded. Now activate/deactivate the local
+        //    coordinate tracking system for the Online dispatch radar. Active-trip
+        //    tracking is managed separately by TripBloc and is not affected here.
         if (event.isOnline) {
-          await _locationStreamer.startTracking();
+          await _locationStreamer.startTracking(
+            reason: LocationTrackingReason.online,
+          );
         } else {
-          await _locationStreamer.stopTracking();
+          await _locationStreamer.stopTracking(
+            reason: LocationTrackingReason.online,
+          );
         }
 
         emit(

@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/services/realtime/realtime_event.dart';
+import '../../../../core/services/realtime/realtime_connection_state.dart';
 import '../../../../core/services/realtime/realtime_service.dart';
 import '../../../../core/utils/bloc_status.dart';
 import '../../../../core/utils/result.dart';
@@ -82,6 +83,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           _applyTripStatusInPlace(tripId, 'Arrived');
         case RealtimeTripStarted(:final tripId):
           _applyTripStatusInPlace(tripId, 'InProgress');
+          _scheduleAdminTripsRefresh();
+          if (state.selectedTripId == tripId) {
+            add(DashboardEvent.tripDetailsRequested(tripId));
+          }
         case RealtimeTripStopCompleted():
           break;
         case RealtimeTripCompleted(:final tripId):
@@ -97,6 +102,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         case RealtimeTripMessageReceived():
         case RealtimeChatClosed():
           break;
+      }
+    });
+    _connectionSub = _realtimeService.connectionState.listen((connectionState) {
+      if (connectionState != RealtimeConnectionState.connected || isClosed) {
+        return;
+      }
+      add(const DashboardEvent.adminTripsRequested());
+      add(const DashboardEvent.overviewRequested());
+      final selectedTripId = state.selectedTripId;
+      if (selectedTripId != null) {
+        add(DashboardEvent.tripDetailsRequested(selectedTripId));
       }
     });
   }
@@ -151,6 +167,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final RealtimeService _realtimeService;
   final RootModeService _rootModeService;
   StreamSubscription<RealtimeEvent>? _realtimeSub;
+  StreamSubscription<RealtimeConnectionState>? _connectionSub;
   Timer? _overviewRefreshTimer;
   Timer? _adminTripsRefreshTimer;
   final Set<String> _joinedTripGroups = <String>{};
@@ -609,6 +626,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   @override
   Future<void> close() {
     _realtimeSub?.cancel();
+    _connectionSub?.cancel();
     _overviewRefreshTimer?.cancel();
     _adminTripsRefreshTimer?.cancel();
     for (final id in _joinedTripGroups) {

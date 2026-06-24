@@ -94,7 +94,7 @@ class DashboardRecentTripRowWidget extends StatelessWidget {
                 Row(
                   children: [
                     DashboardStatusChipWidget(
-                      label: trip.status,
+                      label: dashboardTripStatusLabel(trip.status),
                       tone: dashboardToneFromTripStatus(trip.status),
                       dense: true,
                     ),

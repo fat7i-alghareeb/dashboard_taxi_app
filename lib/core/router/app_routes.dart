@@ -55,6 +55,14 @@ class AppRouteRegistry {
           AppPageTransitions.build(state: state, child: const RootScreen()),
     ),
     GoRoute(
+      path: TripChatScreen.pagePath,
+      name: TripChatScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: TripChatScreen(args: state.extra as TripChatScreenArgs),
+      ),
+    ),
+    GoRoute(
       path: DashboardScreen.pagePath,
       name: DashboardScreen.pageName,
       pageBuilder: (context, state) => AppPageTransitions.build(
@@ -98,6 +106,14 @@ class AppRouteRegistry {
       pageBuilder: (context, state) => AppPageTransitions.build(
         state: state,
         child: const CompanyContactScreen(),
+      ),
+    ),
+    GoRoute(
+      path: SupportContactScreen.pagePath,
+      name: SupportContactScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const SupportContactScreen(),
       ),
     ),
     GoRoute(

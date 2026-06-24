@@ -8,6 +8,4 @@ class NotificationTopics {
   /// Receives driver-facing broadcast alerts.
   static const String drivers = 'drivers';
 
-  /// Receives admin-facing alerts such as new trip bookings.
-  static const String admins = 'admins';
 }

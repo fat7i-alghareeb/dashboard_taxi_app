@@ -1,3 +1,7 @@
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform;
+// AndroidSettings / AppleSettings / ForegroundNotificationConfig are re-exported
+// by the geolocator umbrella package, so no platform-specific imports are needed.
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 
@@ -37,15 +41,63 @@ class LocationService {
     }
   }
 
+  /// Returns a live position stream.
+  ///
+  /// When [keepAliveInBackground] is true the stream is configured to survive the
+  /// app being minimized: on Android it promotes the app to a foreground service
+  /// (persistent notification), and on iOS it enables background location updates.
+  /// Used while an active trip is being tracked so the customer keeps receiving the
+  /// driver's location even when the driver app is in the background.
   Stream<Position> getPositionStream({
     LocationAccuracy accuracy = LocationAccuracy.high,
     int distanceFilter = 0,
+    bool keepAliveInBackground = false,
+    String foregroundNotificationTitle = 'Fat7i',
+    String foregroundNotificationText = 'Sharing your live location',
   }) {
-    return Geolocator.getPositionStream(
-      locationSettings: LocationSettings(
+    final LocationSettings settings = _buildSettings(
+      accuracy: accuracy,
+      distanceFilter: distanceFilter,
+      keepAliveInBackground: keepAliveInBackground,
+      foregroundNotificationTitle: foregroundNotificationTitle,
+      foregroundNotificationText: foregroundNotificationText,
+    );
+
+    return Geolocator.getPositionStream(locationSettings: settings);
+  }
+
+  LocationSettings _buildSettings({
+    required LocationAccuracy accuracy,
+    required int distanceFilter,
+    required bool keepAliveInBackground,
+    required String foregroundNotificationTitle,
+    required String foregroundNotificationText,
+  }) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return AndroidSettings(
         accuracy: accuracy,
         distanceFilter: distanceFilter,
-      ),
-    );
+        foregroundNotificationConfig: keepAliveInBackground
+            ? ForegroundNotificationConfig(
+                notificationTitle: foregroundNotificationTitle,
+                notificationText: foregroundNotificationText,
+                enableWakeLock: true,
+                setOngoing: true,
+              )
+            : null,
+      );
+    }
+
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      return AppleSettings(
+        accuracy: accuracy,
+        distanceFilter: distanceFilter,
+        allowBackgroundLocationUpdates: keepAliveInBackground,
+        showBackgroundLocationIndicator: keepAliveInBackground,
+      );
+    }
+
+    return LocationSettings(accuracy: accuracy, distanceFilter: distanceFilter);
   }
 }

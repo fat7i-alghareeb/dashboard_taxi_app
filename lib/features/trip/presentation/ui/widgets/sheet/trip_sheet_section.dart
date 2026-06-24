@@ -1,4 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_sheet_stage.dart';
 
@@ -23,6 +24,37 @@ class TripSheetSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return MultiBlocListener(
+      // Surface server-side failures for every trip lifecycle action (e.g. the
+      // "This ride is owned by {admin}" 403) as an error overlay. The bloc only
+      // emits these into their BlocStatus.failure(message); without these
+      // listeners the message is logged but never shown to the operator.
+      listeners: [
+        _failureOverlayListener((s) => s.markEnRouteState),
+        _failureOverlayListener((s) => s.markArrivedState),
+        _failureOverlayListener((s) => s.startTripState),
+        _failureOverlayListener((s) => s.completeTripState),
+        _failureOverlayListener((s) => s.completeStopState),
+        _failureOverlayListener((s) => s.driverCancelState),
+      ],
+      child: _buildSheet(context),
+    );
+  }
+
+  /// Builds a listener that shows an error overlay whenever the selected
+  /// action state transitions into a failure.
+  BlocListener<TripBloc, TripState>   _failureOverlayListener(
+    BlocStatus<void> Function(TripState state) select,
+  ) {
+    return BlocListener<TripBloc, TripState>(
+      listenWhen: (prev, curr) => select(prev) != select(curr),
+      listener: (context, state) => select(state).whenOrNull(
+        failure: (message) => showErrorOverlay(context, message),
+      ),
+    );
+  }
+
+  Widget _buildSheet(BuildContext context) {
     return BlocBuilder<TripBloc, TripState>(
       buildWhen: (a, b) =>
           a.sheetStage != b.sheetStage ||
