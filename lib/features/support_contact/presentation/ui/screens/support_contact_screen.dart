@@ -139,6 +139,7 @@ class _SupportContactFormState extends State<_SupportContactForm> {
               AppReactiveTextField.phone(
                 formControlName: _fieldWhatsApp,
                 title: AppStrings.supportContactFieldWhatsApp,
+                phoneDefaultIsoCode: 'NL',
               ),
               AppSpacing.xl.verticalSpace,
               ReactiveFormConsumer(
