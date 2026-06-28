@@ -34,6 +34,7 @@ class ChatSheet extends StatefulWidget {
 class _ChatSheetState extends State<ChatSheet> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  bool _autoScrolling = false;
   String? get _myUserId => getIt<AuthManager>().currentUser?.id;
 
   @override
@@ -44,13 +45,25 @@ class _ChatSheetState extends State<ChatSheet> {
   }
 
   void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!_scrollController.hasClients) return;
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOut,
-      );
+    // Guard against animation pile-up: a burst of messages would otherwise queue
+    // overlapping animateTo calls and jank the UI. While one is in flight we skip
+    // new triggers; the final scroll lands on the latest extent when it settles.
+    if (_autoScrolling) return;
+    _autoScrolling = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!_scrollController.hasClients) {
+        _autoScrolling = false;
+        return;
+      }
+      try {
+        await _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        );
+      } finally {
+        _autoScrolling = false;
+      }
     });
   }
 

@@ -157,6 +157,7 @@ extension DashboardTripModelMapper on DashboardTripModel {
       dispatchWindowOpensAt: dispatchWindowOpensAt,
       canMarkEnRoute: canMarkEnRoute,
       attentionState: attentionState,
+      recordingCount: recordingCount,
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entit
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_status_chip_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_card_stops_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_card_timeline_widget.dart';
+import 'package:dashboardtaxi/features/recordings/presentation/ui/widgets/trip_recordings_sheet.dart';
 import 'package:dashboardtaxi/features/root/domain/services/root_tab_controller.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 
@@ -149,6 +150,10 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
                     dense: true,
                   ),
                   const Spacer(),
+                  if (trip.recordingCount > 0) ...[
+                    _RecordingsButton(trip: trip),
+                    AppSpacing.sm.horizontalSpace,
+                  ],
                   FaIcon(
                     context.chevronEnd,
                     size: 12.r,
@@ -182,6 +187,44 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
       'duesoon' => DashboardStatusTone.info,
       _ => DashboardStatusTone.neutral,
     };
+  }
+}
+
+class _RecordingsButton extends StatelessWidget {
+  const _RecordingsButton({required this.trip});
+
+  final DashboardTripEntity trip;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => TripRecordingsSheet.show(context, trip.id),
+      borderRadius: BorderRadius.circular(AppRadii.sm.r),
+      child: Padding(
+        padding: REdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xs,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FaIcon(
+              FontAwesomeIcons.microphoneLines,
+              size: 13.r,
+              color: context.primary,
+            ),
+            AppSpacing.xs.horizontalSpace,
+            Text(
+              '${trip.recordingCount}',
+              style: AppTextStyles.s12w500.copyWith(
+                color: context.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

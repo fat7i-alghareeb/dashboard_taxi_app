@@ -108,6 +108,16 @@ sealed class RealtimeEvent with _$RealtimeEvent {
   const factory RealtimeEvent.chatClosed({
     required String tripId,
   }) = RealtimeChatClosed;
+
+  /// A new customer incident was recorded (admins-only feed). [tripId] is empty
+  /// when the incident is not tied to a trip.
+  const factory RealtimeEvent.customerIncidentRaised({
+    required String incidentId,
+    required String passengerId,
+    required String tripId,
+    required String type,
+    required String severity,
+  }) = RealtimeCustomerIncidentRaised;
 }
 
 /// Stable list of every SignalR method name the hub will push to clients.
@@ -129,6 +139,7 @@ abstract final class RealtimeMethodNames {
   static const tripStopCompleted = 'TripStopCompleted';
   static const tripMessageReceived = 'TripMessageReceived';
   static const chatClosed = 'ChatClosed';
+  static const customerIncidentRaised = 'CustomerIncidentRaised';
 
   static const all = <String>[
     tripRequested,
@@ -147,6 +158,7 @@ abstract final class RealtimeMethodNames {
     tripStopCompleted,
     tripMessageReceived,
     chatClosed,
+    customerIncidentRaised,
   ];
 }
 
@@ -169,5 +181,6 @@ extension RealtimeEventTripId on RealtimeEvent {
     RealtimeTripStopCompleted(:final tripId) => tripId,
     RealtimeTripMessageReceived(:final tripId) => tripId,
     RealtimeChatClosed(:final tripId) => tripId,
+    RealtimeCustomerIncidentRaised(:final tripId) => tripId,
   };
 }

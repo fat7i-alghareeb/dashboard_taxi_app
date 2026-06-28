@@ -9,6 +9,7 @@ import 'package:dashboardtaxi/core/network/api_endpoints.dart';
 import 'package:dashboardtaxi/core/notification/notification_coordinator.dart';
 import 'package:dashboardtaxi/core/notification/notification_topics.dart';
 import 'package:dashboardtaxi/core/services/localization/locale_service.dart';
+import 'package:dashboardtaxi/core/utils/result.dart';
 import 'package:dashboardtaxi/features/auth/domain/repositories/auth_repository.dart';
 
 import '../../../utils/constants/auth_constants.dart';
@@ -142,24 +143,64 @@ class AuthManager {
       await tokenStorage.write(token);
     }
 
-    // Sync preferred language to backend post-login
-    if (!user.isAdmin) {
-      try {
-        final localeService = getIt<LocaleService>();
-        final langCode = await localeService.currentLanguageCode();
-        final authRepo = getIt<AuthRepository>();
-        unawaited(authRepo.updatePreferredLanguage(langCode));
-        printG(
-          '${AuthLogTags.authManager} language synced post-login: $langCode',
-        );
-      } catch (e) {
-        printY(
-          '${AuthLogTags.authManager} language sync post-login failed: $e',
-        );
-      }
+    // Sync preferred language to backend post-login. The backend persists this
+    // to the matching record (DomainUsers for drivers/passengers, AdminProfiles
+    // for admins), so it must run for admins too — admin push is localized per
+    // AdminProfile.PreferredLanguage.
+    try {
+      final localeService = getIt<LocaleService>();
+      final langCode = await localeService.currentLanguageCode();
+      final authRepo = getIt<AuthRepository>();
+      unawaited(authRepo.updatePreferredLanguage(langCode));
+      printG(
+        '${AuthLogTags.authManager} language synced post-login: $langCode',
+      );
+    } catch (e) {
+      printY('${AuthLogTags.authManager} language sync post-login failed: $e');
     }
 
+    // Register the FCM device token post-login. Drivers/passengers also pass the
+    // token inline at the login endpoint, but admins do not — without this the
+    // backend never stores AdminProfile.FcmToken and admin push reaches no one.
+    await _registerFcmTokenOnLogin();
+
     await syncNotificationTopicsForCurrentUser();
+  }
+
+  /// Fetches the current FCM device token and registers it with the backend.
+  ///
+  /// Retries once on failure so a transient network error at login does not
+  /// silently leave the device unregistered (the cause of "notifications
+  /// sometimes don't arrive"). The backend routes the token to the correct
+  /// record based on the authenticated identity (admin vs user).
+  Future<void> _registerFcmTokenOnLogin() async {
+    try {
+      final token = await getIt<NotificationCoordinator>().getDeviceToken();
+      if (token == null || token.isEmpty) {
+        printY('${AuthLogTags.authManager} no FCM token available post-login');
+        return;
+      }
+
+      final authRepo = getIt<AuthRepository>();
+      for (var attempt = 1; attempt <= 2; attempt++) {
+        final result = await authRepo.updateFcmToken(token);
+        final ok = result.when(success: (_) => true, failure: (_) => false);
+        if (ok) {
+          printG('${AuthLogTags.authManager} FCM token registered post-login');
+          return;
+        }
+        printY(
+          '${AuthLogTags.authManager} FCM token register attempt $attempt failed',
+        );
+        if (attempt < 2) {
+          await Future<void>.delayed(const Duration(seconds: 2));
+        }
+      }
+    } catch (e) {
+      printY(
+        '${AuthLogTags.authManager} FCM token register post-login failed: $e',
+      );
+    }
   }
 
   /// Logs out the current user, clears persisted data and removes tokens.
@@ -323,6 +364,9 @@ class AuthManager {
     final topics = <String>[];
     if (user.isDriver) {
       topics.add(NotificationTopics.drivers);
+    }
+    if (user.isAdmin) {
+      topics.add(NotificationTopics.admins);
     }
     return topics;
   }

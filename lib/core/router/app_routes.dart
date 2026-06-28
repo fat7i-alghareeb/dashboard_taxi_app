@@ -83,7 +83,9 @@ class AppRouteRegistry {
       name: DashboardTripsScreen.pageName,
       pageBuilder: (context, state) => AppPageTransitions.build(
         state: state,
-        child: const DashboardTripsScreen(),
+        child: DashboardTripsScreen(
+          customerFilter: state.extra as CustomerFilterArgs?,
+        ),
       ),
     ),
     GoRoute(
@@ -138,6 +140,50 @@ class AppRouteRegistry {
       pageBuilder: (context, state) => AppPageTransitions.build(
         state: state,
         child: const SendNotificationScreen(),
+      ),
+    ),
+    GoRoute(
+      path: CustomerIncidentsScreen.pagePath,
+      name: CustomerIncidentsScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: CustomerIncidentsScreen(
+          customerFilter: state.extra as CustomerFilterArgs?,
+        ),
+      ),
+    ),
+    GoRoute(
+      path: CustomersListScreen.pagePath,
+      name: CustomersListScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const CustomersListScreen(),
+      ),
+    ),
+    GoRoute(
+      path: CustomerDetailScreen.pagePath,
+      name: CustomerDetailScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: CustomerDetailScreen(customer: state.extra as CustomerEntity),
+      ),
+    ),
+    GoRoute(
+      path: RecordingsListScreen.pagePath,
+      name: RecordingsListScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: RecordingsListScreen(
+          customerFilter: state.extra as CustomerFilterArgs?,
+        ),
+      ),
+    ),
+    GoRoute(
+      path: IncidentDetailScreen.pagePath,
+      name: IncidentDetailScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: IncidentDetailScreen(incidentId: state.extra as String),
       ),
     ),
     GoRoute(

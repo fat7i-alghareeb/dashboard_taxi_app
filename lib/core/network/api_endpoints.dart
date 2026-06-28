@@ -34,6 +34,11 @@ class ApiEndpoints {
       '/api/v1/trips/$tripId/details';
   static String tripMessages(String tripId) => '/api/v1/trips/$tripId/messages';
 
+  // In-trip safety recordings (admin).
+  static const String adminRecordings = '/api/v1/trips/recordings';
+  static String tripRecordings(String tripId) =>
+      '/api/v1/trips/$tripId/recordings';
+
   // Admin dashboard
   static const String drivers = '/api/v1/drivers';
   static const String driversStatus = '/api/v1/drivers/status';
@@ -83,4 +88,19 @@ class ApiEndpoints {
   static const String compensationClaims = '/api/v1/trips/compensation-claims';
   static String reviewCompensationClaim(String claimId) =>
       '/api/v1/trips/compensation-claims/$claimId/reviews';
+
+  // Customer incidents (admin)
+  static const String customerIncidents = '/api/v1/customer-incidents';
+  static String customerIncidentDetail(String id) =>
+      '/api/v1/customer-incidents/$id';
+  static String changeIncidentStatus(String id) =>
+      '/api/v1/customer-incidents/$id/status';
+  static String contactIncidentPassenger(String id) =>
+      '/api/v1/customer-incidents/$id/messages';
+  static String refundIncident(String id) =>
+      '/api/v1/customer-incidents/$id/refunds';
+
+  // Passenger moderation (admin)
+  static String suspendUser(String userId) =>
+      '/api/v1/users/$userId/suspensions';
 }

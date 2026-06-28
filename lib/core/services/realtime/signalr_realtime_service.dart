@@ -259,6 +259,10 @@ class SignalRRealtimeService implements RealtimeService {
     hub.on(RealtimeMethodNames.tripStopCompleted, _onTripStopCompleted);
     hub.on(RealtimeMethodNames.tripMessageReceived, _onTripMessageReceived);
     hub.on(RealtimeMethodNames.chatClosed, _onChatClosed);
+    hub.on(
+      RealtimeMethodNames.customerIncidentRaised,
+      _onCustomerIncidentRaised,
+    );
 
     hub.onclose(({Exception? error}) {
       if (_connection != hub || generation != _connectionGeneration) return;
@@ -645,6 +649,27 @@ class SignalRRealtimeService implements RealtimeService {
     printM('$_logTag <= ChatClosed trip=${_readString(p, 'tripId')}');
     _eventsController.add(
       RealtimeEvent.chatClosed(tripId: _readString(p, 'tripId')),
+    );
+  }
+
+  void _onCustomerIncidentRaised(List<Object?>? args) {
+    // Incidents may not be tied to a trip, so tripId is optional here.
+    final p = _payload(args, requireTripId: false);
+    if (p == null) {
+      printY('$_logTag <= CustomerIncidentRaised (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= CustomerIncidentRaised id=${_readString(p, 'incidentId')} type=${_readString(p, 'type')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.customerIncidentRaised(
+        incidentId: _readString(p, 'incidentId'),
+        passengerId: _readString(p, 'passengerId'),
+        tripId: _readString(p, 'tripId'),
+        type: _readString(p, 'type'),
+        severity: _readString(p, 'severity'),
+      ),
     );
   }
 }

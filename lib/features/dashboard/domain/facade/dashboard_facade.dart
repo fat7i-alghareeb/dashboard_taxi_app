@@ -24,8 +24,20 @@ class DashboardFacade {
     return _repository.getDriverLocations();
   }
 
-  Future<Result<List<DashboardTripEntity>>> getAdminTrips({String? status}) {
-    return _repository.getAdminTrips(status: status);
+  Future<Result<DashboardTripsPage>> getAdminTrips({
+    int page = 1,
+    int pageSize = 20,
+    String? status,
+    String? search,
+    String? passengerId,
+  }) {
+    return _repository.getAdminTrips(
+      page: page,
+      pageSize: pageSize,
+      status: status,
+      search: search,
+      passengerId: passengerId,
+    );
   }
 
   Future<Result<DashboardTripDetailsEntity>> getTripDetails(String tripId) {

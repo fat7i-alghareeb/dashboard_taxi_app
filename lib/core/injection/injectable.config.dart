@@ -44,6 +44,8 @@ import 'package:dashboardtaxi/core/services/location/startup_map_warmup_coordina
     as _i190;
 import 'package:dashboardtaxi/core/services/maps/map_directions_service.dart'
     as _i247;
+import 'package:dashboardtaxi/core/services/media/audio_playback_service.dart'
+    as _i177;
 import 'package:dashboardtaxi/core/services/onboarding/onboarding_service.dart'
     as _i565;
 import 'package:dashboardtaxi/core/services/permissions/location_permission_service.dart'
@@ -107,6 +109,16 @@ import 'package:dashboardtaxi/features/compensation/data/datasources/compensatio
     as _i756;
 import 'package:dashboardtaxi/features/compensation/presentation/states/compensation_cubit.dart'
     as _i498;
+import 'package:dashboardtaxi/features/customer_incidents/data/datasources/customer_incidents_remote_datasource.dart'
+    as _i1043;
+import 'package:dashboardtaxi/features/customer_incidents/presentation/states/customer_incident_detail_cubit.dart'
+    as _i143;
+import 'package:dashboardtaxi/features/customer_incidents/presentation/states/customer_incidents_cubit.dart'
+    as _i907;
+import 'package:dashboardtaxi/features/customers/data/datasources/customers_remote_datasource.dart'
+    as _i674;
+import 'package:dashboardtaxi/features/customers/presentation/states/customers_cubit.dart'
+    as _i31;
 import 'package:dashboardtaxi/features/dashboard/data/datasources/dashboard_remote_datasource.dart'
     as _i505;
 import 'package:dashboardtaxi/features/dashboard/data/repositories/dashboard_repository_impl.dart'
@@ -157,6 +169,10 @@ import 'package:dashboardtaxi/features/profile/domain/repositories/profile_repos
     as _i670;
 import 'package:dashboardtaxi/features/profile/presentation/states/profile_bloc.dart'
     as _i356;
+import 'package:dashboardtaxi/features/recordings/data/datasources/recordings_remote_datasource.dart'
+    as _i422;
+import 'package:dashboardtaxi/features/recordings/presentation/states/recordings_cubit.dart'
+    as _i849;
 import 'package:dashboardtaxi/features/root/data/datasources/root_remote_datasource.dart'
     as _i1064;
 import 'package:dashboardtaxi/features/root/data/repositories/root_repository_impl.dart'
@@ -235,6 +251,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i190.StartupMapWarmupCoordinator>(
       () => _i190.StartupMapWarmupCoordinator(),
+    );
+    gh.lazySingleton<_i177.AudioPlaybackService>(
+      () => _i177.AudioPlaybackService(),
     );
     gh.lazySingleton<_i88.LocationPermissionService>(
       () => const _i88.LocationPermissionService(),
@@ -337,6 +356,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i756.CompensationRemoteDataSource>(
       () => _i756.CompensationRemoteDataSource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i1043.CustomerIncidentsRemoteDataSource>(
+      () => _i1043.CustomerIncidentsRemoteDataSource(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i674.CustomersRemoteDataSource>(
+      () => _i674.CustomersRemoteDataSource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i505.DashboardRemoteDataSource>(
       () => _i505.DashboardRemoteDataSource(gh<_i361.Dio>()),
     );
@@ -351,6 +376,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i508.ProfileRemoteDataSource>(
       () => _i508.ProfileRemoteDataSource(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i422.RecordingsRemoteDataSource>(
+      () => _i422.RecordingsRemoteDataSource(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i1064.RootRemoteDataSource>(
       () => _i1064.RootRemoteDataSource(gh<_i361.Dio>()),
@@ -372,8 +400,16 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i175.SupportContactRemoteDataSource>(),
       ),
     );
+    gh.factory<_i31.CustomersCubit>(
+      () => _i31.CustomersCubit(gh<_i674.CustomersRemoteDataSource>()),
+    );
     gh.factory<_i498.CompensationCubit>(
       () => _i498.CompensationCubit(gh<_i756.CompensationRemoteDataSource>()),
+    );
+    gh.factory<_i143.CustomerIncidentDetailCubit>(
+      () => _i143.CustomerIncidentDetailCubit(
+        gh<_i1043.CustomerIncidentsRemoteDataSource>(),
+      ),
     );
     gh.lazySingleton<_i574.DashboardRepository>(
       () =>
@@ -423,6 +459,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i37.CompanyContactRemoteDataSource>(),
       ),
     );
+    gh.factory<_i849.RecordingsCubit>(
+      () => _i849.RecordingsCubit(gh<_i422.RecordingsRemoteDataSource>()),
+    );
     gh.factory<_i356.ProfileBloc>(
       () => _i356.ProfileBloc(gh<_i512.ProfileFacade>()),
     );
@@ -437,6 +476,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i724.KycFacade>(
       () => _i724.KycFacade(gh<_i986.KycRepository>()),
+    );
+    gh.factory<_i907.CustomerIncidentsCubit>(
+      () => _i907.CustomerIncidentsCubit(
+        gh<_i1043.CustomerIncidentsRemoteDataSource>(),
+        gh<_i868.RealtimeService>(),
+      ),
     );
     gh.lazySingleton<_i336.DriverRepository>(
       () => _i11.DriverRepositoryImpl(gh<_i506.DriverRemoteDataSource>()),

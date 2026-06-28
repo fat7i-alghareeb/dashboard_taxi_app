@@ -105,6 +105,7 @@ DashboardStatusTone dashboardToneFromTripStatus(String status) {
     case 'cancelled':
     case 'canceled':
     case 'failed':
+    case 'paymentfailed':
       return DashboardStatusTone.error;
     case 'enroute':
     case 'accepted':

@@ -6,6 +6,18 @@ import '../../../../core/network/api_endpoints.dart';
 import '../../../../utils/helpers/colored_print.dart';
 import '../models/dashboard_model.dart';
 
+/// A single page of admin trips plus the total available count, used to drive
+/// infinite-scroll pagination.
+class DashboardTripsPageModel {
+  const DashboardTripsPageModel({
+    required this.items,
+    required this.totalCount,
+  });
+
+  final List<DashboardTripModel> items;
+  final int totalCount;
+}
+
 @lazySingleton
 class DashboardRemoteDataSource {
   const DashboardRemoteDataSource(this._dio);
@@ -66,14 +78,16 @@ class DashboardRemoteDataSource {
     });
   }
 
-  Future<List<DashboardTripModel>> getAdminTrips({
+  Future<DashboardTripsPageModel> getAdminTrips({
     int page = 1,
-    int pageSize = 100,
+    int pageSize = 20,
     String? status,
+    String? search,
+    String? passengerId,
   }) {
     return rethrowAsAppException(() async {
       printY(
-        '[DashboardRemoteDataSource] getAdminTrips page=$page pageSize=$pageSize status=$status',
+        '[DashboardRemoteDataSource] getAdminTrips page=$page pageSize=$pageSize status=$status search=$search passenger=$passengerId',
       );
       final response = await _dio.get<dynamic>(
         ApiEndpoints.adminTrips,
@@ -81,12 +95,20 @@ class DashboardRemoteDataSource {
           'page': page,
           'pageSize': pageSize,
           if (status != null && status.isNotEmpty) 'status': status,
+          if (search != null && search.isNotEmpty) 'search': search,
+          if (passengerId != null && passengerId.isNotEmpty)
+            'passengerId': passengerId,
         },
       );
 
-      return _asList(
+      final items = _asList(
         response.data,
       ).map((e) => DashboardTripModel.fromJson(e)).toList();
+      final data = response.data;
+      final totalCount = data is Map<String, dynamic> && data['totalCount'] is int
+          ? data['totalCount'] as int
+          : items.length;
+      return DashboardTripsPageModel(items: items, totalCount: totalCount);
     });
   }
 

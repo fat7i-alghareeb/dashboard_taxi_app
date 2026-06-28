@@ -10,7 +10,13 @@ abstract class DashboardRepository {
 
   Future<Result<List<DashboardDriverLocationEntity>>> getDriverLocations();
 
-  Future<Result<List<DashboardTripEntity>>> getAdminTrips({String? status});
+  Future<Result<DashboardTripsPage>> getAdminTrips({
+    int page = 1,
+    int pageSize = 20,
+    String? status,
+    String? search,
+    String? passengerId,
+  });
 
   Future<Result<DashboardTripDetailsEntity>> getTripDetails(String tripId);
 

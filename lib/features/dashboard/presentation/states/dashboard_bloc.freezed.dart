@@ -55,7 +55,7 @@ extension DashboardEventPatterns on DashboardEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _OverviewRequested value)?  overviewRequested,TResult Function( _DriverDocumentsRequested value)?  driverDocumentsRequested,TResult Function( _DocumentReviewRequested value)?  documentReviewRequested,TResult Function( _DriverApprovalRequested value)?  driverApprovalRequested,TResult Function( _TripAssignmentRequested value)?  tripAssignmentRequested,TResult Function( _DriverLocationsRequested value)?  driverLocationsRequested,TResult Function( _DriverLocationReceived value)?  driverLocationReceived,TResult Function( _AdminTripsRequested value)?  adminTripsRequested,TResult Function( _AdminTripStatusPatched value)?  adminTripStatusPatched,TResult Function( _TripDetailsRequested value)?  tripDetailsRequested,TResult Function( _AdminConfigRequested value)?  adminConfigRequested,TResult Function( _AdminVehicleTypesRequested value)?  adminVehicleTypesRequested,TResult Function( _VehicleTypeStatusToggleRequested value)?  vehicleTypeStatusToggleRequested,TResult Function( _VehicleTypeRemovalRequested value)?  vehicleTypeRemovalRequested,TResult Function( _VehicleTypeCreateRequested value)?  vehicleTypeCreateRequested,TResult Function( _VehicleTypeUpdateRequested value)?  vehicleTypeUpdateRequested,TResult Function( _TripDiscountUpdateRequested value)?  tripDiscountUpdateRequested,TResult Function( _CurrencyUpdateRequested value)?  currencyUpdateRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Started value)?  started,TResult Function( _OverviewRequested value)?  overviewRequested,TResult Function( _DriverDocumentsRequested value)?  driverDocumentsRequested,TResult Function( _DocumentReviewRequested value)?  documentReviewRequested,TResult Function( _DriverApprovalRequested value)?  driverApprovalRequested,TResult Function( _TripAssignmentRequested value)?  tripAssignmentRequested,TResult Function( _DriverLocationsRequested value)?  driverLocationsRequested,TResult Function( _DriverLocationReceived value)?  driverLocationReceived,TResult Function( _AdminTripsRequested value)?  adminTripsRequested,TResult Function( _AdminTripsNextPageRequested value)?  adminTripsNextPageRequested,TResult Function( _AdminTripsSearchChanged value)?  adminTripsSearchChanged,TResult Function( _AdminTripsCustomerChanged value)?  adminTripsCustomerChanged,TResult Function( _AdminTripStatusPatched value)?  adminTripStatusPatched,TResult Function( _TripDetailsRequested value)?  tripDetailsRequested,TResult Function( _AdminConfigRequested value)?  adminConfigRequested,TResult Function( _AdminVehicleTypesRequested value)?  adminVehicleTypesRequested,TResult Function( _VehicleTypeStatusToggleRequested value)?  vehicleTypeStatusToggleRequested,TResult Function( _VehicleTypeRemovalRequested value)?  vehicleTypeRemovalRequested,TResult Function( _VehicleTypeCreateRequested value)?  vehicleTypeCreateRequested,TResult Function( _VehicleTypeUpdateRequested value)?  vehicleTypeUpdateRequested,TResult Function( _TripDiscountUpdateRequested value)?  tripDiscountUpdateRequested,TResult Function( _CurrencyUpdateRequested value)?  currencyUpdateRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
@@ -67,7 +67,10 @@ return driverApprovalRequested(_that);case _TripAssignmentRequested() when tripA
 return tripAssignmentRequested(_that);case _DriverLocationsRequested() when driverLocationsRequested != null:
 return driverLocationsRequested(_that);case _DriverLocationReceived() when driverLocationReceived != null:
 return driverLocationReceived(_that);case _AdminTripsRequested() when adminTripsRequested != null:
-return adminTripsRequested(_that);case _AdminTripStatusPatched() when adminTripStatusPatched != null:
+return adminTripsRequested(_that);case _AdminTripsNextPageRequested() when adminTripsNextPageRequested != null:
+return adminTripsNextPageRequested(_that);case _AdminTripsSearchChanged() when adminTripsSearchChanged != null:
+return adminTripsSearchChanged(_that);case _AdminTripsCustomerChanged() when adminTripsCustomerChanged != null:
+return adminTripsCustomerChanged(_that);case _AdminTripStatusPatched() when adminTripStatusPatched != null:
 return adminTripStatusPatched(_that);case _TripDetailsRequested() when tripDetailsRequested != null:
 return tripDetailsRequested(_that);case _AdminConfigRequested() when adminConfigRequested != null:
 return adminConfigRequested(_that);case _AdminVehicleTypesRequested() when adminVehicleTypesRequested != null:
@@ -95,7 +98,7 @@ return currencyUpdateRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _OverviewRequested value)  overviewRequested,required TResult Function( _DriverDocumentsRequested value)  driverDocumentsRequested,required TResult Function( _DocumentReviewRequested value)  documentReviewRequested,required TResult Function( _DriverApprovalRequested value)  driverApprovalRequested,required TResult Function( _TripAssignmentRequested value)  tripAssignmentRequested,required TResult Function( _DriverLocationsRequested value)  driverLocationsRequested,required TResult Function( _DriverLocationReceived value)  driverLocationReceived,required TResult Function( _AdminTripsRequested value)  adminTripsRequested,required TResult Function( _AdminTripStatusPatched value)  adminTripStatusPatched,required TResult Function( _TripDetailsRequested value)  tripDetailsRequested,required TResult Function( _AdminConfigRequested value)  adminConfigRequested,required TResult Function( _AdminVehicleTypesRequested value)  adminVehicleTypesRequested,required TResult Function( _VehicleTypeStatusToggleRequested value)  vehicleTypeStatusToggleRequested,required TResult Function( _VehicleTypeRemovalRequested value)  vehicleTypeRemovalRequested,required TResult Function( _VehicleTypeCreateRequested value)  vehicleTypeCreateRequested,required TResult Function( _VehicleTypeUpdateRequested value)  vehicleTypeUpdateRequested,required TResult Function( _TripDiscountUpdateRequested value)  tripDiscountUpdateRequested,required TResult Function( _CurrencyUpdateRequested value)  currencyUpdateRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Started value)  started,required TResult Function( _OverviewRequested value)  overviewRequested,required TResult Function( _DriverDocumentsRequested value)  driverDocumentsRequested,required TResult Function( _DocumentReviewRequested value)  documentReviewRequested,required TResult Function( _DriverApprovalRequested value)  driverApprovalRequested,required TResult Function( _TripAssignmentRequested value)  tripAssignmentRequested,required TResult Function( _DriverLocationsRequested value)  driverLocationsRequested,required TResult Function( _DriverLocationReceived value)  driverLocationReceived,required TResult Function( _AdminTripsRequested value)  adminTripsRequested,required TResult Function( _AdminTripsNextPageRequested value)  adminTripsNextPageRequested,required TResult Function( _AdminTripsSearchChanged value)  adminTripsSearchChanged,required TResult Function( _AdminTripsCustomerChanged value)  adminTripsCustomerChanged,required TResult Function( _AdminTripStatusPatched value)  adminTripStatusPatched,required TResult Function( _TripDetailsRequested value)  tripDetailsRequested,required TResult Function( _AdminConfigRequested value)  adminConfigRequested,required TResult Function( _AdminVehicleTypesRequested value)  adminVehicleTypesRequested,required TResult Function( _VehicleTypeStatusToggleRequested value)  vehicleTypeStatusToggleRequested,required TResult Function( _VehicleTypeRemovalRequested value)  vehicleTypeRemovalRequested,required TResult Function( _VehicleTypeCreateRequested value)  vehicleTypeCreateRequested,required TResult Function( _VehicleTypeUpdateRequested value)  vehicleTypeUpdateRequested,required TResult Function( _TripDiscountUpdateRequested value)  tripDiscountUpdateRequested,required TResult Function( _CurrencyUpdateRequested value)  currencyUpdateRequested,}){
 final _that = this;
 switch (_that) {
 case _Started():
@@ -107,7 +110,10 @@ return driverApprovalRequested(_that);case _TripAssignmentRequested():
 return tripAssignmentRequested(_that);case _DriverLocationsRequested():
 return driverLocationsRequested(_that);case _DriverLocationReceived():
 return driverLocationReceived(_that);case _AdminTripsRequested():
-return adminTripsRequested(_that);case _AdminTripStatusPatched():
+return adminTripsRequested(_that);case _AdminTripsNextPageRequested():
+return adminTripsNextPageRequested(_that);case _AdminTripsSearchChanged():
+return adminTripsSearchChanged(_that);case _AdminTripsCustomerChanged():
+return adminTripsCustomerChanged(_that);case _AdminTripStatusPatched():
 return adminTripStatusPatched(_that);case _TripDetailsRequested():
 return tripDetailsRequested(_that);case _AdminConfigRequested():
 return adminConfigRequested(_that);case _AdminVehicleTypesRequested():
@@ -134,7 +140,7 @@ return currencyUpdateRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _OverviewRequested value)?  overviewRequested,TResult? Function( _DriverDocumentsRequested value)?  driverDocumentsRequested,TResult? Function( _DocumentReviewRequested value)?  documentReviewRequested,TResult? Function( _DriverApprovalRequested value)?  driverApprovalRequested,TResult? Function( _TripAssignmentRequested value)?  tripAssignmentRequested,TResult? Function( _DriverLocationsRequested value)?  driverLocationsRequested,TResult? Function( _DriverLocationReceived value)?  driverLocationReceived,TResult? Function( _AdminTripsRequested value)?  adminTripsRequested,TResult? Function( _AdminTripStatusPatched value)?  adminTripStatusPatched,TResult? Function( _TripDetailsRequested value)?  tripDetailsRequested,TResult? Function( _AdminConfigRequested value)?  adminConfigRequested,TResult? Function( _AdminVehicleTypesRequested value)?  adminVehicleTypesRequested,TResult? Function( _VehicleTypeStatusToggleRequested value)?  vehicleTypeStatusToggleRequested,TResult? Function( _VehicleTypeRemovalRequested value)?  vehicleTypeRemovalRequested,TResult? Function( _VehicleTypeCreateRequested value)?  vehicleTypeCreateRequested,TResult? Function( _VehicleTypeUpdateRequested value)?  vehicleTypeUpdateRequested,TResult? Function( _TripDiscountUpdateRequested value)?  tripDiscountUpdateRequested,TResult? Function( _CurrencyUpdateRequested value)?  currencyUpdateRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Started value)?  started,TResult? Function( _OverviewRequested value)?  overviewRequested,TResult? Function( _DriverDocumentsRequested value)?  driverDocumentsRequested,TResult? Function( _DocumentReviewRequested value)?  documentReviewRequested,TResult? Function( _DriverApprovalRequested value)?  driverApprovalRequested,TResult? Function( _TripAssignmentRequested value)?  tripAssignmentRequested,TResult? Function( _DriverLocationsRequested value)?  driverLocationsRequested,TResult? Function( _DriverLocationReceived value)?  driverLocationReceived,TResult? Function( _AdminTripsRequested value)?  adminTripsRequested,TResult? Function( _AdminTripsNextPageRequested value)?  adminTripsNextPageRequested,TResult? Function( _AdminTripsSearchChanged value)?  adminTripsSearchChanged,TResult? Function( _AdminTripsCustomerChanged value)?  adminTripsCustomerChanged,TResult? Function( _AdminTripStatusPatched value)?  adminTripStatusPatched,TResult? Function( _TripDetailsRequested value)?  tripDetailsRequested,TResult? Function( _AdminConfigRequested value)?  adminConfigRequested,TResult? Function( _AdminVehicleTypesRequested value)?  adminVehicleTypesRequested,TResult? Function( _VehicleTypeStatusToggleRequested value)?  vehicleTypeStatusToggleRequested,TResult? Function( _VehicleTypeRemovalRequested value)?  vehicleTypeRemovalRequested,TResult? Function( _VehicleTypeCreateRequested value)?  vehicleTypeCreateRequested,TResult? Function( _VehicleTypeUpdateRequested value)?  vehicleTypeUpdateRequested,TResult? Function( _TripDiscountUpdateRequested value)?  tripDiscountUpdateRequested,TResult? Function( _CurrencyUpdateRequested value)?  currencyUpdateRequested,}){
 final _that = this;
 switch (_that) {
 case _Started() when started != null:
@@ -146,7 +152,10 @@ return driverApprovalRequested(_that);case _TripAssignmentRequested() when tripA
 return tripAssignmentRequested(_that);case _DriverLocationsRequested() when driverLocationsRequested != null:
 return driverLocationsRequested(_that);case _DriverLocationReceived() when driverLocationReceived != null:
 return driverLocationReceived(_that);case _AdminTripsRequested() when adminTripsRequested != null:
-return adminTripsRequested(_that);case _AdminTripStatusPatched() when adminTripStatusPatched != null:
+return adminTripsRequested(_that);case _AdminTripsNextPageRequested() when adminTripsNextPageRequested != null:
+return adminTripsNextPageRequested(_that);case _AdminTripsSearchChanged() when adminTripsSearchChanged != null:
+return adminTripsSearchChanged(_that);case _AdminTripsCustomerChanged() when adminTripsCustomerChanged != null:
+return adminTripsCustomerChanged(_that);case _AdminTripStatusPatched() when adminTripStatusPatched != null:
 return adminTripStatusPatched(_that);case _TripDetailsRequested() when tripDetailsRequested != null:
 return tripDetailsRequested(_that);case _AdminConfigRequested() when adminConfigRequested != null:
 return adminConfigRequested(_that);case _AdminVehicleTypesRequested() when adminVehicleTypesRequested != null:
@@ -173,7 +182,7 @@ return currencyUpdateRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  overviewRequested,TResult Function( String driverId)?  driverDocumentsRequested,TResult Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult Function( String driverId)?  driverApprovalRequested,TResult Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult Function()?  driverLocationsRequested,TResult Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult Function( String? status)?  adminTripsRequested,TResult Function( String tripId,  String newStatus)?  adminTripStatusPatched,TResult Function( String tripId)?  tripDetailsRequested,TResult Function()?  adminConfigRequested,TResult Function()?  adminVehicleTypesRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)?  vehicleTypeCreateRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeUpdateRequested,TResult Function( num discountPercent)?  tripDiscountUpdateRequested,TResult Function( String currencyCode)?  currencyUpdateRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  overviewRequested,TResult Function( String driverId)?  driverDocumentsRequested,TResult Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult Function( String driverId)?  driverApprovalRequested,TResult Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult Function()?  driverLocationsRequested,TResult Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult Function( String? status)?  adminTripsRequested,TResult Function()?  adminTripsNextPageRequested,TResult Function( String query)?  adminTripsSearchChanged,TResult Function( String? passengerId,  String? name)?  adminTripsCustomerChanged,TResult Function( String tripId,  String newStatus)?  adminTripStatusPatched,TResult Function( String tripId)?  tripDetailsRequested,TResult Function()?  adminConfigRequested,TResult Function()?  adminVehicleTypesRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)?  vehicleTypeCreateRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeUpdateRequested,TResult Function( num discountPercent)?  tripDiscountUpdateRequested,TResult Function( String currencyCode)?  currencyUpdateRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _OverviewRequested() when overviewRequested != null:
@@ -184,7 +193,10 @@ return driverApprovalRequested(_that.driverId);case _TripAssignmentRequested() w
 return tripAssignmentRequested(_that.tripId,_that.driverId,_that.enterDriverMode);case _DriverLocationsRequested() when driverLocationsRequested != null:
 return driverLocationsRequested();case _DriverLocationReceived() when driverLocationReceived != null:
 return driverLocationReceived(_that.driverId,_that.latitude,_that.longitude);case _AdminTripsRequested() when adminTripsRequested != null:
-return adminTripsRequested(_that.status);case _AdminTripStatusPatched() when adminTripStatusPatched != null:
+return adminTripsRequested(_that.status);case _AdminTripsNextPageRequested() when adminTripsNextPageRequested != null:
+return adminTripsNextPageRequested();case _AdminTripsSearchChanged() when adminTripsSearchChanged != null:
+return adminTripsSearchChanged(_that.query);case _AdminTripsCustomerChanged() when adminTripsCustomerChanged != null:
+return adminTripsCustomerChanged(_that.passengerId,_that.name);case _AdminTripStatusPatched() when adminTripStatusPatched != null:
 return adminTripStatusPatched(_that.tripId,_that.newStatus);case _TripDetailsRequested() when tripDetailsRequested != null:
 return tripDetailsRequested(_that.tripId);case _AdminConfigRequested() when adminConfigRequested != null:
 return adminConfigRequested();case _AdminVehicleTypesRequested() when adminVehicleTypesRequested != null:
@@ -212,7 +224,7 @@ return currencyUpdateRequested(_that.currencyCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  overviewRequested,required TResult Function( String driverId)  driverDocumentsRequested,required TResult Function( String driverId,  String documentId,  bool approved,  String? notes)  documentReviewRequested,required TResult Function( String driverId)  driverApprovalRequested,required TResult Function( String tripId,  String driverId,  bool enterDriverMode)  tripAssignmentRequested,required TResult Function()  driverLocationsRequested,required TResult Function( String driverId,  double latitude,  double longitude)  driverLocationReceived,required TResult Function( String? status)  adminTripsRequested,required TResult Function( String tripId,  String newStatus)  adminTripStatusPatched,required TResult Function( String tripId)  tripDetailsRequested,required TResult Function()  adminConfigRequested,required TResult Function()  adminVehicleTypesRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeStatusToggleRequested,required TResult Function( String vehicleTypeId)  vehicleTypeRemovalRequested,required TResult Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)  vehicleTypeCreateRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeUpdateRequested,required TResult Function( num discountPercent)  tripDiscountUpdateRequested,required TResult Function( String currencyCode)  currencyUpdateRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  overviewRequested,required TResult Function( String driverId)  driverDocumentsRequested,required TResult Function( String driverId,  String documentId,  bool approved,  String? notes)  documentReviewRequested,required TResult Function( String driverId)  driverApprovalRequested,required TResult Function( String tripId,  String driverId,  bool enterDriverMode)  tripAssignmentRequested,required TResult Function()  driverLocationsRequested,required TResult Function( String driverId,  double latitude,  double longitude)  driverLocationReceived,required TResult Function( String? status)  adminTripsRequested,required TResult Function()  adminTripsNextPageRequested,required TResult Function( String query)  adminTripsSearchChanged,required TResult Function( String? passengerId,  String? name)  adminTripsCustomerChanged,required TResult Function( String tripId,  String newStatus)  adminTripStatusPatched,required TResult Function( String tripId)  tripDetailsRequested,required TResult Function()  adminConfigRequested,required TResult Function()  adminVehicleTypesRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeStatusToggleRequested,required TResult Function( String vehicleTypeId)  vehicleTypeRemovalRequested,required TResult Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)  vehicleTypeCreateRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeUpdateRequested,required TResult Function( num discountPercent)  tripDiscountUpdateRequested,required TResult Function( String currencyCode)  currencyUpdateRequested,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case _OverviewRequested():
@@ -223,7 +235,10 @@ return driverApprovalRequested(_that.driverId);case _TripAssignmentRequested():
 return tripAssignmentRequested(_that.tripId,_that.driverId,_that.enterDriverMode);case _DriverLocationsRequested():
 return driverLocationsRequested();case _DriverLocationReceived():
 return driverLocationReceived(_that.driverId,_that.latitude,_that.longitude);case _AdminTripsRequested():
-return adminTripsRequested(_that.status);case _AdminTripStatusPatched():
+return adminTripsRequested(_that.status);case _AdminTripsNextPageRequested():
+return adminTripsNextPageRequested();case _AdminTripsSearchChanged():
+return adminTripsSearchChanged(_that.query);case _AdminTripsCustomerChanged():
+return adminTripsCustomerChanged(_that.passengerId,_that.name);case _AdminTripStatusPatched():
 return adminTripStatusPatched(_that.tripId,_that.newStatus);case _TripDetailsRequested():
 return tripDetailsRequested(_that.tripId);case _AdminConfigRequested():
 return adminConfigRequested();case _AdminVehicleTypesRequested():
@@ -250,7 +265,7 @@ return currencyUpdateRequested(_that.currencyCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  overviewRequested,TResult? Function( String driverId)?  driverDocumentsRequested,TResult? Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult? Function( String driverId)?  driverApprovalRequested,TResult? Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult? Function()?  driverLocationsRequested,TResult? Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult? Function( String? status)?  adminTripsRequested,TResult? Function( String tripId,  String newStatus)?  adminTripStatusPatched,TResult? Function( String tripId)?  tripDetailsRequested,TResult? Function()?  adminConfigRequested,TResult? Function()?  adminVehicleTypesRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult? Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult? Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)?  vehicleTypeCreateRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeUpdateRequested,TResult? Function( num discountPercent)?  tripDiscountUpdateRequested,TResult? Function( String currencyCode)?  currencyUpdateRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  overviewRequested,TResult? Function( String driverId)?  driverDocumentsRequested,TResult? Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult? Function( String driverId)?  driverApprovalRequested,TResult? Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult? Function()?  driverLocationsRequested,TResult? Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult? Function( String? status)?  adminTripsRequested,TResult? Function()?  adminTripsNextPageRequested,TResult? Function( String query)?  adminTripsSearchChanged,TResult? Function( String? passengerId,  String? name)?  adminTripsCustomerChanged,TResult? Function( String tripId,  String newStatus)?  adminTripStatusPatched,TResult? Function( String tripId)?  tripDetailsRequested,TResult? Function()?  adminConfigRequested,TResult? Function()?  adminVehicleTypesRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult? Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult? Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)?  vehicleTypeCreateRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeUpdateRequested,TResult? Function( num discountPercent)?  tripDiscountUpdateRequested,TResult? Function( String currencyCode)?  currencyUpdateRequested,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _OverviewRequested() when overviewRequested != null:
@@ -261,7 +276,10 @@ return driverApprovalRequested(_that.driverId);case _TripAssignmentRequested() w
 return tripAssignmentRequested(_that.tripId,_that.driverId,_that.enterDriverMode);case _DriverLocationsRequested() when driverLocationsRequested != null:
 return driverLocationsRequested();case _DriverLocationReceived() when driverLocationReceived != null:
 return driverLocationReceived(_that.driverId,_that.latitude,_that.longitude);case _AdminTripsRequested() when adminTripsRequested != null:
-return adminTripsRequested(_that.status);case _AdminTripStatusPatched() when adminTripStatusPatched != null:
+return adminTripsRequested(_that.status);case _AdminTripsNextPageRequested() when adminTripsNextPageRequested != null:
+return adminTripsNextPageRequested();case _AdminTripsSearchChanged() when adminTripsSearchChanged != null:
+return adminTripsSearchChanged(_that.query);case _AdminTripsCustomerChanged() when adminTripsCustomerChanged != null:
+return adminTripsCustomerChanged(_that.passengerId,_that.name);case _AdminTripStatusPatched() when adminTripStatusPatched != null:
 return adminTripStatusPatched(_that.tripId,_that.newStatus);case _TripDetailsRequested() when tripDetailsRequested != null:
 return tripDetailsRequested(_that.tripId);case _AdminConfigRequested() when adminConfigRequested != null:
 return adminConfigRequested();case _AdminVehicleTypesRequested() when adminVehicleTypesRequested != null:
@@ -778,6 +796,172 @@ class __$AdminTripsRequestedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? status = freezed,}) {
   return _then(_AdminTripsRequested(
 status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _AdminTripsNextPageRequested implements DashboardEvent {
+  const _AdminTripsNextPageRequested();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminTripsNextPageRequested);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'DashboardEvent.adminTripsNextPageRequested()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _AdminTripsSearchChanged implements DashboardEvent {
+  const _AdminTripsSearchChanged(this.query);
+  
+
+ final  String query;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AdminTripsSearchChangedCopyWith<_AdminTripsSearchChanged> get copyWith => __$AdminTripsSearchChangedCopyWithImpl<_AdminTripsSearchChanged>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminTripsSearchChanged&&(identical(other.query, query) || other.query == query));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,query);
+
+@override
+String toString() {
+  return 'DashboardEvent.adminTripsSearchChanged(query: $query)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AdminTripsSearchChangedCopyWith<$Res> implements $DashboardEventCopyWith<$Res> {
+  factory _$AdminTripsSearchChangedCopyWith(_AdminTripsSearchChanged value, $Res Function(_AdminTripsSearchChanged) _then) = __$AdminTripsSearchChangedCopyWithImpl;
+@useResult
+$Res call({
+ String query
+});
+
+
+
+
+}
+/// @nodoc
+class __$AdminTripsSearchChangedCopyWithImpl<$Res>
+    implements _$AdminTripsSearchChangedCopyWith<$Res> {
+  __$AdminTripsSearchChangedCopyWithImpl(this._self, this._then);
+
+  final _AdminTripsSearchChanged _self;
+  final $Res Function(_AdminTripsSearchChanged) _then;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? query = null,}) {
+  return _then(_AdminTripsSearchChanged(
+null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _AdminTripsCustomerChanged implements DashboardEvent {
+  const _AdminTripsCustomerChanged({this.passengerId, this.name});
+  
+
+ final  String? passengerId;
+ final  String? name;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AdminTripsCustomerChangedCopyWith<_AdminTripsCustomerChanged> get copyWith => __$AdminTripsCustomerChangedCopyWithImpl<_AdminTripsCustomerChanged>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminTripsCustomerChanged&&(identical(other.passengerId, passengerId) || other.passengerId == passengerId)&&(identical(other.name, name) || other.name == name));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,passengerId,name);
+
+@override
+String toString() {
+  return 'DashboardEvent.adminTripsCustomerChanged(passengerId: $passengerId, name: $name)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AdminTripsCustomerChangedCopyWith<$Res> implements $DashboardEventCopyWith<$Res> {
+  factory _$AdminTripsCustomerChangedCopyWith(_AdminTripsCustomerChanged value, $Res Function(_AdminTripsCustomerChanged) _then) = __$AdminTripsCustomerChangedCopyWithImpl;
+@useResult
+$Res call({
+ String? passengerId, String? name
+});
+
+
+
+
+}
+/// @nodoc
+class __$AdminTripsCustomerChangedCopyWithImpl<$Res>
+    implements _$AdminTripsCustomerChangedCopyWith<$Res> {
+  __$AdminTripsCustomerChangedCopyWithImpl(this._self, this._then);
+
+  final _AdminTripsCustomerChanged _self;
+  final $Res Function(_AdminTripsCustomerChanged) _then;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? passengerId = freezed,Object? name = freezed,}) {
+  return _then(_AdminTripsCustomerChanged(
+passengerId: freezed == passengerId ? _self.passengerId : passengerId // ignore: cast_nullable_to_non_nullable
+as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -1394,7 +1578,7 @@ as String,
 /// @nodoc
 mixin _$DashboardState {
 
- BlocStatus<DashboardEntity> get overviewState; BlocStatus<List<DashboardDriverDocumentEntity>> get driverDocumentsState; BlocStatus<void> get documentReviewState; BlocStatus<void> get driverApprovalState; BlocStatus<void> get tripAssignmentState; BlocStatus<List<DashboardDriverLocationEntity>> get driverLocationsState; BlocStatus<List<DashboardTripEntity>> get adminTripsState; BlocStatus<DashboardTripDetailsEntity> get tripDetailsState;// --- Control Center admin states ---
+ BlocStatus<DashboardEntity> get overviewState; BlocStatus<List<DashboardDriverDocumentEntity>> get driverDocumentsState; BlocStatus<void> get documentReviewState; BlocStatus<void> get driverApprovalState; BlocStatus<void> get tripAssignmentState; BlocStatus<List<DashboardDriverLocationEntity>> get driverLocationsState; BlocStatus<List<DashboardTripEntity>> get adminTripsState; int get adminTripsPage; bool get adminTripsHasMore; bool get adminTripsLoadingMore; String get adminTripsSearch; String get adminTripsPassengerId; String get adminTripsPassengerName; BlocStatus<DashboardTripDetailsEntity> get tripDetailsState;// --- Control Center admin states ---
  BlocStatus<DashboardSystemConfigEntity> get adminConfigState; BlocStatus<List<DashboardVehicleTypeEntity>> get adminVehicleTypesState;// Per-section action loading (scoped instead of shared)
  BlocStatus<void> get configActionState; BlocStatus<void> get vehicleTypeActionState; String? get selectedDriverId; String? get selectedTripId;
 /// Create a copy of DashboardState
@@ -1407,16 +1591,16 @@ $DashboardStateCopyWith<DashboardState> get copyWith => _$DashboardStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState&&(identical(other.overviewState, overviewState) || other.overviewState == overviewState)&&(identical(other.driverDocumentsState, driverDocumentsState) || other.driverDocumentsState == driverDocumentsState)&&(identical(other.documentReviewState, documentReviewState) || other.documentReviewState == documentReviewState)&&(identical(other.driverApprovalState, driverApprovalState) || other.driverApprovalState == driverApprovalState)&&(identical(other.tripAssignmentState, tripAssignmentState) || other.tripAssignmentState == tripAssignmentState)&&(identical(other.driverLocationsState, driverLocationsState) || other.driverLocationsState == driverLocationsState)&&(identical(other.adminTripsState, adminTripsState) || other.adminTripsState == adminTripsState)&&(identical(other.tripDetailsState, tripDetailsState) || other.tripDetailsState == tripDetailsState)&&(identical(other.adminConfigState, adminConfigState) || other.adminConfigState == adminConfigState)&&(identical(other.adminVehicleTypesState, adminVehicleTypesState) || other.adminVehicleTypesState == adminVehicleTypesState)&&(identical(other.configActionState, configActionState) || other.configActionState == configActionState)&&(identical(other.vehicleTypeActionState, vehicleTypeActionState) || other.vehicleTypeActionState == vehicleTypeActionState)&&(identical(other.selectedDriverId, selectedDriverId) || other.selectedDriverId == selectedDriverId)&&(identical(other.selectedTripId, selectedTripId) || other.selectedTripId == selectedTripId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState&&(identical(other.overviewState, overviewState) || other.overviewState == overviewState)&&(identical(other.driverDocumentsState, driverDocumentsState) || other.driverDocumentsState == driverDocumentsState)&&(identical(other.documentReviewState, documentReviewState) || other.documentReviewState == documentReviewState)&&(identical(other.driverApprovalState, driverApprovalState) || other.driverApprovalState == driverApprovalState)&&(identical(other.tripAssignmentState, tripAssignmentState) || other.tripAssignmentState == tripAssignmentState)&&(identical(other.driverLocationsState, driverLocationsState) || other.driverLocationsState == driverLocationsState)&&(identical(other.adminTripsState, adminTripsState) || other.adminTripsState == adminTripsState)&&(identical(other.adminTripsPage, adminTripsPage) || other.adminTripsPage == adminTripsPage)&&(identical(other.adminTripsHasMore, adminTripsHasMore) || other.adminTripsHasMore == adminTripsHasMore)&&(identical(other.adminTripsLoadingMore, adminTripsLoadingMore) || other.adminTripsLoadingMore == adminTripsLoadingMore)&&(identical(other.adminTripsSearch, adminTripsSearch) || other.adminTripsSearch == adminTripsSearch)&&(identical(other.adminTripsPassengerId, adminTripsPassengerId) || other.adminTripsPassengerId == adminTripsPassengerId)&&(identical(other.adminTripsPassengerName, adminTripsPassengerName) || other.adminTripsPassengerName == adminTripsPassengerName)&&(identical(other.tripDetailsState, tripDetailsState) || other.tripDetailsState == tripDetailsState)&&(identical(other.adminConfigState, adminConfigState) || other.adminConfigState == adminConfigState)&&(identical(other.adminVehicleTypesState, adminVehicleTypesState) || other.adminVehicleTypesState == adminVehicleTypesState)&&(identical(other.configActionState, configActionState) || other.configActionState == configActionState)&&(identical(other.vehicleTypeActionState, vehicleTypeActionState) || other.vehicleTypeActionState == vehicleTypeActionState)&&(identical(other.selectedDriverId, selectedDriverId) || other.selectedDriverId == selectedDriverId)&&(identical(other.selectedTripId, selectedTripId) || other.selectedTripId == selectedTripId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,overviewState,driverDocumentsState,documentReviewState,driverApprovalState,tripAssignmentState,driverLocationsState,adminTripsState,tripDetailsState,adminConfigState,adminVehicleTypesState,configActionState,vehicleTypeActionState,selectedDriverId,selectedTripId);
+int get hashCode => Object.hashAll([runtimeType,overviewState,driverDocumentsState,documentReviewState,driverApprovalState,tripAssignmentState,driverLocationsState,adminTripsState,adminTripsPage,adminTripsHasMore,adminTripsLoadingMore,adminTripsSearch,adminTripsPassengerId,adminTripsPassengerName,tripDetailsState,adminConfigState,adminVehicleTypesState,configActionState,vehicleTypeActionState,selectedDriverId,selectedTripId]);
 
 @override
 String toString() {
-  return 'DashboardState(overviewState: $overviewState, driverDocumentsState: $driverDocumentsState, documentReviewState: $documentReviewState, driverApprovalState: $driverApprovalState, tripAssignmentState: $tripAssignmentState, driverLocationsState: $driverLocationsState, adminTripsState: $adminTripsState, tripDetailsState: $tripDetailsState, adminConfigState: $adminConfigState, adminVehicleTypesState: $adminVehicleTypesState, configActionState: $configActionState, vehicleTypeActionState: $vehicleTypeActionState, selectedDriverId: $selectedDriverId, selectedTripId: $selectedTripId)';
+  return 'DashboardState(overviewState: $overviewState, driverDocumentsState: $driverDocumentsState, documentReviewState: $documentReviewState, driverApprovalState: $driverApprovalState, tripAssignmentState: $tripAssignmentState, driverLocationsState: $driverLocationsState, adminTripsState: $adminTripsState, adminTripsPage: $adminTripsPage, adminTripsHasMore: $adminTripsHasMore, adminTripsLoadingMore: $adminTripsLoadingMore, adminTripsSearch: $adminTripsSearch, adminTripsPassengerId: $adminTripsPassengerId, adminTripsPassengerName: $adminTripsPassengerName, tripDetailsState: $tripDetailsState, adminConfigState: $adminConfigState, adminVehicleTypesState: $adminVehicleTypesState, configActionState: $configActionState, vehicleTypeActionState: $vehicleTypeActionState, selectedDriverId: $selectedDriverId, selectedTripId: $selectedTripId)';
 }
 
 
@@ -1427,7 +1611,7 @@ abstract mixin class $DashboardStateCopyWith<$Res>  {
   factory $DashboardStateCopyWith(DashboardState value, $Res Function(DashboardState) _then) = _$DashboardStateCopyWithImpl;
 @useResult
 $Res call({
- BlocStatus<DashboardEntity> overviewState, BlocStatus<List<DashboardDriverDocumentEntity>> driverDocumentsState, BlocStatus<void> documentReviewState, BlocStatus<void> driverApprovalState, BlocStatus<void> tripAssignmentState, BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState, BlocStatus<List<DashboardTripEntity>> adminTripsState, BlocStatus<DashboardTripDetailsEntity> tripDetailsState, BlocStatus<DashboardSystemConfigEntity> adminConfigState, BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState, BlocStatus<void> configActionState, BlocStatus<void> vehicleTypeActionState, String? selectedDriverId, String? selectedTripId
+ BlocStatus<DashboardEntity> overviewState, BlocStatus<List<DashboardDriverDocumentEntity>> driverDocumentsState, BlocStatus<void> documentReviewState, BlocStatus<void> driverApprovalState, BlocStatus<void> tripAssignmentState, BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState, BlocStatus<List<DashboardTripEntity>> adminTripsState, int adminTripsPage, bool adminTripsHasMore, bool adminTripsLoadingMore, String adminTripsSearch, String adminTripsPassengerId, String adminTripsPassengerName, BlocStatus<DashboardTripDetailsEntity> tripDetailsState, BlocStatus<DashboardSystemConfigEntity> adminConfigState, BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState, BlocStatus<void> configActionState, BlocStatus<void> vehicleTypeActionState, String? selectedDriverId, String? selectedTripId
 });
 
 
@@ -1444,7 +1628,7 @@ class _$DashboardStateCopyWithImpl<$Res>
 
 /// Create a copy of DashboardState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? overviewState = null,Object? driverDocumentsState = null,Object? documentReviewState = null,Object? driverApprovalState = null,Object? tripAssignmentState = null,Object? driverLocationsState = null,Object? adminTripsState = null,Object? tripDetailsState = null,Object? adminConfigState = null,Object? adminVehicleTypesState = null,Object? configActionState = null,Object? vehicleTypeActionState = null,Object? selectedDriverId = freezed,Object? selectedTripId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? overviewState = null,Object? driverDocumentsState = null,Object? documentReviewState = null,Object? driverApprovalState = null,Object? tripAssignmentState = null,Object? driverLocationsState = null,Object? adminTripsState = null,Object? adminTripsPage = null,Object? adminTripsHasMore = null,Object? adminTripsLoadingMore = null,Object? adminTripsSearch = null,Object? adminTripsPassengerId = null,Object? adminTripsPassengerName = null,Object? tripDetailsState = null,Object? adminConfigState = null,Object? adminVehicleTypesState = null,Object? configActionState = null,Object? vehicleTypeActionState = null,Object? selectedDriverId = freezed,Object? selectedTripId = freezed,}) {
   return _then(_self.copyWith(
 overviewState: null == overviewState ? _self.overviewState : overviewState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<DashboardEntity>,driverDocumentsState: null == driverDocumentsState ? _self.driverDocumentsState : driverDocumentsState // ignore: cast_nullable_to_non_nullable
@@ -1453,7 +1637,13 @@ as BlocStatus<void>,driverApprovalState: null == driverApprovalState ? _self.dri
 as BlocStatus<void>,tripAssignmentState: null == tripAssignmentState ? _self.tripAssignmentState : tripAssignmentState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<void>,driverLocationsState: null == driverLocationsState ? _self.driverLocationsState : driverLocationsState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<List<DashboardDriverLocationEntity>>,adminTripsState: null == adminTripsState ? _self.adminTripsState : adminTripsState // ignore: cast_nullable_to_non_nullable
-as BlocStatus<List<DashboardTripEntity>>,tripDetailsState: null == tripDetailsState ? _self.tripDetailsState : tripDetailsState // ignore: cast_nullable_to_non_nullable
+as BlocStatus<List<DashboardTripEntity>>,adminTripsPage: null == adminTripsPage ? _self.adminTripsPage : adminTripsPage // ignore: cast_nullable_to_non_nullable
+as int,adminTripsHasMore: null == adminTripsHasMore ? _self.adminTripsHasMore : adminTripsHasMore // ignore: cast_nullable_to_non_nullable
+as bool,adminTripsLoadingMore: null == adminTripsLoadingMore ? _self.adminTripsLoadingMore : adminTripsLoadingMore // ignore: cast_nullable_to_non_nullable
+as bool,adminTripsSearch: null == adminTripsSearch ? _self.adminTripsSearch : adminTripsSearch // ignore: cast_nullable_to_non_nullable
+as String,adminTripsPassengerId: null == adminTripsPassengerId ? _self.adminTripsPassengerId : adminTripsPassengerId // ignore: cast_nullable_to_non_nullable
+as String,adminTripsPassengerName: null == adminTripsPassengerName ? _self.adminTripsPassengerName : adminTripsPassengerName // ignore: cast_nullable_to_non_nullable
+as String,tripDetailsState: null == tripDetailsState ? _self.tripDetailsState : tripDetailsState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<DashboardTripDetailsEntity>,adminConfigState: null == adminConfigState ? _self.adminConfigState : adminConfigState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<DashboardSystemConfigEntity>,adminVehicleTypesState: null == adminVehicleTypesState ? _self.adminVehicleTypesState : adminVehicleTypesState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<List<DashboardVehicleTypeEntity>>,configActionState: null == configActionState ? _self.configActionState : configActionState // ignore: cast_nullable_to_non_nullable
@@ -1653,10 +1843,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BlocStatus<DashboardEntity> overviewState,  BlocStatus<List<DashboardDriverDocumentEntity>> driverDocumentsState,  BlocStatus<void> documentReviewState,  BlocStatus<void> driverApprovalState,  BlocStatus<void> tripAssignmentState,  BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState,  BlocStatus<List<DashboardTripEntity>> adminTripsState,  BlocStatus<DashboardTripDetailsEntity> tripDetailsState,  BlocStatus<DashboardSystemConfigEntity> adminConfigState,  BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState,  BlocStatus<void> configActionState,  BlocStatus<void> vehicleTypeActionState,  String? selectedDriverId,  String? selectedTripId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BlocStatus<DashboardEntity> overviewState,  BlocStatus<List<DashboardDriverDocumentEntity>> driverDocumentsState,  BlocStatus<void> documentReviewState,  BlocStatus<void> driverApprovalState,  BlocStatus<void> tripAssignmentState,  BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState,  BlocStatus<List<DashboardTripEntity>> adminTripsState,  int adminTripsPage,  bool adminTripsHasMore,  bool adminTripsLoadingMore,  String adminTripsSearch,  String adminTripsPassengerId,  String adminTripsPassengerName,  BlocStatus<DashboardTripDetailsEntity> tripDetailsState,  BlocStatus<DashboardSystemConfigEntity> adminConfigState,  BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState,  BlocStatus<void> configActionState,  BlocStatus<void> vehicleTypeActionState,  String? selectedDriverId,  String? selectedTripId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DashboardState() when $default != null:
-return $default(_that.overviewState,_that.driverDocumentsState,_that.documentReviewState,_that.driverApprovalState,_that.tripAssignmentState,_that.driverLocationsState,_that.adminTripsState,_that.tripDetailsState,_that.adminConfigState,_that.adminVehicleTypesState,_that.configActionState,_that.vehicleTypeActionState,_that.selectedDriverId,_that.selectedTripId);case _:
+return $default(_that.overviewState,_that.driverDocumentsState,_that.documentReviewState,_that.driverApprovalState,_that.tripAssignmentState,_that.driverLocationsState,_that.adminTripsState,_that.adminTripsPage,_that.adminTripsHasMore,_that.adminTripsLoadingMore,_that.adminTripsSearch,_that.adminTripsPassengerId,_that.adminTripsPassengerName,_that.tripDetailsState,_that.adminConfigState,_that.adminVehicleTypesState,_that.configActionState,_that.vehicleTypeActionState,_that.selectedDriverId,_that.selectedTripId);case _:
   return orElse();
 
 }
@@ -1674,10 +1864,10 @@ return $default(_that.overviewState,_that.driverDocumentsState,_that.documentRev
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BlocStatus<DashboardEntity> overviewState,  BlocStatus<List<DashboardDriverDocumentEntity>> driverDocumentsState,  BlocStatus<void> documentReviewState,  BlocStatus<void> driverApprovalState,  BlocStatus<void> tripAssignmentState,  BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState,  BlocStatus<List<DashboardTripEntity>> adminTripsState,  BlocStatus<DashboardTripDetailsEntity> tripDetailsState,  BlocStatus<DashboardSystemConfigEntity> adminConfigState,  BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState,  BlocStatus<void> configActionState,  BlocStatus<void> vehicleTypeActionState,  String? selectedDriverId,  String? selectedTripId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BlocStatus<DashboardEntity> overviewState,  BlocStatus<List<DashboardDriverDocumentEntity>> driverDocumentsState,  BlocStatus<void> documentReviewState,  BlocStatus<void> driverApprovalState,  BlocStatus<void> tripAssignmentState,  BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState,  BlocStatus<List<DashboardTripEntity>> adminTripsState,  int adminTripsPage,  bool adminTripsHasMore,  bool adminTripsLoadingMore,  String adminTripsSearch,  String adminTripsPassengerId,  String adminTripsPassengerName,  BlocStatus<DashboardTripDetailsEntity> tripDetailsState,  BlocStatus<DashboardSystemConfigEntity> adminConfigState,  BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState,  BlocStatus<void> configActionState,  BlocStatus<void> vehicleTypeActionState,  String? selectedDriverId,  String? selectedTripId)  $default,) {final _that = this;
 switch (_that) {
 case _DashboardState():
-return $default(_that.overviewState,_that.driverDocumentsState,_that.documentReviewState,_that.driverApprovalState,_that.tripAssignmentState,_that.driverLocationsState,_that.adminTripsState,_that.tripDetailsState,_that.adminConfigState,_that.adminVehicleTypesState,_that.configActionState,_that.vehicleTypeActionState,_that.selectedDriverId,_that.selectedTripId);case _:
+return $default(_that.overviewState,_that.driverDocumentsState,_that.documentReviewState,_that.driverApprovalState,_that.tripAssignmentState,_that.driverLocationsState,_that.adminTripsState,_that.adminTripsPage,_that.adminTripsHasMore,_that.adminTripsLoadingMore,_that.adminTripsSearch,_that.adminTripsPassengerId,_that.adminTripsPassengerName,_that.tripDetailsState,_that.adminConfigState,_that.adminVehicleTypesState,_that.configActionState,_that.vehicleTypeActionState,_that.selectedDriverId,_that.selectedTripId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1694,10 +1884,10 @@ return $default(_that.overviewState,_that.driverDocumentsState,_that.documentRev
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BlocStatus<DashboardEntity> overviewState,  BlocStatus<List<DashboardDriverDocumentEntity>> driverDocumentsState,  BlocStatus<void> documentReviewState,  BlocStatus<void> driverApprovalState,  BlocStatus<void> tripAssignmentState,  BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState,  BlocStatus<List<DashboardTripEntity>> adminTripsState,  BlocStatus<DashboardTripDetailsEntity> tripDetailsState,  BlocStatus<DashboardSystemConfigEntity> adminConfigState,  BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState,  BlocStatus<void> configActionState,  BlocStatus<void> vehicleTypeActionState,  String? selectedDriverId,  String? selectedTripId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BlocStatus<DashboardEntity> overviewState,  BlocStatus<List<DashboardDriverDocumentEntity>> driverDocumentsState,  BlocStatus<void> documentReviewState,  BlocStatus<void> driverApprovalState,  BlocStatus<void> tripAssignmentState,  BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState,  BlocStatus<List<DashboardTripEntity>> adminTripsState,  int adminTripsPage,  bool adminTripsHasMore,  bool adminTripsLoadingMore,  String adminTripsSearch,  String adminTripsPassengerId,  String adminTripsPassengerName,  BlocStatus<DashboardTripDetailsEntity> tripDetailsState,  BlocStatus<DashboardSystemConfigEntity> adminConfigState,  BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState,  BlocStatus<void> configActionState,  BlocStatus<void> vehicleTypeActionState,  String? selectedDriverId,  String? selectedTripId)?  $default,) {final _that = this;
 switch (_that) {
 case _DashboardState() when $default != null:
-return $default(_that.overviewState,_that.driverDocumentsState,_that.documentReviewState,_that.driverApprovalState,_that.tripAssignmentState,_that.driverLocationsState,_that.adminTripsState,_that.tripDetailsState,_that.adminConfigState,_that.adminVehicleTypesState,_that.configActionState,_that.vehicleTypeActionState,_that.selectedDriverId,_that.selectedTripId);case _:
+return $default(_that.overviewState,_that.driverDocumentsState,_that.documentReviewState,_that.driverApprovalState,_that.tripAssignmentState,_that.driverLocationsState,_that.adminTripsState,_that.adminTripsPage,_that.adminTripsHasMore,_that.adminTripsLoadingMore,_that.adminTripsSearch,_that.adminTripsPassengerId,_that.adminTripsPassengerName,_that.tripDetailsState,_that.adminConfigState,_that.adminVehicleTypesState,_that.configActionState,_that.vehicleTypeActionState,_that.selectedDriverId,_that.selectedTripId);case _:
   return null;
 
 }
@@ -1709,7 +1899,7 @@ return $default(_that.overviewState,_that.driverDocumentsState,_that.documentRev
 
 
 class _DashboardState implements DashboardState {
-  const _DashboardState({this.overviewState = const BlocStatus<DashboardEntity>.initial(), this.driverDocumentsState = const BlocStatus<List<DashboardDriverDocumentEntity>>.initial(), this.documentReviewState = const BlocStatus<void>.initial(), this.driverApprovalState = const BlocStatus<void>.initial(), this.tripAssignmentState = const BlocStatus<void>.initial(), this.driverLocationsState = const BlocStatus<List<DashboardDriverLocationEntity>>.initial(), this.adminTripsState = const BlocStatus<List<DashboardTripEntity>>.initial(), this.tripDetailsState = const BlocStatus<DashboardTripDetailsEntity>.initial(), this.adminConfigState = const BlocStatus<DashboardSystemConfigEntity>.initial(), this.adminVehicleTypesState = const BlocStatus<List<DashboardVehicleTypeEntity>>.initial(), this.configActionState = const BlocStatus<void>.initial(), this.vehicleTypeActionState = const BlocStatus<void>.initial(), this.selectedDriverId, this.selectedTripId});
+  const _DashboardState({this.overviewState = const BlocStatus<DashboardEntity>.initial(), this.driverDocumentsState = const BlocStatus<List<DashboardDriverDocumentEntity>>.initial(), this.documentReviewState = const BlocStatus<void>.initial(), this.driverApprovalState = const BlocStatus<void>.initial(), this.tripAssignmentState = const BlocStatus<void>.initial(), this.driverLocationsState = const BlocStatus<List<DashboardDriverLocationEntity>>.initial(), this.adminTripsState = const BlocStatus<List<DashboardTripEntity>>.initial(), this.adminTripsPage = 1, this.adminTripsHasMore = true, this.adminTripsLoadingMore = false, this.adminTripsSearch = '', this.adminTripsPassengerId = '', this.adminTripsPassengerName = '', this.tripDetailsState = const BlocStatus<DashboardTripDetailsEntity>.initial(), this.adminConfigState = const BlocStatus<DashboardSystemConfigEntity>.initial(), this.adminVehicleTypesState = const BlocStatus<List<DashboardVehicleTypeEntity>>.initial(), this.configActionState = const BlocStatus<void>.initial(), this.vehicleTypeActionState = const BlocStatus<void>.initial(), this.selectedDriverId, this.selectedTripId});
   
 
 @override@JsonKey() final  BlocStatus<DashboardEntity> overviewState;
@@ -1719,6 +1909,12 @@ class _DashboardState implements DashboardState {
 @override@JsonKey() final  BlocStatus<void> tripAssignmentState;
 @override@JsonKey() final  BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState;
 @override@JsonKey() final  BlocStatus<List<DashboardTripEntity>> adminTripsState;
+@override@JsonKey() final  int adminTripsPage;
+@override@JsonKey() final  bool adminTripsHasMore;
+@override@JsonKey() final  bool adminTripsLoadingMore;
+@override@JsonKey() final  String adminTripsSearch;
+@override@JsonKey() final  String adminTripsPassengerId;
+@override@JsonKey() final  String adminTripsPassengerName;
 @override@JsonKey() final  BlocStatus<DashboardTripDetailsEntity> tripDetailsState;
 // --- Control Center admin states ---
 @override@JsonKey() final  BlocStatus<DashboardSystemConfigEntity> adminConfigState;
@@ -1739,16 +1935,16 @@ _$DashboardStateCopyWith<_DashboardState> get copyWith => __$DashboardStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardState&&(identical(other.overviewState, overviewState) || other.overviewState == overviewState)&&(identical(other.driverDocumentsState, driverDocumentsState) || other.driverDocumentsState == driverDocumentsState)&&(identical(other.documentReviewState, documentReviewState) || other.documentReviewState == documentReviewState)&&(identical(other.driverApprovalState, driverApprovalState) || other.driverApprovalState == driverApprovalState)&&(identical(other.tripAssignmentState, tripAssignmentState) || other.tripAssignmentState == tripAssignmentState)&&(identical(other.driverLocationsState, driverLocationsState) || other.driverLocationsState == driverLocationsState)&&(identical(other.adminTripsState, adminTripsState) || other.adminTripsState == adminTripsState)&&(identical(other.tripDetailsState, tripDetailsState) || other.tripDetailsState == tripDetailsState)&&(identical(other.adminConfigState, adminConfigState) || other.adminConfigState == adminConfigState)&&(identical(other.adminVehicleTypesState, adminVehicleTypesState) || other.adminVehicleTypesState == adminVehicleTypesState)&&(identical(other.configActionState, configActionState) || other.configActionState == configActionState)&&(identical(other.vehicleTypeActionState, vehicleTypeActionState) || other.vehicleTypeActionState == vehicleTypeActionState)&&(identical(other.selectedDriverId, selectedDriverId) || other.selectedDriverId == selectedDriverId)&&(identical(other.selectedTripId, selectedTripId) || other.selectedTripId == selectedTripId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardState&&(identical(other.overviewState, overviewState) || other.overviewState == overviewState)&&(identical(other.driverDocumentsState, driverDocumentsState) || other.driverDocumentsState == driverDocumentsState)&&(identical(other.documentReviewState, documentReviewState) || other.documentReviewState == documentReviewState)&&(identical(other.driverApprovalState, driverApprovalState) || other.driverApprovalState == driverApprovalState)&&(identical(other.tripAssignmentState, tripAssignmentState) || other.tripAssignmentState == tripAssignmentState)&&(identical(other.driverLocationsState, driverLocationsState) || other.driverLocationsState == driverLocationsState)&&(identical(other.adminTripsState, adminTripsState) || other.adminTripsState == adminTripsState)&&(identical(other.adminTripsPage, adminTripsPage) || other.adminTripsPage == adminTripsPage)&&(identical(other.adminTripsHasMore, adminTripsHasMore) || other.adminTripsHasMore == adminTripsHasMore)&&(identical(other.adminTripsLoadingMore, adminTripsLoadingMore) || other.adminTripsLoadingMore == adminTripsLoadingMore)&&(identical(other.adminTripsSearch, adminTripsSearch) || other.adminTripsSearch == adminTripsSearch)&&(identical(other.adminTripsPassengerId, adminTripsPassengerId) || other.adminTripsPassengerId == adminTripsPassengerId)&&(identical(other.adminTripsPassengerName, adminTripsPassengerName) || other.adminTripsPassengerName == adminTripsPassengerName)&&(identical(other.tripDetailsState, tripDetailsState) || other.tripDetailsState == tripDetailsState)&&(identical(other.adminConfigState, adminConfigState) || other.adminConfigState == adminConfigState)&&(identical(other.adminVehicleTypesState, adminVehicleTypesState) || other.adminVehicleTypesState == adminVehicleTypesState)&&(identical(other.configActionState, configActionState) || other.configActionState == configActionState)&&(identical(other.vehicleTypeActionState, vehicleTypeActionState) || other.vehicleTypeActionState == vehicleTypeActionState)&&(identical(other.selectedDriverId, selectedDriverId) || other.selectedDriverId == selectedDriverId)&&(identical(other.selectedTripId, selectedTripId) || other.selectedTripId == selectedTripId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,overviewState,driverDocumentsState,documentReviewState,driverApprovalState,tripAssignmentState,driverLocationsState,adminTripsState,tripDetailsState,adminConfigState,adminVehicleTypesState,configActionState,vehicleTypeActionState,selectedDriverId,selectedTripId);
+int get hashCode => Object.hashAll([runtimeType,overviewState,driverDocumentsState,documentReviewState,driverApprovalState,tripAssignmentState,driverLocationsState,adminTripsState,adminTripsPage,adminTripsHasMore,adminTripsLoadingMore,adminTripsSearch,adminTripsPassengerId,adminTripsPassengerName,tripDetailsState,adminConfigState,adminVehicleTypesState,configActionState,vehicleTypeActionState,selectedDriverId,selectedTripId]);
 
 @override
 String toString() {
-  return 'DashboardState(overviewState: $overviewState, driverDocumentsState: $driverDocumentsState, documentReviewState: $documentReviewState, driverApprovalState: $driverApprovalState, tripAssignmentState: $tripAssignmentState, driverLocationsState: $driverLocationsState, adminTripsState: $adminTripsState, tripDetailsState: $tripDetailsState, adminConfigState: $adminConfigState, adminVehicleTypesState: $adminVehicleTypesState, configActionState: $configActionState, vehicleTypeActionState: $vehicleTypeActionState, selectedDriverId: $selectedDriverId, selectedTripId: $selectedTripId)';
+  return 'DashboardState(overviewState: $overviewState, driverDocumentsState: $driverDocumentsState, documentReviewState: $documentReviewState, driverApprovalState: $driverApprovalState, tripAssignmentState: $tripAssignmentState, driverLocationsState: $driverLocationsState, adminTripsState: $adminTripsState, adminTripsPage: $adminTripsPage, adminTripsHasMore: $adminTripsHasMore, adminTripsLoadingMore: $adminTripsLoadingMore, adminTripsSearch: $adminTripsSearch, adminTripsPassengerId: $adminTripsPassengerId, adminTripsPassengerName: $adminTripsPassengerName, tripDetailsState: $tripDetailsState, adminConfigState: $adminConfigState, adminVehicleTypesState: $adminVehicleTypesState, configActionState: $configActionState, vehicleTypeActionState: $vehicleTypeActionState, selectedDriverId: $selectedDriverId, selectedTripId: $selectedTripId)';
 }
 
 
@@ -1759,7 +1955,7 @@ abstract mixin class _$DashboardStateCopyWith<$Res> implements $DashboardStateCo
   factory _$DashboardStateCopyWith(_DashboardState value, $Res Function(_DashboardState) _then) = __$DashboardStateCopyWithImpl;
 @override @useResult
 $Res call({
- BlocStatus<DashboardEntity> overviewState, BlocStatus<List<DashboardDriverDocumentEntity>> driverDocumentsState, BlocStatus<void> documentReviewState, BlocStatus<void> driverApprovalState, BlocStatus<void> tripAssignmentState, BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState, BlocStatus<List<DashboardTripEntity>> adminTripsState, BlocStatus<DashboardTripDetailsEntity> tripDetailsState, BlocStatus<DashboardSystemConfigEntity> adminConfigState, BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState, BlocStatus<void> configActionState, BlocStatus<void> vehicleTypeActionState, String? selectedDriverId, String? selectedTripId
+ BlocStatus<DashboardEntity> overviewState, BlocStatus<List<DashboardDriverDocumentEntity>> driverDocumentsState, BlocStatus<void> documentReviewState, BlocStatus<void> driverApprovalState, BlocStatus<void> tripAssignmentState, BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState, BlocStatus<List<DashboardTripEntity>> adminTripsState, int adminTripsPage, bool adminTripsHasMore, bool adminTripsLoadingMore, String adminTripsSearch, String adminTripsPassengerId, String adminTripsPassengerName, BlocStatus<DashboardTripDetailsEntity> tripDetailsState, BlocStatus<DashboardSystemConfigEntity> adminConfigState, BlocStatus<List<DashboardVehicleTypeEntity>> adminVehicleTypesState, BlocStatus<void> configActionState, BlocStatus<void> vehicleTypeActionState, String? selectedDriverId, String? selectedTripId
 });
 
 
@@ -1776,7 +1972,7 @@ class __$DashboardStateCopyWithImpl<$Res>
 
 /// Create a copy of DashboardState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? overviewState = null,Object? driverDocumentsState = null,Object? documentReviewState = null,Object? driverApprovalState = null,Object? tripAssignmentState = null,Object? driverLocationsState = null,Object? adminTripsState = null,Object? tripDetailsState = null,Object? adminConfigState = null,Object? adminVehicleTypesState = null,Object? configActionState = null,Object? vehicleTypeActionState = null,Object? selectedDriverId = freezed,Object? selectedTripId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? overviewState = null,Object? driverDocumentsState = null,Object? documentReviewState = null,Object? driverApprovalState = null,Object? tripAssignmentState = null,Object? driverLocationsState = null,Object? adminTripsState = null,Object? adminTripsPage = null,Object? adminTripsHasMore = null,Object? adminTripsLoadingMore = null,Object? adminTripsSearch = null,Object? adminTripsPassengerId = null,Object? adminTripsPassengerName = null,Object? tripDetailsState = null,Object? adminConfigState = null,Object? adminVehicleTypesState = null,Object? configActionState = null,Object? vehicleTypeActionState = null,Object? selectedDriverId = freezed,Object? selectedTripId = freezed,}) {
   return _then(_DashboardState(
 overviewState: null == overviewState ? _self.overviewState : overviewState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<DashboardEntity>,driverDocumentsState: null == driverDocumentsState ? _self.driverDocumentsState : driverDocumentsState // ignore: cast_nullable_to_non_nullable
@@ -1785,7 +1981,13 @@ as BlocStatus<void>,driverApprovalState: null == driverApprovalState ? _self.dri
 as BlocStatus<void>,tripAssignmentState: null == tripAssignmentState ? _self.tripAssignmentState : tripAssignmentState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<void>,driverLocationsState: null == driverLocationsState ? _self.driverLocationsState : driverLocationsState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<List<DashboardDriverLocationEntity>>,adminTripsState: null == adminTripsState ? _self.adminTripsState : adminTripsState // ignore: cast_nullable_to_non_nullable
-as BlocStatus<List<DashboardTripEntity>>,tripDetailsState: null == tripDetailsState ? _self.tripDetailsState : tripDetailsState // ignore: cast_nullable_to_non_nullable
+as BlocStatus<List<DashboardTripEntity>>,adminTripsPage: null == adminTripsPage ? _self.adminTripsPage : adminTripsPage // ignore: cast_nullable_to_non_nullable
+as int,adminTripsHasMore: null == adminTripsHasMore ? _self.adminTripsHasMore : adminTripsHasMore // ignore: cast_nullable_to_non_nullable
+as bool,adminTripsLoadingMore: null == adminTripsLoadingMore ? _self.adminTripsLoadingMore : adminTripsLoadingMore // ignore: cast_nullable_to_non_nullable
+as bool,adminTripsSearch: null == adminTripsSearch ? _self.adminTripsSearch : adminTripsSearch // ignore: cast_nullable_to_non_nullable
+as String,adminTripsPassengerId: null == adminTripsPassengerId ? _self.adminTripsPassengerId : adminTripsPassengerId // ignore: cast_nullable_to_non_nullable
+as String,adminTripsPassengerName: null == adminTripsPassengerName ? _self.adminTripsPassengerName : adminTripsPassengerName // ignore: cast_nullable_to_non_nullable
+as String,tripDetailsState: null == tripDetailsState ? _self.tripDetailsState : tripDetailsState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<DashboardTripDetailsEntity>,adminConfigState: null == adminConfigState ? _self.adminConfigState : adminConfigState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<DashboardSystemConfigEntity>,adminVehicleTypesState: null == adminVehicleTypesState ? _self.adminVehicleTypesState : adminVehicleTypesState // ignore: cast_nullable_to_non_nullable
 as BlocStatus<List<DashboardVehicleTypeEntity>>,configActionState: null == configActionState ? _self.configActionState : configActionState // ignore: cast_nullable_to_non_nullable

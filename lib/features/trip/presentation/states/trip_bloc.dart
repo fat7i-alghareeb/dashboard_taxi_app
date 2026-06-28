@@ -205,6 +205,8 @@ class TripBloc extends Bloc<TripEvent, TripState> {
       // Chat events are handled by ChatBloc, not the trip lifecycle bloc.
       case RealtimeTripMessageReceived():
       case RealtimeChatClosed():
+      // Incidents are an admin-only concern handled by the incidents feature.
+      case RealtimeCustomerIncidentRaised():
         break;
     }
   }

@@ -55,13 +55,14 @@ extension ChatEventPatterns on ChatEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Opened value)?  opened,TResult Function( _ViewOpened value)?  viewOpened,TResult Function( _ViewClosed value)?  viewClosed,TResult Function( _SendText value)?  sendText,TResult Function( _SendPhoto value)?  sendPhoto,TResult Function( _MessageReceived value)?  messageReceived,TResult Function( _ChatClosedReceived value)?  chatClosedReceived,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Opened value)?  opened,TResult Function( _ViewOpened value)?  viewOpened,TResult Function( _ViewClosed value)?  viewClosed,TResult Function( _SyncRequested value)?  syncRequested,TResult Function( _SendText value)?  sendText,TResult Function( _SendPhoto value)?  sendPhoto,TResult Function( _MessageReceived value)?  messageReceived,TResult Function( _ChatClosedReceived value)?  chatClosedReceived,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Opened() when opened != null:
 return opened(_that);case _ViewOpened() when viewOpened != null:
 return viewOpened(_that);case _ViewClosed() when viewClosed != null:
-return viewClosed(_that);case _SendText() when sendText != null:
+return viewClosed(_that);case _SyncRequested() when syncRequested != null:
+return syncRequested(_that);case _SendText() when sendText != null:
 return sendText(_that);case _SendPhoto() when sendPhoto != null:
 return sendPhoto(_that);case _MessageReceived() when messageReceived != null:
 return messageReceived(_that);case _ChatClosedReceived() when chatClosedReceived != null:
@@ -83,13 +84,14 @@ return chatClosedReceived(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Opened value)  opened,required TResult Function( _ViewOpened value)  viewOpened,required TResult Function( _ViewClosed value)  viewClosed,required TResult Function( _SendText value)  sendText,required TResult Function( _SendPhoto value)  sendPhoto,required TResult Function( _MessageReceived value)  messageReceived,required TResult Function( _ChatClosedReceived value)  chatClosedReceived,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Opened value)  opened,required TResult Function( _ViewOpened value)  viewOpened,required TResult Function( _ViewClosed value)  viewClosed,required TResult Function( _SyncRequested value)  syncRequested,required TResult Function( _SendText value)  sendText,required TResult Function( _SendPhoto value)  sendPhoto,required TResult Function( _MessageReceived value)  messageReceived,required TResult Function( _ChatClosedReceived value)  chatClosedReceived,}){
 final _that = this;
 switch (_that) {
 case _Opened():
 return opened(_that);case _ViewOpened():
 return viewOpened(_that);case _ViewClosed():
-return viewClosed(_that);case _SendText():
+return viewClosed(_that);case _SyncRequested():
+return syncRequested(_that);case _SendText():
 return sendText(_that);case _SendPhoto():
 return sendPhoto(_that);case _MessageReceived():
 return messageReceived(_that);case _ChatClosedReceived():
@@ -110,13 +112,14 @@ return chatClosedReceived(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Opened value)?  opened,TResult? Function( _ViewOpened value)?  viewOpened,TResult? Function( _ViewClosed value)?  viewClosed,TResult? Function( _SendText value)?  sendText,TResult? Function( _SendPhoto value)?  sendPhoto,TResult? Function( _MessageReceived value)?  messageReceived,TResult? Function( _ChatClosedReceived value)?  chatClosedReceived,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Opened value)?  opened,TResult? Function( _ViewOpened value)?  viewOpened,TResult? Function( _ViewClosed value)?  viewClosed,TResult? Function( _SyncRequested value)?  syncRequested,TResult? Function( _SendText value)?  sendText,TResult? Function( _SendPhoto value)?  sendPhoto,TResult? Function( _MessageReceived value)?  messageReceived,TResult? Function( _ChatClosedReceived value)?  chatClosedReceived,}){
 final _that = this;
 switch (_that) {
 case _Opened() when opened != null:
 return opened(_that);case _ViewOpened() when viewOpened != null:
 return viewOpened(_that);case _ViewClosed() when viewClosed != null:
-return viewClosed(_that);case _SendText() when sendText != null:
+return viewClosed(_that);case _SyncRequested() when syncRequested != null:
+return syncRequested(_that);case _SendText() when sendText != null:
 return sendText(_that);case _SendPhoto() when sendPhoto != null:
 return sendPhoto(_that);case _MessageReceived() when messageReceived != null:
 return messageReceived(_that);case _ChatClosedReceived() when chatClosedReceived != null:
@@ -137,12 +140,13 @@ return chatClosedReceived(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String tripId)?  opened,TResult Function()?  viewOpened,TResult Function()?  viewClosed,TResult Function( String text)?  sendText,TResult Function( String path)?  sendPhoto,TResult Function( ChatMessageEntity message)?  messageReceived,TResult Function()?  chatClosedReceived,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String tripId)?  opened,TResult Function()?  viewOpened,TResult Function()?  viewClosed,TResult Function()?  syncRequested,TResult Function( String text)?  sendText,TResult Function( String path)?  sendPhoto,TResult Function( ChatMessageEntity message)?  messageReceived,TResult Function()?  chatClosedReceived,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Opened() when opened != null:
 return opened(_that.tripId);case _ViewOpened() when viewOpened != null:
 return viewOpened();case _ViewClosed() when viewClosed != null:
-return viewClosed();case _SendText() when sendText != null:
+return viewClosed();case _SyncRequested() when syncRequested != null:
+return syncRequested();case _SendText() when sendText != null:
 return sendText(_that.text);case _SendPhoto() when sendPhoto != null:
 return sendPhoto(_that.path);case _MessageReceived() when messageReceived != null:
 return messageReceived(_that.message);case _ChatClosedReceived() when chatClosedReceived != null:
@@ -164,12 +168,13 @@ return chatClosedReceived();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String tripId)  opened,required TResult Function()  viewOpened,required TResult Function()  viewClosed,required TResult Function( String text)  sendText,required TResult Function( String path)  sendPhoto,required TResult Function( ChatMessageEntity message)  messageReceived,required TResult Function()  chatClosedReceived,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String tripId)  opened,required TResult Function()  viewOpened,required TResult Function()  viewClosed,required TResult Function()  syncRequested,required TResult Function( String text)  sendText,required TResult Function( String path)  sendPhoto,required TResult Function( ChatMessageEntity message)  messageReceived,required TResult Function()  chatClosedReceived,}) {final _that = this;
 switch (_that) {
 case _Opened():
 return opened(_that.tripId);case _ViewOpened():
 return viewOpened();case _ViewClosed():
-return viewClosed();case _SendText():
+return viewClosed();case _SyncRequested():
+return syncRequested();case _SendText():
 return sendText(_that.text);case _SendPhoto():
 return sendPhoto(_that.path);case _MessageReceived():
 return messageReceived(_that.message);case _ChatClosedReceived():
@@ -190,12 +195,13 @@ return chatClosedReceived();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String tripId)?  opened,TResult? Function()?  viewOpened,TResult? Function()?  viewClosed,TResult? Function( String text)?  sendText,TResult? Function( String path)?  sendPhoto,TResult? Function( ChatMessageEntity message)?  messageReceived,TResult? Function()?  chatClosedReceived,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String tripId)?  opened,TResult? Function()?  viewOpened,TResult? Function()?  viewClosed,TResult? Function()?  syncRequested,TResult? Function( String text)?  sendText,TResult? Function( String path)?  sendPhoto,TResult? Function( ChatMessageEntity message)?  messageReceived,TResult? Function()?  chatClosedReceived,}) {final _that = this;
 switch (_that) {
 case _Opened() when opened != null:
 return opened(_that.tripId);case _ViewOpened() when viewOpened != null:
 return viewOpened();case _ViewClosed() when viewClosed != null:
-return viewClosed();case _SendText() when sendText != null:
+return viewClosed();case _SyncRequested() when syncRequested != null:
+return syncRequested();case _SendText() when sendText != null:
 return sendText(_that.text);case _SendPhoto() when sendPhoto != null:
 return sendPhoto(_that.path);case _MessageReceived() when messageReceived != null:
 return messageReceived(_that.message);case _ChatClosedReceived() when chatClosedReceived != null:
@@ -329,6 +335,38 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'ChatEvent.viewClosed()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _SyncRequested implements ChatEvent {
+  const _SyncRequested();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SyncRequested);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ChatEvent.syncRequested()';
 }
 
 

@@ -195,6 +195,56 @@ class AppStrings {
   static String get currentPassword => 'currentPassword'.tr();
   /// Enter your current password - أدخل كلمة المرور ا لحالية - Voer uw huidige wachtwoord in - Geben Sie Ihr aktuelles Passwort ein - Wprowadź aktualne hasło - Введіть поточний пароль - Entrez votre mot de passe actuel - Introduzca su contraseña actual - Introduceți parola actuală
   static String get currentPasswordHint => 'currentPasswordHint'.tr();
+  /// Active - نشط - Actief - Aktiv - Aktywny - Активний - Actif - Activo - Activ
+  static String get customerActive => 'customerActive'.tr();
+  /// Email - البريد الإلكتروني - E-mail - E-Mail - E-mail - Email - E-mail - Correo - E-mail
+  static String get customerEmail => 'customerEmail'.tr();
+  /// Filter by customer - تصفية حسب العميل - Filteren op klant - Nach Kunde filtern - Filtruj wg klienta - Фільтр за клієнтом - Filtrer par client - Filtrar por cliente - Filtrează după client
+  static String get customerFilterByCustomer => 'customerFilterByCustomer'.tr();
+  /// Customer - العميل - Klant - Kunde - Klient - Клієнт - Client - Cliente - Client
+  static String get customerFilterLabel => 'customerFilterLabel'.tr();
+  /// Home address - عنوان المنزل - Thuisadres - Privatadresse - Adres domowy - Домашня адреса - Adresse du domicile - Dirección de casa - Adresă domiciliu
+  static String get customerHomeAddress => 'customerHomeAddress'.tr();
+  /// Customer Incidents - حوادث العملاء - Klantincidenten - Kundenvorfälle - Zgłoszenia klientów - Інциденти клієнтів - Incidents clients - Incidencias de clientes - Incidente clienți
+  static String get customerIncidents => 'customerIncidents'.tr();
+  /// Joined - تاريخ الانضمام - Lid sinds - Beigetreten - Dołączył - Приєднався - Inscrit le - Se unió - Înscris
+  static String get customerJoined => 'customerJoined'.tr();
+  /// Phone - الهاتف - Telefoon - Telefon - Telefon - Телефон - Téléphone - Teléfono - Telefon
+  static String get customerPhone => 'customerPhone'.tr();
+  /// Select customer - اختر عميلاً - Klant selecteren - Kunde auswählen - Wybierz klienta - Виберіть клієнта - Sélectionner un client - Seleccionar cliente - Selectează clientul
+  static String get customerPickerTitle => 'customerPickerTitle'.tr();
+  /// Customer profile - ملف العميل - Klantprofiel - Kundenprofil - Profil klienta - Профіль клієнта - Profil du client - Perfil del cliente - Profil client
+  static String get customerProfileTitle => 'customerProfileTitle'.tr();
+  /// Reactivate - إعادة تفعيل - Heractiveren - Reaktivieren - Przywróć - Відновити - Réactiver - Reactivar - Reactivează
+  static String get customerReactivate => 'customerReactivate'.tr();
+  /// Restore this customer's access? - استعادة وصول هذا العميل؟ - Toegang van deze klant herstellen? - Zugang dieses Kunden wiederherstellen? - Przywrócić dostęp tego klienta? - Відновити доступ цього клієнта? - Rétablir l'accès de ce client ? - ¿Restaurar el acceso de este cliente? - Restabiliți accesul acestui client?
+  static String get customerReactivateConfirm => 'customerReactivateConfirm'.tr();
+  /// Reactivate customer - إعادة تفعيل العميل - Klant heractiveren - Kunde reaktivieren - Przywróć klienta - Відновити клієнта - Réactiver le client - Reactivar cliente - Reactivează clientul
+  static String get customerReactivateTitle => 'customerReactivateTitle'.tr();
+  /// Customer reactivated - تمت إعادة تفعيل العميل - Klant geheractiveerd - Kunde reaktiviert - Klient przywrócony - Клієнта відновлено - Client réactivé - Cliente reactivado - Client reactivat
+  static String get customerReactivatedDone => 'customerReactivatedDone'.tr();
+  /// Search by name, phone or email - ابحث بالاسم أو الهاتف أو البريد - Zoek op naam, telefoon of e-mail - Suche nach Name, Telefon oder E-Mail - Szukaj po nazwisku, telefonie lub e-mailu - Пошук за імʼям, телефоном або email - Rechercher par nom, téléphone ou e-mail - Buscar por nombre, teléfono o correo - Caută după nume, telefon sau e-mail
+  static String get customerSearchHint => 'customerSearchHint'.tr();
+  /// Suspend - إيقاف - Schorsen - Sperren - Zawieś - Призупинити - Suspendre - Suspender - Suspendă
+  static String get customerSuspend => 'customerSuspend'.tr();
+  /// This customer will no longer be able to sign in. Continue? - لن يتمكن هذا العميل من تسجيل الدخول. هل تريد المتابعة؟ - Deze klant kan niet meer inloggen. Doorgaan? - Dieser Kunde kann sich nicht mehr anmelden. Fortfahren? - Ten klient nie będzie mógł się zalogować. Kontynuować? - Цей клієнт більше не зможе увійти. Продовжити? - Ce client ne pourra plus se connecter. Continuer ? - Este cliente ya no podrá iniciar sesión. ¿Continuar? - Acest client nu se va mai putea autentifica. Continuați?
+  static String get customerSuspendConfirm => 'customerSuspendConfirm'.tr();
+  /// Suspend customer - إيقاف العميل - Klant schorsen - Kunde sperren - Zawieś klienta - Призупинити клієнта - Suspendre le client - Suspender cliente - Suspendă clientul
+  static String get customerSuspendTitle => 'customerSuspendTitle'.tr();
+  /// Suspended - موقوف - Geschorst - Gesperrt - Zawieszony - Призупинено - Suspendu - Suspendido - Suspendat
+  static String get customerSuspended => 'customerSuspended'.tr();
+  /// Customer suspended - تم إيقاف العميل - Klant geschorst - Kunde gesperrt - Klient zawieszony - Клієнта призупинено - Client suspendu - Cliente suspendido - Client suspendat
+  static String get customerSuspendedDone => 'customerSuspendedDone'.tr();
+  /// View incidents - عرض الحوادث - Incidenten bekijken - Vorfälle ansehen - Zobacz zgłoszenia - Переглянути інциденти - Voir les incidents - Ver incidencias - Vezi incidentele
+  static String get customerViewIncidents => 'customerViewIncidents'.tr();
+  /// View recordings - عرض التسجيلات - Opnames bekijken - Aufnahmen ansehen - Zobacz nagrania - Переглянути записи - Voir les enregistrements - Ver grabaciones - Vezi înregistrările
+  static String get customerViewRecordings => 'customerViewRecordings'.tr();
+  /// View records - عرض الرحلات - Ritten bekijken - Fahrten ansehen - Zobacz przejazdy - Переглянути поїздки - Voir les trajets - Ver viajes - Vezi cursele
+  static String get customerViewRecords => 'customerViewRecords'.tr();
+  /// No customers - لا يوجد عملاء - Geen klanten - Keine Kunden - Brak klientów - Немає клієнтів - Aucun client - Sin clientes - Niciun client
+  static String get customersNone => 'customersNone'.tr();
+  /// Customers - العملاء - Klanten - Kunden - Klienci - Клієнти - Clients - Clientes - Clienți
+  static String get customersTitle => 'customersTitle'.tr();
   /// Dark - الداكن - Donker - Dunkel - Ciemny - Темна - Sombre - Oscuro - Întunecat
   static String get dark => 'dark'.tr();
   /// Dark mode - الوضع الليلي - Donkere modus - Dunkelmodus - Tryb ciemny - Темна тема - Mode sombre - Modo oscuro - Mod întunecat
@@ -453,6 +503,8 @@ class AppStrings {
   static String get dashboardTripDetailsEmpty => 'dashboardTripDetailsEmpty'.tr();
   /// Trip discount - خصم الرحلات - Trip discount - Trip discount - Trip discount - Trip discount - Trip discount - Trip discount - Trip discount
   static String get dashboardTripDiscount => 'dashboardTripDiscount'.tr();
+  /// Search by trip number - البحث برقم الرحلة - Zoeken op ritnummer - Nach Fahrtnummer suchen - Szukaj po numerze przejazdu - Пошук за номером поїздки - Rechercher par numéro de trajet - Buscar por número de viaje - Caută după numărul cursei
+  static String get dashboardTripSearchHint => 'dashboardTripSearchHint'.tr();
   /// Trip management - إدارة الرحلات - Trip management - Trip management - Trip management - Trip management - Trip management - Trip management - Trip management
   static String get dashboardTripsManagement => 'dashboardTripsManagement'.tr();
   /// Inspect all trips and their execution timeline. - متابعة كل الرحلات وخطها الزمني التنفيذي. - Inspect all trips and their execution timeline. - Inspect all trips and their execution timeline. - Inspect all trips and their execution timeline. - Inspect all trips and their execution timeline. - Inspect all trips and their execution timeline. - Inspect all trips and their execution timeline. - Inspect all trips and their execution timeline.
@@ -589,6 +641,88 @@ class AppStrings {
   static String get imageSourceGallery => 'imageSourceGallery'.tr();
   /// Choose source - اختر المصدر - Bron kiezen - Quelle wählen - Wybierz źródło - Виберіть джерело - Choisir la source - Elegir fuente - Alege sursa
   static String get imageSourceTitle => 'imageSourceTitle'.tr();
+  /// Dismiss - رفض - Afwijzen - Ablehnen - Odrzuć - Відхилити - Rejeter - Descartar - Respinge
+  static String get incidentActionDismiss => 'incidentActionDismiss'.tr();
+  /// Resolve - حل - Oplossen - Lösen - Rozwiąż - Вирішити - Résoudre - Resolver - Rezolvă
+  static String get incidentActionResolve => 'incidentActionResolve'.tr();
+  /// Chat - المحادثة - Chat - Chat - Czat - Чат - Discussion - Chat - Chat
+  static String get incidentChat => 'incidentChat'.tr();
+  /// Confirm - تأكيد - Bevestigen - Bestätigen - Potwierdź - Підтвердити - Confirmer - Confirmar - Confirmă
+  static String get incidentConfirm => 'incidentConfirm'.tr();
+  /// Contact customer - التواصل مع العميل - Klant contacteren - Kunde kontaktieren - Skontaktuj się z klientem - Звʼязатися з клієнтом - Contacter le client - Contactar al cliente - Contactează clientul
+  static String get incidentContactCustomer => 'incidentContactCustomer'.tr();
+  /// Customer - العميل - Klant - Kunde - Klient - Клієнт - Client - Cliente - Client
+  static String get incidentCustomer => 'incidentCustomer'.tr();
+  /// Incident details - تفاصيل الحادثة - Incidentdetails - Vorfalldetails - Szczegóły zgłoszenia - Деталі інциденту - Détails de l'incident - Detalles de la incidencia - Detalii incident
+  static String get incidentDetails => 'incidentDetails'.tr();
+  /// Dismiss incident - رفض الحادثة - Incident afwijzen - Vorfall ablehnen - Odrzuć zgłoszenie - Відхилити інцидент - Rejeter l'incident - Descartar incidencia - Respinge incidentul
+  static String get incidentDismissTitle => 'incidentDismissTitle'.tr();
+  /// All - الكل - Alle - Alle - Wszystkie - Усі - Tous - Todas - Toate
+  static String get incidentFilterAll => 'incidentFilterAll'.tr();
+  /// Internal notes - ملاحظات داخلية - Interne notities - Interne Notizen - Notatki wewnętrzne - Внутрішні нотатки - Notes internes - Notas internas - Note interne
+  static String get incidentInternalNotes => 'incidentInternalNotes'.tr();
+  /// Locations - المواقع - Locaties - Standorte - Lokalizacje - Локації - Emplacements - Ubicaciones - Locații
+  static String get incidentLocations => 'incidentLocations'.tr();
+  /// Message - الرسالة - Bericht - Nachricht - Wiadomość - Повідомлення - Message - Mensaje - Mesaj
+  static String get incidentMessageBodyHint => 'incidentMessageBodyHint'.tr();
+  /// Title - العنوان - Titel - Titel - Tytuł - Заголовок - Titre - Título - Titlu
+  static String get incidentMessageTitleHint => 'incidentMessageTitleHint'.tr();
+  /// No recordings - لا توجد تسجيلات - Geen opnames - Keine Aufnahmen - Brak nagrań - Немає записів - Aucun enregistrement - Sin grabaciones - Nicio înregistrare
+  static String get incidentNoRecordings => 'incidentNoRecordings'.tr();
+  /// Phone - الهاتف - Telefoon - Telefon - Telefon - Телефон - Téléphone - Teléfono - Telefon
+  static String get incidentPhone => 'incidentPhone'.tr();
+  /// Reactivate - إعادة تفعيل - Heractiveren - Reaktivieren - Przywróć - Відновити - Réactiver - Reactivar - Reactivează
+  static String get incidentReactivate => 'incidentReactivate'.tr();
+  /// Reason (optional) - السبب (اختياري) - Reden (optioneel) - Grund (optional) - Powód (opcjonalnie) - Причина (необовʼязково) - Motif (facultatif) - Motivo (opcional) - Motiv (opțional)
+  static String get incidentReasonOptionalHint => 'incidentReasonOptionalHint'.tr();
+  /// Recordings - التسجيلات - Opnames - Aufnahmen - Nagrania - Записи - Enregistrements - Grabaciones - Înregistrări
+  static String get incidentRecordings => 'incidentRecordings'.tr();
+  /// Refund - استرداد - Terugbetaling - Erstattung - Zwrot - Повернення - Remboursement - Reembolso - Rambursare
+  static String get incidentRefund => 'incidentRefund'.tr();
+  /// Amount (leave empty for full refund) - المبلغ (اتركه فارغًا للاسترداد الكامل) - Bedrag (leeg laten voor volledige terugbetaling) - Betrag (leer lassen für volle Erstattung) - Kwota (puste = pełny zwrot) - Сума (порожнє — повне повернення) - Montant (vide = remboursement total) - Importe (vacío = reembolso total) - Sumă (gol = rambursare totală)
+  static String get incidentRefundAmountHint => 'incidentRefundAmountHint'.tr();
+  /// Issue refund - إصدار استرداد - Terugbetaling uitgeven - Erstattung veranlassen - Wykonaj zwrot - Оформити повернення - Émettre un remboursement - Emitir reembolso - Emite rambursare
+  static String get incidentRefundTitle => 'incidentRefundTitle'.tr();
+  /// Resolution note (optional) - ملاحظة الحل (اختياري) - Oplossingsnotitie (optioneel) - Lösungsnotiz (optional) - Notatka rozwiązania (opcjonalnie) - Нотатка про вирішення (необовʼязково) - Note de résolution (facultatif) - Nota de resolución (opcional) - Notă de rezolvare (opțional)
+  static String get incidentResolutionNoteHint => 'incidentResolutionNoteHint'.tr();
+  /// Resolve incident - حل الحادثة - Incident oplossen - Vorfall lösen - Rozwiąż zgłoszenie - Вирішити інцидент - Résoudre l'incident - Resolver incidencia - Rezolvă incidentul
+  static String get incidentResolveTitle => 'incidentResolveTitle'.tr();
+  /// Send - إرسال - Verzenden - Senden - Wyślij - Надіслати - Envoyer - Enviar - Trimite
+  static String get incidentSend => 'incidentSend'.tr();
+  /// Dismissed - مرفوضة - Afgewezen - Abgelehnt - Odrzucone - Відхилено - Rejeté - Descartada - Respins
+  static String get incidentStatusDismissed => 'incidentStatusDismissed'.tr();
+  /// In review - قيد المراجعة - In behandeling - In Prüfung - W trakcie przeglądu - На розгляді - En cours d'examen - En revisión - În verificare
+  static String get incidentStatusInReview => 'incidentStatusInReview'.tr();
+  /// Open - مفتوحة - Open - Offen - Otwarte - Відкрито - Ouvert - Abierta - Deschis
+  static String get incidentStatusOpen => 'incidentStatusOpen'.tr();
+  /// Resolved - تم الحل - Opgelost - Gelöst - Rozwiązane - Вирішено - Résolu - Resuelta - Rezolvat
+  static String get incidentStatusResolved => 'incidentStatusResolved'.tr();
+  /// Suspend - إيقاف - Schorsen - Sperren - Zawieś - Призупинити - Suspendre - Suspender - Suspendă
+  static String get incidentSuspend => 'incidentSuspend'.tr();
+  /// Suspend customer - إيقاف العميل - Klant schorsen - Kunde sperren - Zawieś klienta - Призупинити клієнта - Suspendre le client - Suspender cliente - Suspendă clientul
+  static String get incidentSuspendTitle => 'incidentSuspendTitle'.tr();
+  /// Trip - الرحلة - Rit - Fahrt - Przejazd - Поїздка - Trajet - Viaje - Cursă
+  static String get incidentTrip => 'incidentTrip'.tr();
+  /// Trip status - حالة الرحلة - Ritstatus - Fahrtstatus - Status przejazdu - Статус поїздки - Statut du trajet - Estado del viaje - Stare cursă
+  static String get incidentTripStatus => 'incidentTripStatus'.tr();
+  /// Driver cancelled - ألغى السائق - Chauffeur geannuleerd - Fahrer storniert - Kierowca anulował - Водій скасував - Annulé par le chauffeur - Cancelado por el conductor - Anulat de șofer
+  static String get incidentTypeDriverCancelled => 'incidentTypeDriverCancelled'.tr();
+  /// Late-driver claim - مطالبة تأخر السائق - Claim chauffeur te laat - Reklamation: Fahrer zu spät - Roszczenie: kierowca spóźniony - Скарга: водій запізнився - Réclamation chauffeur en retard - Reclamación por conductor tardío - Reclamație șofer întârziat
+  static String get incidentTypeLateClaim => 'incidentTypeLateClaim'.tr();
+  /// Low rating - تقييم منخفض - Lage beoordeling - Schlechte Bewertung - Niska ocena - Низька оцінка - Mauvaise note - Calificación baja - Evaluare scăzută
+  static String get incidentTypeLowRating => 'incidentTypeLowRating'.tr();
+  /// Passenger cancelled - ألغى الراكب - Passagier geannuleerd - Fahrgast storniert - Pasażer anulował - Пасажир скасував - Annulé par le passager - Cancelado por el pasajero - Anulat de pasager
+  static String get incidentTypePassengerCancelled => 'incidentTypePassengerCancelled'.tr();
+  /// Payment failed - فشل الدفع - Betaling mislukt - Zahlung fehlgeschlagen - Płatność nieudana - Помилка оплати - Échec du paiement - Pago fallido - Plată eșuată
+  static String get incidentTypePaymentFailed => 'incidentTypePaymentFailed'.tr();
+  /// Refunded - تم الاسترداد - Terugbetaald - Erstattet - Zwrócono - Повернено - Remboursé - Reembolsado - Rambursat
+  static String get incidentTypeRefunded => 'incidentTypeRefunded'.tr();
+  /// View photo - عرض الصورة - Foto bekijken - Foto ansehen - Zobacz zdjęcie - Переглянути фото - Voir la photo - Ver foto - Vezi foto
+  static String get incidentViewPhoto => 'incidentViewPhoto'.tr();
+  /// Working... - جارٍ التنفيذ... - Bezig... - Wird ausgeführt... - Przetwarzanie... - Виконується... - En cours... - Procesando... - Se procesează...
+  static String get incidentWorking => 'incidentWorking'.tr();
+  /// No incidents - لا توجد حوادث - Geen incidenten - Keine Vorfälle - Brak zgłoszeń - Немає інцидентів - Aucun incident - Sin incidencias - Niciun incident
+  static String get incidentsNone => 'incidentsNone'.tr();
   /// Currency code must be 3 letters - يجب أن يتكون رمز العملة من 3 أحرف - Valutacode moet 3 letters bevatten - Währungscode muss 3 Buchstaben haben - Kod waluty musi mieć 3 litery - Код валюти має містити 3 літери - Le code de devise doit comporter 3 lettres - El código de moneda debe tener 3 letras - Codul valutei trebuie să aibă 3 litere
   static String get invalidCurrencyCode => 'invalidCurrencyCode'.tr();
   /// Please enter a valid discount percentage (0-100) - يرجى إدخال نسبة خصم صحيحة (0-100) - Voer een geldige kortingspercentage in (0-100) - Bitte geben Sie einen gültigen Rabattprozentsatz ein (0-100) - Wprowadź prawidłowy procent rabatu (0-100) - Будь ласка, введіть правильний відсоток знижки (0-100) - Veuillez saisir un pourcentage de remise valide (0-100) - Por favor ingrese un porcentaje de descuento válido (0-100) - Vă rugăm să introduceți un procent de reducere valid (0-100)
@@ -799,6 +933,12 @@ class AppStrings {
   static String get profileSetupTitle => 'profileSetupTitle'.tr();
   /// Recent locations - المواقع الأخيرة - Recente locaties - Letzte Standorte - Ostatnie lokalizacje - Останні адреси - Lieux récents - Ubicaciones recientes - Locații recente
   static String get recentLocations => 'recentLocations'.tr();
+  /// No recordings - لا توجد تسجيلات - Geen opnames - Keine Aufnahmen - Brak nagrań - Немає записів - Aucun enregistrement - Sin grabaciones - Nicio înregistrare
+  static String get recordingsNone => 'recordingsNone'.tr();
+  /// Search by trip reference - ابحث برمز الرحلة - Zoek op ritreferentie - Nach Fahrtreferenz suchen - Szukaj wg numeru przejazdu - Пошук за кодом поїздки - Rechercher par référence de trajet - Buscar por referencia del viaje - Caută după referința cursei
+  static String get recordingsSearchHint => 'recordingsSearchHint'.tr();
+  /// Recordings - التسجيلات - Opnames - Aufnahmen - Nagrania - Записи - Enregistrements - Grabaciones - Înregistrări
+  static String get recordingsTitle => 'recordingsTitle'.tr();
   /// Rejection Reason: {reason} - سبب الرفض: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason}
   static String get rejectionNotes => 'rejectionNotes'.tr();
   /// Request was cancelled. - تم إلغاء الطلب. - Aanvraag is geannuleerd. - Anfrage wurde abgebrochen. - Żądanie zostało anulowane. - Запит скасовано. - La demande a été annulée. - La solicitud fue cancelada. - Solicitarea a fost anulată.
@@ -1033,6 +1173,8 @@ class AppStrings {
   static String get tripReturnOnline => 'tripReturnOnline'.tr();
   /// Scheduled for {time} - مجدولة في {time} - Ingepland voor {time} - Geplant für {time} - Zaplanowano na {time} - Заплановано на {time} - Planifié pour {time} - Programado para {time} - Programată pentru {time}
   static String get tripScheduledFor => 'tripScheduledFor'.tr();
+  /// Trip starts in {time} - تبدأ الرحلة خلال {time} - Rit begint over {time} - Fahrt beginnt in {time} - Przejazd zacznie się za {time} - Поїздка почнеться через {time} - Le trajet commence dans {time} - El viaje comienza en {time} - Cursa începe în {time}
+  static String get tripScheduledStartsIn => 'tripScheduledStartsIn'.tr();
   /// Start En-Route Navigation - بدء التوجه إلى نقطة الانطلاق - Start En-Route Navigation - Start En-Route Navigation - Start En-Route Navigation - Start En-Route Navigation - Start En-Route Navigation - Start En-Route Navigation - Start En-Route Navigation
   static String get tripStartEnRouteNavigation => 'tripStartEnRouteNavigation'.tr();
   /// Start Trip - بدء الرحلة - Start Trip - Start Trip - Start Trip - Start Trip - Start Trip - Start Trip - Start Trip

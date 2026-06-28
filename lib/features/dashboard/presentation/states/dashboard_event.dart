@@ -28,6 +28,14 @@ class DashboardEvent with _$DashboardEvent {
   }) = _DriverLocationReceived;
   const factory DashboardEvent.adminTripsRequested({String? status}) =
       _AdminTripsRequested;
+  const factory DashboardEvent.adminTripsNextPageRequested() =
+      _AdminTripsNextPageRequested;
+  const factory DashboardEvent.adminTripsSearchChanged(String query) =
+      _AdminTripsSearchChanged;
+  const factory DashboardEvent.adminTripsCustomerChanged({
+    String? passengerId,
+    String? name,
+  }) = _AdminTripsCustomerChanged;
   const factory DashboardEvent.adminTripStatusPatched({
     required String tripId,
     required String newStatus,

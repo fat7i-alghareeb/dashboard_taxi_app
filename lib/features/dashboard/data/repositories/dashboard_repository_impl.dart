@@ -41,10 +41,25 @@ class DashboardRepositoryImpl implements DashboardRepository {
   }
 
   @override
-  Future<Result<List<DashboardTripEntity>>> getAdminTrips({String? status}) {
+  Future<Result<DashboardTripsPage>> getAdminTrips({
+    int page = 1,
+    int pageSize = 20,
+    String? status,
+    String? search,
+    String? passengerId,
+  }) {
     return runAsResult(() async {
-      final models = await _remote.getAdminTrips(status: status);
-      return models.map((e) => e.toEntity).toList();
+      final paged = await _remote.getAdminTrips(
+        page: page,
+        pageSize: pageSize,
+        status: status,
+        search: search,
+        passengerId: passengerId,
+      );
+      return DashboardTripsPage(
+        items: paged.items.map((e) => e.toEntity).toList(),
+        totalCount: paged.totalCount,
+      );
     });
   }
 

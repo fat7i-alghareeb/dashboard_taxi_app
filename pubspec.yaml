@@ -80,6 +80,9 @@ dependencies:
   signalr_netcore: ^1.4.4
   url_launcher: ^6.3.2
 
+  # Audio playback (admin plays in-trip safety recordings in-app)
+  audioplayers: ^6.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

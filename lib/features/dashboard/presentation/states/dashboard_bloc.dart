@@ -31,6 +31,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<_DriverLocationsRequested>(_onDriverLocationsRequested);
     on<_DriverLocationReceived>(_onDriverLocationReceived);
     on<_AdminTripsRequested>(_onAdminTripsRequested);
+    on<_AdminTripsNextPageRequested>(_onAdminTripsNextPageRequested);
+    on<_AdminTripsSearchChanged>(_onAdminTripsSearchChanged);
+    on<_AdminTripsCustomerChanged>(_onAdminTripsCustomerChanged);
     on<_AdminTripStatusPatched>(_onAdminTripStatusPatched);
     on<_TripDetailsRequested>(_onTripDetailsRequested);
     on<_AdminConfigRequested>(_onAdminConfigRequested);
@@ -101,6 +104,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         // Chat events are handled by ChatBloc, not the dashboard.
         case RealtimeTripMessageReceived():
         case RealtimeChatClosed():
+        // Incidents have their own screen/cubit that live-refreshes.
+        case RealtimeCustomerIncidentRaised():
           break;
       }
     });
@@ -170,7 +175,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   StreamSubscription<RealtimeConnectionState>? _connectionSub;
   Timer? _overviewRefreshTimer;
   Timer? _adminTripsRefreshTimer;
+  Timer? _adminSearchDebounce;
   final Set<String> _joinedTripGroups = <String>{};
+
+  static const int _adminTripsPageSize = 20;
 
   Future<void> _onStarted(_Started event, Emitter<DashboardState> emit) {
     return _onOverviewRequested(const _OverviewRequested(), emit);
@@ -382,20 +390,113 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     Emitter<DashboardState> emit,
   ) async {
     printM('[DashboardBloc] admin trips requested status=${event.status}');
-    emit(state.copyWith(adminTripsState: const BlocStatus.loading()));
+    emit(
+      state.copyWith(
+        adminTripsState: const BlocStatus.loading(),
+        adminTripsPage: 1,
+        adminTripsHasMore: true,
+        adminTripsLoadingMore: false,
+      ),
+    );
 
-    final result = await _facade.getAdminTrips(status: event.status);
+    final search = state.adminTripsSearch.trim();
+    final result = await _facade.getAdminTrips(
+      page: 1,
+      pageSize: _adminTripsPageSize,
+      status: event.status,
+      search: search.isEmpty ? null : search,
+      passengerId: state.adminTripsPassengerId.isEmpty
+          ? null
+          : state.adminTripsPassengerId,
+    );
     result.when(
-      success: (data) {
-        printG('[DashboardBloc] admin trips success count=${data.length}');
-        emit(state.copyWith(adminTripsState: BlocStatus.success(data)));
-        _syncTripGroupSubscriptions(data.map((t) => t.id).toSet());
+      success: (paged) {
+        printG(
+          '[DashboardBloc] admin trips success count=${paged.items.length} total=${paged.totalCount}',
+        );
+        emit(
+          state.copyWith(
+            adminTripsState: BlocStatus.success(paged.items),
+            adminTripsPage: 1,
+            adminTripsHasMore: paged.items.length < paged.totalCount,
+          ),
+        );
+        _syncTripGroupSubscriptions(paged.items.map((t) => t.id).toSet());
       },
       failure: (message) {
         printY('[DashboardBloc] admin trips failed: $message');
         emit(state.copyWith(adminTripsState: BlocStatus.failure(message)));
       },
     );
+  }
+
+  Future<void> _onAdminTripsNextPageRequested(
+    _AdminTripsNextPageRequested event,
+    Emitter<DashboardState> emit,
+  ) async {
+    if (!state.adminTripsHasMore || state.adminTripsLoadingMore) return;
+    final current = state.adminTripsState.maybeWhen(
+      success: (data) => data,
+      orElse: () => const <DashboardTripEntity>[],
+    );
+    final nextPage = state.adminTripsPage + 1;
+    printM('[DashboardBloc] admin trips next page requested page=$nextPage');
+    emit(state.copyWith(adminTripsLoadingMore: true));
+
+    final search = state.adminTripsSearch.trim();
+    final result = await _facade.getAdminTrips(
+      page: nextPage,
+      pageSize: _adminTripsPageSize,
+      search: search.isEmpty ? null : search,
+      passengerId: state.adminTripsPassengerId.isEmpty
+          ? null
+          : state.adminTripsPassengerId,
+    );
+    result.when(
+      success: (paged) {
+        final merged = <DashboardTripEntity>[...current, ...paged.items];
+        printG('[DashboardBloc] admin trips page loaded count=${merged.length}');
+        emit(
+          state.copyWith(
+            adminTripsState: BlocStatus.success(merged),
+            adminTripsPage: nextPage,
+            adminTripsHasMore: merged.length < paged.totalCount,
+            adminTripsLoadingMore: false,
+          ),
+        );
+        _syncTripGroupSubscriptions(merged.map((t) => t.id).toSet());
+      },
+      failure: (message) {
+        printY('[DashboardBloc] admin trips page failed: $message');
+        emit(state.copyWith(adminTripsLoadingMore: false));
+      },
+    );
+  }
+
+  void _onAdminTripsSearchChanged(
+    _AdminTripsSearchChanged event,
+    Emitter<DashboardState> emit,
+  ) {
+    // Store immediately so the debounced reload uses the latest term.
+    emit(state.copyWith(adminTripsSearch: event.query));
+    _adminSearchDebounce?.cancel();
+    _adminSearchDebounce = Timer(const Duration(milliseconds: 350), () {
+      if (isClosed) return;
+      add(const DashboardEvent.adminTripsRequested());
+    });
+  }
+
+  Future<void> _onAdminTripsCustomerChanged(
+    _AdminTripsCustomerChanged event,
+    Emitter<DashboardState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        adminTripsPassengerId: event.passengerId ?? '',
+        adminTripsPassengerName: event.name ?? '',
+      ),
+    );
+    return _onAdminTripsRequested(const _AdminTripsRequested(), emit);
   }
 
   void _syncTripGroupSubscriptions(Set<String> nextIds) {
@@ -629,6 +730,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _connectionSub?.cancel();
     _overviewRefreshTimer?.cancel();
     _adminTripsRefreshTimer?.cancel();
+    _adminSearchDebounce?.cancel();
     for (final id in _joinedTripGroups) {
       unawaited(_realtimeService.leaveTripGroup(id));
     }

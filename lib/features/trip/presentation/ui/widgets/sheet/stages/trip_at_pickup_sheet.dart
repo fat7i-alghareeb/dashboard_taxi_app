@@ -10,6 +10,12 @@ import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_status_
 
 const Duration _kResendArrivedCooldown = Duration(seconds: 30);
 
+/// Clock-skew tolerance for unlocking the scheduled-trip "Start"/"Notify"
+/// actions. They activate up to this long before the booked time so a small
+/// phone vs server clock difference doesn't reject the action right at the
+/// boundary (mirrors the server-side tolerance in Trip.Start).
+const Duration _kScheduledStartSkew = Duration(minutes: 1);
+
 /// Stage 3: driver has arrived at the pickup. Customer has been notified.
 /// Primary action puts the trip in progress. Secondary actions cover the
 /// resend-notification button and (after 10 minutes) no-show cancellation.
@@ -62,20 +68,17 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
         session?.graceMinutes ?? (widget.trip.isAirport ? 30 : 10);
     final ratePerMinute = session?.ratePerMinute ?? 0;
     final waitingStart = _effectiveWaitingStart(arrivedAt);
-    final elapsed = DateTime.now().difference(waitingStart);
-    final graceRemaining = Duration(minutes: graceMinutes) - elapsed;
+    final now = DateTime.now();
 
     final Widget content;
     final Color tint;
-    if (graceRemaining > Duration.zero) {
-      final mm = graceRemaining.inMinutes
-          .remainder(60)
-          .toString()
-          .padLeft(2, '0');
-      final ss = graceRemaining.inSeconds
-          .remainder(60)
-          .toString()
-          .padLeft(2, '0');
+    if (now.isBefore(waitingStart)) {
+      // The driver arrived before the scheduled pickup time. Count down to the
+      // trip time rather than showing the 10-minute boarding window — the free
+      // waiting window only begins at the scheduled time (waitingStart).
+      final untilStart = waitingStart.difference(now);
+      final mm = untilStart.inMinutes.remainder(60).toString().padLeft(2, '0');
+      final ss = untilStart.inSeconds.remainder(60).toString().padLeft(2, '0');
       tint = context.primary;
       content = Row(
         children: [
@@ -83,46 +86,72 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
           AppSpacing.sm.horizontalSpace,
           Expanded(
             child: Text(
-              AppStrings.tripArrivedBoardWithin.trParams({'time': '$mm:$ss'}),
+              AppStrings.tripScheduledStartsIn.trParams({'time': '$mm:$ss'}),
               style: AppTextStyles.s14w600.copyWith(color: context.onSurface),
             ),
           ),
         ],
       );
     } else {
-      final overdueSeconds = elapsed.inSeconds - graceMinutes * 60;
-      final billableMinutes = (overdueSeconds / 60).ceil();
-      final fee = billableMinutes * ratePerMinute;
-      final amount = '${fee.toStringAsFixed(2)} ${widget.trip.currencyCode}';
-      tint = AppColors.warning;
-      content = Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              FaIcon(
-                FontAwesomeIcons.triangleExclamation,
-                color: tint,
-                size: 16.r,
+      final elapsed = now.difference(waitingStart);
+      final graceRemaining = Duration(minutes: graceMinutes) - elapsed;
+      if (graceRemaining > Duration.zero) {
+        final mm = graceRemaining.inMinutes
+            .remainder(60)
+            .toString()
+            .padLeft(2, '0');
+        final ss = graceRemaining.inSeconds
+            .remainder(60)
+            .toString()
+            .padLeft(2, '0');
+        tint = context.primary;
+        content = Row(
+          children: [
+            FaIcon(FontAwesomeIcons.solidClock, color: tint, size: 16.r),
+            AppSpacing.sm.horizontalSpace,
+            Expanded(
+              child: Text(
+                AppStrings.tripArrivedBoardWithin.trParams({'time': '$mm:$ss'}),
+                style: AppTextStyles.s14w600.copyWith(color: context.onSurface),
               ),
-              AppSpacing.sm.horizontalSpace,
-              Expanded(
-                child: Text(
-                  AppStrings.tripWaitingGraceOver,
-                  style: AppTextStyles.s12w400.copyWith(
-                    color: context.onSurface,
+            ),
+          ],
+        );
+      } else {
+        final overdueSeconds = elapsed.inSeconds - graceMinutes * 60;
+        final billableMinutes = (overdueSeconds / 60).ceil();
+        final fee = billableMinutes * ratePerMinute;
+        final amount = '${fee.toStringAsFixed(2)} ${widget.trip.currencyCode}';
+        tint = AppColors.warning;
+        content = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.triangleExclamation,
+                  color: tint,
+                  size: 16.r,
+                ),
+                AppSpacing.sm.horizontalSpace,
+                Expanded(
+                  child: Text(
+                    AppStrings.tripWaitingGraceOver,
+                    style: AppTextStyles.s12w400.copyWith(
+                      color: context.onSurface,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          AppSpacing.xs.verticalSpace,
-          Text(
-            AppStrings.tripWaitingFeeAccruing.trParams({'amount': amount}),
-            style: AppTextStyles.s16w600.copyWith(color: tint),
-          ),
-        ],
-      );
+              ],
+            ),
+            AppSpacing.xs.verticalSpace,
+            Text(
+              AppStrings.tripWaitingFeeAccruing.trParams({'amount': amount}),
+              style: AppTextStyles.s16w600.copyWith(color: tint),
+            ),
+          ],
+        );
+      }
     }
 
     return Padding(
@@ -174,18 +203,25 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
         DateTime.now().difference(_effectiveWaitingStart(arrivedAt)) >=
             Duration(minutes: waitThresholdMinutes);
     final cooldownRemaining = _remainingCooldownSeconds();
+    final scheduledStartAtLocal = trip.scheduledAtUtc?.toLocal();
+    // Before the scheduled pickup time (minus a small skew tolerance) the trip
+    // cannot start and the customer should not be re-notified yet, so both the
+    // Start and Notify actions stay inactive until the trip time arrives.
+    final isScheduledStartNotReady =
+        scheduledStartAtLocal != null &&
+        scheduledStartAtLocal
+            .subtract(_kScheduledStartSkew)
+            .isAfter(DateTime.now());
+    final scheduledStartLabel = scheduledStartAtLocal?.toSmartDateTime() ?? '';
     final resendDisabled =
-        cooldownRemaining > 0 || state.resendArrivedNotificationState.isLoading;
+        isScheduledStartNotReady ||
+        cooldownRemaining > 0 ||
+        state.resendArrivedNotificationState.isLoading;
     final resendLabel = cooldownRemaining > 0
         ? AppStrings.notifyAgainCountdown.trParams({
             'seconds': cooldownRemaining,
           })
         : AppStrings.notifyCustomerAgain;
-    final scheduledStartAtLocal = trip.scheduledAtUtc?.toLocal();
-    final isScheduledStartNotReady =
-        scheduledStartAtLocal != null &&
-        scheduledStartAtLocal.isAfter(DateTime.now());
-    final scheduledStartLabel = scheduledStartAtLocal?.toSmartDateTime() ?? '';
 
     return MultiBlocListener(
       listeners: [

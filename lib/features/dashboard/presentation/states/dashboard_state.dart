@@ -14,6 +14,12 @@ abstract class DashboardState with _$DashboardState {
     BlocStatus<List<DashboardDriverLocationEntity>> driverLocationsState,
     @Default(BlocStatus<List<DashboardTripEntity>>.initial())
     BlocStatus<List<DashboardTripEntity>> adminTripsState,
+    @Default(1) int adminTripsPage,
+    @Default(true) bool adminTripsHasMore,
+    @Default(false) bool adminTripsLoadingMore,
+    @Default('') String adminTripsSearch,
+    @Default('') String adminTripsPassengerId,
+    @Default('') String adminTripsPassengerName,
     @Default(BlocStatus<DashboardTripDetailsEntity>.initial())
     BlocStatus<DashboardTripDetailsEntity> tripDetailsState,
 

@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../core/services/realtime/realtime_connection_state.dart';
 import '../../../../core/services/realtime/realtime_event.dart';
 import '../../../../core/services/realtime/realtime_service.dart';
 import '../../../../core/services/session/auth_manager.dart';
@@ -27,6 +28,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<_Opened>(_onOpened);
     on<_ViewOpened>(_onViewOpened);
     on<_ViewClosed>(_onViewClosed);
+    on<_SyncRequested>(_onSyncRequested);
     on<_SendText>(_onSendText);
     on<_SendPhoto>(_onSendPhoto);
     on<_MessageReceived>(_onMessageReceived);
@@ -38,6 +40,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final AuthManager _authManager;
 
   StreamSubscription<RealtimeEvent>? _realtimeSub;
+  StreamSubscription<RealtimeConnectionState>? _connSub;
+  RealtimeConnectionState? _lastConnState;
   String? _tripId;
 
   String? get _myUserId => _authManager.currentUser?.id;
@@ -51,15 +55,31 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         .where((e) => e.tripId == event.tripId)
         .listen(_onRealtimeEvent);
 
+    // Belt-and-suspenders: also subscribe to the per-trip server group. The
+    // server already pushes to our per-user group, but this hardens delivery.
+    // Queues internally until the socket is connected and re-joins on reconnect.
+    unawaited(_realtime.joinTripGroup(event.tripId));
+
+    // Recover messages that arrived while the socket was down: SignalR does not
+    // redeliver them, so re-fetch history whenever the connection (re)enters the
+    // connected state. Without this the only recovery is a full app restart.
+    _lastConnState = _realtime.currentConnectionState;
+    await _connSub?.cancel();
+    _connSub = _realtime.connectionState.listen((next) {
+      final wasConnected = _lastConnState == RealtimeConnectionState.connected;
+      _lastConnState = next;
+      if (next == RealtimeConnectionState.connected && !wasConnected) {
+        if (!isClosed) add(const ChatEvent.syncRequested());
+      }
+    });
+
     emit(state.copyWith(loadStatus: const BlocStatus.loading()));
     final result = await _repository.getMessages(event.tripId);
     result.when(
       success: (messages) {
-        final sorted = [...messages]
-          ..sort((a, b) => a.sentAtUtc.compareTo(b.sentAtUtc));
         emit(
           state.copyWith(
-            messages: sorted,
+            messages: _mergeMessages(state.messages, messages),
             loadStatus: const BlocStatus.success(null),
           ),
         );
@@ -68,6 +88,28 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         printY('[ChatBloc] load failed: $message');
         emit(state.copyWith(loadStatus: BlocStatus.failure(message)));
       },
+    );
+  }
+
+  /// Silent history re-sync — re-fetches and merges without flipping the
+  /// full-screen loader, so a (re)connect or sheet re-open recovers any pushes
+  /// missed while the socket was down. De-dup keeps already-shown messages.
+  Future<void> _onSyncRequested(
+    _SyncRequested event,
+    Emitter<ChatState> emit,
+  ) async {
+    final tripId = _tripId;
+    if (tripId == null) return;
+    printC('[ChatBloc] sync trip=$tripId');
+    final result = await _repository.getMessages(tripId);
+    result.when(
+      success: (messages) {
+        final merged = _mergeMessages(state.messages, messages);
+        if (merged.length != state.messages.length) {
+          emit(state.copyWith(messages: merged));
+        }
+      },
+      failure: (message) => printY('[ChatBloc] sync failed: $message'),
     );
   }
 
@@ -96,6 +138,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void _onViewOpened(_ViewOpened event, Emitter<ChatState> emit) {
     emit(state.copyWith(isViewing: true, unreadCount: 0));
+    // Re-open of the sheet reuses this bloc (no fresh _onOpened), so pull any
+    // messages that were missed while it was closed / the socket was down.
+    if (_tripId != null) add(const ChatEvent.syncRequested());
   }
 
   void _onViewClosed(_ViewClosed event, Emitter<ChatState> emit) {
@@ -174,9 +219,28 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     return next;
   }
 
+  /// Merges a batch (history re-fetch) into [current], keeping it ordered by
+  /// time and de-duplicated by id. Returns [current] unchanged when nothing new.
+  List<ChatMessageEntity> _mergeMessages(
+    List<ChatMessageEntity> current,
+    List<ChatMessageEntity> incoming,
+  ) {
+    final byId = {for (final m in current) m.id: m};
+    var added = false;
+    for (final m in incoming) {
+      if (byId.containsKey(m.id)) continue;
+      byId[m.id] = m;
+      added = true;
+    }
+    if (!added) return current;
+    return byId.values.toList()
+      ..sort((a, b) => a.sentAtUtc.compareTo(b.sentAtUtc));
+  }
+
   @override
   Future<void> close() async {
     await _realtimeSub?.cancel();
+    await _connSub?.cancel();
     return super.close();
   }
 }

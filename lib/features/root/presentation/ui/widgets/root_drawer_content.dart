@@ -10,7 +10,11 @@ import 'package:dashboardtaxi/features/admin_management/presentation/ui/screens/
 import 'package:dashboardtaxi/features/auth/presentation/ui/screens/change_password_screen.dart';
 import 'package:dashboardtaxi/features/company_contact/presentation/ui/screens/company_contact_screen.dart';
 import 'package:dashboardtaxi/features/compensation/presentation/ui/screens/compensation_claims_screen.dart';
+import 'package:dashboardtaxi/features/customer_incidents/presentation/ui/screens/incidents_list_screen.dart';
+import 'package:dashboardtaxi/features/customers/presentation/ui/screens/customers_list_screen.dart';
 import 'package:dashboardtaxi/features/control_center/presentation/ui/screens/control_center_screen.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
+import 'package:dashboardtaxi/features/recordings/presentation/ui/screens/recordings_list_screen.dart';
 import 'package:dashboardtaxi/features/support_contact/presentation/ui/screens/support_contact_screen.dart';
 import 'package:dashboardtaxi/features/notifications/presentation/ui/screens/send_notification_screen.dart';
 // import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
@@ -67,20 +71,36 @@ class RootDrawerContent extends StatelessWidget {
   List<Widget> _buildAdminSection(BuildContext context) {
     return [
       _buildSectionHeader(context, AppStrings.drawerSectionAdmin),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.route,
+        label: AppStrings.drawerAdminTrips,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(DashboardTripsScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.users,
+        label: AppStrings.customersTitle,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(CustomersListScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.microphoneLines,
+        label: AppStrings.recordingsTitle,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(RecordingsListScreen.pageName);
+        },
+      ),
       // DrawerMenuItem(
       //   icon: FontAwesomeIcons.gaugeHigh,
       //   label: AppStrings.drawerAdminDashboard,
       //   onTap: () {
       //     Navigator.maybePop(context);
       //     context.pushNamed(DashboardScreen.pageName);
-      //   },
-      // ),
-      // DrawerMenuItem(
-      //   icon: FontAwesomeIcons.route,
-      //   label: AppStrings.drawerAdminTrips,
-      //   onTap: () {
-      //     Navigator.maybePop(context);
-      //     context.pushNamed(DashboardTripsScreen.pageName);
       //   },
       // ),
       // DrawerMenuItem(
@@ -121,6 +141,14 @@ class RootDrawerContent extends StatelessWidget {
         onTap: () {
           Navigator.maybePop(context);
           context.pushNamed(CompensationClaimsScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.triangleExclamation,
+        label: AppStrings.customerIncidents,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(CustomerIncidentsScreen.pageName);
         },
       ),
       DrawerMenuItem(

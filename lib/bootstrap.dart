@@ -22,6 +22,7 @@ import 'package:dashboardtaxi/core/services/realtime/realtime_lifecycle_coordina
 import 'package:dashboardtaxi/core/utils/result.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/chat/presentation/ui/screens/trip_chat_screen.dart';
+import 'features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
 import 'features/root/presentation/ui/screens/root_screen.dart';
 import 'features/trip/presentation/states/trip_bloc.dart';
 import 'core/theme/theme_controller.dart';
@@ -154,23 +155,57 @@ Future<void> _handleNotificationTap(AppNotificationPayload payload) async {
     _routeTripPayloadToBloc(payload);
   }
 
+  final type = _typeFromPayload(payload);
   final explicitLocation = payload.toGoRouterLocation;
-  final location = (explicitLocation != null && explicitLocation.isNotEmpty)
-      ? explicitLocation
-      : (tripId != null ? RootScreen.pagePath : null);
+  final String? location;
+  if (explicitLocation != null && explicitLocation.isNotEmpty) {
+    // A server-provided route/deep-link always wins.
+    location = explicitLocation;
+  } else if (type == 'trip_awaiting_admin_acceptance' ||
+      type == 'scheduled_trip_admin_reminder') {
+    // Admin operational alerts → open the bookings/trips list for triage.
+    location = DashboardTripsScreen.pagePath;
+  } else if (tripId != null) {
+    // Trip-scoped alert with no explicit route → open the root (staged sheet).
+    location = RootScreen.pagePath;
+  } else {
+    location = null;
+  }
 
   if (location == null) {
     printC('[Notifications] Tap ignored (no route/deepLink/tripId)');
     return;
   }
 
-  try {
+  await _navigateWhenReady(location);
+}
+
+/// Navigates to [location] once the session and router are ready.
+///
+/// On a cold start (tap on a terminated app) the router is still on splash and
+/// the auth redirect can bounce an immediate `go`. Waiting for auth + a live
+/// navigator context ensures the deep-link actually lands on the target screen.
+/// When the app is already running this passes on the first attempt.
+Future<void> _navigateWhenReady(String location) async {
+  for (var attempt = 0; attempt < 30; attempt++) {
+    final authManager = getIt<AuthManager>();
     final router = getIt<AppRouterConfig>().router;
-    router.go(location);
-    printG('[Notifications] Navigated to $location');
-  } catch (e) {
-    printY('[Notifications] Navigation failed: $e (location=$location)');
+    if (authManager.isAuthenticated &&
+        router.routerDelegate.navigatorKey.currentContext != null) {
+      try {
+        router.go(location);
+        printG('[Notifications] Navigated to $location');
+      } catch (e) {
+        printY('[Notifications] Navigation failed: $e (location=$location)');
+      }
+      return;
+    }
+    await Future<void>.delayed(const Duration(milliseconds: 500));
   }
+  // Best-effort fallback if readiness was never confirmed within the window.
+  try {
+    getIt<AppRouterConfig>().router.go(location);
+  } catch (_) {}
 }
 
 Future<void> _navigateToChatWhenReady(String tripId) async {

@@ -1,5 +1,4 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
-import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_admin_cancel_button.dart';
@@ -18,11 +17,6 @@ class TripToPickupSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheduledAtLocal = trip.scheduledAtUtc?.toLocal();
-    final isArrivalNotReady =
-        scheduledAtLocal != null && scheduledAtLocal.isAfter(DateTime.now());
-    final scheduledLabel = scheduledAtLocal?.toSmartDateTime() ?? '';
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -55,16 +49,7 @@ class TripToPickupSheet extends StatelessWidget {
         AppSpacing.md.verticalSpace,
         AppButton.primary(
           isLoading: state.markArrivedState.isLoading,
-          isActive: !isArrivalNotReady,
           layout: const AppButtonLayout(height: 52),
-          onTapWhenInactive: !isArrivalNotReady
-              ? null
-              : () => showErrorOverlay(
-                  context,
-                  AppStrings.scheduledArrivalNotReadyWarning.trParams({
-                    'when': scheduledLabel,
-                  }),
-                ),
           onTap: () {
             context.read<TripBloc>().add(
               TripEvent.markArrivedRequested(trip.id),

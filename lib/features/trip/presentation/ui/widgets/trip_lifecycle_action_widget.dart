@@ -4,6 +4,12 @@ import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/dialogs/driver_trip_cancellation_dialog.dart';
 
+/// Clock-skew tolerance for unlocking the scheduled-trip "Start" action. The
+/// button activates up to this long before the booked time so a small phone vs
+/// server clock difference doesn't reject the start right at the boundary
+/// (mirrors the server-side tolerance in Trip.Start).
+const Duration kScheduledStartSkew = Duration(minutes: 1);
+
 class TripLifecycleActionWidget extends StatefulWidget {
   const TripLifecycleActionWidget({
     super.key,
@@ -64,7 +70,9 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
     final scheduledStartAtLocal = widget.trip.scheduledAtUtc?.toLocal();
     final isScheduledStartNotReady =
         scheduledStartAtLocal != null &&
-        scheduledStartAtLocal.isAfter(DateTime.now());
+        scheduledStartAtLocal
+            .subtract(kScheduledStartSkew)
+            .isAfter(DateTime.now());
     final scheduledStartLabel = scheduledStartAtLocal?.toSmartDateTime() ?? '';
 
     return Column(
@@ -140,12 +148,9 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
   }
 
   _LifecycleConfig get _config {
-    final now = DateTime.now();
     final scheduledAtLocal = widget.trip.scheduledAtUtc?.toLocal();
     final scheduledLabel = scheduledAtLocal?.toSmartDateTime() ?? '';
     final isEnRouteNotReady = !widget.trip.canMarkEnRoute;
-    final isArrivalNotReady =
-        scheduledAtLocal != null && scheduledAtLocal.isAfter(now);
 
     return switch (widget.trip.status) {
       TripStatus.accepted => _LifecycleConfig(
@@ -169,15 +174,6 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
         hint: AppStrings.tripEnRouteHint,
         icon: FontAwesomeIcons.locationDot,
         isLoading: widget.state.markArrivedState.isLoading,
-        isActive: !isArrivalNotReady,
-        onTapWhenInactive: !isArrivalNotReady
-            ? null
-            : () => showErrorOverlay(
-                context,
-                AppStrings.scheduledArrivalNotReadyWarning.trParams({
-                  'when': scheduledLabel,
-                }),
-              ),
         event: TripEvent.markArrivedRequested(widget.trip.id),
       ),
       TripStatus.inProgress => _LifecycleConfig(

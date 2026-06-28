@@ -124,6 +124,14 @@ class DashboardAdminProfileEntity {
   final bool isActive;
 }
 
+/// A page of admin trips plus the total count, for infinite-scroll paging.
+class DashboardTripsPage {
+  const DashboardTripsPage({required this.items, required this.totalCount});
+
+  final List<DashboardTripEntity> items;
+  final int totalCount;
+}
+
 class DashboardTripEntity {
   const DashboardTripEntity({
     required this.id,
@@ -151,6 +159,7 @@ class DashboardTripEntity {
     this.dispatchWindowOpensAt,
     this.canMarkEnRoute = false,
     this.attentionState = 'Normal',
+    this.recordingCount = 0,
   });
 
   final String id;
@@ -158,6 +167,7 @@ class DashboardTripEntity {
   final String status;
   final String vehicleTypeId;
   final String fareLabel;
+  final int recordingCount;
   final DateTime? createdAt;
   final double? pickupLatitude;
   final double? pickupLongitude;
@@ -214,6 +224,7 @@ class DashboardTripEntity {
       dispatchWindowOpensAt: dispatchWindowOpensAt,
       canMarkEnRoute: canMarkEnRoute,
       attentionState: attentionState,
+      recordingCount: recordingCount,
     );
   }
 }

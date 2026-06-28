@@ -73,6 +73,7 @@ class DashboardTripModel {
     this.dispatchWindowOpensAt,
     this.canMarkEnRoute = false,
     this.attentionState = 'Normal',
+    this.recordingCount = 0,
   });
 
   final String id;
@@ -80,6 +81,7 @@ class DashboardTripModel {
   final String status;
   final String vehicleTypeId;
   final num quotedFare;
+  final int recordingCount;
   final String currencyCode;
   final DateTime? createdAt;
   final List<DashboardTripStopModel> stops;
@@ -106,6 +108,9 @@ class DashboardTripModel {
       status: _readString(json, 'status'),
       vehicleTypeId: _readString(json, 'vehicleTypeId'),
       quotedFare: json['quotedFare'] as num? ?? json['QuotedFare'] as num? ?? 0,
+      recordingCount:
+          ((json['recordingCount'] ?? json['RecordingCount']) as num?)?.toInt() ??
+          0,
       currencyCode: _readString(json, 'currencyCode', fallback: 'EUR'),
       createdAt: DateTime.tryParse(_readString(json, 'createdAtUtc')),
       stops: _readList(

@@ -139,8 +139,10 @@ class AuthRepositoryImpl implements AuthRepository {
         'requiresPasswordReset=${_authManager.currentUser?.requiresPasswordReset}',
       );
 
-      // Note: Admins reside in the AdminProfiles table and do not support FCM tokens or preferred language synchronization.
-      // So we skip FCM token syncing here.
+      // FCM token + preferred language are registered centrally in
+      // AuthManager.login() (called above) for all roles. The backend routes
+      // both to the AdminProfiles record based on the authenticated identity,
+      // so admin push is delivered per-device and localized per admin.
 
       return _authManager.currentUser ?? user;
     });
