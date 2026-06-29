@@ -279,12 +279,34 @@ class _TripAtPickupSheetState extends State<TripAtPickupSheet> {
             layout: const AppButtonLayout(height: 52),
             onTapWhenInactive: !isScheduledStartNotReady
                 ? null
-                : () => showErrorOverlay(
-                    context,
-                    AppStrings.scheduledStartNotReadyWarning.trParams({
-                      'when': scheduledStartLabel,
-                    }),
-                  ),
+                : () async {
+                    final nav = Navigator.of(context);
+                    final bloc = context.read<TripBloc>();
+                    final confirmed = await AppDialog.show<bool>(
+                      context,
+                      dialog: AppDialog.basic(
+                        title: AppStrings.scheduledStartAdminOverrideTitle,
+                        message: AppStrings.scheduledStartAdminOverrideMessage
+                            .trParams({'when': scheduledStartLabel}),
+                        primaryAction: AppDialogAction.danger(
+                          label: AppStrings.adminOverrideProceed,
+                          onPressed: () => nav.pop(true),
+                        ),
+                        secondaryAction: AppDialogAction.secondary(
+                          label: AppStrings.cancel,
+                          onPressed: () => nav.pop(false),
+                        ),
+                      ),
+                    );
+                    if (confirmed == true) {
+                      bloc.add(
+                        TripEvent.startTripRequested(
+                          trip.id,
+                          forceOverride: true,
+                        ),
+                      );
+                    }
+                  },
             onTap: () => context.read<TripBloc>().add(
               TripEvent.startTripRequested(trip.id),
             ),

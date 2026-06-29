@@ -1,5 +1,4 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
-import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/dialogs/driver_trip_cancellation_dialog.dart';
@@ -91,12 +90,34 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
           layout: const AppButtonLayout(height: 52),
           onTapWhenInactive: !isScheduledStartNotReady
               ? null
-              : () => showErrorOverlay(
-                  context,
-                  AppStrings.scheduledStartNotReadyWarning.trParams({
-                    'when': scheduledStartLabel,
-                  }),
-                ),
+              : () async {
+                  final nav = Navigator.of(context);
+                  final bloc = context.read<TripBloc>();
+                  final confirmed = await AppDialog.show<bool>(
+                    context,
+                    dialog: AppDialog.basic(
+                      title: AppStrings.scheduledStartAdminOverrideTitle,
+                      message: AppStrings.scheduledStartAdminOverrideMessage
+                          .trParams({'when': scheduledStartLabel}),
+                      primaryAction: AppDialogAction.danger(
+                        label: AppStrings.adminOverrideProceed,
+                        onPressed: () => nav.pop(true),
+                      ),
+                      secondaryAction: AppDialogAction.secondary(
+                        label: AppStrings.cancel,
+                        onPressed: () => nav.pop(false),
+                      ),
+                    ),
+                  );
+                  if (confirmed == true && mounted) {
+                    bloc.add(
+                      TripEvent.startTripRequested(
+                        widget.trip.id,
+                        forceOverride: true,
+                      ),
+                    );
+                  }
+                },
           onTap: () => context.read<TripBloc>().add(
             TripEvent.startTripRequested(widget.trip.id),
           ),
@@ -161,12 +182,34 @@ class _TripLifecycleActionWidgetState extends State<TripLifecycleActionWidget> {
         isActive: !isEnRouteNotReady,
         onTapWhenInactive: !isEnRouteNotReady
             ? null
-            : () => showErrorOverlay(
-                context,
-                AppStrings.scheduledEnRouteNotReadyWarning.trParams({
-                  'when': scheduledLabel,
-                }),
-              ),
+            : () async {
+                final nav = Navigator.of(context);
+                final bloc = context.read<TripBloc>();
+                final confirmed = await AppDialog.show<bool>(
+                  context,
+                  dialog: AppDialog.basic(
+                    title: AppStrings.scheduledEnRouteAdminOverrideTitle,
+                    message: AppStrings.scheduledEnRouteAdminOverrideMessage
+                        .trParams({'when': scheduledLabel}),
+                    primaryAction: AppDialogAction.danger(
+                      label: AppStrings.adminOverrideProceed,
+                      onPressed: () => nav.pop(true),
+                    ),
+                    secondaryAction: AppDialogAction.secondary(
+                      label: AppStrings.cancel,
+                      onPressed: () => nav.pop(false),
+                    ),
+                  ),
+                );
+                if (confirmed == true && mounted) {
+                  bloc.add(
+                    TripEvent.markEnRouteRequested(
+                      widget.trip.id,
+                      forceOverride: true,
+                    ),
+                  );
+                }
+              },
         event: TripEvent.markEnRouteRequested(widget.trip.id),
       ),
       TripStatus.enRoute => _LifecycleConfig(

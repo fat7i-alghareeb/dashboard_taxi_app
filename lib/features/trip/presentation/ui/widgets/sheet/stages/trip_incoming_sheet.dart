@@ -1,5 +1,4 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
-import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/features/trip/domain/entities/trip_entity.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 import 'package:dashboardtaxi/features/trip/presentation/ui/widgets/trip_admin_cancel_button.dart';
@@ -76,12 +75,34 @@ class TripIncomingSheet extends StatelessWidget {
           layout: const AppButtonLayout(height: 52),
           onTapWhenInactive: !isEnRouteNotReady
               ? null
-              : () => showErrorOverlay(
-                  context,
-                  AppStrings.scheduledEnRouteNotReadyWarning.trParams({
-                    'when': scheduledLabel,
-                  }),
-                ),
+              : () async {
+                  final nav = Navigator.of(context);
+                  final bloc = context.read<TripBloc>();
+                  final confirmed = await AppDialog.show<bool>(
+                    context,
+                    dialog: AppDialog.basic(
+                      title: AppStrings.scheduledEnRouteAdminOverrideTitle,
+                      message: AppStrings.scheduledEnRouteAdminOverrideMessage
+                          .trParams({'when': scheduledLabel}),
+                      primaryAction: AppDialogAction.danger(
+                        label: AppStrings.adminOverrideProceed,
+                        onPressed: () => nav.pop(true),
+                      ),
+                      secondaryAction: AppDialogAction.secondary(
+                        label: AppStrings.cancel,
+                        onPressed: () => nav.pop(false),
+                      ),
+                    ),
+                  );
+                  if (confirmed == true) {
+                    bloc.add(
+                      TripEvent.markEnRouteRequested(
+                        trip.id,
+                        forceOverride: true,
+                      ),
+                    );
+                  }
+                },
           onTap: () {
             context.read<TripBloc>().add(
               TripEvent.markEnRouteRequested(trip.id),

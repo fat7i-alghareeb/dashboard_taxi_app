@@ -343,7 +343,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
   ) async {
     printM('[TripBloc] mark en-route requested trip=${event.tripId}');
     emit(state.copyWith(markEnRouteState: const BlocStatus.loading()));
-    final result = await _facade.markEnRoute(event.tripId);
+    final result = await _facade.markEnRoute(event.tripId, forceOverride: event.forceOverride);
     await result.when(
       success: (_) async {
         printG('[TripBloc] mark en-route success trip=${event.tripId}');
@@ -441,7 +441,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
   ) async {
     printM('[TripBloc] start trip requested trip=${event.tripId}');
     emit(state.copyWith(startTripState: const BlocStatus.loading()));
-    final result = await _facade.startTrip(event.tripId);
+    final result = await _facade.startTrip(event.tripId, forceOverride: event.forceOverride);
     await result.when(
       success: (_) async {
         printG('[TripBloc] start trip success trip=${event.tripId}');

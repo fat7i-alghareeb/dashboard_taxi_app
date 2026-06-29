@@ -12,14 +12,18 @@ class TripEvent with _$TripEvent {
       _ActiveTripResolveRequested;
   const factory TripEvent.tripSelected(String tripId) = _TripSelected;
   const factory TripEvent.selectionCleared() = _SelectionCleared;
-  const factory TripEvent.markEnRouteRequested(String tripId) =
-      _MarkEnRouteRequested;
+  const factory TripEvent.markEnRouteRequested(
+    String tripId, {
+    @Default(false) bool forceOverride,
+  }) = _MarkEnRouteRequested;
   const factory TripEvent.markArrivedRequested(String tripId) =
       _MarkArrivedRequested;
   const factory TripEvent.resendArrivedNotificationRequested(String tripId) =
       _ResendArrivedNotificationRequested;
-  const factory TripEvent.startTripRequested(String tripId) =
-      _StartTripRequested;
+  const factory TripEvent.startTripRequested(
+    String tripId, {
+    @Default(false) bool forceOverride,
+  }) = _StartTripRequested;
   const factory TripEvent.completeTripRequested(String tripId) =
       _CompleteTripRequested;
   const factory TripEvent.clearCompletedSummaryRequested() =

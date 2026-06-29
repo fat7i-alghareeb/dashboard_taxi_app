@@ -5,10 +5,10 @@ abstract class TripRepository {
   Future<Result<List<TripEntity>>> getAllTrips();
   Future<Result<TripEntity>> getTripById(String tripId);
   Future<Result<TripEntity?>> getActiveTrip();
-  Future<Result<void>> markEnRoute(String tripId);
+  Future<Result<void>> markEnRoute(String tripId, {bool forceOverride = false});
   Future<Result<void>> markArrived(String tripId);
   Future<Result<void>> resendArrived(String tripId);
-  Future<Result<void>> startTrip(String tripId);
+  Future<Result<void>> startTrip(String tripId, {bool forceOverride = false});
   Future<Result<void>> completeTrip(String tripId);
   Future<Result<void>> completeStop(String tripId, int sequence);
   Future<Result<void>> assignToDriver(String tripId, String driverId);

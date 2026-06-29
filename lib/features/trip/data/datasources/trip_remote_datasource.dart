@@ -47,8 +47,14 @@ class TripRemoteDataSource {
     });
   }
 
-  Future<void> markEnRoute(String tripId) {
-    return _postAction(tripId, 'en-route');
+  Future<void> markEnRoute(String tripId, {bool forceOverride = false}) {
+    return rethrowAsAppException(() async {
+      printY('[TripRemoteDataSource] markEnRoute trip=$tripId forceOverride=$forceOverride');
+      await _dio.post<dynamic>(
+        '${ApiEndpoints.trips}/$tripId/en-route',
+        queryParameters: forceOverride ? {'forceScheduledOverride': 'true'} : null,
+      );
+    });
   }
 
   Future<void> markArrived(String tripId) {
@@ -62,8 +68,14 @@ class TripRemoteDataSource {
     });
   }
 
-  Future<void> startTrip(String tripId) {
-    return _postAction(tripId, 'start');
+  Future<void> startTrip(String tripId, {bool forceOverride = false}) {
+    return rethrowAsAppException(() async {
+      printY('[TripRemoteDataSource] startTrip trip=$tripId forceOverride=$forceOverride');
+      await _dio.post<dynamic>(
+        '${ApiEndpoints.trips}/$tripId/start',
+        queryParameters: forceOverride ? {'forceScheduledOverride': 'true'} : null,
+      );
+    });
   }
 
   Future<void> completeTrip(String tripId) {

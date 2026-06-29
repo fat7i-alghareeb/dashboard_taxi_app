@@ -170,7 +170,7 @@ return dismissPendingTripRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  getAllRequested,TResult Function( RealtimeEvent event)?  realtimeEventReceived,TResult Function( String tripId)?  fetchActiveRequested,TResult Function()?  activeTripResolveRequested,TResult Function( String tripId)?  tripSelected,TResult Function()?  selectionCleared,TResult Function( String tripId)?  markEnRouteRequested,TResult Function( String tripId)?  markArrivedRequested,TResult Function( String tripId)?  resendArrivedNotificationRequested,TResult Function( String tripId)?  startTripRequested,TResult Function( String tripId)?  completeTripRequested,TResult Function()?  clearCompletedSummaryRequested,TResult Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult Function( String tripId,  int sequence)?  completeStopRequested,TResult Function( String tripId)?  adminSelfAssignRequested,TResult Function( String tripId)?  adminCancelRequested,TResult Function( String tripId)?  dismissPendingTripRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  getAllRequested,TResult Function( RealtimeEvent event)?  realtimeEventReceived,TResult Function( String tripId)?  fetchActiveRequested,TResult Function()?  activeTripResolveRequested,TResult Function( String tripId)?  tripSelected,TResult Function()?  selectionCleared,TResult Function( String tripId,  bool forceOverride)?  markEnRouteRequested,TResult Function( String tripId)?  markArrivedRequested,TResult Function( String tripId)?  resendArrivedNotificationRequested,TResult Function( String tripId,  bool forceOverride)?  startTripRequested,TResult Function( String tripId)?  completeTripRequested,TResult Function()?  clearCompletedSummaryRequested,TResult Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult Function( String tripId,  int sequence)?  completeStopRequested,TResult Function( String tripId)?  adminSelfAssignRequested,TResult Function( String tripId)?  adminCancelRequested,TResult Function( String tripId)?  dismissPendingTripRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _GetAllRequested() when getAllRequested != null:
@@ -180,10 +180,10 @@ return fetchActiveRequested(_that.tripId);case _ActiveTripResolveRequested() whe
 return activeTripResolveRequested();case _TripSelected() when tripSelected != null:
 return tripSelected(_that.tripId);case _SelectionCleared() when selectionCleared != null:
 return selectionCleared();case _MarkEnRouteRequested() when markEnRouteRequested != null:
-return markEnRouteRequested(_that.tripId);case _MarkArrivedRequested() when markArrivedRequested != null:
+return markEnRouteRequested(_that.tripId,_that.forceOverride);case _MarkArrivedRequested() when markArrivedRequested != null:
 return markArrivedRequested(_that.tripId);case _ResendArrivedNotificationRequested() when resendArrivedNotificationRequested != null:
 return resendArrivedNotificationRequested(_that.tripId);case _StartTripRequested() when startTripRequested != null:
-return startTripRequested(_that.tripId);case _CompleteTripRequested() when completeTripRequested != null:
+return startTripRequested(_that.tripId,_that.forceOverride);case _CompleteTripRequested() when completeTripRequested != null:
 return completeTripRequested(_that.tripId);case _ClearCompletedSummaryRequested() when clearCompletedSummaryRequested != null:
 return clearCompletedSummaryRequested();case _DriverCancelRequested() when driverCancelRequested != null:
 return driverCancelRequested(_that.tripId,_that.reason,_that.note);case _CompleteStopRequested() when completeStopRequested != null:
@@ -208,7 +208,7 @@ return dismissPendingTripRequested(_that.tripId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  getAllRequested,required TResult Function( RealtimeEvent event)  realtimeEventReceived,required TResult Function( String tripId)  fetchActiveRequested,required TResult Function()  activeTripResolveRequested,required TResult Function( String tripId)  tripSelected,required TResult Function()  selectionCleared,required TResult Function( String tripId)  markEnRouteRequested,required TResult Function( String tripId)  markArrivedRequested,required TResult Function( String tripId)  resendArrivedNotificationRequested,required TResult Function( String tripId)  startTripRequested,required TResult Function( String tripId)  completeTripRequested,required TResult Function()  clearCompletedSummaryRequested,required TResult Function( String tripId,  String reason,  String? note)  driverCancelRequested,required TResult Function( String tripId,  int sequence)  completeStopRequested,required TResult Function( String tripId)  adminSelfAssignRequested,required TResult Function( String tripId)  adminCancelRequested,required TResult Function( String tripId)  dismissPendingTripRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  getAllRequested,required TResult Function( RealtimeEvent event)  realtimeEventReceived,required TResult Function( String tripId)  fetchActiveRequested,required TResult Function()  activeTripResolveRequested,required TResult Function( String tripId)  tripSelected,required TResult Function()  selectionCleared,required TResult Function( String tripId,  bool forceOverride)  markEnRouteRequested,required TResult Function( String tripId)  markArrivedRequested,required TResult Function( String tripId)  resendArrivedNotificationRequested,required TResult Function( String tripId,  bool forceOverride)  startTripRequested,required TResult Function( String tripId)  completeTripRequested,required TResult Function()  clearCompletedSummaryRequested,required TResult Function( String tripId,  String reason,  String? note)  driverCancelRequested,required TResult Function( String tripId,  int sequence)  completeStopRequested,required TResult Function( String tripId)  adminSelfAssignRequested,required TResult Function( String tripId)  adminCancelRequested,required TResult Function( String tripId)  dismissPendingTripRequested,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case _GetAllRequested():
@@ -218,10 +218,10 @@ return fetchActiveRequested(_that.tripId);case _ActiveTripResolveRequested():
 return activeTripResolveRequested();case _TripSelected():
 return tripSelected(_that.tripId);case _SelectionCleared():
 return selectionCleared();case _MarkEnRouteRequested():
-return markEnRouteRequested(_that.tripId);case _MarkArrivedRequested():
+return markEnRouteRequested(_that.tripId,_that.forceOverride);case _MarkArrivedRequested():
 return markArrivedRequested(_that.tripId);case _ResendArrivedNotificationRequested():
 return resendArrivedNotificationRequested(_that.tripId);case _StartTripRequested():
-return startTripRequested(_that.tripId);case _CompleteTripRequested():
+return startTripRequested(_that.tripId,_that.forceOverride);case _CompleteTripRequested():
 return completeTripRequested(_that.tripId);case _ClearCompletedSummaryRequested():
 return clearCompletedSummaryRequested();case _DriverCancelRequested():
 return driverCancelRequested(_that.tripId,_that.reason,_that.note);case _CompleteStopRequested():
@@ -245,7 +245,7 @@ return dismissPendingTripRequested(_that.tripId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  getAllRequested,TResult? Function( RealtimeEvent event)?  realtimeEventReceived,TResult? Function( String tripId)?  fetchActiveRequested,TResult? Function()?  activeTripResolveRequested,TResult? Function( String tripId)?  tripSelected,TResult? Function()?  selectionCleared,TResult? Function( String tripId)?  markEnRouteRequested,TResult? Function( String tripId)?  markArrivedRequested,TResult? Function( String tripId)?  resendArrivedNotificationRequested,TResult? Function( String tripId)?  startTripRequested,TResult? Function( String tripId)?  completeTripRequested,TResult? Function()?  clearCompletedSummaryRequested,TResult? Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult? Function( String tripId,  int sequence)?  completeStopRequested,TResult? Function( String tripId)?  adminSelfAssignRequested,TResult? Function( String tripId)?  adminCancelRequested,TResult? Function( String tripId)?  dismissPendingTripRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  getAllRequested,TResult? Function( RealtimeEvent event)?  realtimeEventReceived,TResult? Function( String tripId)?  fetchActiveRequested,TResult? Function()?  activeTripResolveRequested,TResult? Function( String tripId)?  tripSelected,TResult? Function()?  selectionCleared,TResult? Function( String tripId,  bool forceOverride)?  markEnRouteRequested,TResult? Function( String tripId)?  markArrivedRequested,TResult? Function( String tripId)?  resendArrivedNotificationRequested,TResult? Function( String tripId,  bool forceOverride)?  startTripRequested,TResult? Function( String tripId)?  completeTripRequested,TResult? Function()?  clearCompletedSummaryRequested,TResult? Function( String tripId,  String reason,  String? note)?  driverCancelRequested,TResult? Function( String tripId,  int sequence)?  completeStopRequested,TResult? Function( String tripId)?  adminSelfAssignRequested,TResult? Function( String tripId)?  adminCancelRequested,TResult? Function( String tripId)?  dismissPendingTripRequested,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _GetAllRequested() when getAllRequested != null:
@@ -255,10 +255,10 @@ return fetchActiveRequested(_that.tripId);case _ActiveTripResolveRequested() whe
 return activeTripResolveRequested();case _TripSelected() when tripSelected != null:
 return tripSelected(_that.tripId);case _SelectionCleared() when selectionCleared != null:
 return selectionCleared();case _MarkEnRouteRequested() when markEnRouteRequested != null:
-return markEnRouteRequested(_that.tripId);case _MarkArrivedRequested() when markArrivedRequested != null:
+return markEnRouteRequested(_that.tripId,_that.forceOverride);case _MarkArrivedRequested() when markArrivedRequested != null:
 return markArrivedRequested(_that.tripId);case _ResendArrivedNotificationRequested() when resendArrivedNotificationRequested != null:
 return resendArrivedNotificationRequested(_that.tripId);case _StartTripRequested() when startTripRequested != null:
-return startTripRequested(_that.tripId);case _CompleteTripRequested() when completeTripRequested != null:
+return startTripRequested(_that.tripId,_that.forceOverride);case _CompleteTripRequested() when completeTripRequested != null:
 return completeTripRequested(_that.tripId);case _ClearCompletedSummaryRequested() when clearCompletedSummaryRequested != null:
 return clearCompletedSummaryRequested();case _DriverCancelRequested() when driverCancelRequested != null:
 return driverCancelRequested(_that.tripId,_that.reason,_that.note);case _CompleteStopRequested() when completeStopRequested != null:
@@ -612,10 +612,11 @@ String toString() {
 
 
 class _MarkEnRouteRequested implements TripEvent {
-  const _MarkEnRouteRequested(this.tripId);
+  const _MarkEnRouteRequested(this.tripId, {this.forceOverride = false});
   
 
  final  String tripId;
+@JsonKey() final  bool forceOverride;
 
 /// Create a copy of TripEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -627,16 +628,16 @@ _$MarkEnRouteRequestedCopyWith<_MarkEnRouteRequested> get copyWith => __$MarkEnR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkEnRouteRequested&&(identical(other.tripId, tripId) || other.tripId == tripId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkEnRouteRequested&&(identical(other.tripId, tripId) || other.tripId == tripId)&&(identical(other.forceOverride, forceOverride) || other.forceOverride == forceOverride));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,tripId);
+int get hashCode => Object.hash(runtimeType,tripId,forceOverride);
 
 @override
 String toString() {
-  return 'TripEvent.markEnRouteRequested(tripId: $tripId)';
+  return 'TripEvent.markEnRouteRequested(tripId: $tripId, forceOverride: $forceOverride)';
 }
 
 
@@ -647,7 +648,7 @@ abstract mixin class _$MarkEnRouteRequestedCopyWith<$Res> implements $TripEventC
   factory _$MarkEnRouteRequestedCopyWith(_MarkEnRouteRequested value, $Res Function(_MarkEnRouteRequested) _then) = __$MarkEnRouteRequestedCopyWithImpl;
 @useResult
 $Res call({
- String tripId
+ String tripId, bool forceOverride
 });
 
 
@@ -664,10 +665,11 @@ class __$MarkEnRouteRequestedCopyWithImpl<$Res>
 
 /// Create a copy of TripEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? tripId = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? tripId = null,Object? forceOverride = null,}) {
   return _then(_MarkEnRouteRequested(
 null == tripId ? _self.tripId : tripId // ignore: cast_nullable_to_non_nullable
-as String,
+as String,forceOverride: null == forceOverride ? _self.forceOverride : forceOverride // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -810,10 +812,11 @@ as String,
 
 
 class _StartTripRequested implements TripEvent {
-  const _StartTripRequested(this.tripId);
+  const _StartTripRequested(this.tripId, {this.forceOverride = false});
   
 
  final  String tripId;
+@JsonKey() final  bool forceOverride;
 
 /// Create a copy of TripEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -825,16 +828,16 @@ _$StartTripRequestedCopyWith<_StartTripRequested> get copyWith => __$StartTripRe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StartTripRequested&&(identical(other.tripId, tripId) || other.tripId == tripId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StartTripRequested&&(identical(other.tripId, tripId) || other.tripId == tripId)&&(identical(other.forceOverride, forceOverride) || other.forceOverride == forceOverride));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,tripId);
+int get hashCode => Object.hash(runtimeType,tripId,forceOverride);
 
 @override
 String toString() {
-  return 'TripEvent.startTripRequested(tripId: $tripId)';
+  return 'TripEvent.startTripRequested(tripId: $tripId, forceOverride: $forceOverride)';
 }
 
 
@@ -845,7 +848,7 @@ abstract mixin class _$StartTripRequestedCopyWith<$Res> implements $TripEventCop
   factory _$StartTripRequestedCopyWith(_StartTripRequested value, $Res Function(_StartTripRequested) _then) = __$StartTripRequestedCopyWithImpl;
 @useResult
 $Res call({
- String tripId
+ String tripId, bool forceOverride
 });
 
 
@@ -862,10 +865,11 @@ class __$StartTripRequestedCopyWithImpl<$Res>
 
 /// Create a copy of TripEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? tripId = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? tripId = null,Object? forceOverride = null,}) {
   return _then(_StartTripRequested(
 null == tripId ? _self.tripId : tripId // ignore: cast_nullable_to_non_nullable
-as String,
+as String,forceOverride: null == forceOverride ? _self.forceOverride : forceOverride // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

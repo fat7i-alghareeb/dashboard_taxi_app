@@ -22,8 +22,8 @@ class TripFacade {
     return _repository.getActiveTrip();
   }
 
-  Future<Result<void>> markEnRoute(String tripId) {
-    return _repository.markEnRoute(tripId);
+  Future<Result<void>> markEnRoute(String tripId, {bool forceOverride = false}) {
+    return _repository.markEnRoute(tripId, forceOverride: forceOverride);
   }
 
   Future<Result<void>> markArrived(String tripId) {
@@ -34,8 +34,8 @@ class TripFacade {
     return _repository.resendArrived(tripId);
   }
 
-  Future<Result<void>> startTrip(String tripId) {
-    return _repository.startTrip(tripId);
+  Future<Result<void>> startTrip(String tripId, {bool forceOverride = false}) {
+    return _repository.startTrip(tripId, forceOverride: forceOverride);
   }
 
   Future<Result<void>> completeTrip(String tripId) {

@@ -38,8 +38,8 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
-  Future<Result<void>> markEnRoute(String tripId) {
-    return runAsResult(() => _remote.markEnRoute(tripId));
+  Future<Result<void>> markEnRoute(String tripId, {bool forceOverride = false}) {
+    return runAsResult(() => _remote.markEnRoute(tripId, forceOverride: forceOverride));
   }
 
   @override
@@ -53,8 +53,8 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
-  Future<Result<void>> startTrip(String tripId) {
-    return runAsResult(() => _remote.startTrip(tripId));
+  Future<Result<void>> startTrip(String tripId, {bool forceOverride = false}) {
+    return runAsResult(() => _remote.startTrip(tripId, forceOverride: forceOverride));
   }
 
   @override
