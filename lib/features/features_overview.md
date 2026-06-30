@@ -61,6 +61,20 @@ The **Dashboard** feature is the admin-facing operational surface for the taxi p
 - Built on a **Per-Section Architecture** where each segment (profile, config, drivers, vehicle types, users, audit) utilizes its own typed `StatusBuilder` and shape-matched shimmer. Loading, refresh, or mutation in one section does not block or reload the other sections.
 - Use scoped loading states (`configActionState`, `driverActionState`, `vehicleTypeActionState`) for precise action feedback.
 
+## 💳 The Refunds Feature: Admin Refund Operations
+
+The **Refunds** feature is the admin-facing operational surface for the backend refund lifecycle introduced for cancellation, compensation, manual incident refund, and retry workflows.
+
+### Current Responsibilities
+
+- Fetch refund list data from `/api/v1/refunds` and refund detail data from `/api/v1/refunds/{refundId}`.
+- Map backend admin refund DTOs into clean `RefundEntity` objects before presentation.
+- Show failed and requires-action refunds prominently with status, amount, source type, trip/passenger references, payment method, and requested date.
+- Provide local status/source/search filters for failed, pending, succeeded, requires-action, cancellation, manual incident, and compensation refund views.
+- Show admin-only detail fields including Stripe refund ID, Stripe PaymentIntent ID, Stripe charge ID, failure code, failure reason, attempt count, related records, and lifecycle timestamps.
+- Submit retry requests only through `POST /api/v1/refunds/{refundId}/retry`; the UI never decides eligibility and only enables retry when the backend DTO says `canRetry = true`.
+- Keep all labels in `assets/l10n/*.json` and generated `AppStrings`.
+
 ## 🚘 The Driver Feature: Driver Profile & Earnings
 
 The **Driver** feature owns driver-specific REST contracts that are shared by the driver home and dashboard driver mode.

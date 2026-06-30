@@ -101,6 +101,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         case RealtimePaymentConfirmed():
         case RealtimePaymentFailed():
         case RealtimeTripRefunded():
+        case RealtimeRefundLifecycleChanged():
+        case RealtimeRefundIssueCreated():
         // Chat events are handled by ChatBloc, not the dashboard.
         case RealtimeTripMessageReceived():
         case RealtimeChatClosed():

@@ -253,6 +253,11 @@ class SignalRRealtimeService implements RealtimeService {
     hub.on(RealtimeMethodNames.paymentConfirmed, _onPaymentConfirmed);
     hub.on(RealtimeMethodNames.paymentFailed, _onPaymentFailed);
     hub.on(RealtimeMethodNames.tripRefunded, _onTripRefunded);
+    hub.on(
+      RealtimeMethodNames.refundLifecycleChanged,
+      _onRefundLifecycleChanged,
+    );
+    hub.on(RealtimeMethodNames.refundIssueCreated, _onRefundIssueCreated);
     hub.on(RealtimeMethodNames.driverEnRoute, _onDriverEnRoute);
     hub.on(RealtimeMethodNames.driverArrived, _onDriverArrived);
     hub.on(RealtimeMethodNames.driverLocationUpdated, _onDriverLocationUpdated);
@@ -375,6 +380,13 @@ class SignalRRealtimeService implements RealtimeService {
     if (value is num) return value.toDouble();
     if (value is String) return double.tryParse(value) ?? 0;
     return 0;
+  }
+
+  bool _readBool(Map<String, dynamic> map, String camel) {
+    final value = map[camel] ?? map[_pascal(camel)];
+    if (value is bool) return value;
+    if (value is String) return value.toLowerCase() == 'true';
+    return false;
   }
 
   String _pascal(String camel) =>
@@ -541,6 +553,52 @@ class SignalRRealtimeService implements RealtimeService {
         tripId: _readString(p, 'tripId'),
         passengerId: _readString(p, 'passengerId'),
         amount: _readDouble(p, 'amount'),
+      ),
+    );
+  }
+
+  void _onRefundLifecycleChanged(List<Object?>? args) {
+    final p = _payload(args, requireTripId: false);
+    if (p == null) {
+      printY('$_logTag <= RefundLifecycleChanged (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= RefundLifecycleChanged refund=${_readString(p, 'refundId')} status=${_readString(p, 'status')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.refundLifecycleChanged(
+        refundId: _readString(p, 'refundId'),
+        paymentId: _readString(p, 'paymentId'),
+        tripId: _readNullableString(p, 'tripId'),
+        passengerId: _readNullableString(p, 'passengerId'),
+        status: _readString(p, 'status'),
+        amount: _readDouble(p, 'amount'),
+        currency: _readString(p, 'currency'),
+        requiresAdminAction: _readBool(p, 'requiresAdminAction'),
+        canRetry: _readBool(p, 'canRetry'),
+        sourceType: _readString(p, 'sourceType'),
+      ),
+    );
+  }
+
+  void _onRefundIssueCreated(List<Object?>? args) {
+    final p = _payload(args);
+    if (p == null) {
+      printY('$_logTag <= RefundIssueCreated (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= RefundIssueCreated issue=${_readString(p, 'refundIssueId')} trip=${_readString(p, 'tripId')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.refundIssueCreated(
+        refundIssueId: _readString(p, 'refundIssueId'),
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+        paymentId: _readString(p, 'paymentId'),
+        requestType: _readString(p, 'requestType'),
+        reviewStatus: _readString(p, 'reviewStatus'),
       ),
     );
   }

@@ -15,6 +15,7 @@ import 'package:dashboardtaxi/features/customers/presentation/ui/screens/custome
 import 'package:dashboardtaxi/features/control_center/presentation/ui/screens/control_center_screen.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
 import 'package:dashboardtaxi/features/recordings/presentation/ui/screens/recordings_list_screen.dart';
+import 'package:dashboardtaxi/features/refunds/presentation/ui/screens/refunds_screen.dart';
 import 'package:dashboardtaxi/features/support_contact/presentation/ui/screens/support_contact_screen.dart';
 import 'package:dashboardtaxi/features/notifications/presentation/ui/screens/send_notification_screen.dart';
 // import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
@@ -141,6 +142,14 @@ class RootDrawerContent extends StatelessWidget {
         onTap: () {
           Navigator.maybePop(context);
           context.pushNamed(CompensationClaimsScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.moneyBillTransfer,
+        label: AppStrings.refundsTitle,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(RefundsScreen.pageName);
         },
       ),
       DrawerMenuItem(

@@ -100,6 +100,12 @@ class ApiEndpoints {
   static String refundIncident(String id) =>
       '/api/v1/customer-incidents/$id/refunds';
 
+  // Refund lifecycle (admin)
+  static const String refunds = '/api/v1/refunds';
+  static String refundDetail(String refundId) => '/api/v1/refunds/$refundId';
+  static String retryRefund(String refundId) =>
+      '/api/v1/refunds/$refundId/retry';
+
   // Passenger moderation (admin)
   static String suspendUser(String userId) =>
       '/api/v1/users/$userId/suspensions';

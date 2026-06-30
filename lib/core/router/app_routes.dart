@@ -187,6 +187,22 @@ class AppRouteRegistry {
       ),
     ),
     GoRoute(
+      path: RefundsScreen.pagePath,
+      name: RefundsScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const RefundsScreen(),
+      ),
+    ),
+    GoRoute(
+      path: RefundDetailScreen.pagePath,
+      name: RefundDetailScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: RefundDetailScreen(args: state.extra as RefundDetailScreenArgs),
+      ),
+    ),
+    GoRoute(
       path: ChangePasswordScreen.pagePath,
       name: ChangePasswordScreen.pageName,
       pageBuilder: (context, state) => AppPageTransitions.build(

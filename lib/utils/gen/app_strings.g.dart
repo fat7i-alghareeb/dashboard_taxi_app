@@ -941,6 +941,146 @@ class AppStrings {
   static String get recordingsSearchHint => 'recordingsSearchHint'.tr();
   /// Recordings - التسجيلات - Opnames - Aufnahmen - Nagrania - Записи - Enregistrements - Grabaciones - Înregistrări
   static String get recordingsTitle => 'recordingsTitle'.tr();
+  /// Admin note - ملاحظة المدير - Adminnotitie - Admin-Notiz - Notatka admina - Нотатка адміністратора - Note admin - Nota del admin - Notă admin
+  static String get refundsAdminNote => 'refundsAdminNote'.tr();
+  /// Attempt count - عدد المحاولات - Aantal pogingen - Versuche - Liczba prób - Кількість спроб - Nombre de tentatives - Número de intentos - Număr încercări
+  static String get refundsAttemptCount => 'refundsAttemptCount'.tr();
+  /// Cancellation - الإلغاء - Annulering - Stornierung - Anulowanie - Скасування - Annulation - Cancelación - Anulare
+  static String get refundsCancellation => 'refundsCancellation'.tr();
+  /// Compensation - التعويض - Compensatie - Entschädigung - Rekompensata - Компенсація - Compensation - Compensación - Compensație
+  static String get refundsCompensation => 'refundsCompensation'.tr();
+  /// Completed - اكتمل - Voltooid - Abgeschlossen - Zakończono - Завершено - Terminé - Completado - Finalizată
+  static String get refundsCompleted => 'refundsCompleted'.tr();
+  /// CUR - عملة - VAL - WAE - WAL - ВАЛ - DEV - MON - MON
+  static String get refundsCurrencyUnknown => 'refundsCurrencyUnknown'.tr();
+  /// Refund details - تفاصيل رد المبلغ - Terugbetalingsdetails - Erstattungsdetails - Szczegóły zwrotu - Деталі повернення - Détails du remboursement - Detalles del reembolso - Detalii rambursare
+  static String get refundsDetailTitle => 'refundsDetailTitle'.tr();
+  /// No refunds found - لا توجد مبالغ مستردة - Geen terugbetalingen gevonden - Keine Erstattungen gefunden - Nie znaleziono zwrotów - Повернень не знайдено - Aucun remboursement trouvé - No se encontraron reembolsos - Nu s-au găsit rambursări
+  static String get refundsEmpty => 'refundsEmpty'.tr();
+  /// Failed at - فشل في - Mislukt op - Fehlgeschlagen am - Nieudane o - Помилка о - Échec le - Falló el - Eșuată la
+  static String get refundsFailedAt => 'refundsFailedAt'.tr();
+  /// Failure code - رمز الفشل - Foutcode - Fehlercode - Kod błędu - Код помилки - Code d'échec - Código de fallo - Cod eșec
+  static String get refundsFailureCode => 'refundsFailureCode'.tr();
+  /// Failure reason - سبب الفشل - Foutreden - Fehlergrund - Powód błędu - Причина помилки - Raison de l'échec - Motivo del fallo - Motiv eșec
+  static String get refundsFailureReason => 'refundsFailureReason'.tr();
+  /// Failure - الفشل - Fout - Fehler - Błąd - Помилка - Échec - Fallo - Eșec
+  static String get refundsFailureSection => 'refundsFailureSection'.tr();
+  /// All - الكل - Alles - Alle - Wszystkie - Усі - Tous - Todos - Toate
+  static String get refundsFilterAll => 'refundsFilterAll'.tr();
+  /// All sources - كل المصادر - Alle bronnen - Alle Quellen - Wszystkie źródła - Усі джерела - Toutes les sources - Todas las fuentes - Toate sursele
+  static String get refundsFilterAllSources => 'refundsFilterAllSources'.tr();
+  /// Cancellation - إلغاء - Annulering - Stornierung - Anulowanie - Скасування - Annulation - Cancelación - Anulare
+  static String get refundsFilterCancellation => 'refundsFilterCancellation'.tr();
+  /// Compensation - تعويض - Compensatie - Entschädigung - Rekompensata - Компенсація - Compensation - Compensación - Compensație
+  static String get refundsFilterCompensation => 'refundsFilterCompensation'.tr();
+  /// Failed - فاشلة - Mislukt - Fehlgeschlagen - Nieudane - З помилкою - Échoués - Fallidos - Eșuate
+  static String get refundsFilterFailed => 'refundsFilterFailed'.tr();
+  /// Manual incident - حادث يدوي - Handmatig incident - Manueller Vorfall - Ręczny incydent - Ручний інцидент - Incident manuel - Incidente manual - Incident manual
+  static String get refundsFilterManualIncident => 'refundsFilterManualIncident'.tr();
+  /// Pending - معلقة - In behandeling - Ausstehend - Oczekujące - Очікують - En attente - Pendientes - În așteptare
+  static String get refundsFilterPending => 'refundsFilterPending'.tr();
+  /// Needs action - تحتاج إجراء - Actie nodig - Benötigt Aktion - Wymaga działania - Потрібна дія - Action requise - Necesita acción - Necesită acțiune
+  static String get refundsFilterRequiresAction => 'refundsFilterRequiresAction'.tr();
+  /// Succeeded - ناجحة - Geslaagd - Erfolgreich - Zakończone - Успішні - Réussis - Completados - Reușite
+  static String get refundsFilterSucceeded => 'refundsFilterSucceeded'.tr();
+  /// Full refund - رد كامل - Volledige terugbetaling - Vollständige Erstattung - Pełny zwrot - Повне повернення - Remboursement complet - Reembolso completo - Rambursare completă
+  static String get refundsFullRefund => 'refundsFullRefund'.tr();
+  /// Incident - الحادث - Incident - Vorfall - Incydent - Інцидент - Incident - Incidente - Incident
+  static String get refundsIncident => 'refundsIncident'.tr();
+  /// Last attempt - آخر محاولة - Laatste poging - Letzter Versuch - Ostatnia próba - Остання спроба - Dernière tentative - Último intento - Ultima încercare
+  static String get refundsLastAttempt => 'refundsLastAttempt'.tr();
+  /// Related records - السجلات المرتبطة - Gerelateerde records - Verknüpfte Datensätze - Powiązane rekordy - Пов'язані записи - Dossiers liés - Registros relacionados - Înregistrări asociate
+  static String get refundsLinksSection => 'refundsLinksSection'.tr();
+  /// Not available - غير متوفر - Niet beschikbaar - Nicht verfügbar - Niedostępne - Недоступно - Indisponible - No disponible - Indisponibil
+  static String get refundsNotAvailable => 'refundsNotAvailable'.tr();
+  /// Original payment - المبلغ الأصلي - Oorspronkelijke betaling - Ursprüngliche Zahlung - Pierwotna płatność - Початкова оплата - Paiement initial - Pago original - Plata inițială
+  static String get refundsOriginalPaymentAmount => 'refundsOriginalPaymentAmount'.tr();
+  /// Partial refund - رد جزئي - Gedeeltelijke terugbetaling - Teilerstattung - Częściowy zwrot - Часткове повернення - Remboursement partiel - Reembolso parcial - Rambursare parțială
+  static String get refundsPartialRefund => 'refundsPartialRefund'.tr();
+  /// Passenger - الراكب - Passagier - Fahrgast - Pasażer - Пасажир - Passager - Pasajero - Pasager
+  static String get refundsPassenger => 'refundsPassenger'.tr();
+  /// Payment ID - معرف الدفع - Betalings-ID - Zahlungs-ID - ID płatności - ID платежу - ID paiement - ID de pago - ID plată
+  static String get refundsPaymentId => 'refundsPaymentId'.tr();
+  /// Payment method - طريقة الدفع - Betaalmethode - Zahlungsmethode - Metoda płatności - Спосіб оплати - Moyen de paiement - Método de pago - Metodă de plată
+  static String get refundsPaymentMethod => 'refundsPaymentMethod'.tr();
+  /// Payment - الدفع - Betaling - Zahlung - Płatność - Оплата - Paiement - Pago - Plată
+  static String get refundsPaymentSection => 'refundsPaymentSection'.tr();
+  /// Refund percent - نسبة الرد - Terugbetalingspercentage - Erstattungsprozent - Procent zwrotu - Відсоток повернення - Pourcentage remboursé - Porcentaje de reembolso - Procent rambursat
+  static String get refundsRefundPercent => 'refundsRefundPercent'.tr();
+  /// Refunded total - إجمالي المسترد - Totaal terugbetaald - Erstattet gesamt - Łącznie zwrócono - Усього повернено - Total remboursé - Total reembolsado - Total rambursat
+  static String get refundsRefundedTotal => 'refundsRefundedTotal'.tr();
+  /// Remaining balance - الرصيد القابل للرد - Resterend saldo - Verbleibender Betrag - Pozostałe saldo - Залишок - Solde restant - Saldo restante - Sold rămas
+  static String get refundsRemainingBalance => 'refundsRemainingBalance'.tr();
+  /// Requested - تاريخ الطلب - Aangevraagd - Angefordert - Zażądano - Запитано - Demandé - Solicitado - Solicitată
+  static String get refundsRequested => 'refundsRequested'.tr();
+  /// Requested by admin - طلبه المدير - Aangevraagd door admin - Angefordert von Admin - Zażądane przez admina - Запитав адміністратор - Demandé par admin - Solicitado por admin - Solicitată de admin
+  static String get refundsRequestedByAdmin => 'refundsRequestedByAdmin'.tr();
+  /// Retry - إعادة المحاولة - Opnieuw proberen - Wiederholen - Ponów - Повторити - Relancer - Reintentar - Reîncearcă
+  static String get refundsRetry => 'refundsRetry'.tr();
+  /// Retry available - إعادة المحاولة متاحة - Retry beschikbaar - Wiederholung verfügbar - Ponowienie dostępne - Повтор доступний - Relance disponible - Reintento disponible - Reîncercare disponibilă
+  static String get refundsRetryAvailable => 'refundsRetryAvailable'.tr();
+  /// Retry is still approved by the backend at submission time. - سيعاد التحقق من الأهلية من الخادم عند الإرسال. - De retry wordt bij verzending opnieuw door de backend goedgekeurd. - Die Wiederholung wird beim Absenden weiterhin vom Backend genehmigt. - Ponowienie jest nadal zatwierdzane przez backend przy wysyłaniu. - Backend знову підтвердить повтор під час надсилання. - La relance reste approuvée par le backend au moment de l'envoi. - El backend sigue aprobando el reintento en el momento del envío. - Reîncercarea este aprobată de backend în momentul trimiterii.
+  static String get refundsRetryBackendApproval => 'refundsRetryBackendApproval'.tr();
+  /// The backend has blocked retry for this refund. - منع الخادم إعادة المحاولة لهذا الرد. - De backend heeft retry voor deze terugbetaling geblokkeerd. - Das Backend hat die Wiederholung für diese Erstattung blockiert. - Backend zablokował ponowienie tego zwrotu. - Backend заблокував повтор для цього повернення. - Le backend a bloqué la relance pour ce remboursement. - El backend bloqueó el reintento para este reembolso. - Backend-ul a blocat reîncercarea pentru această rambursare.
+  static String get refundsRetryBlockedFallback => 'refundsRetryBlockedFallback'.tr();
+  /// The backend will recheck eligibility before calling Stripe. Continue? - سيتحقق الخادم من الأهلية قبل استدعاء Stripe. هل تريد المتابعة؟ - De backend controleert opnieuw de geschiktheid voordat Stripe wordt aangeroepen. Doorgaan? - Das Backend prüft die Berechtigung erneut, bevor Stripe aufgerufen wird. Fortfahren? - Backend ponownie sprawdzi kwalifikację przed wywołaniem Stripe. Kontynuować? - Backend повторно перевірить право перед викликом Stripe. Продовжити? - Le backend revérifiera l'éligibilité avant d'appeler Stripe. Continuer ? - El backend volverá a validar la elegibilidad antes de llamar a Stripe. ¿Continuar? - Backend-ul va reverifica eligibilitatea înainte de a apela Stripe. Continui?
+  static String get refundsRetryConfirm => 'refundsRetryConfirm'.tr();
+  /// Refund retry submitted - تم إرسال إعادة محاولة رد المبلغ - Retry voor terugbetaling verzonden - Erstattungswiederholung gesendet - Ponowienie zwrotu wysłane - Повтор повернення надіслано - Relance du remboursement envoyée - Reintento de reembolso enviado - Reîncercarea rambursării a fost trimisă
+  static String get refundsRetrySubmitted => 'refundsRetrySubmitted'.tr();
+  /// Retry refund - إعادة محاولة رد المبلغ - Terugbetaling opnieuw proberen - Erstattung erneut versuchen - Ponów zwrot - Повторити повернення - Relancer le remboursement - Reintentar reembolso - Reîncearcă rambursarea
+  static String get refundsRetryTitle => 'refundsRetryTitle'.tr();
+  /// Retry unavailable - إعادة المحاولة غير متاحة - Retry niet beschikbaar - Wiederholung nicht verfügbar - Ponowienie niedostępne - Повтор недоступний - Relance indisponible - Reintento no disponible - Reîncercare indisponibilă
+  static String get refundsRetryUnavailable => 'refundsRetryUnavailable'.tr();
+  /// Search refund, trip, passenger or payment method - ابحث برد المبلغ أو الرحلة أو الراكب أو طريقة الدفع - Zoek terugbetaling, rit, passagier of betaalmethode - Erstattung, Fahrt, Fahrgast oder Zahlungsmethode suchen - Szukaj zwrotu, kursu, pasażera lub metody płatności - Шукайте повернення, поїздку, пасажира або спосіб оплати - Rechercher remboursement, trajet, passager ou moyen de paiement - Buscar reembolso, viaje, pasajero o método de pago - Caută rambursare, cursă, pasager sau metodă de plată
+  static String get refundsSearchHint => 'refundsSearchHint'.tr();
+  /// Source - المصدر - Bron - Quelle - Źródło - Джерело - Source - Fuente - Sursă
+  static String get refundsSource => 'refundsSource'.tr();
+  /// Admin cancellation - إلغاء الإدارة - Annulering door admin - Admin-Stornierung - Anulowanie przez admina - Скасування адміністратором - Annulation admin - Cancelación del admin - Anulare admin
+  static String get refundsSourceAdminCancellation => 'refundsSourceAdminCancellation'.tr();
+  /// Admin retry - إعادة محاولة الإدارة - Admin retry - Admin-Wiederholung - Ponowienie admina - Повтор адміністратора - Relance admin - Reintento del admin - Reîncercare admin
+  static String get refundsSourceAdminRetry => 'refundsSourceAdminRetry'.tr();
+  /// Airport wait cancellation - إلغاء انتظار المطار - Annulering luchthavenwachttijd - Flughafenwarte-Stornierung - Anulowanie oczekiwania na lotnisku - Скасування очікування в аеропорту - Annulation attente aéroport - Cancelación por espera en aeropuerto - Anulare așteptare aeroport
+  static String get refundsSourceAirportWaitCancellation => 'refundsSourceAirportWaitCancellation'.tr();
+  /// Compensation claim - مطالبة تعويض - Compensatieclaim - Entschädigungsantrag - Wniosek o rekompensatę - Заявка на компенсацію - Demande de compensation - Solicitud de compensación - Cerere compensație
+  static String get refundsSourceCompensationClaim => 'refundsSourceCompensationClaim'.tr();
+  /// Driver cancellation - إلغاء السائق - Annulering door chauffeur - Fahrerstornierung - Anulowanie przez kierowcę - Скасування водієм - Annulation chauffeur - Cancelación del conductor - Anulare șofer
+  static String get refundsSourceDriverCancellation => 'refundsSourceDriverCancellation'.tr();
+  /// Manual incident refund - رد يدوي لحادث - Handmatige incidentterugbetaling - Manuelle Vorfall-Erstattung - Ręczny zwrot incydentu - Ручне повернення за інцидент - Remboursement manuel d'incident - Reembolso manual de incidente - Rambursare manuală incident
+  static String get refundsSourceManualIncidentRefund => 'refundsSourceManualIncidentRefund'.tr();
+  /// Passenger cancellation - إلغاء الراكب - Annulering door passagier - Fahrgaststornierung - Anulowanie przez pasażera - Скасування пасажиром - Annulation passager - Cancelación del pasajero - Anulare pasager
+  static String get refundsSourcePassengerCancellation => 'refundsSourcePassengerCancellation'.tr();
+  /// Cancelled - ملغى - Geannuleerd - Storniert - Anulowane - Скасовано - Annulé - Cancelado - Anulată
+  static String get refundsStatusCancelled => 'refundsStatusCancelled'.tr();
+  /// Failed - فشل - Mislukt - Fehlgeschlagen - Nieudane - Помилка - Échoué - Fallido - Eșuată
+  static String get refundsStatusFailed => 'refundsStatusFailed'.tr();
+  /// Pending - قيد الانتظار - In behandeling - Ausstehend - Oczekuje - Очікує - En attente - Pendiente - În așteptare
+  static String get refundsStatusPending => 'refundsStatusPending'.tr();
+  /// Permanently failed - فشل نهائي - Definitief mislukt - Endgültig fehlgeschlagen - Trwale nieudane - Остаточна помилка - Échec définitif - Fallido definitivamente - Eșuată definitiv
+  static String get refundsStatusPermanentlyFailed => 'refundsStatusPermanentlyFailed'.tr();
+  /// Requested - مطلوب - Aangevraagd - Angefordert - Zażądano - Запитано - Demandé - Solicitado - Solicitată
+  static String get refundsStatusRequested => 'refundsStatusRequested'.tr();
+  /// Requires action - يتطلب إجراء - Actie vereist - Aktion erforderlich - Wymaga działania - Потрібна дія - Action requise - Requiere acción - Necesită acțiune
+  static String get refundsStatusRequiresAction => 'refundsStatusRequiresAction'.tr();
+  /// Retrying - جار إعادة المحاولة - Opnieuw proberen - Wird erneut versucht - Ponawianie - Повторюється - Nouvelle tentative - Reintentando - Se reîncearcă
+  static String get refundsStatusRetrying => 'refundsStatusRetrying'.tr();
+  /// Succeeded - ناجح - Geslaagd - Erfolgreich - Zakończono - Успішно - Réussi - Completado - Reușită
+  static String get refundsStatusSucceeded => 'refundsStatusSucceeded'.tr();
+  /// Stripe charge ID - معرف عملية Stripe - Stripe charge-ID - Stripe-Zahlungs-ID - ID obciążenia Stripe - ID списання Stripe - ID débit Stripe - ID de cargo Stripe - ID debitare Stripe
+  static String get refundsStripeChargeId => 'refundsStripeChargeId'.tr();
+  /// Stripe PaymentIntent ID - معرف نية الدفع في Stripe - Stripe PaymentIntent-ID - Stripe PaymentIntent-ID - ID PaymentIntent Stripe - ID PaymentIntent Stripe - ID PaymentIntent Stripe - ID de PaymentIntent Stripe - ID PaymentIntent Stripe
+  static String get refundsStripePaymentIntentId => 'refundsStripePaymentIntentId'.tr();
+  /// Stripe refund ID - معرف رد Stripe - Stripe-terugbetalings-ID - Stripe-Erstattungs-ID - ID zwrotu Stripe - ID повернення Stripe - ID remboursement Stripe - ID de reembolso Stripe - ID rambursare Stripe
+  static String get refundsStripeRefundId => 'refundsStripeRefundId'.tr();
+  /// Stripe - Stripe - Stripe - Stripe - Stripe - Stripe - Stripe - Stripe - Stripe
+  static String get refundsStripeSection => 'refundsStripeSection'.tr();
+  /// Track Stripe refund state, failed refunds and retry eligibility. - تتبع حالة رد الأموال في Stripe وحالات الفشل وإمكانية إعادة المحاولة. - Volg Stripe-terugbetalingsstatus, mislukte terugbetalingen en retry-toegang. - Stripe-Erstattungsstatus, fehlgeschlagene Erstattungen und Wiederholbarkeit verfolgen. - Śledź status zwrotów Stripe, błędy i możliwość ponowienia. - Відстежуйте стан повернень Stripe, помилки та можливість повтору. - Suivez l'état des remboursements Stripe, les échecs et l'éligibilité aux relances. - Supervisa el estado de reembolsos de Stripe, fallos y elegibilidad de reintento. - Urmărește starea rambursărilor Stripe, eșecurile și eligibilitatea pentru reîncercare.
+  static String get refundsSubtitle => 'refundsSubtitle'.tr();
+  /// Timeline - الجدول الزمني - Tijdlijn - Zeitachse - Oś czasu - Хронологія - Chronologie - Cronología - Cronologie
+  static String get refundsTimelineSection => 'refundsTimelineSection'.tr();
+  /// Refunds - المبالغ المستردة - Terugbetalingen - Erstattungen - Zwroty - Повернення коштів - Remboursements - Reembolsos - Rambursări
+  static String get refundsTitle => 'refundsTitle'.tr();
+  /// Trip - الرحلة - Rit - Fahrt - Kurs - Поїздка - Trajet - Viaje - Cursă
+  static String get refundsTrip => 'refundsTrip'.tr();
   /// Rejection Reason: {reason} - سبب الرفض: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason} - Rejection Reason: {reason}
   static String get rejectionNotes => 'rejectionNotes'.tr();
   /// Request was cancelled. - تم إلغاء الطلب. - Aanvraag is geannuleerd. - Anfrage wurde abgebrochen. - Żądanie zostało anulowane. - Запит скасовано. - La demande a été annulée. - La solicitud fue cancelada. - Solicitarea a fost anulată.

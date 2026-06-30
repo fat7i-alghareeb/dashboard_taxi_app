@@ -22,6 +22,8 @@ import '../../features/customers/domain/entities/customer_filter_args.dart';
 import '../../features/customers/presentation/ui/screens/customers_list_screen.dart';
 import '../../features/customers/presentation/ui/screens/customer_detail_screen.dart';
 import '../../features/recordings/presentation/ui/screens/recordings_list_screen.dart';
+import '../../features/refunds/presentation/ui/screens/refund_detail_screen.dart';
+import '../../features/refunds/presentation/ui/screens/refunds_screen.dart';
 import '../../features/support_contact/presentation/ui/screens/support_contact_screen.dart';
 import '../../features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
 import '../../features/dashboard/presentation/ui/screens/dashboard_screen.dart';

@@ -173,6 +173,16 @@ import 'package:dashboardtaxi/features/recordings/data/datasources/recordings_re
     as _i422;
 import 'package:dashboardtaxi/features/recordings/presentation/states/recordings_cubit.dart'
     as _i849;
+import 'package:dashboardtaxi/features/refunds/data/datasources/refunds_remote_datasource.dart'
+    as _i565;
+import 'package:dashboardtaxi/features/refunds/data/repositories/refunds_repository_impl.dart'
+    as _i253;
+import 'package:dashboardtaxi/features/refunds/domain/facade/refunds_facade.dart'
+    as _i239;
+import 'package:dashboardtaxi/features/refunds/domain/repositories/refunds_repository.dart'
+    as _i555;
+import 'package:dashboardtaxi/features/refunds/presentation/states/refunds_cubit.dart'
+    as _i323;
 import 'package:dashboardtaxi/features/root/data/datasources/root_remote_datasource.dart'
     as _i1064;
 import 'package:dashboardtaxi/features/root/data/repositories/root_repository_impl.dart'
@@ -380,6 +390,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i422.RecordingsRemoteDataSource>(
       () => _i422.RecordingsRemoteDataSource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i565.RefundsRemoteDataSource>(
+      () => _i565.RefundsRemoteDataSource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i1064.RootRemoteDataSource>(
       () => _i1064.RootRemoteDataSource(gh<_i361.Dio>()),
     );
@@ -443,6 +456,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i322.AuthManager>(),
       ),
     );
+    gh.lazySingleton<_i555.RefundsRepository>(
+      () => _i253.RefundsRepositoryImpl(gh<_i565.RefundsRemoteDataSource>()),
+    );
     gh.lazySingleton<_i733.SupportContactFacade>(
       () => _i733.SupportContactFacade(gh<_i355.SupportContactRepository>()),
     );
@@ -492,6 +508,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i969.DashboardFacade>(
       () => _i969.DashboardFacade(gh<_i574.DashboardRepository>()),
     );
+    gh.lazySingleton<_i239.RefundsFacade>(
+      () => _i239.RefundsFacade(gh<_i555.RefundsRepository>()),
+    );
     gh.lazySingleton<_i132.CompanyContactFacade>(
       () => _i132.CompanyContactFacade(gh<_i991.CompanyContactRepository>()),
     );
@@ -513,6 +532,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i969.DashboardFacade>(),
         gh<_i868.RealtimeService>(),
         gh<_i885.RootModeService>(),
+      ),
+    );
+    gh.factory<_i323.RefundsCubit>(
+      () => _i323.RefundsCubit(
+        gh<_i239.RefundsFacade>(),
+        gh<_i868.RealtimeService>(),
       ),
     );
     gh.factory<_i211.CompanyContactBloc>(

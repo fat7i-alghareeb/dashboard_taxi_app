@@ -202,6 +202,8 @@ class TripBloc extends Bloc<TripEvent, TripState> {
       case RealtimePaymentConfirmed():
       case RealtimePaymentFailed():
       case RealtimeTripRefunded():
+      case RealtimeRefundLifecycleChanged():
+      case RealtimeRefundIssueCreated():
       // Chat events are handled by ChatBloc, not the trip lifecycle bloc.
       case RealtimeTripMessageReceived():
       case RealtimeChatClosed():
