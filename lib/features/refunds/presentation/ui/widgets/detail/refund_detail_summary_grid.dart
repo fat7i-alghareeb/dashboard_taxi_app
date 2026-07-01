@@ -46,9 +46,7 @@ class RefundDetailSummaryGrid extends StatelessWidget {
             refund.isFullRefund
                 ? AppStrings.refundsFullRefund
                 : AppStrings.refundsPartialRefund,
-            style: AppTextStyles.s12w500.copyWith(
-              color: context.primary,
-            ),
+            style: AppTextStyles.s12w500.copyWith(color: context.primary),
           ),
           AppSpacing.lg.verticalSpace,
           Wrap(

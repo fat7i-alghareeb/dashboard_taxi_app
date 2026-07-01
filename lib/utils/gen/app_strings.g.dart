@@ -81,7 +81,7 @@ class AppStrings {
   static String get cancel => 'cancel'.tr();
   /// Confirm Cancellation - تأكيد الإلغاء - Annulering bevestigen - Stornierung bestätigen - Potwierdź anulowanie - Підтвердити скасування - Confirmer l'annulation - Confirmar cancelación - Confirmați anularea
   static String get cancelConfirmButton => 'cancelConfirmButton'.tr();
-  /// Available 10 minutes after arrival. A 20% refund will be issued to the passenger. - متاح بعد 10 دقائق من الوصول. سيُعاد للراكب 20% من قيمة الرحلة. - Beschikbaar 10 minuten na aankomst. De passagier ontvangt 20% terugbetaling. - Verfügbar 10 Minuten nach Ankunft. Der Fahrgast erhält 20 % Rückerstattung. - Dostępne 10 minut po przyjeździe. Pasażer otrzyma zwrot 20%. - Доступно через 10 хвилин після прибуття. Пасажиру буде повернено 20%. - Disponible 10 minutes après l'arrivée. Le passager recevra un remboursement de 20 %. - Disponible 10 minutos después de llegar. Se emitirá un reembolso del 20% al pasajero. - Disponibil la 10 minute după sosire. Pasagerului i se va rambursa 20%.
+  /// Available 10 minutes after arrival. A 45% refund will be issued to the passenger. - متاح بعد 10 دقائق من الوصول. سيُعاد للراكب 45% من قيمة الرحلة. - Beschikbaar 10 minuten na aankomst. De passagier ontvangt 45% terugbetaling. - Verfügbar 10 Minuten nach Ankunft. Der Fahrgast erhält 45 % Rückerstattung. - Dostępne 10 minut po przyjeździe. Pasażer otrzyma zwrot 45%. - Доступно через 10 хвилин після прибуття. Пасажиру буде повернено 45%. - Disponible 10 minutes après l'arrivée. Le passager recevra un remboursement de 45 %. - Disponible 10 minutos después de llegar. Se emitirá un reembolso del 45% al pasajero. - Disponibil la 10 minute după sosire. Pasagerului i se va rambursa 45%.
   static String get cancelNoShowPolicyNote => 'cancelNoShowPolicyNote'.tr();
   /// Add an optional note (e.g. waited at entrance, called twice) - أضف ملاحظة اختيارية (مثل: انتظرت عند المدخل، اتصلت مرتين) - Voeg een optionele opmerking toe (bijv. gewacht bij ingang, twee keer gebeld) - Optionale Notiz hinzufügen (z. B. am Eingang gewartet, zweimal angerufen) - Dodaj opcjonalną notatkę (np. czekałem przy wejściu, dzwoniłem dwa razy) - Додайте необов'язкову нотатку (напр. чекав біля входу, дзвонив двічі) - Ajoutez une note facultative (ex. attendu à l'entrée, appelé deux fois) - Agregue una nota opcional (ej. esperé en la entrada, llamé dos veces) - Adăugați o notă opțională (ex. am așteptat la intrare, am sunat de două ori)
   static String get cancelNoteHint => 'cancelNoteHint'.tr();
@@ -149,6 +149,14 @@ class AppStrings {
   static String get compensationEvidenceItem => 'compensationEvidenceItem'.tr();
   /// 2% compensation - تعويض 2% - 2% compensatie - 2% Entschädigung - 2% odszkodowania - 2% компенсації - 2% d'indemnisation - 2% de compensación - 2% compensație
   static String get compensationPercentage => 'compensationPercentage'.tr();
+  /// Approved - تمت الموافقة - Goedgekeurd - Genehmigt - Zatwierdzono - Схвалено - Approuvé - Aprobado - Aprobat
+  static String get compensationStatusApproved => 'compensationStatusApproved'.tr();
+  /// Pending review - بانتظار المراجعة - Wacht op beoordeling - Prüfung ausstehend - Oczekuje na przegląd - Очікує розгляду - En attente d'examen - Pendiente de revisión - În așteptarea revizuirii
+  static String get compensationStatusPending => 'compensationStatusPending'.tr();
+  /// Rejected - مرفوض - Afgewezen - Abgelehnt - Odrzucono - Відхилено - Rejeté - Rechazado - Respins
+  static String get compensationStatusRejected => 'compensationStatusRejected'.tr();
+  /// Review and decide driver compensation claims - راجع مطالبات تعويض السائقين واتخذ القرار - Beoordeel en beslis over compensatieclaims van chauffeurs - Fahrer-Entschädigungsansprüche prüfen und entscheiden - Przejrzyj i rozstrzygnij wnioski o rekompensatę kierowców - Перегляньте та вирішіть заявки на компенсацію водіїв - Examinez et décidez les demandes d'indemnisation des chauffeurs - Revisa y decide las reclamaciones de compensación de conductores - Examinează și decide cererile de compensare ale șoferilor
+  static String get compensationSubtitle => 'compensationSubtitle'.tr();
   /// Confirm password - تأكيد كلمة المرور - Confirm password - Confirm password - Confirm password - Confirm password - Confirm password - Confirm password - Confirm password
   static String get confirmPassword => 'confirmPassword'.tr();
   /// Confirm your new password - أكد كلمة المرور الجديدة - Bevestig uw nieuwe wachtwoord - Bestätigen Sie Ihr neues Passwort - Potwierdź nowe hasło - Підтвердіть новий пароль - Confirmez votre nouveau mot de passe - Confirme su nueva contraseña - Confirmați parola nouă
@@ -569,7 +577,7 @@ class AppStrings {
   static String get drawerTrips => 'drawerTrips'.tr();
   /// Trip cancelled successfully. - تم إلغاء الرحلة بنجاح. - Rit succesvol geannuleerd. - Fahrt erfolgreich storniert. - Kurs anulowany pomyślnie. - Поїздку успішно скасовано. - Trajet annulé avec succès. - Viaje cancelado exitosamente. - Cursa a fost anulată cu succes.
   static String get driverCancelSuccess => 'driverCancelSuccess'.tr();
-  /// 20% refund issued to passenger. - تم إعادة 20% من قيمة الرحلة للراكب. - 20% terugbetaald aan de passagier. - 20 % Rückerstattung an den Fahrgast ausgestellt. - Pasażerowi zwrócono 20% kwoty kursu. - Пасажиру повернено 20% вартості поїздки. - Remboursement de 20 % émis au passager. - Se emitió un reembolso del 20% al pasajero. - S-a emis o rambursare de 20% pasagerului.
+  /// 45% refund issued to passenger. - تم إعادة 45% من قيمة الرحلة للراكب. - 45% terugbetaald aan de passagier. - 45 % Rückerstattung an den Fahrgast ausgestellt. - Pasażerowi zwrócono 45% kwoty kursu. - Пасажиру повернено 45% вартості поїздки. - Remboursement de 45 % émis au passager. - Se emitió un reembolso del 45% al pasajero. - S-a emis o rambursare de 45% pasagerului.
   static String get driverCancelSummary => 'driverCancelSummary'.tr();
   /// Connected - متصل - Connected - Connected - Connected - Connected - Connected - Connected - Connected
   static String get driverConnected => 'driverConnected'.tr();
@@ -941,6 +949,44 @@ class AppStrings {
   static String get recordingsSearchHint => 'recordingsSearchHint'.tr();
   /// Recordings - التسجيلات - Opnames - Aufnahmen - Nagrania - Записи - Enregistrements - Grabaciones - Înregistrări
   static String get recordingsTitle => 'recordingsTitle'.tr();
+  /// Customer requests - طلبات العملاء - Klantverzoeken - Kundenanfragen - Prośby klientów - Запити клієнтів - Demandes clients - Solicitudes de clientes - Cereri clienți
+  static String get refundRequestsButton => 'refundRequestsButton'.tr();
+  /// Dismiss - رفض - Afwijzen - Abweisen - Odrzuć - Відхилити - Rejeter - Descartar - Respinge
+  static String get refundRequestsDismiss => 'refundRequestsDismiss'.tr();
+  /// No refund requests found - لا توجد طلبات استرداد - Geen terugbetalingsverzoeken gevonden - Keine Erstattungsanfragen gefunden - Nie znaleziono próśb o zwrot - Запитів на повернення не знайдено - Aucune demande de remboursement trouvée - No se encontraron solicitudes de reembolso - Nu s-au găsit cereri de rambursare
+  static String get refundRequestsEmpty => 'refundRequestsEmpty'.tr();
+  /// Resolve - حل - Oplossen - Lösen - Rozwiąż - Вирішити - Résoudre - Resolver - Rezolvă
+  static String get refundRequestsResolve => 'refundRequestsResolve'.tr();
+  /// Refund request review saved - تم حفظ مراجعة طلب الاسترداد - Beoordeling van terugbetalingsverzoek opgeslagen - Prüfung der Erstattungsanfrage gespeichert - Zapisano przegląd prośby o zwrot - Перегляд запиту на повернення збережено - Examen de la demande de remboursement enregistré - Revisión de solicitud de reembolso guardada - Revizuirea cererii de rambursare a fost salvată
+  static String get refundRequestsReviewSaved => 'refundRequestsReviewSaved'.tr();
+  /// Snapshot amount - مبلغ اللقطة - Momentopname bedrag - Snapshot-Betrag - Kwota migawki - Сума знімка - Montant instantané - Importe de captura - Sumă instantaneu
+  static String get refundRequestsSnapshotAmount => 'refundRequestsSnapshotAmount'.tr();
+  /// Snapshot status - حالة اللقطة - Momentopname status - Snapshot-Status - Status migawki - Статус знімка - Statut instantané - Estado de captura - Stare instantaneu
+  static String get refundRequestsSnapshotStatus => 'refundRequestsSnapshotStatus'.tr();
+  /// Dismissed - مرفوض - Afgewezen - Abgewiesen - Odrzucone - Відхилено - Rejetée - Descartada - Respinsă
+  static String get refundRequestsStatusDismissed => 'refundRequestsStatusDismissed'.tr();
+  /// In review - قيد المراجعة - In beoordeling - In Prüfung - W trakcie przeglądu - На розгляді - En examen - En revisión - În revizuire
+  static String get refundRequestsStatusInReview => 'refundRequestsStatusInReview'.tr();
+  /// Open - مفتوح - Open - Offen - Otwarte - Відкрито - Ouverte - Abierta - Deschisă
+  static String get refundRequestsStatusOpen => 'refundRequestsStatusOpen'.tr();
+  /// Resolved - تم الحل - Opgelost - Gelöst - Rozwiązane - Вирішено - Résolue - Resuelta - Rezolvată
+  static String get refundRequestsStatusResolved => 'refundRequestsStatusResolved'.tr();
+  /// Review customer refund questions and support requests. - راجع أسئلة العملاء وطلبات الدعم الخاصة بالاسترداد. - Beoordeel klantvragen en supportverzoeken over terugbetalingen. - Kundenfragen und Supportanfragen zu Erstattungen prüfen. - Przeglądaj pytania klientów i zgłoszenia wsparcia dotyczące zwrotów. - Переглядайте питання клієнтів і звернення підтримки щодо повернень. - Examinez les questions clients et demandes support liées aux remboursements. - Revisa preguntas de clientes y solicitudes de soporte sobre reembolsos. - Revizuiește întrebările clienților și cererile de suport despre rambursări.
+  static String get refundRequestsSubtitle => 'refundRequestsSubtitle'.tr();
+  /// Refund requests - طلبات الاسترداد - Terugbetalingsverzoeken - Erstattungsanfragen - Prośby o zwrot - Запити на повернення - Demandes de remboursement - Solicitudes de reembolso - Cereri de rambursare
+  static String get refundRequestsTitle => 'refundRequestsTitle'.tr();
+  /// Did not receive refund - لم أستلم مبلغ الاسترداد - Terugbetaling niet ontvangen - Erstattung nicht erhalten - Zwrot nie został otrzymany - Повернення не отримано - Remboursement non reçu - No recibió el reembolso - Rambursare neprimită
+  static String get refundRequestsTypeDidNotReceiveRefund => 'refundRequestsTypeDidNotReceiveRefund'.tr();
+  /// Failed refund review - مراجعة استرداد فاشل - Beoordeling van mislukte terugbetaling - Prüfung einer fehlgeschlagenen Erstattung - Przegląd nieudanego zwrotu - Перевірка невдалого повернення - Examen d'un remboursement échoué - Revisión de reembolso fallido - Revizuire rambursare eșuată
+  static String get refundRequestsTypeKnownFailedRefund => 'refundRequestsTypeKnownFailedRefund'.tr();
+  /// Other - أخرى - Anders - Andere - Inne - Інше - Autre - Otro - Alta
+  static String get refundRequestsTypeOther => 'refundRequestsTypeOther'.tr();
+  /// Question about refund - سؤال حول الاسترداد - Vraag over terugbetaling - Frage zur Erstattung - Pytanie o zwrot - Запитання про повернення - Question sur le remboursement - Pregunta sobre el reembolso - Întrebare despre rambursare
+  static String get refundRequestsTypeQuestionAboutRefund => 'refundRequestsTypeQuestionAboutRefund'.tr();
+  /// Received less than expected - استلمت مبلغا أقل من المتوقع - Minder ontvangen dan verwacht - Weniger als erwartet erhalten - Otrzymano mniej niż oczekiwano - Отримано менше, ніж очікувалося - Montant reçu inférieur au montant attendu - Recibió menos de lo esperado - Suma primită este mai mică decât cea așteptată
+  static String get refundRequestsTypeReceivedLessThanExpected => 'refundRequestsTypeReceivedLessThanExpected'.tr();
+  /// Refund taking too long - الاسترداد يستغرق وقتا طويلا - Terugbetaling duurt te lang - Erstattung dauert zu lange - Zwrot trwa zbyt długo - Повернення триває занадто довго - Remboursement trop long - El reembolso tarda demasiado - Rambursarea durează prea mult
+  static String get refundRequestsTypeRefundTakingTooLong => 'refundRequestsTypeRefundTakingTooLong'.tr();
   /// Admin note - ملاحظة المدير - Adminnotitie - Admin-Notiz - Notatka admina - Нотатка адміністратора - Note admin - Nota del admin - Notă admin
   static String get refundsAdminNote => 'refundsAdminNote'.tr();
   /// Attempt count - عدد المحاولات - Aantal pogingen - Versuche - Liczba prób - Кількість спроб - Nombre de tentatives - Número de intentos - Număr încercări
@@ -963,8 +1009,14 @@ class AppStrings {
   static String get refundsFailureCode => 'refundsFailureCode'.tr();
   /// Failure reason - سبب الفشل - Foutreden - Fehlergrund - Powód błędu - Причина помилки - Raison de l'échec - Motivo del fallo - Motiv eșec
   static String get refundsFailureReason => 'refundsFailureReason'.tr();
+  /// No captured online payment is available for an automatic refund. - لا توجد دفعة إلكترونية محصلة متاحة للاسترداد التلقائي. - Er is geen geïnde online betaling beschikbaar voor een automatische terugbetaling. - Es ist keine eingezogene Online-Zahlung für eine automatische Erstattung verfügbar. - Brak pobranej płatności online dostępnej do automatycznego zwrotu. - Немає захопленого онлайн-платежу для автоматичного повернення. - Aucun paiement en ligne capturé n’est disponible pour un remboursement automatique. - No hay un pago en línea capturado disponible para un reembolso automático. - Nu există o plată online capturată disponibilă pentru rambursare automată.
+  static String get refundsFailureRefundUnavailable => 'refundsFailureRefundUnavailable'.tr();
+  /// Retry is currently blocked by backend eligibility. - إعادة المحاولة محظورة حاليا حسب أهلية الخادم. - Opnieuw proberen is momenteel geblokkeerd door backendgeschiktheid. - Die Wiederholung ist derzeit durch die Backend-Berechtigung blockiert. - Ponowienie jest obecnie zablokowane przez uprawnienia backendu. - Повтор зараз заблоковано правилами backend. - La relance est actuellement bloquée par l’éligibilité backend. - El reintento está bloqueado actualmente por la elegibilidad del backend. - Reîncercarea este momentan blocată de eligibilitatea backend.
+  static String get refundsFailureRetryBlocked => 'refundsFailureRetryBlocked'.tr();
   /// Failure - الفشل - Fout - Fehler - Błąd - Помилка - Échec - Fallo - Eșec
   static String get refundsFailureSection => 'refundsFailureSection'.tr();
+  /// Refund processing failed. Retry the refund when it is available. - فشلت معالجة الاسترداد. أعد محاولة الاسترداد عندما تكون متاحة. - De terugbetaling is mislukt. Probeer de terugbetaling opnieuw zodra deze beschikbaar is. - Die Erstattungsverarbeitung ist fehlgeschlagen. Wiederholen Sie die Erstattung, sobald sie verfügbar ist. - Przetwarzanie zwrotu nie powiodło się. Ponów zwrot, gdy będzie dostępny. - Обробка повернення не вдалася. Повторіть повернення, коли воно буде доступне. - Le traitement du remboursement a échoué. Relancez le remboursement lorsqu’il est disponible. - El procesamiento del reembolso falló. Reintenta el reembolso cuando esté disponible. - Procesarea rambursării a eșuat. Reîncearcă rambursarea când este disponibilă.
+  static String get refundsFailureStripeDisabled => 'refundsFailureStripeDisabled'.tr();
   /// All - الكل - Alles - Alle - Wszystkie - Усі - Tous - Todos - Toate
   static String get refundsFilterAll => 'refundsFilterAll'.tr();
   /// All sources - كل المصادر - Alle bronnen - Alle Quellen - Wszystkie źródła - Усі джерела - Toutes les sources - Todas las fuentes - Toate sursele
@@ -991,6 +1043,8 @@ class AppStrings {
   static String get refundsLastAttempt => 'refundsLastAttempt'.tr();
   /// Related records - السجلات المرتبطة - Gerelateerde records - Verknüpfte Datensätze - Powiązane rekordy - Пов'язані записи - Dossiers liés - Registros relacionados - Înregistrări asociate
   static String get refundsLinksSection => 'refundsLinksSection'.tr();
+  /// Load more - تحميل المزيد - Meer laden - Mehr laden - Załaduj więcej - Завантажити ще - Charger plus - Cargar más - Încarcă mai multe
+  static String get refundsLoadMore => 'refundsLoadMore'.tr();
   /// Not available - غير متوفر - Niet beschikbaar - Nicht verfügbar - Niedostępne - Недоступно - Indisponible - No disponible - Indisponibil
   static String get refundsNotAvailable => 'refundsNotAvailable'.tr();
   /// Original payment - المبلغ الأصلي - Oorspronkelijke betaling - Ursprüngliche Zahlung - Pierwotna płatność - Початкова оплата - Paiement initial - Pago original - Plata inițială

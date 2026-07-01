@@ -1,5 +1,7 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/refunds/domain/entities/refund_entity.dart';
+import 'package:dashboardtaxi/features/refunds/domain/entities/refund_enums.dart';
+import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/shared/refund_ui_formatters.dart';
 
 class RefundRetrySection extends StatelessWidget {
   const RefundRetrySection({
@@ -21,7 +23,7 @@ class RefundRetrySection extends StatelessWidget {
         color: context.surfaceContainer,
         borderRadius: BorderRadius.circular(AppRadii.lg.r),
         border: Border.all(
-          color: refund.canRetry
+          color: refund.canRetrySafely
               ? context.primary.withValues(alpha: 0.22)
               : context.onSurface.withValues(alpha: 0.08),
           width: 1.w,
@@ -33,16 +35,18 @@ class RefundRetrySection extends StatelessWidget {
           Row(
             children: [
               FaIcon(
-                refund.canRetry
+                refund.canRetrySafely
                     ? FontAwesomeIcons.rotateRight
                     : FontAwesomeIcons.circleInfo,
                 size: 16.r,
-                color: refund.canRetry ? context.primary : AppColors.warning,
+                color: refund.canRetrySafely
+                    ? context.primary
+                    : AppColors.warning,
               ),
               AppSpacing.sm.horizontalSpace,
               Expanded(
                 child: Text(
-                  refund.canRetry
+                  refund.canRetrySafely
                       ? AppStrings.refundsRetryAvailable
                       : AppStrings.refundsRetryUnavailable,
                   style: AppTextStyles.s14w600.copyWith(
@@ -54,10 +58,11 @@ class RefundRetrySection extends StatelessWidget {
           ),
           AppSpacing.sm.verticalSpace,
           Text(
-            refund.canRetry
+            refund.canRetrySafely
                 ? AppStrings.refundsRetryBackendApproval
-                : refund.retryBlockedReason ??
-                    AppStrings.refundsRetryBlockedFallback,
+                : refund.retryBlockedReason == RefundFailureCode.unknown
+                ? AppStrings.refundsRetryBlockedFallback
+                : RefundUiFormatters.failureLabel(refund.retryBlockedReason),
             style: AppTextStyles.s12w400.copyWith(
               color: context.onSurface.withValues(alpha: 0.66),
             ),
@@ -65,7 +70,7 @@ class RefundRetrySection extends StatelessWidget {
           AppSpacing.lg.verticalSpace,
           AppButton.primaryGradient(
             onTap: onRetry,
-            isActive: refund.canRetry,
+            isActive: refund.canRetrySafely,
             isLoading: isLoading,
             child: AppButtonChild.labelIcon(
               label: AppStrings.refundsRetry,

@@ -169,18 +169,14 @@ class SignalRRealtimeService implements RealtimeService {
     _joinedVehicleTypeGroups.add(vehicleTypeId);
     final hub = _connection;
     if (hub == null || _state != RealtimeConnectionState.connected) {
-      printC(
-        '$_logTag queued VehicleType_$vehicleTypeId join until connected',
-      );
+      printC('$_logTag queued VehicleType_$vehicleTypeId join until connected');
       return;
     }
     try {
       await hub.invoke('JoinVehicleTypeGroup', args: <Object>[vehicleTypeId]);
       printG('$_logTag joined VehicleType_$vehicleTypeId');
     } catch (error) {
-      printY(
-        '$_logTag joinVehicleTypeGroup($vehicleTypeId) failed: $error',
-      );
+      printY('$_logTag joinVehicleTypeGroup($vehicleTypeId) failed: $error');
     }
   }
 
@@ -193,9 +189,7 @@ class SignalRRealtimeService implements RealtimeService {
       await hub.invoke('LeaveVehicleTypeGroup', args: <Object>[vehicleTypeId]);
       printC('$_logTag left VehicleType_$vehicleTypeId');
     } catch (error) {
-      printY(
-        '$_logTag leaveVehicleTypeGroup($vehicleTypeId) failed: $error',
-      );
+      printY('$_logTag leaveVehicleTypeGroup($vehicleTypeId) failed: $error');
     }
   }
 
@@ -308,15 +302,10 @@ class SignalRRealtimeService implements RealtimeService {
     }
     for (final vehicleTypeId in _joinedVehicleTypeGroups) {
       try {
-        await hub.invoke(
-          'JoinVehicleTypeGroup',
-          args: <Object>[vehicleTypeId],
-        );
+        await hub.invoke('JoinVehicleTypeGroup', args: <Object>[vehicleTypeId]);
         printC('$_logTag re-joined VehicleType_$vehicleTypeId');
       } catch (error) {
-        printY(
-          '$_logTag re-join VehicleType_$vehicleTypeId failed: $error',
-        );
+        printY('$_logTag re-join VehicleType_$vehicleTypeId failed: $error');
       }
     }
   }
@@ -351,10 +340,7 @@ class SignalRRealtimeService implements RealtimeService {
     return payload;
   }
 
-  bool _hasRequiredStrings(
-    Map<String, dynamic> payload,
-    List<String> fields,
-  ) {
+  bool _hasRequiredStrings(Map<String, dynamic> payload, List<String> fields) {
     for (final field in fields) {
       if (_readNullableString(payload, field) == null) {
         printY('$_logTag malformed payload missing $field: $payload');
@@ -596,7 +582,7 @@ class SignalRRealtimeService implements RealtimeService {
         refundIssueId: _readString(p, 'refundIssueId'),
         tripId: _readString(p, 'tripId'),
         passengerId: _readString(p, 'passengerId'),
-        paymentId: _readString(p, 'paymentId'),
+        paymentId: _readNullableString(p, 'paymentId'),
         requestType: _readString(p, 'requestType'),
         reviewStatus: _readString(p, 'reviewStatus'),
       ),

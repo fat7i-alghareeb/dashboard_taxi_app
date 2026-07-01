@@ -280,6 +280,15 @@ The separation between Domain and Data layers must be absolute.
 - `presentation/ui/screens/`: Scaffolding and routing.
 - `presentation/ui/widgets/`: Separated sections and widgets.
 
+### Admin Refund Requests Feature Note
+
+`lib/features/refund_requests/` owns the admin-facing queue for customer refund review/support requests:
+
+- It calls `GET /api/v1/refund-issues` with pagination and review-status filters.
+- It calls `POST /api/v1/refund-issues/{id}/review` for admin review outcomes.
+- It displays nullable payment/refund links safely because Stripe-disabled trips can still create customer refund requests without a `Payment` row.
+- It does not execute refunds and does not call Stripe; actual refund execution remains in the backend refund lifecycle.
+
 ---
 
 _For detailed technical deep-dives into specific infrastructure layers, visit the internal documentation in `lib/core/`._

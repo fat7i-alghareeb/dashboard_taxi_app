@@ -1,9 +1,11 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
+import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/list/refunds_shimmer_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../domain/entities/compensation_claim_entity.dart';
 import '../../states/compensation_cubit.dart';
+import '../widgets/compensation_status_badge.dart';
 
 class CompensationClaimsScreen extends StatelessWidget {
   const CompensationClaimsScreen({super.key});
@@ -54,7 +56,11 @@ class _CompensationClaimsBody extends StatelessWidget {
             Expanded(
               child: StatusBuilder<List<CompensationClaimEntity>>(
                 state: state.claimsState,
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: REdgeInsets.all(AppSpacing.lg),
+                  child: const RefundsShimmerWidget(),
+                ),
                 success: (claims) {
                   if (claims.isEmpty) {
                     return Center(
@@ -97,38 +103,70 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: REdgeInsets.fromLTRB(
-        AppSpacing.md,
-        AppSpacing.md,
-        AppSpacing.md,
+        AppSpacing.lg,
+        AppSpacing.lg,
+        AppSpacing.lg,
         AppSpacing.sm,
       ),
       child: Row(
         children: [
-          IconButton(
-            onPressed: onBack,
-            icon: FaIcon(
-              context.chevronStart,
-              size: 18.r,
-              color: context.onSurface,
+          AppButton.grey(
+            onTap: onBack,
+            layout: AppButtonLayout(
+              width: 44.w,
+              height: 44.h,
+              shape: AppButtonShape.circle,
+              contentPadding: REdgeInsets.all(AppSpacing.sm),
+            ),
+            child: AppButtonChild.icon(
+              IconSource.builder(
+                (_) => FaIcon(FontAwesomeIcons.arrowLeft, size: 16.r),
+              ),
             ),
           ),
+          AppSpacing.md.horizontalSpace,
           Expanded(
-            child: Text(
-              AppStrings.dashboardCompensationClaims,
-              style: AppTextStyles.s18w600.copyWith(color: context.onSurface),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppStrings.dashboardCompensationClaims,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.s24w700.copyWith(
+                    color: context.onSurface,
+                  ),
+                ),
+                AppSpacing.xs.verticalSpace,
+                Text(
+                  AppStrings.compensationSubtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.s12w400.copyWith(
+                    color: context.onSurface.withValues(alpha: 0.64),
+                  ),
+                ),
+              ],
             ),
           ),
-          IconButton(
-            onPressed: onRefresh,
-            icon: FaIcon(
-              FontAwesomeIcons.arrowsRotate,
-              size: 18.r,
-              color: context.onSurface.withValues(alpha: 0.70),
+          AppSpacing.md.horizontalSpace,
+          AppButton.primary(
+            onTap: onRefresh,
+            layout: AppButtonLayout(
+              width: 44.w,
+              height: 44.h,
+              shape: AppButtonShape.circle,
+              contentPadding: REdgeInsets.all(AppSpacing.sm),
+            ),
+            child: AppButtonChild.icon(
+              IconSource.builder(
+                (_) => FaIcon(FontAwesomeIcons.arrowsRotate, size: 16.r),
+              ),
             ),
           ),
         ],
       ),
-    );
+    ).animate().fadeIn(duration: 220.ms).slideY(begin: 0.06, end: 0);
   }
 }
 
@@ -145,28 +183,63 @@ class _ClaimCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg.r),
-        border: Border.all(color: context.onSurface.withValues(alpha: 0.08)),
+        border: Border.all(color: _borderColor(context), width: 1.w),
+        boxShadow: context.shadows.primary,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  AppStrings.compensationPercentage,
-                  style: AppTextStyles.s12w500.copyWith(
-                    color: context.onSurface.withValues(alpha: 0.60),
-                  ),
+              Container(
+                width: 40.w,
+                height: 40.h,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.success.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppRadii.lg.r),
+                ),
+                child: FaIcon(
+                  FontAwesomeIcons.handHoldingDollar,
+                  size: 17.r,
+                  color: AppColors.success,
                 ),
               ),
-              Text(
-                claim.amountLabel,
-                style: AppTextStyles.s16w600.copyWith(color: AppColors.success),
+              AppSpacing.md.horizontalSpace,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      claim.amountLabel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.s18w600.copyWith(
+                        color: context.onSurface,
+                      ),
+                    ),
+                    if (claim.createdAt != null) ...[
+                      AppSpacing.xs.verticalSpace,
+                      Text(
+                        claim.createdAt!.toSmartDateTime(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.s12w400.copyWith(
+                          color: context.onSurface.withValues(alpha: 0.62),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
+              AppSpacing.md.horizontalSpace,
+              CompensationStatusBadge(claim: claim),
             ],
           ),
-          AppSpacing.sm.verticalSpace,
+          AppSpacing.lg.verticalSpace,
+          _InfoRow(label: AppStrings.refundsTrip, value: claim.tripId),
+          AppSpacing.md.verticalSpace,
           Text(
             claim.note,
             style: AppTextStyles.s14w400.copyWith(color: context.onSurface),
@@ -183,46 +256,90 @@ class _ClaimCard extends StatelessWidget {
             for (var i = 0; i < claim.evidenceUrls.length; i++)
               _EvidenceLink(url: claim.evidenceUrls[i], index: i + 1),
           ],
-          AppSpacing.lg.verticalSpace,
-          Row(
-            children: [
-              Expanded(
-                child: AppButton.outline(
-                  variant: AppButtonVariant.error,
-                  layout: const AppButtonLayout(height: 44),
-                  onTap: isReviewing
-                      ? null
-                      : () => context.read<CompensationCubit>().review(
-                          claimId: claim.id,
-                          approved: false,
-                        ),
-                  child: AppButtonChild.label(
-                    AppStrings.dashboardRejectClaim,
-                    textStyle: AppTextStyles.s14w500,
+          if (claim.isPending) ...[
+            AppSpacing.lg.verticalSpace,
+            Row(
+              children: [
+                Expanded(
+                  child: AppButton.outline(
+                    variant: AppButtonVariant.error,
+                    layout: const AppButtonLayout(height: 44),
+                    onTap: isReviewing
+                        ? null
+                        : () => context.read<CompensationCubit>().review(
+                            claimId: claim.id,
+                            approved: false,
+                          ),
+                    child: AppButtonChild.label(
+                      AppStrings.dashboardRejectClaim,
+                      textStyle: AppTextStyles.s14w500,
+                    ),
                   ),
                 ),
-              ),
-              AppSpacing.md.horizontalSpace,
-              Expanded(
-                child: AppButton.primary(
-                  isLoading: isReviewing,
-                  layout: const AppButtonLayout(height: 44),
-                  onTap: isReviewing
-                      ? null
-                      : () => context.read<CompensationCubit>().review(
-                          claimId: claim.id,
-                          approved: true,
-                        ),
-                  child: AppButtonChild.label(
-                    AppStrings.dashboardApproveClaim,
-                    textStyle: AppTextStyles.s14w600,
+                AppSpacing.md.horizontalSpace,
+                Expanded(
+                  child: AppButton.primary(
+                    isLoading: isReviewing,
+                    layout: const AppButtonLayout(height: 44),
+                    onTap: isReviewing
+                        ? null
+                        : () => context.read<CompensationCubit>().review(
+                            claimId: claim.id,
+                            approved: true,
+                          ),
+                    child: AppButtonChild.label(
+                      AppStrings.dashboardApproveClaim,
+                      textStyle: AppTextStyles.s14w600,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ],
       ),
+    );
+  }
+
+  Color _borderColor(BuildContext context) {
+    if (claim.isPending) return AppColors.warning.withValues(alpha: 0.24);
+    return context.onSurface.withValues(alpha: 0.08);
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 118.w,
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.s12w400.copyWith(
+              color: context.onSurface.withValues(alpha: 0.58),
+            ),
+          ),
+        ),
+        AppSpacing.sm.horizontalSpace,
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.end,
+            style: AppTextStyles.s12w500.copyWith(color: context.onSurface),
+          ),
+        ),
+      ],
     );
   }
 }

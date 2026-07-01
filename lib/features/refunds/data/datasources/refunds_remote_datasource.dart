@@ -3,6 +3,8 @@ import 'package:injectable/injectable.dart';
 import 'package:dashboardtaxi/core/error/global_error_handler.dart';
 import 'package:dashboardtaxi/core/network/api_endpoints.dart';
 import 'package:dashboardtaxi/features/refunds/data/models/refund_model.dart';
+import 'package:dashboardtaxi/features/refunds/data/models/refunds_page_model.dart';
+import 'package:dashboardtaxi/features/refunds/data/models/refunds_query_model.dart';
 import 'package:dashboardtaxi/utils/helpers/colored_print.dart';
 
 @lazySingleton
@@ -11,14 +13,14 @@ class RefundsRemoteDataSource {
 
   final Dio _dio;
 
-  Future<List<RefundModel>> getRefunds() {
+  Future<RefundsPageModel> getRefunds(RefundsQueryModel query) {
     return rethrowAsAppException(() async {
       printY('[RefundsRemoteDataSource] getRefunds');
-      final response = await _dio.get<dynamic>(ApiEndpoints.refunds);
-      return _readList(response.data)
-          .whereType<Map<String, dynamic>>()
-          .map(RefundModel.fromJson)
-          .toList();
+      final response = await _dio.get<dynamic>(
+        ApiEndpoints.refunds,
+        queryParameters: query.toQueryParameters(),
+      );
+      return RefundsPageModel.fromJson(_readMap(response.data));
     });
   }
 
@@ -27,6 +29,18 @@ class RefundsRemoteDataSource {
       printY('[RefundsRemoteDataSource] getRefundDetail refund=$refundId');
       final response = await _dio.get<dynamic>(
         ApiEndpoints.refundDetail(refundId),
+      );
+      return RefundModel.fromJson(_readMap(response.data));
+    });
+  }
+
+  Future<RefundModel> getCancellationRefundDetail(String tripCancellationId) {
+    return rethrowAsAppException(() async {
+      printY(
+        '[RefundsRemoteDataSource] getCancellationRefundDetail cancellation=$tripCancellationId',
+      );
+      final response = await _dio.get<dynamic>(
+        ApiEndpoints.refundCancellationDetail(tripCancellationId),
       );
       return RefundModel.fromJson(_readMap(response.data));
     });
@@ -41,15 +55,6 @@ class RefundsRemoteDataSource {
       );
       return RefundModel.fromJson(_readMap(response.data));
     });
-  }
-
-  List<dynamic> _readList(dynamic data) {
-    if (data is List<dynamic>) return data;
-    if (data is Map<String, dynamic>) {
-      final items = data['items'] ?? data['data'] ?? data['refunds'];
-      if (items is List<dynamic>) return items;
-    }
-    return const <dynamic>[];
   }
 
   Map<String, dynamic> _readMap(dynamic data) {

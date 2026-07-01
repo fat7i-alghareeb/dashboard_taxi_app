@@ -189,10 +189,8 @@ class AppRouteRegistry {
     GoRoute(
       path: RefundsScreen.pagePath,
       name: RefundsScreen.pageName,
-      pageBuilder: (context, state) => AppPageTransitions.build(
-        state: state,
-        child: const RefundsScreen(),
-      ),
+      pageBuilder: (context, state) =>
+          AppPageTransitions.build(state: state, child: const RefundsScreen()),
     ),
     GoRoute(
       path: RefundDetailScreen.pagePath,
@@ -200,6 +198,14 @@ class AppRouteRegistry {
       pageBuilder: (context, state) => AppPageTransitions.build(
         state: state,
         child: RefundDetailScreen(args: state.extra as RefundDetailScreenArgs),
+      ),
+    ),
+    GoRoute(
+      path: RefundRequestsScreen.pagePath,
+      name: RefundRequestsScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const RefundRequestsScreen(),
       ),
     ),
     GoRoute(

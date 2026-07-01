@@ -173,6 +173,16 @@ import 'package:dashboardtaxi/features/recordings/data/datasources/recordings_re
     as _i422;
 import 'package:dashboardtaxi/features/recordings/presentation/states/recordings_cubit.dart'
     as _i849;
+import 'package:dashboardtaxi/features/refund_requests/data/datasources/refund_requests_remote_datasource.dart'
+    as _i440;
+import 'package:dashboardtaxi/features/refund_requests/data/repositories/refund_requests_repository_impl.dart'
+    as _i371;
+import 'package:dashboardtaxi/features/refund_requests/domain/facade/refund_requests_facade.dart'
+    as _i164;
+import 'package:dashboardtaxi/features/refund_requests/domain/repositories/refund_requests_repository.dart'
+    as _i719;
+import 'package:dashboardtaxi/features/refund_requests/presentation/states/refund_requests_cubit.dart'
+    as _i787;
 import 'package:dashboardtaxi/features/refunds/data/datasources/refunds_remote_datasource.dart'
     as _i565;
 import 'package:dashboardtaxi/features/refunds/data/repositories/refunds_repository_impl.dart'
@@ -390,6 +400,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i422.RecordingsRemoteDataSource>(
       () => _i422.RecordingsRemoteDataSource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i440.RefundRequestsRemoteDataSource>(
+      () => _i440.RefundRequestsRemoteDataSource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i565.RefundsRemoteDataSource>(
       () => _i565.RefundsRemoteDataSource(gh<_i361.Dio>()),
     );
@@ -467,6 +480,11 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i193.AdminManagementRemoteDataSource>(),
       ),
     );
+    gh.lazySingleton<_i719.RefundRequestsRepository>(
+      () => _i371.RefundRequestsRepositoryImpl(
+        gh<_i440.RefundRequestsRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i188.SupportContactBloc>(
       () => _i188.SupportContactBloc(gh<_i733.SupportContactFacade>()),
     );
@@ -518,11 +536,20 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i625.AdminManagementFacade(gh<_i392.AdminManagementRepository>()),
     );
     gh.factory<_i100.AuthBloc>(() => _i100.AuthBloc(gh<_i471.AuthFacade>()));
+    gh.lazySingleton<_i164.RefundRequestsFacade>(
+      () => _i164.RefundRequestsFacade(gh<_i719.RefundRequestsRepository>()),
+    );
     gh.lazySingleton<_i461.DriverFacade>(
       () => _i461.DriverFacade(gh<_i336.DriverRepository>()),
     );
     gh.factory<_i141.KycBloc>(
       () => _i141.KycBloc(gh<_i724.KycFacade>(), gh<_i322.AuthManager>()),
+    );
+    gh.factory<_i787.RefundRequestsCubit>(
+      () => _i787.RefundRequestsCubit(
+        gh<_i164.RefundRequestsFacade>(),
+        gh<_i868.RealtimeService>(),
+      ),
     );
     gh.lazySingleton<_i931.TripFacade>(
       () => _i931.TripFacade(gh<_i217.TripRepository>()),

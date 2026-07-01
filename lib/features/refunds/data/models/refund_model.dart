@@ -1,6 +1,5 @@
 class RefundModel {
   const RefundModel({
-    required this.refundId,
     required this.status,
     required this.sourceType,
     required this.amount,
@@ -10,6 +9,7 @@ class RefundModel {
     required this.canRetry,
     required this.attemptCount,
     this.paymentId,
+    this.refundId,
     this.tripId,
     this.passengerId,
     this.refundPercent,
@@ -32,9 +32,11 @@ class RefundModel {
     this.tripCompensationClaimId,
     this.requestedByAdminId,
     this.adminNote,
+    this.isManualObligation = false,
+    this.cancellationReason,
   });
 
-  final String refundId;
+  final String? refundId;
   final String? paymentId;
   final String? tripId;
   final String? passengerId;
@@ -66,10 +68,12 @@ class RefundModel {
   final String? tripCompensationClaimId;
   final String? requestedByAdminId;
   final String? adminNote;
+  final bool isManualObligation;
+  final String? cancellationReason;
 
   factory RefundModel.fromJson(Map<String, dynamic> json) {
     return RefundModel(
-      refundId: _readString(json, 'refundId', fallbackKey: 'id') ?? '',
+      refundId: _readString(json, 'refundId', fallbackKey: 'id'),
       paymentId: _readString(json, 'paymentId'),
       tripId: _readString(json, 'tripId'),
       passengerId: _readString(json, 'passengerId'),
@@ -106,6 +110,8 @@ class RefundModel {
       tripCompensationClaimId: _readString(json, 'tripCompensationClaimId'),
       requestedByAdminId: _readString(json, 'requestedByAdminId'),
       adminNote: _readString(json, 'adminNote'),
+      isManualObligation: _readBool(json, 'isManualObligation'),
+      cancellationReason: _readString(json, 'cancellationReason'),
     );
   }
 
@@ -143,6 +149,8 @@ class RefundModel {
       'tripCompensationClaimId': tripCompensationClaimId,
       'requestedByAdminId': requestedByAdminId,
       'adminNote': adminNote,
+      'isManualObligation': isManualObligation,
+      'cancellationReason': cancellationReason,
     };
   }
 

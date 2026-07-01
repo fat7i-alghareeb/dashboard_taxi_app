@@ -84,7 +84,7 @@ sealed class RealtimeEvent with _$RealtimeEvent {
     required String refundIssueId,
     required String tripId,
     required String passengerId,
-    required String paymentId,
+    String? paymentId,
     required String requestType,
     required String reviewStatus,
   }) = RealtimeRefundIssueCreated;
@@ -127,9 +127,8 @@ sealed class RealtimeEvent with _$RealtimeEvent {
   }) = RealtimeTripMessageReceived;
 
   /// The trip's chat was closed (trip completed or cancelled).
-  const factory RealtimeEvent.chatClosed({
-    required String tripId,
-  }) = RealtimeChatClosed;
+  const factory RealtimeEvent.chatClosed({required String tripId}) =
+      RealtimeChatClosed;
 
   /// A new customer incident was recorded (admins-only feed). [tripId] is empty
   /// when the incident is not tied to a trip.

@@ -7,6 +7,7 @@ import 'package:dashboardtaxi/core/services/realtime/realtime_service.dart';
 import 'package:dashboardtaxi/core/utils/bloc_status.dart';
 import 'package:dashboardtaxi/core/utils/result.dart';
 import 'package:dashboardtaxi/features/refunds/domain/entities/refund_entity.dart';
+import 'package:dashboardtaxi/features/refunds/domain/entities/refund_enums.dart';
 import 'package:dashboardtaxi/features/refunds/domain/facade/refunds_facade.dart';
 
 enum RefundStatusFilter { all, failed, pending, succeeded, requiresAction }
@@ -21,6 +22,11 @@ class RefundsState {
     this.statusFilter = RefundStatusFilter.all,
     this.sourceFilter = RefundSourceFilter.all,
     this.search = '',
+    this.page = 1,
+    this.pageSize = 20,
+    this.totalCount = 0,
+    this.hasMore = false,
+    this.isLoadingMore = false,
   });
 
   final BlocStatus<List<RefundEntity>> listState;
@@ -29,6 +35,11 @@ class RefundsState {
   final RefundStatusFilter statusFilter;
   final RefundSourceFilter sourceFilter;
   final String search;
+  final int page;
+  final int pageSize;
+  final int totalCount;
+  final bool hasMore;
+  final bool isLoadingMore;
 
   List<RefundEntity> get filteredRefunds {
     final refunds = listState.getDataWhenSuccess ?? const <RefundEntity>[];
@@ -43,16 +54,15 @@ class RefundsState {
       };
       final sourceMatches = switch (sourceFilter) {
         RefundSourceFilter.all => true,
-        RefundSourceFilter.cancellation =>
-          refund.sourceType.toLowerCase().contains('cancellation'),
+        RefundSourceFilter.cancellation => refund.sourceType.isCancellation,
         RefundSourceFilter.manualIncident =>
-          refund.sourceType.toLowerCase() == 'manualincidentrefund',
+          refund.sourceType == RefundSourceType.manualIncidentRefund,
         RefundSourceFilter.compensation =>
-          refund.sourceType.toLowerCase() == 'compensationclaim',
+          refund.sourceType == RefundSourceType.compensationClaim,
       };
       final queryMatches =
           query.isEmpty ||
-          refund.refundId.toLowerCase().contains(query) ||
+          refund.stableReferenceId.toLowerCase().contains(query) ||
           (refund.tripId?.toLowerCase().contains(query) ?? false) ||
           (refund.passengerId?.toLowerCase().contains(query) ?? false) ||
           (refund.paymentMethod?.toLowerCase().contains(query) ?? false);
@@ -69,6 +79,11 @@ class RefundsState {
     RefundStatusFilter? statusFilter,
     RefundSourceFilter? sourceFilter,
     String? search,
+    int? page,
+    int? pageSize,
+    int? totalCount,
+    bool? hasMore,
+    bool? isLoadingMore,
   }) {
     return RefundsState(
       listState: listState ?? this.listState,
@@ -77,6 +92,11 @@ class RefundsState {
       statusFilter: statusFilter ?? this.statusFilter,
       sourceFilter: sourceFilter ?? this.sourceFilter,
       search: search ?? this.search,
+      page: page ?? this.page,
+      pageSize: pageSize ?? this.pageSize,
+      totalCount: totalCount ?? this.totalCount,
+      hasMore: hasMore ?? this.hasMore,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
     );
   }
 
@@ -108,19 +128,75 @@ class RefundsCubit extends Cubit<RefundsState> {
   StreamSubscription<RealtimeEvent>? _realtimeSub;
 
   Future<void> loadRefunds() async {
-    emit(state.copyWith(listState: const BlocStatus.loading()));
-    final result = await _facade.getRefunds();
+    emit(
+      state.copyWith(
+        listState: const BlocStatus.loading(),
+        page: 1,
+        totalCount: 0,
+        hasMore: false,
+        isLoadingMore: false,
+      ),
+    );
+    final result = await _facade.getRefunds(
+      page: 1,
+      pageSize: state.pageSize,
+      status: _statusQuery(state.statusFilter),
+      sourceType: _sourceQuery(state.sourceFilter),
+    );
     result.map(
-      success: (value) =>
-          emit(state.copyWith(listState: BlocStatus.success(value.data))),
+      success: (value) => emit(
+        state.copyWith(
+          listState: BlocStatus.success(value.data.items),
+          page: value.data.page,
+          pageSize: value.data.pageSize,
+          totalCount: value.data.totalCount,
+          hasMore: value.data.hasMore,
+          isLoadingMore: false,
+        ),
+      ),
       failure: (value) =>
           emit(state.copyWith(listState: BlocStatus.failure(value.message))),
     );
   }
 
-  Future<void> loadRefundDetail(String refundId) async {
+  Future<void> loadMoreRefunds() async {
+    if (!state.hasMore || state.isLoadingMore || state.listState.isLoading) {
+      return;
+    }
+
+    final current =
+        state.listState.getDataWhenSuccess ?? const <RefundEntity>[];
+    final nextPage = state.page + 1;
+    emit(state.copyWith(isLoadingMore: true));
+    final result = await _facade.getRefunds(
+      page: nextPage,
+      pageSize: state.pageSize,
+      status: _statusQuery(state.statusFilter),
+      sourceType: _sourceQuery(state.sourceFilter),
+    );
+    result.map(
+      success: (value) => emit(
+        state.copyWith(
+          listState: BlocStatus.success([...current, ...value.data.items]),
+          page: value.data.page,
+          pageSize: value.data.pageSize,
+          totalCount: value.data.totalCount,
+          hasMore: value.data.hasMore,
+          isLoadingMore: false,
+        ),
+      ),
+      failure: (_) => emit(state.copyWith(isLoadingMore: false)),
+    );
+  }
+
+  Future<void> loadRefundDetail({
+    String? refundId,
+    String? tripCancellationId,
+  }) async {
     emit(state.copyWith(detailState: const BlocStatus.loading()));
-    final result = await _facade.getRefundDetail(refundId);
+    final result = refundId?.isNotEmpty == true
+        ? await _facade.getRefundDetail(refundId!)
+        : await _facade.getCancellationRefundDetail(tripCancellationId ?? '');
     result.map(
       success: (value) =>
           emit(state.copyWith(detailState: BlocStatus.success(value.data))),
@@ -153,10 +229,12 @@ class RefundsCubit extends Cubit<RefundsState> {
 
   void setStatusFilter(RefundStatusFilter filter) {
     emit(state.copyWith(statusFilter: filter));
+    unawaited(loadRefunds());
   }
 
   void setSourceFilter(RefundSourceFilter filter) {
     emit(state.copyWith(sourceFilter: filter));
+    unawaited(loadRefunds());
   }
 
   void setSearch(String value) {
@@ -179,7 +257,7 @@ class RefundsCubit extends Cubit<RefundsState> {
         unawaited(loadRefunds());
         final currentDetail = state.detailState.getDataWhenSuccess;
         if (currentDetail?.refundId == refundId) {
-          unawaited(loadRefundDetail(refundId));
+          unawaited(loadRefundDetail(refundId: refundId));
         }
         break;
       case RealtimeRefundIssueCreated():
@@ -195,7 +273,31 @@ class RefundsCubit extends Cubit<RefundsState> {
     RefundEntity refund,
   ) {
     return current
-        .map((item) => item.refundId == refund.refundId ? refund : item)
+        .map(
+          (item) => item.stableReferenceId == refund.stableReferenceId
+              ? refund
+              : item,
+        )
         .toList();
+  }
+
+  RefundStatus? _statusQuery(RefundStatusFilter filter) {
+    return switch (filter) {
+      RefundStatusFilter.all => null,
+      RefundStatusFilter.failed => RefundStatus.failed,
+      RefundStatusFilter.pending => RefundStatus.pending,
+      RefundStatusFilter.succeeded => RefundStatus.succeeded,
+      RefundStatusFilter.requiresAction => RefundStatus.requiresAdminAction,
+    };
+  }
+
+  RefundSourceType? _sourceQuery(RefundSourceFilter filter) {
+    return switch (filter) {
+      RefundSourceFilter.all => null,
+      RefundSourceFilter.cancellation => null,
+      RefundSourceFilter.manualIncident =>
+        RefundSourceType.manualIncidentRefund,
+      RefundSourceFilter.compensation => RefundSourceType.compensationClaim,
+    };
   }
 }

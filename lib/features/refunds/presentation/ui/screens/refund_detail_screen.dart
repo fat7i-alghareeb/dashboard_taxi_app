@@ -3,9 +3,10 @@ import 'package:dashboardtaxi/features/refunds/presentation/states/refunds_cubit
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/detail/refund_detail_body.dart';
 
 class RefundDetailScreenArgs {
-  const RefundDetailScreenArgs({required this.refundId});
+  const RefundDetailScreenArgs({this.refundId, this.tripCancellationId});
 
-  final String refundId;
+  final String? refundId;
+  final String? tripCancellationId;
 }
 
 class RefundDetailScreen extends StatelessWidget {
@@ -20,8 +21,12 @@ class RefundDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScaffold.body(
       child: BlocProvider(
-        create: (_) => getIt<RefundsCubit>()..loadRefundDetail(args.refundId),
-        child: RefundDetailBody(refundId: args.refundId),
+        create: (_) => getIt<RefundsCubit>()
+          ..loadRefundDetail(
+            refundId: args.refundId,
+            tripCancellationId: args.tripCancellationId,
+          ),
+        child: RefundDetailBody(args: args),
       ),
     );
   }

@@ -11,7 +11,8 @@ class ApiEndpoints {
   static const String registerAdmin = '/api/v1/admins';
 
   // Notifications (admin broadcast to an audience topic)
-  static const String broadcastNotification = '/api/v1/notifications/broadcasts';
+  static const String broadcastNotification =
+      '/api/v1/notifications/broadcasts';
 
   // Users
   static const String currentUser = '/api/v1/users/me';
@@ -103,8 +104,13 @@ class ApiEndpoints {
   // Refund lifecycle (admin)
   static const String refunds = '/api/v1/refunds';
   static String refundDetail(String refundId) => '/api/v1/refunds/$refundId';
+  static String refundCancellationDetail(String tripCancellationId) =>
+      '/api/v1/refunds/cancellations/$tripCancellationId';
   static String retryRefund(String refundId) =>
       '/api/v1/refunds/$refundId/retry';
+  static const String refundIssues = '/api/v1/refund-issues';
+  static String reviewRefundIssue(String refundIssueId) =>
+      '/api/v1/refund-issues/$refundIssueId/review';
 
   // Passenger moderation (admin)
   static String suspendUser(String userId) =>

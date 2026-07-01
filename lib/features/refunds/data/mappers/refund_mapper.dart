@@ -1,5 +1,6 @@
 import 'package:dashboardtaxi/features/refunds/data/models/refund_model.dart';
 import 'package:dashboardtaxi/features/refunds/domain/entities/refund_entity.dart';
+import 'package:dashboardtaxi/features/refunds/domain/entities/refund_enums.dart';
 
 extension RefundModelMapper on RefundModel {
   RefundEntity get toEntity => RefundEntity(
@@ -7,8 +8,8 @@ extension RefundModelMapper on RefundModel {
     paymentId: paymentId,
     tripId: tripId,
     passengerId: passengerId,
-    status: status,
-    sourceType: sourceType,
+    status: RefundStatus.fromJson(status),
+    sourceType: RefundSourceType.fromJson(sourceType),
     amount: amount,
     currency: currency,
     refundPercent: refundPercent,
@@ -24,16 +25,18 @@ extension RefundModelMapper on RefundModel {
     stripeRefundId: stripeRefundId,
     stripePaymentIntentId: stripePaymentIntentId,
     stripeChargeId: stripeChargeId,
-    failureCode: failureCode,
+    failureCode: RefundFailureCode.fromJson(failureCode),
     failureReason: failureReason,
     attemptCount: attemptCount,
     canRetry: canRetry,
-    retryBlockedReason: retryBlockedReason,
+    retryBlockedReason: RefundFailureCode.fromJson(retryBlockedReason),
     requiresAdminAction: requiresAdminAction,
     tripCancellationId: tripCancellationId,
     customerIncidentId: customerIncidentId,
     tripCompensationClaimId: tripCompensationClaimId,
     requestedByAdminId: requestedByAdminId,
     adminNote: adminNote,
+    isManualObligation: isManualObligation,
+    cancellationReason: cancellationReason,
   );
 }

@@ -1,4 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/features/refund_requests/presentation/ui/screens/refund_requests_screen.dart';
 import 'package:dashboardtaxi/features/refunds/domain/entities/refund_entity.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/states/refunds_cubit.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/list/refunds_filter_bar.dart';
@@ -36,7 +37,11 @@ class _RefundsBodyState extends State<RefundsBody> {
               vertical: AppSpacing.lg,
             ),
             children: [
-              RefundsHeaderSection(onRefresh: cubit.loadRefunds),
+              RefundsHeaderSection(
+                onRefresh: cubit.loadRefunds,
+                onOpenCustomerRequests: () =>
+                    context.pushNamed(RefundRequestsScreen.pageName),
+              ),
               AppSpacing.lg.verticalSpace,
               RefundsFilterBar(
                 searchController: _searchController,
@@ -52,7 +57,12 @@ class _RefundsBodyState extends State<RefundsBody> {
                 isEmpty: (_) => state.filteredRefunds.isEmpty,
                 empty: () => EmptyStateWidget(text: AppStrings.refundsEmpty),
                 onError: cubit.loadRefunds,
-                success: (_) => RefundsListSection(refunds: state.filteredRefunds),
+                success: (_) => RefundsListSection(
+                  refunds: state.filteredRefunds,
+                  hasMore: state.hasMore,
+                  isLoadingMore: state.isLoadingMore,
+                  onLoadMore: cubit.loadMoreRefunds,
+                ),
               ),
               AppSpacing.xxl.verticalSpace,
             ],

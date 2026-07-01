@@ -1,6 +1,7 @@
+import 'package:dashboardtaxi/features/refunds/domain/entities/refund_enums.dart';
+
 class RefundEntity {
   const RefundEntity({
-    required this.refundId,
     required this.status,
     required this.sourceType,
     required this.amount,
@@ -10,6 +11,7 @@ class RefundEntity {
     required this.canRetry,
     required this.attemptCount,
     this.paymentId,
+    this.refundId,
     this.tripId,
     this.passengerId,
     this.refundPercent,
@@ -24,22 +26,24 @@ class RefundEntity {
     this.stripeRefundId,
     this.stripePaymentIntentId,
     this.stripeChargeId,
-    this.failureCode,
+    this.failureCode = RefundFailureCode.unknown,
     this.failureReason,
-    this.retryBlockedReason,
+    this.retryBlockedReason = RefundFailureCode.unknown,
     this.tripCancellationId,
     this.customerIncidentId,
     this.tripCompensationClaimId,
     this.requestedByAdminId,
     this.adminNote,
+    this.isManualObligation = false,
+    this.cancellationReason,
   });
 
-  final String refundId;
+  final String? refundId;
   final String? paymentId;
   final String? tripId;
   final String? passengerId;
-  final String status;
-  final String sourceType;
+  final RefundStatus status;
+  final RefundSourceType sourceType;
   final double amount;
   final String currency;
   final double? refundPercent;
@@ -55,33 +59,36 @@ class RefundEntity {
   final String? stripeRefundId;
   final String? stripePaymentIntentId;
   final String? stripeChargeId;
-  final String? failureCode;
+  final RefundFailureCode failureCode;
   final String? failureReason;
   final int attemptCount;
   final bool canRetry;
-  final String? retryBlockedReason;
+  final RefundFailureCode retryBlockedReason;
   final bool requiresAdminAction;
   final String? tripCancellationId;
   final String? customerIncidentId;
   final String? tripCompensationClaimId;
   final String? requestedByAdminId;
   final String? adminNote;
+  final bool isManualObligation;
+  final String? cancellationReason;
 
-  bool get isFailedLike {
-    final normalized = status.toLowerCase();
-    return normalized.contains('failed') ||
-        normalized == 'requiresadminaction';
-  }
+  String get stableReferenceId =>
+      refundId ?? tripCancellationId ?? paymentId ?? tripId ?? '';
 
-  bool get isPendingLike {
-    final normalized = status.toLowerCase();
-    return normalized == 'requested' ||
-        normalized == 'pending' ||
-        normalized == 'retrying';
-  }
+  bool get hasDetailReference =>
+      (refundId?.isNotEmpty ?? false) ||
+      (tripCancellationId?.isNotEmpty ?? false);
 
-  bool get isSucceeded => status.toLowerCase() == 'succeeded';
+  bool get canRetrySafely =>
+      !isManualObligation && (refundId?.isNotEmpty ?? false) && canRetry;
+
+  bool get isFailedLike => status.isFailedLike;
+
+  bool get isPendingLike => status.isPendingLike;
+
+  bool get isSucceeded => status.isSucceeded;
 
   bool get isRequiresAction =>
-      requiresAdminAction || status.toLowerCase() == 'requiresadminaction';
+      requiresAdminAction || status == RefundStatus.requiresAdminAction;
 }

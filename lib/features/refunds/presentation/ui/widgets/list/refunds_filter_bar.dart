@@ -80,7 +80,8 @@ class RefundsFilterBar extends StatelessWidget {
       RefundStatusFilter.failed => AppStrings.refundsFilterFailed,
       RefundStatusFilter.pending => AppStrings.refundsFilterPending,
       RefundStatusFilter.succeeded => AppStrings.refundsFilterSucceeded,
-      RefundStatusFilter.requiresAction => AppStrings.refundsFilterRequiresAction,
+      RefundStatusFilter.requiresAction =>
+        AppStrings.refundsFilterRequiresAction,
     };
   }
 
@@ -88,7 +89,8 @@ class RefundsFilterBar extends StatelessWidget {
     return switch (filter) {
       RefundSourceFilter.all => AppStrings.refundsFilterAllSources,
       RefundSourceFilter.cancellation => AppStrings.refundsFilterCancellation,
-      RefundSourceFilter.manualIncident => AppStrings.refundsFilterManualIncident,
+      RefundSourceFilter.manualIncident =>
+        AppStrings.refundsFilterManualIncident,
       RefundSourceFilter.compensation => AppStrings.refundsFilterCompensation,
     };
   }

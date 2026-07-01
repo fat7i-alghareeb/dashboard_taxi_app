@@ -1,5 +1,6 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/refunds/domain/entities/refund_entity.dart';
+import 'package:dashboardtaxi/features/refunds/domain/entities/refund_enums.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/screens/refund_detail_screen.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/list/refund_card_info_row.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/shared/refund_status_badge.dart';
@@ -19,16 +20,16 @@ class RefundCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadii.lg.r),
         onTap: () => context.pushNamed(
           RefundDetailScreen.pageName,
-          extra: RefundDetailScreenArgs(refundId: refund.refundId),
+          extra: RefundDetailScreenArgs(
+            refundId: refund.refundId,
+            tripCancellationId: refund.tripCancellationId,
+          ),
         ),
         child: Container(
           padding: REdgeInsets.all(AppSpacing.lg),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadii.lg.r),
-            border: Border.all(
-              color: _borderColor(context),
-              width: 1.w,
-            ),
+            border: Border.all(color: _borderColor(context), width: 1.w),
             boxShadow: context.shadows.primary,
           ),
           child: Column(
@@ -103,10 +104,14 @@ class RefundCardWidget extends StatelessWidget {
                 label: AppStrings.refundsRequested,
                 value: RefundUiFormatters.date(refund.requestedAtUtc),
               ),
-              if (refund.failureReason?.isNotEmpty == true) ...[
+              if (refund.failureCode != RefundFailureCode.unknown ||
+                  refund.failureReason?.isNotEmpty == true) ...[
                 AppSpacing.lg.verticalSpace,
                 Text(
-                  refund.failureReason!,
+                  RefundUiFormatters.failureLabel(
+                    refund.failureCode,
+                    fallback: refund.failureReason,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.s12w400.copyWith(color: context.error),

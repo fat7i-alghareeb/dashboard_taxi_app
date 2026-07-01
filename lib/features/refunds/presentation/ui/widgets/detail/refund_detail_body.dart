@@ -1,6 +1,7 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/refunds/domain/entities/refund_entity.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/states/refunds_cubit.dart';
+import 'package:dashboardtaxi/features/refunds/presentation/ui/screens/refund_detail_screen.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/detail/refund_detail_header_section.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/detail/refund_detail_info_section.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/detail/refund_detail_shimmer_widget.dart';
@@ -9,9 +10,9 @@ import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/detail/re
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/shared/refund_ui_formatters.dart';
 
 class RefundDetailBody extends StatelessWidget {
-  const RefundDetailBody({super.key, required this.refundId});
+  const RefundDetailBody({super.key, required this.args});
 
-  final String refundId;
+  final RefundDetailScreenArgs args;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +28,9 @@ class RefundDetailBody extends StatelessWidget {
             context.read<RefundsCubit>().clearRetryState();
           },
           failure: (message) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(message)),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(message)));
             context.read<RefundsCubit>().clearRetryState();
           },
         );
@@ -37,7 +38,10 @@ class RefundDetailBody extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<RefundsCubit>();
         return RefreshIndicator(
-          onRefresh: () => cubit.loadRefundDetail(refundId),
+          onRefresh: () => cubit.loadRefundDetail(
+            refundId: args.refundId,
+            tripCancellationId: args.tripCancellationId,
+          ),
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: REdgeInsets.symmetric(
@@ -46,13 +50,19 @@ class RefundDetailBody extends StatelessWidget {
             ),
             children: [
               RefundDetailHeaderSection(
-                onRefresh: () => cubit.loadRefundDetail(refundId),
+                onRefresh: () => cubit.loadRefundDetail(
+                  refundId: args.refundId,
+                  tripCancellationId: args.tripCancellationId,
+                ),
               ),
               AppSpacing.lg.verticalSpace,
               StatusBuilder<RefundEntity>(
                 state: state.detailState,
                 loading: () => const RefundDetailShimmerWidget(),
-                onError: () => cubit.loadRefundDetail(refundId),
+                onError: () => cubit.loadRefundDetail(
+                  refundId: args.refundId,
+                  tripCancellationId: args.tripCancellationId,
+                ),
                 success: (refund) => Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -90,7 +100,8 @@ class RefundDetailBody extends StatelessWidget {
                         ),
                         RefundInfoRowData(
                           AppStrings.refundsPaymentMethod,
-                          refund.paymentMethod ?? AppStrings.refundsNotAvailable,
+                          refund.paymentMethod ??
+                              AppStrings.refundsNotAvailable,
                         ),
                         RefundInfoRowData(
                           AppStrings.refundsPaymentId,
@@ -125,12 +136,14 @@ class RefundDetailBody extends StatelessWidget {
                       rows: [
                         RefundInfoRowData(
                           AppStrings.refundsFailureCode,
-                          refund.failureCode ?? AppStrings.refundsNotAvailable,
+                          RefundUiFormatters.failureLabel(refund.failureCode),
                         ),
                         RefundInfoRowData(
                           AppStrings.refundsFailureReason,
-                          refund.failureReason ??
-                              AppStrings.refundsNotAvailable,
+                          RefundUiFormatters.failureLabel(
+                            refund.failureCode,
+                            fallback: refund.failureReason,
+                          ),
                         ),
                         RefundInfoRowData(
                           AppStrings.refundsAttemptCount,
@@ -170,8 +183,7 @@ class RefundDetailBody extends StatelessWidget {
                         ),
                         RefundInfoRowData(
                           AppStrings.refundsPassenger,
-                          refund.passengerId ??
-                              AppStrings.refundsNotAvailable,
+                          refund.passengerId ?? AppStrings.refundsNotAvailable,
                         ),
                         RefundInfoRowData(
                           AppStrings.refundsCancellation,
@@ -230,6 +242,8 @@ class RefundDetailBody extends StatelessWidget {
       ),
     );
     if (confirmed != true || !context.mounted) return;
-    await context.read<RefundsCubit>().retryRefund(refund.refundId);
+    final refundId = refund.refundId;
+    if (refundId == null || refundId.isEmpty) return;
+    await context.read<RefundsCubit>().retryRefund(refundId);
   }
 }
