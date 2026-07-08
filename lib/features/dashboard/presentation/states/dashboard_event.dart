@@ -42,6 +42,10 @@ class DashboardEvent with _$DashboardEvent {
   }) = _AdminTripStatusPatched;
   const factory DashboardEvent.tripDetailsRequested(String tripId) =
       _TripDetailsRequested;
+  const factory DashboardEvent.tripFinancialsRequested(String tripId) =
+      _TripFinancialsRequested;
+  const factory DashboardEvent.userWalletRequested(String userId) =
+      _UserWalletRequested;
   // --- Control Center admin fetch events ---
   const factory DashboardEvent.adminConfigRequested() = _AdminConfigRequested;
   const factory DashboardEvent.adminVehicleTypesRequested() =

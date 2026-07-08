@@ -95,6 +95,8 @@ class TripEntity {
     this.dispatchWindowOpensAtUtc,
     this.canMarkEnRoute = false,
     this.attentionState = 'Normal',
+    this.passengerCount = 1,
+    this.bagCount = 0,
   });
 
   final String id;
@@ -127,6 +129,8 @@ class TripEntity {
   final DateTime? dispatchWindowOpensAtUtc;
   final bool canMarkEnRoute;
   final String attentionState;
+  final int passengerCount;
+  final int bagCount;
 
   TripStopEntity? get pickup => stops.isEmpty ? null : stops.first;
   TripStopEntity? get dropoff => stops.length < 2 ? null : stops.last;

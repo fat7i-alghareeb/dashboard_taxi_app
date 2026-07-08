@@ -4,6 +4,8 @@ import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboa
 import 'package:dashboardtaxi/features/recordings/presentation/ui/screens/recordings_list_screen.dart';
 
 import '../../../../../core/error/global_error_handler.dart';
+import '../../../../dashboard/domain/entities/dashboard_entity.dart';
+import '../../../../dashboard/domain/facade/dashboard_facade.dart';
 import '../../../data/datasources/customers_remote_datasource.dart';
 import '../../../domain/entities/customer_entity.dart';
 import '../../../domain/entities/customer_filter_args.dart';
@@ -104,6 +106,8 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                 _ProfileCard(customer: _customer, isActive: _isActive),
                 AppSpacing.lg.verticalSpace,
                 _InfoSection(customer: _customer),
+                AppSpacing.lg.verticalSpace,
+                _WalletSection(userId: _customer.id),
                 AppSpacing.xl.verticalSpace,
                 _ActionTile(
                   icon: FontAwesomeIcons.route,
@@ -343,6 +347,222 @@ class _InfoRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Read-only wallet ledger for a customer (balance + recent transactions).
+/// Loads via [DashboardFacade]; view-only, no balance edits.
+class _WalletSection extends StatefulWidget {
+  const _WalletSection({required this.userId});
+
+  final String userId;
+
+  @override
+  State<_WalletSection> createState() => _WalletSectionState();
+}
+
+class _WalletSectionState extends State<_WalletSection> {
+  final DashboardFacade _facade = getIt<DashboardFacade>();
+
+  bool _loading = true;
+  String? _error;
+  DashboardUserWalletEntity? _wallet;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    final result = await _facade.getUserWallet(widget.userId);
+    if (!mounted) return;
+    result.when(
+      success: (data) => setState(() {
+        _wallet = data;
+        _loading = false;
+      }),
+      failure: (message) => setState(() {
+        _error = message;
+        _loading = false;
+      }),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: REdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg.r),
+        border: Border.all(color: context.onSurface.withValues(alpha: 0.08)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              FaIcon(
+                FontAwesomeIcons.wallet,
+                size: 16.r,
+                color: context.primary,
+              ),
+              AppSpacing.md.horizontalSpace,
+              Expanded(
+                child: Text(
+                  AppStrings.dashboardCustomerWallet,
+                  style: AppTextStyles.s16w600.copyWith(color: context.onSurface),
+                ),
+              ),
+            ],
+          ),
+          AppSpacing.md.verticalSpace,
+          _buildBody(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    if (_loading) {
+      return AppShimmer.box(
+        width: double.infinity,
+        height: 96,
+        borderRadius: AppRadii.md,
+      );
+    }
+    final error = _error;
+    if (error != null) {
+      return _WalletMessage(text: error, onRetry: _load);
+    }
+    final wallet = _wallet;
+    if (wallet == null || !wallet.hasAccount) {
+      return _WalletMessage(text: AppStrings.dashboardWalletNoAccount);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                AppStrings.dashboardWalletBalance,
+                style: AppTextStyles.s14w500.copyWith(
+                  color: context.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+            ),
+            Text(
+              '${wallet.balance.toStringAsFixed(2)} ${wallet.currencyCode}',
+              style: AppTextStyles.s18w600.copyWith(color: context.primary),
+            ),
+          ],
+        ),
+        AppSpacing.md.verticalSpace,
+        Text(
+          AppStrings.dashboardWalletLedger,
+          style: AppTextStyles.s12w500.copyWith(
+            color: context.onSurface.withValues(alpha: 0.50),
+          ),
+        ),
+        AppSpacing.sm.verticalSpace,
+        if (wallet.transactions.isEmpty)
+          _WalletMessage(text: AppStrings.dashboardWalletEmpty)
+        else
+          for (final tx in wallet.transactions) _WalletTxRow(tx: tx),
+      ],
+    );
+  }
+}
+
+class _WalletTxRow extends StatelessWidget {
+  const _WalletTxRow({required this.tx});
+
+  final DashboardWalletTransactionEntity tx;
+
+  static String _humanize(String value) => value.replaceAllMapped(
+    RegExp(r'([a-z])([A-Z])'),
+    (m) => '${m[1]} ${m[2]}',
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final credit = tx.isCredit;
+    final amountColor = credit ? AppColors.success : context.onSurface;
+    final sign = credit ? '+' : '-';
+    final when = tx.completedAt ?? tx.createdAt;
+    return Container(
+      padding: REdgeInsets.symmetric(vertical: AppSpacing.sm),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: context.onSurface.withValues(alpha: 0.06),
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _humanize(tx.type),
+                  style: AppTextStyles.s14w500.copyWith(color: context.onSurface),
+                ),
+                if (when != null) ...[
+                  AppSpacing.xs.verticalSpace,
+                  Text(
+                    when.toLocal().toYmd(),
+                    style: AppTextStyles.s11w500.copyWith(
+                      color: context.onSurface.withValues(alpha: 0.45),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          Text(
+            '$sign${tx.amount.toStringAsFixed(2)} ${tx.currencyCode}',
+            style: AppTextStyles.s14w600.copyWith(color: amountColor),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WalletMessage extends StatelessWidget {
+  const _WalletMessage({required this.text, this.onRetry});
+
+  final String text;
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            text,
+            style: AppTextStyles.s12w500.copyWith(
+              color: context.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+        ),
+        if (onRetry != null)
+          TextButton(
+            onPressed: onRetry,
+            child: Text(AppStrings.retry),
+          ),
+      ],
     );
   }
 }

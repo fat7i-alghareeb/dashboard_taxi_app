@@ -355,6 +355,52 @@ class DashboardRemoteDataSource {
     });
   }
 
+  Future<DashboardTripFinancialsModel> getTripFinancials(String tripId) {
+    return rethrowAsAppException(() async {
+      printY('[DashboardRemoteDataSource] getTripFinancials trip=$tripId');
+      final response = await _dio.get<dynamic>(
+        ApiEndpoints.adminTripFinancials(tripId),
+      );
+      final data = response.data;
+      if (data is Map<String, dynamic>) {
+        return DashboardTripFinancialsModel.fromJson(data);
+      }
+      return const DashboardTripFinancialsModel(
+        currencyCode: 'EUR',
+        fareAmount: 0,
+        waitingFeeAmount: 0,
+        totalCharged: 0,
+        walletPaidAmount: 0,
+        cardPaidAmount: 0,
+        totalPaidAmount: 0,
+        unpaidAmount: 0,
+        refundedAmount: 0,
+        payments: [],
+        refunds: [],
+      );
+    });
+  }
+
+  Future<DashboardUserWalletModel> getUserWallet(String userId) {
+    return rethrowAsAppException(() async {
+      printY('[DashboardRemoteDataSource] getUserWallet user=$userId');
+      final response = await _dio.get<dynamic>(
+        ApiEndpoints.userWallet(userId),
+      );
+      final data = response.data;
+      if (data is Map<String, dynamic>) {
+        return DashboardUserWalletModel.fromJson(data);
+      }
+      return DashboardUserWalletModel(
+        userId: userId,
+        hasAccount: false,
+        balance: 0,
+        currencyCode: 'EUR',
+        transactions: const [],
+      );
+    });
+  }
+
   Future<void> reviewDriverDocument({
     required String driverId,
     required String documentId,

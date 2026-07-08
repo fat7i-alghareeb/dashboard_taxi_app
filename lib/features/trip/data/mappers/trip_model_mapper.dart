@@ -44,6 +44,8 @@ extension TripModelMapper on TripModel {
     dispatchWindowOpensAtUtc: dispatchWindowOpensAtUtc,
     canMarkEnRoute: canMarkEnRoute,
     attentionState: attentionState,
+    passengerCount: passengerCount,
+    bagCount: bagCount,
   );
 }
 

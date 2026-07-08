@@ -275,6 +275,12 @@ class _RootMapSectionState extends State<RootMapSection>
     final List<LatLng> fallbackPoints;
     final bool legsAreDashed;
 
+    if (stage == TripSheetStage.inProgress) {
+      // Route tracking disabled for in-progress trips.
+      _tripOverlay.value = (legs: const [], markers: markers, legsAreDashed: false);
+      return;
+    }
+
     if (beforePickup) {
       final stops = <LatLng>[
         LatLng(_currentLocation.latitude, _currentLocation.longitude),

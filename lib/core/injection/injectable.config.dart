@@ -283,12 +283,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i885.RootModeService>(() => _i885.RootModeService());
     gh.lazySingleton<_i452.RootTabController>(() => _i452.RootTabController());
-    gh.lazySingleton<_i538.AuthFirebaseDataSource>(
-      () => _i538.AuthFirebaseDataSource(
-        gh<_i59.FirebaseAuth>(),
-        gh<_i892.FirebaseMessaging>(),
-      ),
-    );
     gh.lazySingleton<_i1039.LocaleService>(
       () => _i1039.LocaleService(gh<_i76.StorageService>()),
     );
@@ -300,6 +294,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i548.ThemeController>(
       () => _i548.ThemeController(gh<_i76.StorageService>()),
+    );
+    gh.lazySingleton<_i538.AuthFirebaseDataSource>(
+      () => _i538.AuthFirebaseDataSource(gh<_i892.FirebaseMessaging>()),
     );
     gh.lazySingleton<_i17.NotificationCoordinator>(
       () => _i17.NotificationCoordinator(

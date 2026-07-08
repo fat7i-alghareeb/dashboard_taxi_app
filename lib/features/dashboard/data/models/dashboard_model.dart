@@ -200,6 +200,8 @@ class DashboardTripDetailsModel {
     this.dispatchWindowOpensAt,
     this.canMarkEnRoute = false,
     this.attentionState = 'Normal',
+    this.passengerCount = 1,
+    this.bagCount = 0,
   });
 
   final String id;
@@ -232,6 +234,8 @@ class DashboardTripDetailsModel {
   final DateTime? dispatchWindowOpensAt;
   final bool canMarkEnRoute;
   final String attentionState;
+  final int passengerCount;
+  final int bagCount;
 
   factory DashboardTripDetailsModel.fromJson(Map<String, dynamic> json) {
     return DashboardTripDetailsModel(
@@ -282,6 +286,9 @@ class DashboardTripDetailsModel {
         'attentionState',
         fallback: 'Normal',
       ),
+      passengerCount:
+          (json['passengerCount'] ?? json['PassengerCount']) as int? ?? 1,
+      bagCount: (json['bagCount'] ?? json['BagCount']) as int? ?? 0,
     );
   }
 }
@@ -552,6 +559,184 @@ class DashboardSystemConfigModel {
           client['StripeEnabled'] as bool? ??
           false,
       stripePublishableKey: _readString(client, 'stripePublishableKey'),
+    );
+  }
+}
+
+class DashboardTripPaymentLineModel {
+  const DashboardTripPaymentLineModel({
+    required this.kind,
+    required this.method,
+    required this.amount,
+    required this.status,
+    this.processedAt,
+    this.stripePaymentMethodType,
+  });
+
+  final String kind;
+  final String method;
+  final double amount;
+  final String status;
+  final DateTime? processedAt;
+  final String? stripePaymentMethodType;
+
+  factory DashboardTripPaymentLineModel.fromJson(Map<String, dynamic> json) {
+    return DashboardTripPaymentLineModel(
+      kind: _readString(json, 'kind'),
+      method: _readString(json, 'method'),
+      amount: _readNullableDouble(json, 'amount') ?? 0,
+      status: _readString(json, 'status'),
+      processedAt: DateTime.tryParse(_readString(json, 'processedAtUtc')),
+      stripePaymentMethodType: _readNullableString(
+        json,
+        'stripePaymentMethodType',
+      ),
+    );
+  }
+}
+
+class DashboardTripRefundLineModel {
+  const DashboardTripRefundLineModel({
+    required this.amount,
+    required this.status,
+    required this.sourceType,
+    this.requestedAt,
+    this.completedAt,
+  });
+
+  final double amount;
+  final String status;
+  final String sourceType;
+  final DateTime? requestedAt;
+  final DateTime? completedAt;
+
+  factory DashboardTripRefundLineModel.fromJson(Map<String, dynamic> json) {
+    return DashboardTripRefundLineModel(
+      amount: _readNullableDouble(json, 'amount') ?? 0,
+      status: _readString(json, 'status'),
+      sourceType: _readString(json, 'sourceType'),
+      requestedAt: DateTime.tryParse(_readString(json, 'requestedAtUtc')),
+      completedAt: DateTime.tryParse(_readString(json, 'completedAtUtc')),
+    );
+  }
+}
+
+class DashboardTripFinancialsModel {
+  const DashboardTripFinancialsModel({
+    required this.currencyCode,
+    required this.fareAmount,
+    required this.waitingFeeAmount,
+    required this.totalCharged,
+    required this.walletPaidAmount,
+    required this.cardPaidAmount,
+    required this.totalPaidAmount,
+    required this.unpaidAmount,
+    required this.refundedAmount,
+    required this.payments,
+    required this.refunds,
+  });
+
+  final String currencyCode;
+  final double fareAmount;
+  final double waitingFeeAmount;
+  final double totalCharged;
+  final double walletPaidAmount;
+  final double cardPaidAmount;
+  final double totalPaidAmount;
+  final double unpaidAmount;
+  final double refundedAmount;
+  final List<DashboardTripPaymentLineModel> payments;
+  final List<DashboardTripRefundLineModel> refunds;
+
+  factory DashboardTripFinancialsModel.fromJson(Map<String, dynamic> json) {
+    return DashboardTripFinancialsModel(
+      currencyCode: _readString(json, 'currencyCode', fallback: 'EUR'),
+      fareAmount: _readNullableDouble(json, 'fareAmount') ?? 0,
+      waitingFeeAmount: _readNullableDouble(json, 'waitingFeeAmount') ?? 0,
+      totalCharged: _readNullableDouble(json, 'totalCharged') ?? 0,
+      walletPaidAmount: _readNullableDouble(json, 'walletPaidAmount') ?? 0,
+      cardPaidAmount: _readNullableDouble(json, 'cardPaidAmount') ?? 0,
+      totalPaidAmount: _readNullableDouble(json, 'totalPaidAmount') ?? 0,
+      unpaidAmount: _readNullableDouble(json, 'unpaidAmount') ?? 0,
+      refundedAmount: _readNullableDouble(json, 'refundedAmount') ?? 0,
+      payments: _readList(
+        json,
+        'payments',
+      ).map((e) => DashboardTripPaymentLineModel.fromJson(e)).toList(),
+      refunds: _readList(
+        json,
+        'refunds',
+      ).map((e) => DashboardTripRefundLineModel.fromJson(e)).toList(),
+    );
+  }
+}
+
+class DashboardWalletTransactionModel {
+  const DashboardWalletTransactionModel({
+    required this.id,
+    required this.type,
+    required this.direction,
+    required this.amount,
+    required this.currencyCode,
+    required this.status,
+    this.balanceAfter,
+    this.description,
+    this.createdAt,
+    this.completedAt,
+  });
+
+  final String id;
+  final String type;
+  final String direction;
+  final double amount;
+  final String currencyCode;
+  final String status;
+  final double? balanceAfter;
+  final String? description;
+  final DateTime? createdAt;
+  final DateTime? completedAt;
+
+  factory DashboardWalletTransactionModel.fromJson(Map<String, dynamic> json) {
+    return DashboardWalletTransactionModel(
+      id: _readString(json, 'id'),
+      type: _readString(json, 'type'),
+      direction: _readString(json, 'direction'),
+      amount: _readNullableDouble(json, 'amount') ?? 0,
+      currencyCode: _readString(json, 'currencyCode', fallback: 'EUR'),
+      status: _readString(json, 'status'),
+      balanceAfter: _readNullableDouble(json, 'balanceAfter'),
+      description: _readNullableString(json, 'description'),
+      createdAt: DateTime.tryParse(_readString(json, 'createdAtUtc')),
+      completedAt: DateTime.tryParse(_readString(json, 'completedAtUtc')),
+    );
+  }
+}
+
+class DashboardUserWalletModel {
+  const DashboardUserWalletModel({
+    required this.userId,
+    required this.hasAccount,
+    required this.balance,
+    required this.currencyCode,
+    required this.transactions,
+  });
+
+  final String userId;
+  final bool hasAccount;
+  final double balance;
+  final String currencyCode;
+  final List<DashboardWalletTransactionModel> transactions;
+
+  factory DashboardUserWalletModel.fromJson(Map<String, dynamic> json) {
+    return DashboardUserWalletModel(
+      userId: _readString(json, 'userId'),
+      hasAccount: json['hasAccount'] as bool? ?? json['HasAccount'] as bool? ?? false,
+      balance: _readNullableDouble(json, 'balance') ?? 0,
+      currencyCode: _readString(json, 'currencyCode', fallback: 'EUR'),
+      transactions: _readList(
+        json,
+        'transactions',
+      ).map((e) => DashboardWalletTransactionModel.fromJson(e)).toList(),
     );
   }
 }

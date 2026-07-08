@@ -44,6 +44,16 @@ class DashboardFacade {
     return _repository.getTripDetails(tripId);
   }
 
+  Future<Result<DashboardTripFinancialsEntity>> getTripFinancials(
+    String tripId,
+  ) {
+    return _repository.getTripFinancials(tripId);
+  }
+
+  Future<Result<DashboardUserWalletEntity>> getUserWallet(String userId) {
+    return _repository.getUserWallet(userId);
+  }
+
   Future<Result<DashboardAdminProfileEntity?>> getAdminProfile() {
     return _repository.getAdminProfile();
   }

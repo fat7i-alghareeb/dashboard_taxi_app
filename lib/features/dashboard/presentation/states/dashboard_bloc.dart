@@ -36,6 +36,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<_AdminTripsCustomerChanged>(_onAdminTripsCustomerChanged);
     on<_AdminTripStatusPatched>(_onAdminTripStatusPatched);
     on<_TripDetailsRequested>(_onTripDetailsRequested);
+    on<_TripFinancialsRequested>(_onTripFinancialsRequested);
+    on<_UserWalletRequested>(_onUserWalletRequested);
     on<_AdminConfigRequested>(_onAdminConfigRequested);
     on<_AdminVehicleTypesRequested>(_onAdminVehicleTypesRequested);
     on<_VehicleTypeStatusToggleRequested>(_onVehicleTypeStatusToggleRequested);
@@ -527,6 +529,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       ),
     );
 
+    // Load the read-only money breakdown in parallel with the details.
+    add(DashboardEvent.tripFinancialsRequested(event.tripId));
+
     final result = await _facade.getTripDetails(event.tripId);
     result.when(
       success: (data) {
@@ -538,6 +543,46 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       failure: (message) {
         printY('[DashboardBloc] trip details failed: $message');
         emit(state.copyWith(tripDetailsState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _onTripFinancialsRequested(
+    _TripFinancialsRequested event,
+    Emitter<DashboardState> emit,
+  ) async {
+    printM('[DashboardBloc] trip financials requested trip=${event.tripId}');
+    emit(state.copyWith(tripFinancialsState: const BlocStatus.loading()));
+
+    final result = await _facade.getTripFinancials(event.tripId);
+    result.when(
+      success: (data) {
+        printG('[DashboardBloc] trip financials success');
+        emit(state.copyWith(tripFinancialsState: BlocStatus.success(data)));
+      },
+      failure: (message) {
+        printY('[DashboardBloc] trip financials failed: $message');
+        emit(state.copyWith(tripFinancialsState: BlocStatus.failure(message)));
+      },
+    );
+  }
+
+  Future<void> _onUserWalletRequested(
+    _UserWalletRequested event,
+    Emitter<DashboardState> emit,
+  ) async {
+    printM('[DashboardBloc] user wallet requested user=${event.userId}');
+    emit(state.copyWith(userWalletState: const BlocStatus.loading()));
+
+    final result = await _facade.getUserWallet(event.userId);
+    result.when(
+      success: (data) {
+        printG('[DashboardBloc] user wallet success balance=${data.balance}');
+        emit(state.copyWith(userWalletState: BlocStatus.success(data)));
+      },
+      failure: (message) {
+        printY('[DashboardBloc] user wallet failed: $message');
+        emit(state.copyWith(userWalletState: BlocStatus.failure(message)));
       },
     );
   }

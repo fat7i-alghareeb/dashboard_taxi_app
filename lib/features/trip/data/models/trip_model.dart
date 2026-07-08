@@ -62,6 +62,8 @@ class TripModel {
     this.dispatchWindowOpensAtUtc,
     this.canMarkEnRoute = false,
     this.attentionState = 'Normal',
+    this.passengerCount = 1,
+    this.bagCount = 0,
   });
 
   final String id;
@@ -94,6 +96,8 @@ class TripModel {
   final DateTime? dispatchWindowOpensAtUtc;
   final bool canMarkEnRoute;
   final String attentionState;
+  final int passengerCount;
+  final int bagCount;
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
     final stopsJson =
@@ -162,6 +166,9 @@ class TripModel {
         'attentionState',
         fallback: 'Normal',
       ),
+      passengerCount:
+          (json['passengerCount'] ?? json['PassengerCount']) as int? ?? 1,
+      bagCount: (json['bagCount'] ?? json['BagCount']) as int? ?? 0,
     );
   }
 }

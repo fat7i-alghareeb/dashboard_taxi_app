@@ -22,12 +22,14 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Result<String>> requestSmsCode(String phone) {
     return runAsResult(() async {
-      printC('[AuthRepository] requestSmsCode start phone=$phone');
-      final verificationId = await _firebase.requestSmsCode(phone);
-      printG(
-        '[AuthRepository] requestSmsCode success verificationId=$verificationId',
+      // Backend-owned OTP (CM.com SMS). The returned otpRequestId is carried in
+      // the "verificationId" slot so the bloc/UI stay unchanged.
+      printC('[AuthRepository] requestPhoneLoginOtp start phone=$phone');
+      final otpRequestId = await _remote.requestPhoneLoginOtp(
+        PhoneOtpParams(phone: phone),
       );
-      return verificationId;
+      printG('[AuthRepository] requestPhoneLoginOtp success');
+      return otpRequestId;
     });
   }
 
@@ -38,23 +40,21 @@ class AuthRepositoryImpl implements AuthRepository {
     required String smsCode,
   }) {
     return runAsResult(() async {
+      // verificationId == otpRequestId from requestSmsCode above.
       printC(
-        '[AuthRepository] verifyAndLogin start phone=$phone '
-        'verificationId=$verificationId',
+        '[AuthRepository] verifyPhoneLoginOtp start otpRequestId=$verificationId',
       );
-      final idToken = await _firebase.signInAndGetIdToken(
-        verificationId: verificationId,
-        smsCode: smsCode,
-      );
-      printG('[AuthRepository] Firebase id token received');
-
       final fcmToken = await _firebase.getFcmToken();
       printC('[AuthRepository] FCM token present=${fcmToken != null}');
 
-      final response = await _remote.login(
-        LoginParams(phone: phone, firebaseIdToken: idToken, fcmToken: fcmToken),
+      final response = await _remote.verifyPhoneLoginOtp(
+        VerifyOtpParams(
+          otpRequestId: verificationId,
+          code: smsCode,
+          fcmToken: fcmToken,
+        ),
       );
-      printG('[AuthRepository] backend login success');
+      printG('[AuthRepository] backend phone login success');
 
       final user = response.toUserEntity();
       final token = response.toAuthTokenModel();

@@ -2,8 +2,13 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   // Auth (Constitution-compliant nouns)
-  static const String login = '/api/v1/auth/sessions';
+  static const String login = '/api/v1/auth/sessions'; // legacy Firebase (deprecated)
   static const String adminLogin = '/api/v1/auth/admin-sessions';
+
+  // Driver phone login via backend-owned OTP (CM.com SMS) — replaces Firebase phone auth.
+  static const String phoneLoginOtp = '/api/v1/auth/phone/login/otp';
+  static const String phoneLoginOtpVerify =
+      '/api/v1/auth/phone/login/otp/verify';
   static const String forceResetPassword = '/api/v1/auth/me/password'; // PUT
   static const String refreshToken = '/api/v1/auth/tokens/refreshes';
 
@@ -33,6 +38,8 @@ class ApiEndpoints {
   static const String adminTrips = '/api/v1/trips/admin';
   static String adminTripDetails(String tripId) =>
       '/api/v1/trips/$tripId/details';
+  static String adminTripFinancials(String tripId) =>
+      '/api/v1/trips/$tripId/financials';
   static String tripMessages(String tripId) => '/api/v1/trips/$tripId/messages';
 
   // In-trip safety recordings (admin).
@@ -48,6 +55,7 @@ class ApiEndpoints {
   // Admin-scoped collection view (sub-resource alias — documented exception).
   static const String adminVehicleTypes = '/api/v1/vehicle-types/admin';
   static const String users = '/api/v1/users';
+  static String userWallet(String userId) => '/api/v1/users/$userId/wallet';
   static const String tripDiscount = '/api/v1/app-config/trip-discount';
   static const String currency = '/api/v1/app-config/currency';
   static const String clientConfig = '/api/v1/app-config/client';

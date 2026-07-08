@@ -103,14 +103,28 @@ class AppStrings {
   static String get chatChooseGallery => 'chatChooseGallery'.tr();
   /// This chat has ended. - انتهت هذه الدردشة. - Deze chat is beëindigd. - Dieser Chat ist beendet. - Ten czat został zakończony. - Цей чат завершено. - Cette conversation est terminée. - Este chat ha finalizado. - Acest chat s-a încheiat.
   static String get chatClosedNotice => 'chatClosedNotice'.tr();
+  /// customer name - اسم العميل - klant naam - Kundenname - imię klienta - ім'я клієнта - nom du client - nombre del cliente - numele clientului
+  static String get chatCustomerLabel => 'chatCustomerLabel'.tr();
   /// No messages yet. Say hello! - لا توجد رسائل بعد. ابدأ بالتحية! - Nog geen berichten. Zeg hallo! - Noch keine Nachrichten. Sag Hallo! - Brak wiadomości. Przywitaj się! - Повідомлень ще немає. Привітайтеся! - Aucun message pour l'instant. Dites bonjour ! - Aún no hay mensajes. ¡Saluda! - Niciun mesaj încă. Salută!
   static String get chatEmptyState => 'chatEmptyState'.tr();
-  /// Type a message… - اكتب رسالة… - Typ een bericht… - Nachricht schreiben… - Napisz wiadomość… - Введіть повідомлення… - Écrivez un message… - Escribe un mensaje… - Scrie un mesaj…
+  /// Type your message - اكتب رسالتك - Typ je bericht - Schreib deine Nachricht - Napisz wiadomość - Напишіть повідомлення - Écrivez votre message - Escribe tu mensaje - Scrie mesajul tău
   static String get chatInputHint => 'chatInputHint'.tr();
+  /// I'll be there in a few minutes - سأصل في غضون دقائق قليلة - Ik kom over een paar minuten - Ich komme in ein paar Minuten - Będę za kilka minut - Я буду через кілька хвилин - J'arrive dans quelques minutes - Llegaré en unos minutos - Vin în câteva minute
+  static String get chatQuickFewMinutes => 'chatQuickFewMinutes'.tr();
+  /// I'm here - أنا هنا - Ik ben hier - Ich bin hier - Jestem tutaj - Я тут - Je suis là - Estoy aquí - Sunt aici
+  static String get chatQuickImHere => 'chatQuickImHere'.tr();
+  /// I'm on my way - أنا في الطريق - Ik ben onderweg - Ich bin unterwegs - Jestem w drodze - Я в дорозі - Je suis en route - Estoy en camino - Sunt pe drum
+  static String get chatQuickOnMyWay => 'chatQuickOnMyWay'.tr();
+  /// Please send a photo of where you are - من فضلك أرسل صورة لمكانك - stuur aub een foto waar u staat - Bitte senden Sie ein Foto Ihres Standorts - Proszę wyślij zdjęcie z miejsca, gdzie jesteś - Будь ласка, надішліть фото місця де ви знаходитесь - Veuillez envoyer une photo de l'endroit où vous êtes - Por favor envía una foto de dónde estás - Vă rugăm trimiteți o fotografie de unde vă aflați
+  static String get chatQuickSendPhoto => 'chatQuickSendPhoto'.tr();
+  /// 👋 - 👋 - 👋 - 👋 - 👋 - 👋 - 👋 - 👋 - 👋
+  static String get chatQuickWave => 'chatQuickWave'.tr();
   /// Couldn't send message. Please try again. - تعذّر إرسال الرسالة. حاول مرة أخرى. - Bericht kon niet worden verzonden. Probeer het opnieuw. - Nachricht konnte nicht gesendet werden. Bitte erneut versuchen. - Nie udało się wysłać wiadomości. Spróbuj ponownie. - Не вдалося надіслати повідомлення. Спробуйте ще раз. - Échec de l'envoi du message. Veuillez réessayer. - No se pudo enviar el mensaje. Inténtalo de nuevo. - Mesajul nu a putut fi trimis. Încearcă din nou.
   static String get chatSendFailed => 'chatSendFailed'.tr();
   /// Chat - الدردشة - Chat - Chat - Czat - Чат - Chat - Chat - Chat
   static String get chatTitle => 'chatTitle'.tr();
+  /// Do not share contact details and verification codes. Check the ride details via the app. - لا تشارك بيانات الاتصال ورموز التحقق. تحقق من تفاصيل الرحلة عبر التطبيق. - Deel nog geen contactgegevens en verificatiecodes. Controleer de details van de rit via de app. - Teilen Sie keine Kontaktdaten und Verifizierungscodes. Prüfen Sie die Fahrtdetails über die App. - Nie udostępniaj danych kontaktowych i kodów weryfikacyjnych. Sprawdź szczegóły przejazdu w aplikacji. - Не діліться контактними даними та кодами підтвердження. Перевірте деталі поїздки в додатку. - Ne partagez pas vos coordonnées ni vos codes de vérification. Consultez les détails du trajet dans l'application. - No compartas datos de contacto ni códigos de verificación. Comprueba los detalles del viaje en la app. - Nu partajați datele de contact și codurile de verificare. Verificați detaliile călătoriei prin aplicație.
+  static String get chatWarningMessage => 'chatWarningMessage'.tr();
   /// Clear - مسح - Wissen - Löschen - Wyczyść - Очистити - Effacer - Limpiar - Șterge
   static String get clear => 'clear'.tr();
   /// The request was invalid. - الطلب غير صالح. - De aanvraag was ongeldig. - Die Anfrage war ungültig. - Nieprawidłowe żądanie. - Неправильний запит. - La demande était invalide. - La solicitud no era válida. - Solicitarea a fost invalidă.
@@ -325,6 +339,8 @@ class AppStrings {
   static String get dashboardCompletedTrips => 'dashboardCompletedTrips'.tr();
   /// Currency - العملة - Currency - Currency - Currency - Currency - Currency - Currency - Currency
   static String get dashboardCurrency => 'dashboardCurrency'.tr();
+  /// Customer wallet - محفظة العميل - Klantportemonnee - Kunden-Wallet - Portfel klienta - Гаманець клієнта - Portefeuille client - Billetera del cliente - Portofel client
+  static String get dashboardCustomerWallet => 'dashboardCustomerWallet'.tr();
   /// Details - التفاصيل - Details - Details - Details - Details - Details - Details - Details
   static String get dashboardDetails => 'dashboardDetails'.tr();
   /// Disabled - معطل - Disabled - Disabled - Disabled - Disabled - Disabled - Disabled - Disabled
@@ -353,6 +369,8 @@ class AppStrings {
   static String get dashboardFilterCompleted => 'dashboardFilterCompleted'.tr();
   /// Pending - قيد الانتظار - In afwachting - Ausstehend - Oczekujące - Очікують - En attente - Pendientes - În așteptare
   static String get dashboardFilterPending => 'dashboardFilterPending'.tr();
+  /// Financials - المالية - Financiën - Finanzen - Finanse - Фінанси - Finances - Finanzas - Finanțe
+  static String get dashboardFinancials => 'dashboardFinancials'.tr();
   /// Fleet - الأسطول - Fleet - Fleet - Fleet - Fleet - Fleet - Fleet - Fleet
   static String get dashboardFleet => 'dashboardFleet'.tr();
   /// Good afternoon - مساء الخير - Goedemiddag - Guten Tag - Dzień dobry - Добрий день - Bon après-midi - Buenas tardes - Bună ziua
@@ -503,6 +521,8 @@ class AppStrings {
   static String get dashboardTitle => 'dashboardTitle'.tr();
   /// Toggle - تبديل - Toggle - Toggle - Toggle - Toggle - Toggle - Toggle - Toggle
   static String get dashboardToggle => 'dashboardToggle'.tr();
+  /// Total charged - الإجمالي المحصّل - Totaal in rekening gebracht - Gesamt berechnet - Łączna kwota - Загалом нараховано - Total facturé - Total cobrado - Total taxat
+  static String get dashboardTotalCharged => 'dashboardTotalCharged'.tr();
   /// Total drivers - إجمالي السائقين - Total drivers - Total drivers - Total drivers - Total drivers - Total drivers - Total drivers - Total drivers
   static String get dashboardTotalDrivers => 'dashboardTotalDrivers'.tr();
   /// Total trips - إجمالي الرحلات - Total trips - Total trips - Total trips - Total trips - Total trips - Total trips - Total trips
@@ -529,6 +549,14 @@ class AppStrings {
   static String get dashboardVehicleTypePricingSummary => 'dashboardVehicleTypePricingSummary'.tr();
   /// Vehicle types - أنواع المركبات - Vehicle types - Vehicle types - Vehicle types - Vehicle types - Vehicle types - Vehicle types - Vehicle types
   static String get dashboardVehicleTypes => 'dashboardVehicleTypes'.tr();
+  /// Wallet balance - رصيد المحفظة - Saldo - Guthaben - Saldo - Баланс - Solde - Saldo - Sold
+  static String get dashboardWalletBalance => 'dashboardWalletBalance'.tr();
+  /// No transactions yet - لا توجد معاملات بعد - Nog geen transacties - Noch keine Transaktionen - Brak transakcji - Ще немає транзакцій - Aucune transaction - Aún no hay transacciones - Nicio tranzacție
+  static String get dashboardWalletEmpty => 'dashboardWalletEmpty'.tr();
+  /// Recent transactions - أحدث المعاملات - Recente transacties - Letzte Transaktionen - Ostatnie transakcje - Останні транзакції - Transactions récentes - Transacciones recientes - Tranzacții recente
+  static String get dashboardWalletLedger => 'dashboardWalletLedger'.tr();
+  /// No wallet account yet - لا يوجد حساب محفظة بعد - Nog geen portemonnee-account - Noch kein Wallet-Konto - Brak konta portfela - Ще немає рахунку гаманця - Pas encore de compte portefeuille - Aún no hay cuenta de billetera - Încă nu există cont de portofel
+  static String get dashboardWalletNoAccount => 'dashboardWalletNoAccount'.tr();
   /// Dec - ديس - Dec - Dez - Gru - Груд - Déc - Dic - Dec
   static String get dec => 'dec'.tr();
   /// December - ديسمبر - December - Dezember - Grudzień - Грудень - Décembre - Diciembre - Decembrie
@@ -941,6 +969,18 @@ class AppStrings {
   static String get profileSectionDriverDetails => 'profileSectionDriverDetails'.tr();
   /// Complete Your Profile - أكمل ملفك الشخصي - Voltooi uw profiel - Profil vervollständigen - Uzupełnij profil - Заповніть профіль - Complétez votre profil - Complete su perfil - Completează profilul
   static String get profileSetupTitle => 'profileSetupTitle'.tr();
+  /// Paid by card - مدفوع بالبطاقة - Betaald met kaart - Mit Karte bezahlt - Zapłacono kartą - Сплачено карткою - Payé par carte - Pagado con tarjeta - Plătit cu cardul
+  static String get receiptCardPaid => 'receiptCardPaid'.tr();
+  /// Refunded - مُسترد - Terugbetaald - Erstattet - Zwrócono - Повернено - Remboursé - Reembolsado - Rambursat
+  static String get receiptRefunded => 'receiptRefunded'.tr();
+  /// Trip fare - أجرة المشوار - Rittarief - Fahrpreis - Cena kursu - Вартість поїздки - Tarif de la course - Tarifa del viaje - Tarif cursă
+  static String get receiptTripFare => 'receiptTripFare'.tr();
+  /// Unpaid - غير مدفوع - Onbetaald - Unbezahlt - Niezapłacone - Не сплачено - Impayé - Sin pagar - Neplătit
+  static String get receiptUnpaid => 'receiptUnpaid'.tr();
+  /// Waiting fee - رسوم الانتظار - Wachtkosten - Wartegebühr - Opłata za oczekiwanie - Плата за очікування - Frais d'attente - Tarifa de espera - Taxă de așteptare
+  static String get receiptWaitingFee => 'receiptWaitingFee'.tr();
+  /// Paid from wallet - مدفوع من المحفظة - Betaald met saldo - Aus Guthaben bezahlt - Zapłacono z portfela - Сплачено з гаманця - Payé avec le solde - Pagado con saldo - Plătit din portofel
+  static String get receiptWalletPaid => 'receiptWalletPaid'.tr();
   /// Recent locations - المواقع الأخيرة - Recente locaties - Letzte Standorte - Ostatnie lokalizacje - Останні адреси - Lieux récents - Ubicaciones recientes - Locații recente
   static String get recentLocations => 'recentLocations'.tr();
   /// No recordings - لا توجد تسجيلات - Geen opnames - Keine Aufnahmen - Brak nagrań - Немає записів - Aucun enregistrement - Sin grabaciones - Nicio înregistrare
@@ -1325,6 +1365,8 @@ class AppStrings {
   static String get tripAssignedHint => 'tripAssignedHint'.tr();
   /// New Trip Assigned - تم تعيين رحلة جديدة - New Trip Assigned - New Trip Assigned - New Trip Assigned - New Trip Assigned - New Trip Assigned - New Trip Assigned - New Trip Assigned
   static String get tripAssignmentTitle => 'tripAssignmentTitle'.tr();
+  /// Luggage: {count} - الأمتعة: {count} - Bagage: {count} - Gepäck: {count} - Bagaż: {count} - Багаж: {count} - Bagages : {count} - Equipaje: {count} - Bagaje: {count}
+  static String get tripBagCount => 'tripBagCount'.tr();
   /// Could not open the dialer. - تعذّر فتح الاتصال. - Kan kiezer niet openen. - Anruf konnte nicht gestartet werden. - Nie można otworzyć dialera. - Не вдалося відкрити набирач. - Impossible d'ouvrir le composeur. - No se pudo abrir el marcador. - Nu se poate deschide apelul.
   static String get tripCallCustomerFailed => 'tripCallCustomerFailed'.tr();
   /// Cancel Trip - إلغاء الرحلة - Rit annuleren - Fahrt stornieren - Anuluj przejazd - Скасувати поїздку - Annuler le trajet - Cancelar viaje - Anulează cursa
@@ -1369,6 +1411,8 @@ class AppStrings {
   static String get tripNoActiveRide => 'tripNoActiveRide'.tr();
   /// Open in Maps - افتح في الخرائط - Open in Maps - In Karten öffnen - Otwórz w Mapach - Відкрити в Картах - Ouvrir dans Maps - Abrir en Mapas - Deschide în Hărți
   static String get tripOpenInMaps => 'tripOpenInMaps'.tr();
+  /// Passengers: {count} - الركاب: {count} - Passagiers: {count} - Fahrgäste: {count} - Pasażerowie: {count} - Пасажири: {count} - Passagers : {count} - Pasajeros: {count} - Pasageri: {count}
+  static String get tripPassengerCount => 'tripPassengerCount'.tr();
   /// Pickup - نقطة الانطلاق - Pickup - Pickup - Pickup - Pickup - Pickup - Pickup - Pickup
   static String get tripPickup => 'tripPickup'.tr();
   /// Trip #{code} - رحلة رقم {code} - Rit #{code} - Fahrt #{code} - Przejazd #{code} - Поїздка #{code} - Trajet #{code} - Viaje #{code} - Cursa #{code}

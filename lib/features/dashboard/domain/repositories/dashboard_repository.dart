@@ -20,6 +20,12 @@ abstract class DashboardRepository {
 
   Future<Result<DashboardTripDetailsEntity>> getTripDetails(String tripId);
 
+  Future<Result<DashboardTripFinancialsEntity>> getTripFinancials(
+    String tripId,
+  );
+
+  Future<Result<DashboardUserWalletEntity>> getUserWallet(String userId);
+
   Future<Result<DashboardAdminProfileEntity?>> getAdminProfile();
 
   Future<Result<DashboardSystemConfigEntity>> getAdminConfig();

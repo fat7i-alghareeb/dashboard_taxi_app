@@ -260,6 +260,8 @@ class DashboardTripDetailsEntity {
     this.dispatchWindowOpensAt,
     this.canMarkEnRoute = false,
     this.attentionState = 'Normal',
+    this.passengerCount = 1,
+    this.bagCount = 0,
   });
 
   final String id;
@@ -291,6 +293,8 @@ class DashboardTripDetailsEntity {
   final DateTime? dispatchWindowOpensAt;
   final bool canMarkEnRoute;
   final String attentionState;
+  final int passengerCount;
+  final int bagCount;
 
   String? get waitingFeeLabel => waitingFeeTotal > 0
       ? '${waitingFeeTotal.toStringAsFixed(2)} $currencyCode'
@@ -427,4 +431,116 @@ class DashboardDriverLocationEntity {
       vehicleTypeName: vehicleTypeName,
     );
   }
+}
+
+class DashboardTripPaymentLineEntity {
+  const DashboardTripPaymentLineEntity({
+    required this.kind,
+    required this.method,
+    required this.amount,
+    required this.status,
+    this.processedAt,
+    this.stripePaymentMethodType,
+  });
+
+  final String kind;
+  final String method;
+  final double amount;
+  final String status;
+  final DateTime? processedAt;
+  final String? stripePaymentMethodType;
+}
+
+class DashboardTripRefundLineEntity {
+  const DashboardTripRefundLineEntity({
+    required this.amount,
+    required this.status,
+    required this.sourceType,
+    this.requestedAt,
+    this.completedAt,
+  });
+
+  final double amount;
+  final String status;
+  final String sourceType;
+  final DateTime? requestedAt;
+  final DateTime? completedAt;
+}
+
+/// Read-only per-trip money breakdown (fare + fees, wallet vs card vs unpaid,
+/// and refunds) shown to admins. Mirrors the backend TripFinancialsDto.
+class DashboardTripFinancialsEntity {
+  const DashboardTripFinancialsEntity({
+    required this.currencyCode,
+    required this.fareAmount,
+    required this.waitingFeeAmount,
+    required this.totalCharged,
+    required this.walletPaidAmount,
+    required this.cardPaidAmount,
+    required this.totalPaidAmount,
+    required this.unpaidAmount,
+    required this.refundedAmount,
+    required this.payments,
+    required this.refunds,
+  });
+
+  final String currencyCode;
+  final double fareAmount;
+  final double waitingFeeAmount;
+  final double totalCharged;
+  final double walletPaidAmount;
+  final double cardPaidAmount;
+  final double totalPaidAmount;
+  final double unpaidAmount;
+  final double refundedAmount;
+  final List<DashboardTripPaymentLineEntity> payments;
+  final List<DashboardTripRefundLineEntity> refunds;
+
+  bool get hasUnpaid => unpaidAmount > 0;
+  bool get hasRefund => refundedAmount > 0;
+}
+
+class DashboardWalletTransactionEntity {
+  const DashboardWalletTransactionEntity({
+    required this.id,
+    required this.type,
+    required this.direction,
+    required this.amount,
+    required this.currencyCode,
+    required this.status,
+    this.balanceAfter,
+    this.description,
+    this.createdAt,
+    this.completedAt,
+  });
+
+  final String id;
+  final String type;
+  final String direction;
+  final double amount;
+  final String currencyCode;
+  final String status;
+  final double? balanceAfter;
+  final String? description;
+  final DateTime? createdAt;
+  final DateTime? completedAt;
+
+  bool get isCredit => direction.toLowerCase() == 'credit';
+}
+
+/// Read-only admin view of a passenger's wallet: balance + recent ledger.
+class DashboardUserWalletEntity {
+  const DashboardUserWalletEntity({
+    required this.userId,
+    required this.hasAccount,
+    required this.balance,
+    required this.currencyCode,
+    required this.transactions,
+  });
+
+  final String userId;
+  final bool hasAccount;
+  final double balance;
+  final String currencyCode;
+  final List<DashboardWalletTransactionEntity> transactions;
 }

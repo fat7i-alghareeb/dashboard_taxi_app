@@ -22,6 +22,10 @@ abstract class DashboardState with _$DashboardState {
     @Default('') String adminTripsPassengerName,
     @Default(BlocStatus<DashboardTripDetailsEntity>.initial())
     BlocStatus<DashboardTripDetailsEntity> tripDetailsState,
+    @Default(BlocStatus<DashboardTripFinancialsEntity>.initial())
+    BlocStatus<DashboardTripFinancialsEntity> tripFinancialsState,
+    @Default(BlocStatus<DashboardUserWalletEntity>.initial())
+    BlocStatus<DashboardUserWalletEntity> userWalletState,
 
     // --- Control Center admin states ---
     @Default(BlocStatus<DashboardSystemConfigEntity>.initial())

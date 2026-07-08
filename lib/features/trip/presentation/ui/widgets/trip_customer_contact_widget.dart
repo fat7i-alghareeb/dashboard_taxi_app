@@ -80,7 +80,11 @@ class TripCustomerContactWidget extends StatelessWidget {
           ),
           if (!trip.status.isTerminal) ...[
             AppSpacing.sm.horizontalSpace,
-            ChatEntryButton(tripId: trip.id, compact: true),
+            ChatEntryButton(
+              tripId: trip.id,
+              compact: true,
+              customerName: trip.passengerName,
+            ),
           ],
           if (hasPhone) ...[
             AppSpacing.sm.horizontalSpace,

@@ -5,6 +5,7 @@ import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboa
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_overview_label_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_status_chip_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_detail_info_row_widget.dart';
+import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_financials_section_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_stops_widget.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_timeline_widget.dart';
 
@@ -82,7 +83,10 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
           AppSpacing.md.verticalSpace,
           Align(
             alignment: AlignmentDirectional.centerStart,
-            child: ChatEntryButton(tripId: details.id),
+            child: ChatEntryButton(
+              tripId: details.id,
+              customerName: details.passengerName,
+            ),
           ),
         ],
         if (details.waitingFeeLabel != null) ...[
@@ -148,6 +152,20 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
                 label: AppStrings.tripVehicleType,
                 value: details.vehicleTypeName,
               ),
+              DashboardTripDetailInfoRowWidget(
+                label: AppStrings.tripPassengerCount.replaceAll(
+                  '{count}',
+                  '',
+                ).trim().replaceAll(':', '').trim(),
+                value: details.passengerCount.toString(),
+              ),
+              DashboardTripDetailInfoRowWidget(
+                label: AppStrings.tripBagCount.replaceAll(
+                  '{count}',
+                  '',
+                ).trim().replaceAll(':', '').trim(),
+                value: details.bagCount.toString(),
+              ),
             ];
             return Wrap(
               spacing: spacing.w,
@@ -180,6 +198,10 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
         DashboardOverviewLabelWidget(label: AppStrings.dashboardLifecycle),
         AppSpacing.md.verticalSpace,
         DashboardTripTimelineWidget(details: details),
+        AppSpacing.xl.verticalSpace,
+        DashboardOverviewLabelWidget(label: AppStrings.dashboardFinancials),
+        AppSpacing.md.verticalSpace,
+        const DashboardTripFinancialsSectionWidget(),
       ],
     );
   }

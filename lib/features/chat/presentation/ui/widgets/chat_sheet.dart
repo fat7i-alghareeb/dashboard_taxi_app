@@ -10,18 +10,41 @@ import 'package:image_picker/image_picker.dart';
 /// instance so the unread badge on the trigger and the live messages stay in
 /// sync. Locks the input once the trip ends ([ChatState.isClosed]).
 class ChatSheet extends StatefulWidget {
-  const ChatSheet({super.key, this.fullScreen = false});
+  const ChatSheet({
+    super.key,
+    this.fullScreen = false,
+    this.onClose,
+    this.customerName,
+  });
 
   final bool fullScreen;
 
-  static Future<void> show(BuildContext context, {required ChatBloc bloc}) {
+  /// Called when the close button is tapped. Uses a captured [BuildContext]
+  /// from the modal builder so it always resolves the correct navigator route.
+  final VoidCallback? onClose;
+
+  /// When provided, the header shows "klant naam : [customerName]" instead of
+  /// the generic chat title. Used in admin/driver context to identify who is
+  /// being chatted with.
+  final String? customerName;
+
+  static Future<void> show(
+    BuildContext context, {
+    required ChatBloc bloc,
+    String? customerName,
+  }) {
     bloc.add(const ChatEvent.viewOpened());
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) =>
-          BlocProvider<ChatBloc>.value(value: bloc, child: const ChatSheet()),
+      builder: (builderContext) => BlocProvider<ChatBloc>.value(
+        value: bloc,
+        child: ChatSheet(
+          customerName: customerName,
+          onClose: () => Navigator.of(builderContext).pop(),
+        ),
+      ),
     ).whenComplete(() {
       if (!bloc.isClosed) bloc.add(const ChatEvent.viewClosed());
     });
@@ -37,6 +60,14 @@ class _ChatSheetState extends State<ChatSheet> {
   bool _autoScrolling = false;
   String? get _myUserId => getIt<AuthManager>().currentUser?.id;
 
+  static const _quickMessageKeys = [
+    'chatQuickOnMyWay',
+    'chatQuickImHere',
+    'chatQuickWave',
+    'chatQuickFewMinutes',
+    'chatQuickSendPhoto',
+  ];
+
   @override
   void dispose() {
     _controller.dispose();
@@ -46,8 +77,7 @@ class _ChatSheetState extends State<ChatSheet> {
 
   void _scrollToBottom() {
     // Guard against animation pile-up: a burst of messages would otherwise queue
-    // overlapping animateTo calls and jank the UI. While one is in flight we skip
-    // new triggers; the final scroll lands on the latest extent when it settles.
+    // overlapping animateTo calls and jank the UI.
     if (_autoScrolling) return;
     _autoScrolling = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -67,11 +97,11 @@ class _ChatSheetState extends State<ChatSheet> {
     });
   }
 
-  void _sendText() {
-    final text = _controller.text.trim();
+  void _sendText([String? quickText]) {
+    final text = quickText ?? _controller.text.trim();
     if (text.isEmpty) return;
     context.read<ChatBloc>().add(ChatEvent.sendText(text));
-    _controller.clear();
+    if (quickText == null) _controller.clear();
   }
 
   Future<void> _pickPhoto() async {
@@ -115,9 +145,11 @@ class _ChatSheetState extends State<ChatSheet> {
     return Padding(
       padding: EdgeInsets.only(bottom: viewInsets),
       child: Container(
+        // Subtract viewInsets so total height never exceeds screen height when
+        // the keyboard is visible — without this the header gets clipped.
         height: widget.fullScreen
             ? double.infinity
-            : MediaQuery.sizeOf(context).height * 0.8,
+            : MediaQuery.sizeOf(context).height * 0.8 - viewInsets,
         decoration: BoxDecoration(
           color: colors.surface,
           borderRadius: widget.fullScreen
@@ -140,8 +172,11 @@ class _ChatSheetState extends State<ChatSheet> {
           builder: (context, state) {
             return Column(
               children: [
+                _buildDragHandle(context),
                 _buildHeader(context),
+                _buildWarningBanner(context),
                 Expanded(child: _buildMessages(context, state)),
+                if (!state.isClosed) _buildQuickMessages(context, state),
                 if (state.isClosed)
                   _buildClosedNotice(context)
                 else
@@ -154,37 +189,130 @@ class _ChatSheetState extends State<ChatSheet> {
     );
   }
 
+  Widget _buildDragHandle(BuildContext context) {
+    return Padding(
+      padding: REdgeInsets.only(top: AppSpacing.md),
+      child: Center(
+        child: Container(
+          width: 40.w,
+          height: 4.h,
+          decoration: BoxDecoration(
+            color: context.colorScheme.onSurface.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(AppRadii.sm.r),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildHeader(BuildContext context) {
     final colors = context.colorScheme;
+    final name = widget.customerName;
+
     return Padding(
       padding: REdgeInsets.fromLTRB(
-        AppSpacing.xl,
-        AppSpacing.md,
-        AppSpacing.md,
+        AppSpacing.lg,
         AppSpacing.sm,
+        AppSpacing.sm,
+        AppSpacing.xs,
       ),
       child: Row(
         children: [
-          Container(
-            width: 40.w,
-            height: 4.h,
-            margin: REdgeInsets.only(right: AppSpacing.md),
-            decoration: BoxDecoration(
-              color: colors.onSurface.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(AppRadii.sm.r),
+          if (name != null && name.isNotEmpty) ...[
+            Text(
+              '${'chatCustomerLabel'.tr()} :',
+              style: AppTextStyles.s12w500.copyWith(color: context.primary),
             ),
-          ),
-          Expanded(
-            child: Text(
-              'chatTitle'.tr(),
-              style: AppTextStyles.s18w600.copyWith(color: colors.onSurface),
+            AppSpacing.sm.horizontalSpace,
+            Expanded(
+              child: Text(
+                name,
+                style: AppTextStyles.s18w600.copyWith(color: colors.onSurface),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
+          ] else
+            Expanded(
+              child: Text(
+                'chatTitle'.tr(),
+                style: AppTextStyles.s18w600.copyWith(color: colors.onSurface),
+              ),
+            ),
           IconButton(
-            onPressed: () => Navigator.of(context).maybePop(),
+            onPressed: widget.onClose ?? () => Navigator.of(context).pop(),
             icon: Icon(Icons.close, color: colors.onSurface, size: 22.r),
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(minWidth: 36.r, minHeight: 36.r),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildWarningBanner(BuildContext context) {
+    final primary = context.primary;
+    return Padding(
+      padding: REdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.xs,
+        AppSpacing.md,
+        AppSpacing.sm,
+      ),
+      child: Container(
+        padding: REdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          border: Border.all(color: primary, width: 1),
+          borderRadius: BorderRadius.circular(AppRadii.md.r),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 28.r,
+              height: 28.r,
+              decoration: BoxDecoration(color: primary, shape: BoxShape.circle),
+              child: Center(
+                child: Text(
+                  'i',
+                  style: AppTextStyles.s14w600.copyWith(
+                    color: Colors.white,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+            ),
+            AppSpacing.sm.horizontalSpace,
+            Expanded(
+              child: Text(
+                'chatWarningMessage'.tr(),
+                style: AppTextStyles.s12w400.copyWith(
+                  color: context.colorScheme.onSurface,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickMessages(BuildContext context, ChatState state) {
+    final isSending = state.sendStatus.isLoading;
+    return Padding(
+      padding: REdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.xs,
+      ),
+      child: Wrap(
+        spacing: 8.w,
+        runSpacing: 6.h,
+        children: _quickMessageKeys.map((key) {
+          return _QuickMessageButton(
+            label: key.tr(),
+            onTap: isSending ? null : () => _sendText(key.tr()),
+          );
+        }).toList(),
       ),
     );
   }
@@ -235,7 +363,6 @@ class _ChatSheetState extends State<ChatSheet> {
   }
 
   Widget _buildInputBar(BuildContext context, ChatState state) {
-    final colors = context.colorScheme;
     final isSending = state.sendStatus.isLoading;
     return SafeArea(
       top: false,
@@ -248,14 +375,11 @@ class _ChatSheetState extends State<ChatSheet> {
         ),
         child: Row(
           children: [
-            IconButton(
+            _CircleActionButton(
+              icon: Icons.add,
               onPressed: isSending ? null : _pickPhoto,
-              icon: FaIcon(
-                FontAwesomeIcons.paperclip,
-                color: colors.primary,
-                size: 20.r,
-              ),
             ),
+            AppSpacing.sm.horizontalSpace,
             Expanded(
               child: TextField(
                 controller: _controller,
@@ -266,9 +390,8 @@ class _ChatSheetState extends State<ChatSheet> {
                 decoration: InputDecoration(
                   hintText: 'chatInputHint'.tr(),
                   filled: true,
-                  fillColor: colors.surfaceContainerHighest.withValues(
-                    alpha: 0.4,
-                  ),
+                  fillColor: context.colorScheme.surfaceContainerHighest
+                      .withValues(alpha: 0.4),
                   contentPadding: REdgeInsets.symmetric(
                     horizontal: AppSpacing.md,
                     vertical: AppSpacing.sm,
@@ -281,21 +404,83 @@ class _ChatSheetState extends State<ChatSheet> {
               ),
             ),
             AppSpacing.sm.horizontalSpace,
-            IconButton(
+            _CircleActionButton(
+              icon: Icons.send_rounded,
               onPressed: isSending ? null : _sendText,
-              icon: isSending
-                  ? SizedBox(
-                      width: 20.r,
-                      height: 20.r,
-                      child: const CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : FaIcon(
-                      FontAwesomeIcons.solidPaperPlane,
-                      color: colors.primary,
-                      size: 20.r,
-                    ),
+              isLoading: isSending,
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CircleActionButton extends StatelessWidget {
+  const _CircleActionButton({
+    required this.icon,
+    required this.onPressed,
+    this.isLoading = false,
+  });
+
+  final IconData icon;
+  final VoidCallback? onPressed;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = context.primary;
+    final disabled = onPressed == null;
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: 42.r,
+        height: 42.r,
+        decoration: BoxDecoration(
+          color: disabled ? primary.withValues(alpha: 0.4) : primary,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: isLoading
+              ? SizedBox(
+                  width: 18.r,
+                  height: 18.r,
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : Icon(icon, color: Colors.white, size: 20.r),
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickMessageButton extends StatelessWidget {
+  const _QuickMessageButton({required this.label, this.onTap});
+
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: REdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(color: context.primary, width: 1),
+          borderRadius: BorderRadius.circular(AppRadii.lg.r),
+        ),
+        child: Text(
+          label,
+          style: AppTextStyles.s12w500.copyWith(
+            color: context.colorScheme.onSurface,
+          ),
         ),
       ),
     );
@@ -329,9 +514,8 @@ class _ChatBubble extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadii.lg.r),
         ),
         child: Column(
-          crossAxisAlignment: isMine
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             if (message.photoUrl != null && message.photoUrl!.isNotEmpty)
               Padding(

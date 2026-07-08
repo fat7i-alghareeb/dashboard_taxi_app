@@ -72,6 +72,24 @@ class DashboardRepositoryImpl implements DashboardRepository {
   }
 
   @override
+  Future<Result<DashboardTripFinancialsEntity>> getTripFinancials(
+    String tripId,
+  ) {
+    return runAsResult(() async {
+      final model = await _remote.getTripFinancials(tripId);
+      return model.toEntity;
+    });
+  }
+
+  @override
+  Future<Result<DashboardUserWalletEntity>> getUserWallet(String userId) {
+    return runAsResult(() async {
+      final model = await _remote.getUserWallet(userId);
+      return model.toEntity;
+    });
+  }
+
+  @override
   Future<Result<DashboardAdminProfileEntity?>> getAdminProfile() {
     return runAsResult(() async {
       final model = await _remote.getAdminProfile();

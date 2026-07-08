@@ -7,12 +7,21 @@ import 'package:dashboardtaxi/features/chat/presentation/ui/widgets/chat_sheet.d
 /// so it can both show an unread badge and open the [ChatSheet] with the same
 /// instance. Tapping opens the chat.
 class ChatEntryButton extends StatefulWidget {
-  const ChatEntryButton({super.key, required this.tripId, this.compact = false});
+  const ChatEntryButton({
+    super.key,
+    required this.tripId,
+    this.compact = false,
+    this.customerName,
+  });
 
   final String tripId;
 
   /// When true, renders an icon-only button (for tight rows).
   final bool compact;
+
+  /// Passed through to [ChatSheet] so the header can display the passenger
+  /// name. When null the generic "Chat" title is shown instead.
+  final String? customerName;
 
   @override
   State<ChatEntryButton> createState() => _ChatEntryButtonState();
@@ -42,7 +51,11 @@ class _ChatEntryButtonState extends State<ChatEntryButton> {
           final unread = state.unreadCount;
           final colors = context.colorScheme;
           return InkWell(
-            onTap: () => ChatSheet.show(context, bloc: _bloc),
+            onTap: () => ChatSheet.show(
+              context,
+              bloc: _bloc,
+              customerName: widget.customerName,
+            ),
             borderRadius: BorderRadius.circular(AppRadii.md.r),
             child: Container(
               padding: REdgeInsets.symmetric(

@@ -50,6 +50,44 @@ class AuthRemoteDataSource {
         return model;
       });
 
+  /// Requests a backend SMS OTP for phone login; returns the otpRequestId.
+  Future<String> requestPhoneLoginOtp(PhoneOtpParams params) =>
+      rethrowAsAppException(() async {
+        printY(
+          '[AuthRemoteDataSource] requestPhoneLoginOtp -> '
+          '${ApiEndpoints.phoneLoginOtp}',
+        );
+        final res = await _dio.post(
+          ApiEndpoints.phoneLoginOtp,
+          data: params.toJson(),
+        );
+        final data = res.data as Map<String, dynamic>;
+        final otpRequestId = data['otpRequestId'] as String;
+        printG('[AuthRemoteDataSource] requestPhoneLoginOtp success');
+        return otpRequestId;
+      });
+
+  /// Verifies the phone-login OTP and returns the authenticated session.
+  Future<AuthLoginResponseModel> verifyPhoneLoginOtp(VerifyOtpParams params) =>
+      rethrowAsAppException(() async {
+        printY(
+          '[AuthRemoteDataSource] verifyPhoneLoginOtp -> '
+          '${ApiEndpoints.phoneLoginOtpVerify}',
+        );
+        final res = await _dio.post(
+          ApiEndpoints.phoneLoginOtpVerify,
+          data: params.toJson(),
+        );
+        final model = AuthLoginResponseModel.fromJson(
+          res.data as Map<String, dynamic>,
+        );
+        printG(
+          '[AuthRemoteDataSource] verifyPhoneLoginOtp success '
+          'user=${model.user.id} role=${model.user.role}',
+        );
+        return model;
+      });
+
   Future<void> updateFcmToken(String token) => rethrowAsAppException(() async {
     printY(
       '[AuthRemoteDataSource] updateFcmToken -> ${ApiEndpoints.updateFcmToken}',

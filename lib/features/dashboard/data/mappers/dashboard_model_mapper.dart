@@ -215,6 +215,8 @@ extension DashboardTripDetailsModelMapper on DashboardTripDetailsModel {
       dispatchWindowOpensAt: dispatchWindowOpensAt,
       canMarkEnRoute: canMarkEnRoute,
       attentionState: attentionState,
+      passengerCount: passengerCount,
+      bagCount: bagCount,
     );
   }
 }
@@ -257,6 +259,72 @@ extension DashboardDriverLocationModelMapper on DashboardDriverLocationModel {
       locationUpdatedAt: locationUpdatedAt,
       vehicleTypeId: vehicleTypeId,
       vehicleTypeName: vehicleTypeName,
+    );
+  }
+}
+
+extension DashboardTripFinancialsModelMapper on DashboardTripFinancialsModel {
+  DashboardTripFinancialsEntity get toEntity {
+    return DashboardTripFinancialsEntity(
+      currencyCode: currencyCode,
+      fareAmount: fareAmount,
+      waitingFeeAmount: waitingFeeAmount,
+      totalCharged: totalCharged,
+      walletPaidAmount: walletPaidAmount,
+      cardPaidAmount: cardPaidAmount,
+      totalPaidAmount: totalPaidAmount,
+      unpaidAmount: unpaidAmount,
+      refundedAmount: refundedAmount,
+      payments: payments
+          .map(
+            (p) => DashboardTripPaymentLineEntity(
+              kind: p.kind,
+              method: p.method,
+              amount: p.amount,
+              status: p.status,
+              processedAt: p.processedAt,
+              stripePaymentMethodType: p.stripePaymentMethodType,
+            ),
+          )
+          .toList(),
+      refunds: refunds
+          .map(
+            (r) => DashboardTripRefundLineEntity(
+              amount: r.amount,
+              status: r.status,
+              sourceType: r.sourceType,
+              requestedAt: r.requestedAt,
+              completedAt: r.completedAt,
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+extension DashboardUserWalletModelMapper on DashboardUserWalletModel {
+  DashboardUserWalletEntity get toEntity {
+    return DashboardUserWalletEntity(
+      userId: userId,
+      hasAccount: hasAccount,
+      balance: balance,
+      currencyCode: currencyCode,
+      transactions: transactions
+          .map(
+            (t) => DashboardWalletTransactionEntity(
+              id: t.id,
+              type: t.type,
+              direction: t.direction,
+              amount: t.amount,
+              currencyCode: t.currencyCode,
+              status: t.status,
+              balanceAfter: t.balanceAfter,
+              description: t.description,
+              createdAt: t.createdAt,
+              completedAt: t.completedAt,
+            ),
+          )
+          .toList(),
     );
   }
 }
