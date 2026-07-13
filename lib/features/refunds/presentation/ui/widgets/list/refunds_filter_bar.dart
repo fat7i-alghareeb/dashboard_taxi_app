@@ -1,7 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/states/refunds_cubit.dart';
-import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/list/refund_filter_chip_item.dart';
-import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/list/refund_filter_chip_wrap.dart';
 
 class RefundsFilterBar extends StatelessWidget {
   const RefundsFilterBar({
@@ -47,10 +45,10 @@ class RefundsFilterBar extends StatelessWidget {
           ),
         ),
         AppSpacing.md.verticalSpace,
-        RefundFilterChipWrap(
+        AppFilterChipWrap(
           children: RefundStatusFilter.values
               .map(
-                (filter) => RefundFilterChipItem(
+                (filter) => AppFilterChipItem(
                   label: _statusLabel(filter),
                   selected: filter == state.statusFilter,
                   onSelected: () => onStatusChanged(filter),
@@ -59,10 +57,10 @@ class RefundsFilterBar extends StatelessWidget {
               .toList(),
         ),
         AppSpacing.sm.verticalSpace,
-        RefundFilterChipWrap(
+        AppFilterChipWrap(
           children: RefundSourceFilter.values
               .map(
-                (filter) => RefundFilterChipItem(
+                (filter) => AppFilterChipItem(
                   label: _sourceLabel(filter),
                   selected: filter == state.sourceFilter,
                   onSelected: () => onSourceChanged(filter),

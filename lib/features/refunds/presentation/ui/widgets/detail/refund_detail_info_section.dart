@@ -2,10 +2,11 @@ import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/detail/refund_info_row_widget.dart';
 
 class RefundInfoRowData {
-  const RefundInfoRowData(this.label, this.value);
+  const RefundInfoRowData(this.label, this.value, {this.copyable = false});
 
   final String label;
   final String value;
+  final bool copyable;
 }
 
 class RefundDetailInfoSection extends StatelessWidget {
@@ -41,7 +42,11 @@ class RefundDetailInfoSection extends StatelessWidget {
           ...rows.map(
             (row) => Padding(
               padding: REdgeInsets.only(bottom: AppSpacing.sm),
-              child: RefundInfoRowWidget(label: row.label, value: row.value),
+              child: RefundInfoRowWidget(
+                label: row.label,
+                value: row.value,
+                copyable: row.copyable,
+              ),
             ),
           ),
         ],

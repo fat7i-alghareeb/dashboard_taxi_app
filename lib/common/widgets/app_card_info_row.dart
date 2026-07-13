@@ -1,21 +1,27 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 
-class RefundCardInfoRow extends StatelessWidget {
-  const RefundCardInfoRow({
+/// Shared label/value row used inside admin review-queue cards.
+class AppCardInfoRow extends StatelessWidget {
+  const AppCardInfoRow({
     super.key,
     required this.label,
     required this.value,
+    this.labelWidth = 126,
+    this.valueMaxLines = 1,
   });
 
   final String label;
   final String value;
+  final double labelWidth;
+  final int valueMaxLines;
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 126.w,
+          width: labelWidth.w,
           child: Text(
             label,
             maxLines: 1,
@@ -29,7 +35,7 @@ class RefundCardInfoRow extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            maxLines: 1,
+            maxLines: valueMaxLines,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.end,
             style: AppTextStyles.s12w500.copyWith(color: context.onSurface),

@@ -3,9 +3,7 @@ import 'package:dashboardtaxi/features/refund_requests/presentation/ui/screens/r
 import 'package:dashboardtaxi/features/refunds/domain/entities/refund_entity.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/states/refunds_cubit.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/list/refunds_filter_bar.dart';
-import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/list/refunds_header_section.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/list/refunds_list_section.dart';
-import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/list/refunds_shimmer_widget.dart';
 
 class RefundsBody extends StatefulWidget {
   const RefundsBody({super.key});
@@ -28,45 +26,67 @@ class _RefundsBodyState extends State<RefundsBody> {
     return BlocBuilder<RefundsCubit, RefundsState>(
       builder: (context, state) {
         final cubit = context.read<RefundsCubit>();
-        return RefreshIndicator(
-          onRefresh: cubit.loadRefunds,
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: REdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.lg,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: REdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.lg,
+                AppSpacing.lg,
+                0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AppButton.grey(
+                    onTap: () =>
+                        context.pushNamed(RefundRequestsScreen.pageName),
+                    child: AppButtonChild.labelIcon(
+                      label: AppStrings.refundRequestsButton,
+                      icon: IconSource.builder(
+                        (_) => FaIcon(FontAwesomeIcons.inbox, size: 15.r),
+                      ),
+                    ),
+                  ),
+                  AppSpacing.lg.verticalSpace,
+                  RefundsFilterBar(
+                    searchController: _searchController,
+                    state: state,
+                    onSearchChanged: cubit.setSearch,
+                    onStatusChanged: cubit.setStatusFilter,
+                    onSourceChanged: cubit.setSourceFilter,
+                  ),
+                ],
+              ),
             ),
-            children: [
-              RefundsHeaderSection(
-                onRefresh: cubit.loadRefunds,
-                onOpenCustomerRequests: () =>
-                    context.pushNamed(RefundRequestsScreen.pageName),
-              ),
-              AppSpacing.lg.verticalSpace,
-              RefundsFilterBar(
-                searchController: _searchController,
-                state: state,
-                onSearchChanged: cubit.setSearch,
-                onStatusChanged: cubit.setStatusFilter,
-                onSourceChanged: cubit.setSourceFilter,
-              ),
-              AppSpacing.lg.verticalSpace,
-              StatusBuilder<List<RefundEntity>>(
+            Expanded(
+              child: StatusBuilder<List<RefundEntity>>(
                 state: state.listState,
-                loading: () => const RefundsShimmerWidget(),
+                loading: () => SingleChildScrollView(
+                  padding: REdgeInsets.all(AppSpacing.lg),
+                  child: const AppListShimmer(),
+                ),
                 isEmpty: (_) => state.filteredRefunds.isEmpty,
-                empty: () => EmptyStateWidget(text: AppStrings.refundsEmpty),
+                empty: () => EmptyStateWidget(
+                  text: AppStrings.refundsEmpty,
+                  onRefresh: cubit.loadRefunds,
+                ),
                 onError: cubit.loadRefunds,
-                success: (_) => RefundsListSection(
-                  refunds: state.filteredRefunds,
-                  hasMore: state.hasMore,
-                  isLoadingMore: state.isLoadingMore,
-                  onLoadMore: cubit.loadMoreRefunds,
+                onRefresh: cubit.loadRefunds,
+                success: (_) => SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: REdgeInsets.all(AppSpacing.lg),
+                  child: RefundsListSection(
+                    refunds: state.filteredRefunds,
+                    hasMore: state.hasMore,
+                    isLoadingMore: state.isLoadingMore,
+                    onLoadMore: cubit.loadMoreRefunds,
+                  ),
                 ),
               ),
-              AppSpacing.xxl.verticalSpace,
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

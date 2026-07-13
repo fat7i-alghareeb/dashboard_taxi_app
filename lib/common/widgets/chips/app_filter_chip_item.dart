@@ -1,7 +1,8 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 
-class RefundFilterChipItem extends StatelessWidget {
-  const RefundFilterChipItem({
+/// Shared selectable filter chip used across admin list/filter bars.
+class AppFilterChipItem extends StatelessWidget {
+  const AppFilterChipItem({
     super.key,
     required this.label,
     required this.selected,

@@ -198,6 +198,13 @@ class TripBloc extends Bloc<TripEvent, TripState> {
           );
         }
         await _refreshOrAdvance(tripId, TripStatus.accepted, emit);
+      case RealtimeTripDestinationChanged(:final tripId):
+        printC('[TripBloc] realtime TripDestinationChanged trip=$tripId');
+        // The passenger changed the drop-off mid-trip; re-fetch so the map/nav
+        // section picks up the new destination + route polyline and re-routes.
+        if (state.activeTrip?.id == tripId) {
+          await _loadActiveTrip(tripId, emit);
+        }
       case RealtimeDriverLocationUpdated():
       case RealtimePaymentConfirmed():
       case RealtimePaymentFailed():

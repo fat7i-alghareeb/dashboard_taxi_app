@@ -100,6 +100,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         case RealtimeTripCancelled(:final tripId):
           _applyTripStatusInPlace(tripId, 'Cancelled');
           _scheduleOverviewRefresh();
+        // Passenger changed the drop-off mid-trip: refresh so the new route/fare
+        // shows on the dashboard and, if open, the trip detail re-fetches.
+        case RealtimeTripDestinationChanged(:final tripId):
+          _scheduleAdminTripsRefresh();
+          if (state.selectedTripId == tripId) {
+            add(DashboardEvent.tripDetailsRequested(tripId));
+          }
         case RealtimePaymentConfirmed():
         case RealtimePaymentFailed():
         case RealtimeTripRefunded():

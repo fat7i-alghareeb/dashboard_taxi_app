@@ -2,7 +2,6 @@ import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/refunds/domain/entities/refund_entity.dart';
 import 'package:dashboardtaxi/features/refunds/domain/entities/refund_enums.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/screens/refund_detail_screen.dart';
-import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/list/refund_card_info_row.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/shared/refund_status_badge.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/shared/refund_ui_formatters.dart';
 
@@ -30,7 +29,6 @@ class RefundCardWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadii.lg.r),
             border: Border.all(color: _borderColor(context), width: 1.w),
-            boxShadow: context.shadows.primary,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -47,7 +45,7 @@ class RefundCardWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(AppRadii.lg.r),
                     ),
                     child: FaIcon(
-                      FontAwesomeIcons.moneyBillTransfer,
+                      _accentIcon(),
                       size: 17.r,
                       color: _accentColor(context),
                     ),
@@ -85,22 +83,22 @@ class RefundCardWidget extends StatelessWidget {
                 ],
               ),
               AppSpacing.lg.verticalSpace,
-              RefundCardInfoRow(
+              AppCardInfoRow(
                 label: AppStrings.refundsTrip,
                 value: refund.tripId ?? AppStrings.refundsNotAvailable,
               ),
               AppSpacing.sm.verticalSpace,
-              RefundCardInfoRow(
+              AppCardInfoRow(
                 label: AppStrings.refundsPassenger,
                 value: refund.passengerId ?? AppStrings.refundsNotAvailable,
               ),
               AppSpacing.sm.verticalSpace,
-              RefundCardInfoRow(
+              AppCardInfoRow(
                 label: AppStrings.refundsPaymentMethod,
                 value: refund.paymentMethod ?? AppStrings.refundsNotAvailable,
               ),
               AppSpacing.sm.verticalSpace,
-              RefundCardInfoRow(
+              AppCardInfoRow(
                 label: AppStrings.refundsRequested,
                 value: RefundUiFormatters.date(refund.requestedAtUtc),
               ),
@@ -128,6 +126,20 @@ class RefundCardWidget extends StatelessWidget {
     if (refund.isSucceeded) return AppColors.success;
     if (refund.isFailedLike || refund.isRequiresAction) return context.error;
     return context.primary;
+  }
+
+  FaIconData _accentIcon() {
+    return switch (refund.sourceType) {
+      RefundSourceType.compensationClaim => FontAwesomeIcons.handHoldingDollar,
+      RefundSourceType.manualIncidentRefund =>
+        FontAwesomeIcons.triangleExclamation,
+      RefundSourceType.adminRetry => FontAwesomeIcons.arrowsRotate,
+      RefundSourceType.passengerCancellation ||
+      RefundSourceType.adminCancellation ||
+      RefundSourceType.driverCancellation ||
+      RefundSourceType.airportWaitCancellation => FontAwesomeIcons.rotateLeft,
+      RefundSourceType.unknown => FontAwesomeIcons.moneyBillTransfer,
+    };
   }
 
   Color _borderColor(BuildContext context) {

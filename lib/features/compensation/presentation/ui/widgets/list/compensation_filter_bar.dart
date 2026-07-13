@@ -1,19 +1,20 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
-import 'package:dashboardtaxi/features/refund_requests/presentation/states/refund_requests_cubit.dart';
 
-class RefundRequestsFilterBar extends StatelessWidget {
-  const RefundRequestsFilterBar({
+import '../../../states/compensation_cubit.dart';
+
+class CompensationFilterBar extends StatelessWidget {
+  const CompensationFilterBar({
     super.key,
     required this.searchController,
-    required this.selected,
+    required this.statusFilter,
     required this.onSearchChanged,
-    required this.onChanged,
+    required this.onStatusChanged,
   });
 
   final TextEditingController searchController;
-  final RefundRequestStatusFilter selected;
+  final CompensationStatusFilter statusFilter;
   final ValueChanged<String> onSearchChanged;
-  final ValueChanged<RefundRequestStatusFilter> onChanged;
+  final ValueChanged<CompensationStatusFilter> onStatusChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class RefundRequestsFilterBar extends StatelessWidget {
           textInputAction: TextInputAction.search,
           onChanged: onSearchChanged,
           decoration: InputDecoration(
-            hintText: AppStrings.refundRequestsSearchHint,
+            hintText: AppStrings.compensationSearchHint,
             prefixIcon: Padding(
               padding: REdgeInsets.all(AppSpacing.md),
               child: FaIcon(
@@ -44,12 +45,12 @@ class RefundRequestsFilterBar extends StatelessWidget {
         ),
         AppSpacing.md.verticalSpace,
         AppFilterChipWrap(
-          children: RefundRequestStatusFilter.values
+          children: CompensationStatusFilter.values
               .map(
                 (filter) => AppFilterChipItem(
                   label: _label(filter),
-                  selected: selected == filter,
-                  onSelected: () => onChanged(filter),
+                  selected: filter == statusFilter,
+                  onSelected: () => onStatusChanged(filter),
                 ),
               )
               .toList(),
@@ -58,16 +59,14 @@ class RefundRequestsFilterBar extends StatelessWidget {
     ).animate().fadeIn(duration: 240.ms).slideY(begin: 0.04, end: 0);
   }
 
-  String _label(RefundRequestStatusFilter filter) {
+  String _label(CompensationStatusFilter filter) {
     return switch (filter) {
-      RefundRequestStatusFilter.all => AppStrings.refundsFilterAll,
-      RefundRequestStatusFilter.open => AppStrings.refundRequestsStatusOpen,
-      RefundRequestStatusFilter.inReview =>
-        AppStrings.refundRequestsStatusInReview,
-      RefundRequestStatusFilter.resolved =>
-        AppStrings.refundRequestsStatusResolved,
-      RefundRequestStatusFilter.dismissed =>
-        AppStrings.refundRequestsStatusDismissed,
+      CompensationStatusFilter.all => AppStrings.compensationFilterAll,
+      CompensationStatusFilter.pending => AppStrings.compensationFilterPending,
+      CompensationStatusFilter.approved =>
+        AppStrings.compensationFilterApproved,
+      CompensationStatusFilter.rejected =>
+        AppStrings.compensationFilterRejected,
     };
   }
 }

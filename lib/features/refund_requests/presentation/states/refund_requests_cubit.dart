@@ -17,6 +17,7 @@ class RefundRequestsState {
     this.listState = const BlocStatus<List<RefundIssueEntity>>.initial(),
     this.reviewState = const BlocStatus<RefundIssueEntity>.initial(),
     this.statusFilter = RefundRequestStatusFilter.all,
+    this.search = '',
     this.page = 1,
     this.pageSize = 20,
     this.totalCount = 0,
@@ -27,6 +28,7 @@ class RefundRequestsState {
   final BlocStatus<List<RefundIssueEntity>> listState;
   final BlocStatus<RefundIssueEntity> reviewState;
   final RefundRequestStatusFilter statusFilter;
+  final String search;
   final int page;
   final int pageSize;
   final int totalCount;
@@ -43,10 +45,26 @@ class RefundRequestsState {
     return items;
   }
 
+  List<RefundIssueEntity> get filteredItems {
+    final query = search.trim().toLowerCase();
+    if (query.isEmpty) return sortedItems;
+    return sortedItems
+        .where(
+          (issue) =>
+              issue.tripId.toLowerCase().contains(query) ||
+              (issue.tripReferenceCode?.toLowerCase().contains(query) ??
+                  false) ||
+              issue.passengerId.toLowerCase().contains(query) ||
+              (issue.passengerName?.toLowerCase().contains(query) ?? false),
+        )
+        .toList();
+  }
+
   RefundRequestsState copyWith({
     BlocStatus<List<RefundIssueEntity>>? listState,
     BlocStatus<RefundIssueEntity>? reviewState,
     RefundRequestStatusFilter? statusFilter,
+    String? search,
     int? page,
     int? pageSize,
     int? totalCount,
@@ -57,6 +75,7 @@ class RefundRequestsState {
       listState: listState ?? this.listState,
       reviewState: reviewState ?? this.reviewState,
       statusFilter: statusFilter ?? this.statusFilter,
+      search: search ?? this.search,
       page: page ?? this.page,
       pageSize: pageSize ?? this.pageSize,
       totalCount: totalCount ?? this.totalCount,
@@ -145,6 +164,10 @@ class RefundRequestsCubit extends Cubit<RefundRequestsState> {
   void setStatusFilter(RefundRequestStatusFilter filter) {
     emit(state.copyWith(statusFilter: filter));
     unawaited(loadRequests());
+  }
+
+  void setSearch(String value) {
+    emit(state.copyWith(search: value));
   }
 
   Future<void> reviewRequest({

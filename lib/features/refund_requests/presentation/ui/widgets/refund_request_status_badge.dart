@@ -9,21 +9,9 @@ class RefundRequestStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = _color(context);
-    return Container(
-      padding: REdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(AppRadii.lg.r),
-        border: Border.all(color: color.withValues(alpha: 0.28), width: 1.w),
-      ),
-      child: Text(
-        RefundRequestsFormatters.statusLabel(issue.reviewStatus),
-        style: AppTextStyles.s12w500.copyWith(color: color),
-      ),
+    return AppStatusBadge(
+      color: _color(context),
+      label: RefundRequestsFormatters.statusLabel(issue.reviewStatus),
     );
   }
 

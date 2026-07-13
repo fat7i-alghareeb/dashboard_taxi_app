@@ -19,7 +19,11 @@ class RefundDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold.body(
+    return AppScaffold.appBar(
+      appBarConfig: AppScaffoldAppBarConfig(
+        title: AppStrings.refundsDetailTitle,
+        titleAlignment: AppScaffoldTitleAlignment.start,
+      ),
       child: BlocProvider(
         create: (_) => getIt<RefundsCubit>()
           ..loadRefundDetail(

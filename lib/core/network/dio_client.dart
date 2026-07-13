@@ -222,59 +222,111 @@ void _configureJwtFlow({
         return null;
       },
       refreshToken: (token, tokenDio) async {
-        try {
-          printC('[DioClient] Attempting token refresh', tag: false);
+        final user = authManager.currentUser;
+        if (user?.id == null || !authManager.isAuthenticated) {
+          printY(
+            '[DioClient] No user ID or not authenticated for token refresh',
+            tag: false,
+          );
+          throw Exception('Not authenticated for token refresh');
+        }
 
-          final user = authManager.currentUser;
-          if (user?.id == null || !authManager.isAuthenticated) {
-            printY(
-              '[DioClient] No user ID or not authenticated for token refresh',
+        if (ApiEndpoints.refreshToken.isEmpty) {
+          printY(
+            '[DioClient] Refresh skipped because endpoint is not configured',
+            tag: false,
+          );
+          return token;
+        }
+
+        const maxTransientRetries = 1;
+        const retryBaseDelay = Duration(seconds: 1);
+
+        for (var attempt = 0; ; attempt++) {
+          try {
+            printC('[DioClient] Attempting token refresh', tag: false);
+
+            final response = await tokenDio.post<dynamic>(
+              ApiEndpoints.refreshToken,
+              data: <String, Object?>{
+                'expiredAccessToken': token.accessToken,
+                'refreshToken': token.refreshToken,
+              },
+            );
+
+            final data = response.data;
+            if (data is! Map<String, dynamic>) {
+              throw Exception('Unexpected refresh response shape: $data');
+            }
+
+            final fromApi = AuthTokenModel.fromMap(data);
+            final newToken = AuthTokenModel(
+              accessToken: fromApi.accessToken,
+              refreshToken: fromApi.refreshToken ?? token.refreshToken,
+              expiresIn: fromApi.expiresIn,
+            );
+
+            await tokenStorage.write(newToken);
+
+            printG('[DioClient] Token refresh successful', tag: false);
+            return newToken;
+          } on DioException catch (e) {
+            // Only a definitive rejection from the backend means the refresh
+            // token itself is dead — everything else (timeout, DNS/socket
+            // errors right after the device wakes from idle, a transient
+            // 5xx) is a failed request, not proof the session is invalid, so
+            // it must not force a destructive logout.
+            if (_isDefinitiveAuthRejection(e)) {
+              printR(
+                '[DioClient] Refresh definitively rejected: '
+                '${e.response?.statusCode}',
+                tag: false,
+              );
+              await authManager.logout();
+              rethrow;
+            }
+
+            if (attempt < maxTransientRetries) {
+              printY(
+                '[DioClient] Token refresh transient failure, retrying: $e',
+                tag: false,
+              );
+              await Future<void>.delayed(retryBaseDelay * (attempt + 1));
+              continue;
+            }
+
+            printR(
+              '[DioClient] Token refresh failed (non-destructive): $e',
               tag: false,
             );
-            await authManager.logout();
-            throw Exception('Not authenticated for token refresh');
+            rethrow;
           }
-
-          if (ApiEndpoints.refreshToken.isEmpty) {
-            printY(
-              '[DioClient] Refresh skipped because endpoint is not configured',
-              tag: false,
-            );
-            return token;
-          }
-
-          final response = await tokenDio.post<dynamic>(
-            ApiEndpoints.refreshToken,
-            data: <String, Object?>{
-              'expiredAccessToken': token.accessToken,
-              'refreshToken': token.refreshToken,
-            },
-          );
-
-          final data = response.data;
-          if (data is! Map<String, dynamic>) {
-            throw Exception('Unexpected refresh response shape: $data');
-          }
-
-          final fromApi = AuthTokenModel.fromMap(data);
-          final newToken = AuthTokenModel(
-            accessToken: fromApi.accessToken,
-            refreshToken: fromApi.refreshToken ?? token.refreshToken,
-            expiresIn: fromApi.expiresIn,
-          );
-
-          await tokenStorage.write(newToken);
-
-          printG('[DioClient] Token refresh successful', tag: false);
-          return newToken;
-        } catch (e) {
-          printR('[DioClient] Token refresh failed: $e', tag: false);
-          await authManager.logout();
-          throw Exception('Token refresh failed: $e');
         }
       },
     ),
   );
+}
+
+/// A definitive auth rejection means the refresh token itself is invalid,
+/// expired, or revoked — the only case where a refresh failure should force
+/// a logout. Everything else (timeouts, connectivity blips, unrelated server
+/// errors) is left to propagate as a normal failed request.
+bool _isDefinitiveAuthRejection(DioException e) {
+  final status = e.response?.statusCode;
+  if (status == 401 || status == 403) return true;
+  if (status == 409) {
+    final data = e.response?.data;
+    final code = data is Map ? data['errorCode']?.toString() : null;
+    const knownCodes = <String>{
+      'Auth.RefreshToken.Expired',
+      'Auth.ExpiredAccessToken.Invalid',
+      'Auth.UserIdClaim.Invalid',
+    };
+    // Fails open (non-destructive) if the code is missing/unrecognized, e.g.
+    // an older backend build that doesn't send `errorCode` yet.
+    return code != null && knownCodes.contains(code);
+  }
+  return false;
 }
 
 /// Attaches the Authorization header if a token exists, but does not refresh.

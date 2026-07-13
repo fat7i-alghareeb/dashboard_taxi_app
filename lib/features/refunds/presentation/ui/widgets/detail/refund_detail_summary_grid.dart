@@ -20,7 +20,6 @@ class RefundDetailSummaryGrid extends StatelessWidget {
           color: context.onSurface.withValues(alpha: 0.08),
           width: 1.w,
         ),
-        boxShadow: context.shadows.primary,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

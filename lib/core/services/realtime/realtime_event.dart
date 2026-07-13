@@ -139,6 +139,17 @@ sealed class RealtimeEvent with _$RealtimeEvent {
     required String type,
     required String severity,
   }) = RealtimeCustomerIncidentRaised;
+
+  /// The trip's drop-off changed mid-trip. The driver app re-fetches the active
+  /// trip (new drop-off + route polyline) so the map/nav re-routes.
+  const factory RealtimeEvent.tripDestinationChanged({
+    required String tripId,
+    required String passengerId,
+    String? driverId,
+    required double newDropoffLatitude,
+    required double newDropoffLongitude,
+    String? newDropoffLabel,
+  }) = RealtimeTripDestinationChanged;
 }
 
 /// Stable list of every SignalR method name the hub will push to clients.
@@ -163,6 +174,7 @@ abstract final class RealtimeMethodNames {
   static const tripMessageReceived = 'TripMessageReceived';
   static const chatClosed = 'ChatClosed';
   static const customerIncidentRaised = 'CustomerIncidentRaised';
+  static const tripDestinationChanged = 'TripDestinationChanged';
 
   static const all = <String>[
     tripRequested,
@@ -184,6 +196,7 @@ abstract final class RealtimeMethodNames {
     tripMessageReceived,
     chatClosed,
     customerIncidentRaised,
+    tripDestinationChanged,
   ];
 }
 
@@ -209,5 +222,6 @@ extension RealtimeEventTripId on RealtimeEvent {
     RealtimeTripMessageReceived(:final tripId) => tripId,
     RealtimeChatClosed(:final tripId) => tripId,
     RealtimeCustomerIncidentRaised(:final tripId) => tripId,
+    RealtimeTripDestinationChanged(:final tripId) => tripId,
   };
 }

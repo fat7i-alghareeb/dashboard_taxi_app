@@ -87,6 +87,12 @@ class AppStrings {
   static String get cancelNoteHint => 'cancelNoteHint'.tr();
   /// Reason - السبب - Reden - Grund - Powód - Причина - Raison - Motivo - Motiv
   static String get cancelReasonLabel => 'cancelReasonLabel'.tr();
+  /// Admin - المسؤول - Beheerder - Administrator - Administrator - Адміністратор - Administrateur - Administrador - Administrator
+  static String get cancellationActorAdmin => 'cancellationActorAdmin'.tr();
+  /// Driver - السائق - Chauffeur - Fahrer - Kierowca - Водій - Chauffeur - Conductor - Șofer
+  static String get cancellationActorDriver => 'cancellationActorDriver'.tr();
+  /// Passenger - الراكب - Passagier - Fahrgast - Pasażer - Пасажир - Passager - Pasajero - Pasager
+  static String get cancellationActorPassenger => 'cancellationActorPassenger'.tr();
   /// Failed to update password - فشل تحديث كلمة المرور - Wachtwoord bijwerken mislukt - Passwort konnte nicht aktualisiert werden - Nie udało się zaktualizować hasła - Не вдалося оновити пароль - Échec de la mise à jour du mot de passe - Error al actualizar la contraseña - Actualizarea parolei a eșuat
   static String get changePasswordFailed => 'changePasswordFailed'.tr();
   /// Update Password - تحديث كلمة المرور - Wachtwoord bijwerken - Passwort aktualisieren - Aktualizuj hasło - Оновити пароль - Mettre à jour le mot de passe - Actualizar contraseña - Actualizare parolă
@@ -161,8 +167,18 @@ class AppStrings {
   static String get compensationEvidence => 'compensationEvidence'.tr();
   /// Evidence {index} - دليل {index} - Bewijs {index} - Nachweis {index} - Dowód {index} - Доказ {index} - Preuve {index} - Evidencia {index} - Dovadă {index}
   static String get compensationEvidenceItem => 'compensationEvidenceItem'.tr();
+  /// All - الكل - Alle - Alle - Wszystkie - Усі - Tous - Todos - Toate
+  static String get compensationFilterAll => 'compensationFilterAll'.tr();
+  /// Approved - تمت الموافقة - Goedgekeurd - Genehmigt - Zatwierdzone - Схвалено - Approuvé - Aprobado - Aprobat
+  static String get compensationFilterApproved => 'compensationFilterApproved'.tr();
+  /// Pending - قيد الانتظار - In behandeling - Ausstehend - Oczekujące - Очікує - En attente - Pendiente - În așteptare
+  static String get compensationFilterPending => 'compensationFilterPending'.tr();
+  /// Rejected - مرفوض - Afgewezen - Abgelehnt - Odrzucone - Відхилено - Rejeté - Rechazado - Respins
+  static String get compensationFilterRejected => 'compensationFilterRejected'.tr();
   /// 2% compensation - تعويض 2% - 2% compensatie - 2% Entschädigung - 2% odszkodowania - 2% компенсації - 2% d'indemnisation - 2% de compensación - 2% compensație
   static String get compensationPercentage => 'compensationPercentage'.tr();
+  /// Search claim, trip or note - ابحث عن مطالبة أو رحلة أو ملاحظة - Zoek claim, rit of notitie - Anspruch, Fahrt oder Notiz suchen - Szukaj wniosku, kursu lub notatki - Пошук заявки, поїздки або нотатки - Rechercher une demande, un trajet ou une note - Buscar reclamación, viaje o nota - Caută cerere, cursă sau notă
+  static String get compensationSearchHint => 'compensationSearchHint'.tr();
   /// Approved - تمت الموافقة - Goedgekeurd - Genehmigt - Zatwierdzono - Схвалено - Approuvé - Aprobado - Aprobat
   static String get compensationStatusApproved => 'compensationStatusApproved'.tr();
   /// Pending review - بانتظار المراجعة - Wacht op beoordeling - Prüfung ausstehend - Oczekuje na przegląd - Очікує розгляду - En attente d'examen - Pendiente de revisión - În așteptarea revizuirii
@@ -321,6 +337,10 @@ class AppStrings {
   static String get dashboardCancellationReason => 'dashboardCancellationReason'.tr();
   /// Refund: {percent}% ({amount} {currency}) - المبلغ المُعاد: {percent}% ({amount} {currency}) - Terugbetaling: {percent}% ({amount} {currency}) - Rückerstattung: {percent}% ({amount} {currency}) - Zwrot: {percent}% ({amount} {currency}) - Повернення: {percent}% ({amount} {currency}) - Remboursement : {percent}% ({amount} {currency}) - Reembolso: {percent}% ({amount} {currency}) - Rambursare: {percent}% ({amount} {currency})
   static String get dashboardCancellationRefund => 'dashboardCancellationRefund'.tr();
+  /// Cancelled at - أُلغيت في - Geannuleerd op - Storniert am - Anulowano o - Скасовано о - Annulé le - Cancelado el - Anulat la
+  static String get dashboardCancelledAtLabel => 'dashboardCancelledAtLabel'.tr();
+  /// Cancelled by - أُلغيت بواسطة - Geannuleerd door - Storniert von - Anulowane przez - Скасовано ким - Annulé par - Cancelado por - Anulat de
+  static String get dashboardCancelledByLabel => 'dashboardCancelledByLabel'.tr();
   /// Capacity - السعة - Capacity - Capacity - Capacity - Capacity - Capacity - Capacity - Capacity
   static String get dashboardCapacity => 'dashboardCapacity'.tr();
   /// Capacity: {value} - السعة: {value} - Capacity: {value} - Capacity: {value} - Capacity: {value} - Capacity: {value} - Capacity: {value} - Capacity: {value} - Capacity: {value}
@@ -439,6 +459,8 @@ class AppStrings {
   static String get dashboardNotProvided => 'dashboardNotProvided'.tr();
   /// Not reached - لم تصل بعد - Not reached - Not reached - Not reached - Not reached - Not reached - Not reached - Not reached
   static String get dashboardNotReached => 'dashboardNotReached'.tr();
+  /// Note - ملاحظة - Notitie - Notiz - Notatka - Примітка - Note - Nota - Notă
+  static String get dashboardNoteLabel => 'dashboardNoteLabel'.tr();
   /// Online drivers - السائقون المتصلون - Online drivers - Online drivers - Online drivers - Online drivers - Online drivers - Online drivers - Online drivers
   static String get dashboardOnlineDrivers => 'dashboardOnlineDrivers'.tr();
   /// Operations - العمليات - Beheer - Verwaltung - Operacje - Операції - Opérations - Operaciones - Operațiuni
@@ -469,12 +491,16 @@ class AppStrings {
   static String get dashboardRatePerKm => 'dashboardRatePerKm'.tr();
   /// Read only - قراءة فقط - Read only - Read only - Read only - Read only - Read only - Read only - Read only
   static String get dashboardReadOnly => 'dashboardReadOnly'.tr();
+  /// Reason - السبب - Reden - Grund - Powód - Причина - Motif - Motivo - Motiv
+  static String get dashboardReasonLabel => 'dashboardReasonLabel'.tr();
   /// Recent activity - النشاط الأخير - Recent activity - Recent activity - Recent activity - Recent activity - Recent activity - Recent activity - Recent activity
   static String get dashboardRecentActivity => 'dashboardRecentActivity'.tr();
   /// Recent trips - الرحلات الأخيرة - Recent trips - Recent trips - Recent trips - Recent trips - Recent trips - Recent trips - Recent trips
   static String get dashboardRecentTrips => 'dashboardRecentTrips'.tr();
   /// Refresh - تحديث - Vernieuwen - Aktualisieren - Odśwież - Оновити - Actualiser - Actualizar - Reîmprospătează
   static String get dashboardRefresh => 'dashboardRefresh'.tr();
+  /// Refund - استرداد - Terugbetaling - Rückerstattung - Zwrot - Повернення - Remboursement - Reembolso - Rambursare
+  static String get dashboardRefundLabel => 'dashboardRefundLabel'.tr();
   /// Reject - رفض - Afwijzen - Ablehnen - Odrzuć - Відхилити - Rejeter - Rechazar - Respinge
   static String get dashboardRejectClaim => 'dashboardRejectClaim'.tr();
   /// Reject - رفض - Reject - Reject - Reject - Reject - Reject - Reject - Reject
@@ -999,6 +1025,8 @@ class AppStrings {
   static String get refundRequestsResolve => 'refundRequestsResolve'.tr();
   /// Refund request review saved - تم حفظ مراجعة طلب الاسترداد - Beoordeling van terugbetalingsverzoek opgeslagen - Prüfung der Erstattungsanfrage gespeichert - Zapisano przegląd prośby o zwrot - Перегляд запиту на повернення збережено - Examen de la demande de remboursement enregistré - Revisión de solicitud de reembolso guardada - Revizuirea cererii de rambursare a fost salvată
   static String get refundRequestsReviewSaved => 'refundRequestsReviewSaved'.tr();
+  /// Search request, trip or passenger - ابحث عن طلب أو رحلة أو راكب - Zoek verzoek, rit of passagier - Anfrage, Fahrt oder Fahrgast suchen - Szukaj zgłoszenia, kursu lub pasażera - Пошук звернення, поїздки або пасажира - Rechercher une demande, un trajet ou un passager - Buscar solicitud, viaje o pasajero - Caută solicitare, cursă sau pasager
+  static String get refundRequestsSearchHint => 'refundRequestsSearchHint'.tr();
   /// Snapshot amount - مبلغ اللقطة - Momentopname bedrag - Snapshot-Betrag - Kwota migawki - Сума знімка - Montant instantané - Importe de captura - Sumă instantaneu
   static String get refundRequestsSnapshotAmount => 'refundRequestsSnapshotAmount'.tr();
   /// Snapshot status - حالة اللقطة - Momentopname status - Snapshot-Status - Status migawki - Статус знімка - Statut instantané - Estado de captura - Stare instantaneu
@@ -1077,6 +1105,8 @@ class AppStrings {
   static String get refundsFilterSucceeded => 'refundsFilterSucceeded'.tr();
   /// Full refund - رد كامل - Volledige terugbetaling - Vollständige Erstattung - Pełny zwrot - Повне повернення - Remboursement complet - Reembolso completo - Rambursare completă
   static String get refundsFullRefund => 'refundsFullRefund'.tr();
+  /// Copied to clipboard - تم النسخ إلى الحافظة - Gekopieerd naar klembord - In die Zwischenablage kopiert - Skopiowano do schowka - Скопійовано в буфер обміну - Copié dans le presse-papiers - Copiado al portapapeles - Copiat în clipboard
+  static String get refundsIdCopied => 'refundsIdCopied'.tr();
   /// Incident - الحادث - Incident - Vorfall - Incydent - Інцидент - Incident - Incidente - Incident
   static String get refundsIncident => 'refundsIncident'.tr();
   /// Last attempt - آخر محاولة - Laatste poging - Letzter Versuch - Ostatnia próba - Остання спроба - Dernière tentative - Último intento - Ultima încercare

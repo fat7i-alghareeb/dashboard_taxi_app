@@ -2,7 +2,6 @@ import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/refunds/domain/entities/refund_entity.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/states/refunds_cubit.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/screens/refund_detail_screen.dart';
-import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/detail/refund_detail_header_section.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/detail/refund_detail_info_section.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/detail/refund_detail_shimmer_widget.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/widgets/detail/refund_detail_summary_grid.dart';
@@ -37,35 +36,26 @@ class RefundDetailBody extends StatelessWidget {
       },
       builder: (context, state) {
         final cubit = context.read<RefundsCubit>();
-        return RefreshIndicator(
-          onRefresh: () => cubit.loadRefundDetail(
-            refundId: args.refundId,
-            tripCancellationId: args.tripCancellationId,
-          ),
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: REdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.lg,
-            ),
-            children: [
-              RefundDetailHeaderSection(
-                onRefresh: () => cubit.loadRefundDetail(
-                  refundId: args.refundId,
-                  tripCancellationId: args.tripCancellationId,
-                ),
-              ),
-              AppSpacing.lg.verticalSpace,
-              StatusBuilder<RefundEntity>(
+        void reload() => cubit.loadRefundDetail(
+          refundId: args.refundId,
+          tripCancellationId: args.tripCancellationId,
+        );
+        return Padding(
+          padding: REdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: StatusBuilder<RefundEntity>(
                 state: state.detailState,
-                loading: () => const RefundDetailShimmerWidget(),
-                onError: () => cubit.loadRefundDetail(
-                  refundId: args.refundId,
-                  tripCancellationId: args.tripCancellationId,
+                loading: () => SingleChildScrollView(
+                  padding: REdgeInsets.symmetric(vertical: AppSpacing.lg),
+                  child: const RefundDetailShimmerWidget(),
                 ),
-                success: (refund) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
+                onError: reload,
+                onRefresh: () async => reload(),
+                success: (refund) => SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: REdgeInsets.symmetric(vertical: AppSpacing.lg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
                     RefundDetailSummaryGrid(refund: refund),
                     AppSpacing.lg.verticalSpace,
                     RefundRetrySection(
@@ -106,6 +96,7 @@ class RefundDetailBody extends StatelessWidget {
                         RefundInfoRowData(
                           AppStrings.refundsPaymentId,
                           refund.paymentId ?? AppStrings.refundsNotAvailable,
+                          copyable: refund.paymentId?.isNotEmpty == true,
                         ),
                       ],
                     ),
@@ -117,16 +108,21 @@ class RefundDetailBody extends StatelessWidget {
                           AppStrings.refundsStripeRefundId,
                           refund.stripeRefundId ??
                               AppStrings.refundsNotAvailable,
+                          copyable: refund.stripeRefundId?.isNotEmpty == true,
                         ),
                         RefundInfoRowData(
                           AppStrings.refundsStripePaymentIntentId,
                           refund.stripePaymentIntentId ??
                               AppStrings.refundsNotAvailable,
+                          copyable:
+                              refund.stripePaymentIntentId?.isNotEmpty ==
+                              true,
                         ),
                         RefundInfoRowData(
                           AppStrings.refundsStripeChargeId,
                           refund.stripeChargeId ??
                               AppStrings.refundsNotAvailable,
+                          copyable: refund.stripeChargeId?.isNotEmpty == true,
                         ),
                       ],
                     ),
@@ -211,11 +207,10 @@ class RefundDetailBody extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ],
+                    AppSpacing.xxl.verticalSpace,
+                    ],
+                  ),
                 ),
-              ),
-              AppSpacing.xxl.verticalSpace,
-            ],
           ),
         );
       },

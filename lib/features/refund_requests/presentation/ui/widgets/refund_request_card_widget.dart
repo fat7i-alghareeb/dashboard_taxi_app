@@ -1,7 +1,6 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/refund_requests/domain/entities/refund_issue_entity.dart';
 import 'package:dashboardtaxi/features/refund_requests/domain/entities/refund_issue_enums.dart';
-import 'package:dashboardtaxi/features/refund_requests/presentation/ui/widgets/refund_request_info_row.dart';
 import 'package:dashboardtaxi/features/refund_requests/presentation/ui/widgets/refund_request_status_badge.dart';
 import 'package:dashboardtaxi/features/refund_requests/presentation/ui/widgets/refund_requests_formatters.dart';
 
@@ -79,31 +78,39 @@ class RefundRequestCardWidget extends StatelessWidget {
             ],
           ),
           AppSpacing.lg.verticalSpace,
-          RefundRequestInfoRow(
+          AppCardInfoRow(
             label: AppStrings.refundsTrip,
             value: issue.tripReferenceCode?.isNotEmpty == true
                 ? issue.tripReferenceCode!
                 : issue.tripId,
+            labelWidth: 118,
+            valueMaxLines: 2,
           ),
           AppSpacing.sm.verticalSpace,
-          RefundRequestInfoRow(
+          AppCardInfoRow(
             label: AppStrings.refundsPassenger,
             value: issue.passengerName?.isNotEmpty == true
                 ? issue.passengerName!
                 : issue.passengerId,
+            labelWidth: 118,
+            valueMaxLines: 2,
           ),
           AppSpacing.sm.verticalSpace,
-          RefundRequestInfoRow(
+          AppCardInfoRow(
             label: AppStrings.refundRequestsSnapshotAmount,
             value: RefundRequestsFormatters.amount(
               issue.refundAmountSnapshot,
               issue.refundCurrencySnapshot,
             ),
+            labelWidth: 118,
+            valueMaxLines: 2,
           ),
           AppSpacing.sm.verticalSpace,
-          RefundRequestInfoRow(
+          AppCardInfoRow(
             label: AppStrings.refundRequestsSnapshotStatus,
             value: issue.refundStatusSnapshot ?? AppStrings.refundsNotAvailable,
+            labelWidth: 118,
+            valueMaxLines: 2,
           ),
           if (issue.note?.isNotEmpty == true) ...[
             AppSpacing.lg.verticalSpace,

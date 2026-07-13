@@ -1,7 +1,8 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 
-class RefundFilterChipWrap extends StatelessWidget {
-  const RefundFilterChipWrap({super.key, required this.children});
+/// Wraps a row of [AppFilterChipItem]s with consistent spacing.
+class AppFilterChipWrap extends StatelessWidget {
+  const AppFilterChipWrap({super.key, required this.children});
 
   final List<Widget> children;
 

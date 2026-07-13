@@ -178,7 +178,9 @@ class DashboardTripDetailsBodyWidget extends StatelessWidget {
         ),
         if (details.cancellation != null) ...[
           AppSpacing.xl.verticalSpace,
-          const DashboardOverviewLabelWidget(label: 'Cancellation'),
+          DashboardOverviewLabelWidget(
+            label: AppStrings.dashboardCancellationDetails,
+          ),
           AppSpacing.md.verticalSpace,
           _CancellationSection(cancellation: details.cancellation!),
         ],
@@ -252,24 +254,37 @@ class _CancellationSection extends StatelessWidget {
     (m) => '${m[1]} ${m[2]}',
   );
 
+  static String _actorLabel(String actor) {
+    switch (actor.toLowerCase()) {
+      case 'passenger':
+        return AppStrings.cancellationActorPassenger;
+      case 'driver':
+        return AppStrings.cancellationActorDriver;
+      case 'admin':
+        return AppStrings.cancellationActorAdmin;
+      default:
+        return _humanize(actor);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final rows = <Widget>[
       DashboardTripDetailInfoRowWidget(
-        label: 'Cancelled by',
-        value: _humanize(cancellation.actor),
+        label: AppStrings.dashboardCancelledByLabel,
+        value: _actorLabel(cancellation.actor),
       ),
       DashboardTripDetailInfoRowWidget(
-        label: 'Reason',
+        label: AppStrings.dashboardReasonLabel,
         value: _humanize(cancellation.reason),
       ),
       DashboardTripDetailInfoRowWidget(
-        label: 'Refund',
+        label: AppStrings.dashboardRefundLabel,
         value: cancellation.refundLabel,
       ),
       if (cancellation.createdAt != null)
         DashboardTripDetailInfoRowWidget(
-          label: 'Cancelled at',
+          label: AppStrings.dashboardCancelledAtLabel,
           value: cancellation.createdAt!.toSmartDateTime(),
         ),
     ];
@@ -292,7 +307,7 @@ class _CancellationSection extends StatelessWidget {
           if (cancellation.note?.trim().isNotEmpty == true) ...[
             AppSpacing.md.verticalSpace,
             DashboardTripDetailInfoRowWidget(
-              label: 'Note',
+              label: AppStrings.dashboardNoteLabel,
               value: cancellation.note!.trim(),
             ),
           ],
