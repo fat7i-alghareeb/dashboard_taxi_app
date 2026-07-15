@@ -22,6 +22,7 @@ class _RootBodyState extends State<RootBody> {
   late final bool _isAdmin;
   late final int _homeTabIndex;
   late final RootTabController _tabController;
+  late final Set<int> _visitedIndices;
   int _currentIndex = 0;
 
   @override
@@ -32,6 +33,7 @@ class _RootBodyState extends State<RootBody> {
     // Home is always at index 1.
     _homeTabIndex = 1;
     _currentIndex = _homeTabIndex;
+    _visitedIndices = {_currentIndex};
     _pageController = PageController(initialPage: _currentIndex);
     _tabController = getIt<RootTabController>()..addListener(_onTabRequested);
   }
@@ -59,14 +61,20 @@ class _RootBodyState extends State<RootBody> {
       context.read<TripBloc>().add(const TripEvent.activeTripResolveRequested());
     }
     if (index == _currentIndex) return;
-    setState(() => _currentIndex = index);
+    setState(() {
+      _currentIndex = index;
+      _visitedIndices.add(index);
+    });
     _pageController.jumpToPage(index);
   }
 
   void _onPageChanged(int index) {
     printM('[RootBody] _onPageChanged index=$index');
     if (index == _currentIndex) return;
-    setState(() => _currentIndex = index);
+    setState(() {
+      _currentIndex = index;
+      _visitedIndices.add(index);
+    });
   }
 
   List<RootBottomNavItemConfig> _buildNavItems(int newTripsCount) {
@@ -89,11 +97,15 @@ class _RootBodyState extends State<RootBody> {
   }
 
   List<Widget> _buildPages() {
-    return <Widget>[
+    final pages = <Widget>[
       const RootProfileTabSection(),
       const RootHomeTabSection(),
       if (_isAdmin) const RootTripTabSection(),
     ];
+    return List<Widget>.generate(
+      pages.length,
+      (i) => _visitedIndices.contains(i) ? pages[i] : const SizedBox.shrink(),
+    );
   }
 
   @override

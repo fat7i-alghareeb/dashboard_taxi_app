@@ -82,6 +82,7 @@ dependencies:
 
   # Audio playback (admin plays in-trip safety recordings in-app)
   audioplayers: ^6.1.0
+  flutter_displaymode: ^0.7.0
 
 dev_dependencies:
   flutter_test:

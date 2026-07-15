@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/core/theme/app_map_styles.dart';
 import 'package:dashboardtaxi/features/root/domain/entities/root_map_location_entity.dart';
 
-class RootMapCanvasWidget extends StatelessWidget {
+class RootMapCanvasWidget extends StatefulWidget {
   const RootMapCanvasWidget({
     super.key,
     required this.currentLocation,
@@ -37,9 +38,11 @@ class RootMapCanvasWidget extends StatelessWidget {
   /// the leg color palette.
   final bool legsAreDashed;
 
-  LatLng get _latLng =>
-      LatLng(currentLocation.latitude, currentLocation.longitude);
+  @override
+  State<RootMapCanvasWidget> createState() => _RootMapCanvasWidgetState();
+}
 
+class _RootMapCanvasWidgetState extends State<RootMapCanvasWidget> {
   // Rotating leg colors — kept in sync with the customer app so the route
   // looks identical across both surfaces.
   static const List<Color> _legColors = <Color>[
@@ -52,12 +55,41 @@ class RootMapCanvasWidget extends StatelessWidget {
     Colors.indigo,
   ];
 
+  Set<Polyline>? _cachedPolylines;
+  List<List<LatLng>>? _lastLegPolylinesInput;
+  bool? _lastLegsAreDashed;
+  bool? _lastIsDarkTheme;
+
+  LatLng get _latLng => LatLng(
+    widget.currentLocation.latitude,
+    widget.currentLocation.longitude,
+  );
+
+  Set<Polyline> _resolvePolylines(BuildContext context) {
+    final isDark = context.isDarkTheme;
+    if (_cachedPolylines != null &&
+        listEquals(_lastLegPolylinesInput, widget.legPolylines) &&
+        _lastLegsAreDashed == widget.legsAreDashed &&
+        _lastIsDarkTheme == isDark) {
+      return _cachedPolylines!;
+    }
+
+    final polylines = _buildPolylines(context);
+
+    _cachedPolylines = polylines;
+    _lastLegPolylinesInput = widget.legPolylines;
+    _lastLegsAreDashed = widget.legsAreDashed;
+    _lastIsDarkTheme = isDark;
+    return polylines;
+  }
+
   Set<Polyline> _buildPolylines(BuildContext context) {
+    final legPolylines = widget.legPolylines;
     if (legPolylines.isEmpty) return const <Polyline>{};
 
     final polylines = <Polyline>{};
 
-    if (legsAreDashed) {
+    if (widget.legsAreDashed) {
       // Driver→pickup approach: road-following polyline, rendered dashed so
       // it doesn't look like a real trip leg yet.
       for (var i = 0; i < legPolylines.length; i++) {
@@ -114,15 +146,15 @@ class RootMapCanvasWidget extends StatelessWidget {
       child: ExcludeSemantics(
         child: GoogleMap(
           style: context.isDarkTheme ? AppMapStyles.dark : null,
-          onMapCreated: onMapCreated,
-          onCameraMove: onCameraMove,
-          onCameraIdle: onCameraIdle,
+          onMapCreated: widget.onMapCreated,
+          onCameraMove: widget.onCameraMove,
+          onCameraIdle: widget.onCameraIdle,
           initialCameraPosition: CameraPosition(
             target: _latLng,
-            zoom: currentLocation.zoom,
+            zoom: widget.currentLocation.zoom,
           ),
-          markers: tripMarkers,
-          polylines: _buildPolylines(context),
+          markers: widget.tripMarkers,
+          polylines: _resolvePolylines(context),
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           compassEnabled: false,
