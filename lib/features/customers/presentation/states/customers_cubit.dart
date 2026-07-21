@@ -62,7 +62,6 @@ class CustomersCubit extends Cubit<CustomersState> {
     final search = state.search.trim();
     final result = await runAsResult(() async {
       final models = await _dataSource.getCustomers(
-        page: 1,
         pageSize: _pageSize,
         search: search.isEmpty ? null : search,
       );
@@ -91,7 +90,6 @@ class CustomersCubit extends Cubit<CustomersState> {
     final result = await runAsResult(() async {
       final models = await _dataSource.getCustomers(
         page: nextPage,
-        pageSize: _pageSize,
         search: search.isEmpty ? null : search,
       );
       return models.map((m) => m.toEntity).toList();

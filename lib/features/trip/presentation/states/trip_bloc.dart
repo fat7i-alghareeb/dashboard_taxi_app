@@ -205,6 +205,13 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         if (state.activeTrip?.id == tripId) {
           await _loadActiveTrip(tripId, emit);
         }
+      case RealtimeTripEditApplied(:final tripId):
+        printC('[TripBloc] realtime TripEditApplied trip=$tripId');
+        // Covers the edits the destination event misses — party size and the vehicle
+        // swap it can force — so the trip on screen stops describing the old booking.
+        if (state.activeTrip?.id == tripId) {
+          await _loadActiveTrip(tripId, emit);
+        }
       case RealtimeDriverLocationUpdated():
       case RealtimePaymentConfirmed():
       case RealtimePaymentFailed():

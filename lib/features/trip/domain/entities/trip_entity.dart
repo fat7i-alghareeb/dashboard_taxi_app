@@ -173,6 +173,10 @@ class TripEntity {
       dispatchWindowOpensAtUtc: dispatchWindowOpensAtUtc,
       canMarkEnRoute: canMarkEnRoute,
       attentionState: attentionState,
+      // Easy to miss on a manual copy: omitting these silently resets the trip
+      // to 1 passenger / 0 bags on every status change.
+      passengerCount: passengerCount,
+      bagCount: bagCount,
     );
   }
 }

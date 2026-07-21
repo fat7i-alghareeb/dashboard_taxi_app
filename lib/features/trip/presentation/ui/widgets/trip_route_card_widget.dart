@@ -40,7 +40,83 @@ class TripRouteCardWidget extends StatelessWidget {
             latitude: stops[i].latitude,
             longitude: stops[i].longitude,
           ),
+        AppSpacing.md.verticalSpace,
+        _PartySizeRow(
+          passengerCount: trip.passengerCount,
+          bagCount: trip.bagCount,
+        ),
       ],
+    );
+  }
+}
+
+/// Passenger and luggage counts. The admin needs these to pick a vehicle and to
+/// spot when the customer changes them mid-trip.
+class _PartySizeRow extends StatelessWidget {
+  const _PartySizeRow({required this.passengerCount, required this.bagCount});
+
+  final int passengerCount;
+  final int bagCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _PartySizeChip(
+            icon: FontAwesomeIcons.users,
+            label: AppStrings.tripPassengerCount.trParams({
+              'count': '$passengerCount',
+            }),
+          ),
+        ),
+        AppSpacing.sm.horizontalSpace,
+        Expanded(
+          child: _PartySizeChip(
+            icon: FontAwesomeIcons.suitcase,
+            label: AppStrings.tripBagCount.trParams({'count': '$bagCount'}),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PartySizeChip extends StatelessWidget {
+  const _PartySizeChip({required this.icon, required this.label});
+
+  final FaIconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: REdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: context.surfaceContainer,
+        borderRadius: BorderRadius.circular(AppRadii.md.r),
+      ),
+      child: Row(
+        children: [
+          FaIcon(
+            icon,
+            size: 14.r,
+            color: context.onSurface.withValues(alpha: 0.65),
+          ),
+          AppSpacing.sm.horizontalSpace,
+          Expanded(
+            child: Text(
+              label,
+              style: AppTextStyles.s14w500.copyWith(color: context.onSurface),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

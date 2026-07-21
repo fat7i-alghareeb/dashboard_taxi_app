@@ -1,4 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
+import 'package:dashboardtaxi/core/router/safe_pop.dart';
 import 'package:dashboardtaxi/features/chat/presentation/states/chat_bloc.dart';
 import 'package:dashboardtaxi/features/chat/presentation/ui/widgets/chat_sheet.dart';
 
@@ -38,10 +39,20 @@ class _TripChatScreenState extends State<TripChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold.body(
-      child: BlocProvider<ChatBloc>.value(
-        value: _bloc,
-        child: const ChatSheet(fullScreen: true),
+    // This screen is reachable from a notification tap, which enters it with
+    // `go` — the stack can be one deep, where the default pop would empty the
+    // navigator and show a black screen. Route both the system back gesture and
+    // the sheet's X through safePop.
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) safePop(context);
+      },
+      child: AppScaffold.body(
+        child: BlocProvider<ChatBloc>.value(
+          value: _bloc,
+          child: ChatSheet(fullScreen: true, onClose: () => safePop(context)),
+        ),
       ),
     );
   }

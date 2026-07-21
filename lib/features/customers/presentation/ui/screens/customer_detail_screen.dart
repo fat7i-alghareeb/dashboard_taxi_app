@@ -434,7 +434,6 @@ class _WalletSectionState extends State<_WalletSection> {
       return AppShimmer.box(
         width: double.infinity,
         height: 96,
-        borderRadius: AppRadii.md,
       );
     }
     final error = _error;

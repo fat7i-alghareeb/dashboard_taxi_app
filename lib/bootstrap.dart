@@ -4,7 +4,8 @@ import 'dart:developer';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart'
@@ -160,11 +161,22 @@ Future<void> _handleNotificationTap(AppNotificationPayload payload) async {
   }
 
   final tripId = _tripIdFromPayload(payload);
+  final type = _typeFromPayload(payload);
+
   if (tripId != null) {
-    _routeTripPayloadToBloc(payload);
+    if (type == 'trip_edited') {
+      // The customer changed the route or party size. Select the trip so the
+      // staged sheet opens on it with the new details already applied.
+      try {
+        getIt<TripBloc>().add(TripEvent.tripSelected(tripId));
+      } catch (e) {
+        printY('[Notifications] Trip selection failed: $e');
+      }
+    } else {
+      _routeTripPayloadToBloc(payload);
+    }
   }
 
-  final type = _typeFromPayload(payload);
   final explicitLocation = payload.toGoRouterLocation;
   final String? location;
   if (explicitLocation != null && explicitLocation.isNotEmpty) {
@@ -223,7 +235,10 @@ Future<void> _navigateToChatWhenReady(String tripId) async {
     final router = getIt<AppRouterConfig>().router;
     if (authManager.isAuthenticated &&
         router.routerDelegate.navigatorKey.currentContext != null) {
-      router.goNamed(
+      // push, not go: keeps whatever the user was on underneath so closing the
+      // chat returns there. On a cold start the stack is still splash-only, so
+      // the screen's safePop fallback covers that case.
+      router.pushNamed(
         TripChatScreen.pageName,
         extra: TripChatScreenArgs(tripId: tripId),
       );

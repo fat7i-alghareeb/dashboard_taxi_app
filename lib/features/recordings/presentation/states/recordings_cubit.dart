@@ -78,7 +78,6 @@ class RecordingsCubit extends Cubit<RecordingsState> {
     final search = state.search.trim();
     final result = await runAsResult(() async {
       final models = await _dataSource.getAllRecordings(
-        pageSize: _pageSize,
         passengerId: state.passengerId,
         search: search.isEmpty ? null : search,
       );
@@ -107,7 +106,6 @@ class RecordingsCubit extends Cubit<RecordingsState> {
     final result = await runAsResult(() async {
       final models = await _dataSource.getAllRecordings(
         page: nextPage,
-        pageSize: _pageSize,
         passengerId: state.passengerId,
         search: search.isEmpty ? null : search,
       );

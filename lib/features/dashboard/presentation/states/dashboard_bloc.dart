@@ -107,6 +107,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           if (state.selectedTripId == tripId) {
             add(DashboardEvent.tripDetailsRequested(tripId));
           }
+        // Any re-priced customer edit — route, party size or a van upgrade — with the fare
+        // already settled. TripDestinationChanged above only covers a moved drop-off, so
+        // passenger and vehicle changes reached the admin nowhere before this.
+        case RealtimeTripEditApplied(:final tripId):
+          _scheduleAdminTripsRefresh();
+          if (state.selectedTripId == tripId) {
+            add(DashboardEvent.tripDetailsRequested(tripId));
+          }
         case RealtimePaymentConfirmed():
         case RealtimePaymentFailed():
         case RealtimeTripRefunded():
@@ -412,7 +420,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
     final search = state.adminTripsSearch.trim();
     final result = await _facade.getAdminTrips(
-      page: 1,
       pageSize: _adminTripsPageSize,
       status: event.status,
       search: search.isEmpty ? null : search,
@@ -457,7 +464,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     final search = state.adminTripsSearch.trim();
     final result = await _facade.getAdminTrips(
       page: nextPage,
-      pageSize: _adminTripsPageSize,
       search: search.isEmpty ? null : search,
       passengerId: state.adminTripsPassengerId.isEmpty
           ? null

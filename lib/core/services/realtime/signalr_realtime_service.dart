@@ -263,6 +263,10 @@ class SignalRRealtimeService implements RealtimeService {
       _onCustomerIncidentRaised,
     );
     hub.on(
+      RealtimeMethodNames.tripEditApplied,
+      _onTripEditApplied,
+    );
+    hub.on(
       RealtimeMethodNames.tripDestinationChanged,
       _onTripDestinationChanged,
     );
@@ -717,6 +721,30 @@ class SignalRRealtimeService implements RealtimeService {
         tripId: _readString(p, 'tripId'),
         type: _readString(p, 'type'),
         severity: _readString(p, 'severity'),
+      ),
+    );
+  }
+
+  void _onTripEditApplied(List<Object?>? args) {
+    final p = _payload(args);
+    if (p == null) {
+      printY('$_logTag <= TripEditApplied (empty payload, ignored)');
+      return;
+    }
+    printM(
+      '$_logTag <= TripEditApplied trip=${_readString(p, 'tripId')} '
+      'delta=${_readDouble(p, 'delta')} newFare=${_readDouble(p, 'newFare')}',
+    );
+    _eventsController.add(
+      RealtimeEvent.tripEditApplied(
+        tripId: _readString(p, 'tripId'),
+        passengerId: _readString(p, 'passengerId'),
+        newFare: _readDouble(p, 'newFare'),
+        currency: _readString(p, 'currencyCode'),
+        delta: _readDouble(p, 'delta'),
+        passengerCount: _readDouble(p, 'passengerCount').toInt(),
+        vehicleTypeName: _readNullableString(p, 'vehicleTypeName'),
+        dropoffLabel: _readNullableString(p, 'dropoffLabel'),
       ),
     );
   }

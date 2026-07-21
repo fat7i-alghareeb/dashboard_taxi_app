@@ -1,5 +1,8 @@
+import 'package:flutter/services.dart';
+
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
+import 'package:dashboardtaxi/core/router/safe_pop.dart';
 import 'package:dashboardtaxi/core/services/session/auth_manager.dart';
 import 'package:dashboardtaxi/core/services/media/media_picker_service.dart';
 import 'package:dashboardtaxi/features/chat/domain/entities/chat_message_entity.dart';
@@ -21,6 +24,8 @@ class ChatSheet extends StatefulWidget {
 
   /// Called when the close button is tapped. Uses a captured [BuildContext]
   /// from the modal builder so it always resolves the correct navigator route.
+  /// Defaults to [safePop], which the full-screen route depends on: it is
+  /// entered with `go`, so a plain pop would empty the navigator.
   final VoidCallback? onClose;
 
   /// When provided, the header shows "klant naam : [customerName]" instead of
@@ -59,6 +64,42 @@ class _ChatSheetState extends State<ChatSheet> {
   final ScrollController _scrollController = ScrollController();
   bool _autoScrolling = false;
   String? get _myUserId => getIt<AuthManager>().currentUser?.id;
+
+  /// Ids of the messages picked for copying. Purely ephemeral UI state, so it
+  /// lives here rather than in [ChatBloc] — nothing outside this sheet cares,
+  /// and it must reset whenever the sheet closes.
+  final Set<String> _selectedIds = <String>{};
+  bool get _isSelecting => _selectedIds.isNotEmpty;
+
+  void _toggleSelection(ChatMessageEntity message) {
+    setState(() {
+      if (!_selectedIds.remove(message.id)) _selectedIds.add(message.id);
+    });
+  }
+
+  void _onBubbleLongPress(ChatMessageEntity message) {
+    HapticFeedback.mediumImpact();
+    _toggleSelection(message);
+  }
+
+  void _clearSelection() => setState(_selectedIds.clear);
+
+  Future<void> _copySelection(List<ChatMessageEntity> messages) async {
+    // Copy in conversation order regardless of the order they were tapped in.
+    // Photo-only messages have nothing to put on the clipboard, so they drop out.
+    final text = messages
+        .where((m) => _selectedIds.contains(m.id))
+        .map((m) => m.content)
+        .whereType<String>()
+        .where((content) => content.isNotEmpty)
+        .join('\n');
+
+    _clearSelection();
+    if (text.isEmpty) return;
+
+    await Clipboard.setData(ClipboardData(text: text));
+    if (mounted) showSuccessOverlay(context, 'chatCopied'.tr());
+  }
 
   static const _quickMessageKeys = [
     'chatQuickOnMyWay',
@@ -173,7 +214,7 @@ class _ChatSheetState extends State<ChatSheet> {
             return Column(
               children: [
                 _buildDragHandle(context),
-                _buildHeader(context),
+                _buildHeader(context, state),
                 _buildWarningBanner(context),
                 Expanded(child: _buildMessages(context, state)),
                 if (!state.isClosed) _buildQuickMessages(context, state),
@@ -205,9 +246,48 @@ class _ChatSheetState extends State<ChatSheet> {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  /// The normal title row, or — while messages are selected — a copy bar. Putting
+  /// the copy action here keeps the resting state free of extra icons: the only
+  /// way in is a long press.
+  Widget _buildHeader(BuildContext context, ChatState state) {
     final colors = context.colorScheme;
     final name = widget.customerName;
+
+    if (_isSelecting) {
+      return Padding(
+        padding: REdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          AppSpacing.sm,
+          AppSpacing.sm,
+          AppSpacing.xs,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                'chatSelectedCount'.tr(
+                  namedArgs: {'count': _selectedIds.length.toString()},
+                ),
+                style: AppTextStyles.s18w600.copyWith(color: colors.onSurface),
+              ),
+            ),
+            IconButton(
+              onPressed: () => _copySelection(state.messages),
+              icon: Icon(Icons.copy, color: context.primary, size: 22.r),
+              tooltip: 'chatCopy'.tr(),
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(minWidth: 36.r, minHeight: 36.r),
+            ),
+            IconButton(
+              onPressed: _clearSelection,
+              icon: Icon(Icons.close, color: colors.onSurface, size: 22.r),
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(minWidth: 36.r, minHeight: 36.r),
+            ),
+          ],
+        ),
+      );
+    }
 
     return Padding(
       padding: REdgeInsets.fromLTRB(
@@ -240,7 +320,7 @@ class _ChatSheetState extends State<ChatSheet> {
               ),
             ),
           IconButton(
-            onPressed: widget.onClose ?? () => Navigator.of(context).pop(),
+            onPressed: widget.onClose ?? () => safePop(context),
             icon: Icon(Icons.close, color: colors.onSurface, size: 22.r),
             padding: EdgeInsets.zero,
             constraints: BoxConstraints(minWidth: 36.r, minHeight: 36.r),
@@ -262,7 +342,7 @@ class _ChatSheetState extends State<ChatSheet> {
       child: Container(
         padding: REdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          border: Border.all(color: primary, width: 1),
+          border: Border.all(color: primary),
           borderRadius: BorderRadius.circular(AppRadii.md.r),
         ),
         child: Row(
@@ -341,7 +421,15 @@ class _ChatSheetState extends State<ChatSheet> {
       itemBuilder: (context, index) {
         final message = state.messages[index];
         final isMine = message.senderId == _myUserId;
-        return _ChatBubble(message: message, isMine: isMine);
+        return _ChatBubble(
+          message: message,
+          isMine: isMine,
+          isSelected: _selectedIds.contains(message.id),
+          onLongPress: () => _onBubbleLongPress(message),
+          // A plain tap only means something once selection is under way, so
+          // normal reading is unaffected.
+          onTap: _isSelecting ? () => _toggleSelection(message) : () {},
+        );
       },
     );
   }
@@ -473,7 +561,7 @@ class _QuickMessageButton extends StatelessWidget {
           vertical: AppSpacing.sm,
         ),
         decoration: BoxDecoration(
-          border: Border.all(color: context.primary, width: 1),
+          border: Border.all(color: context.primary),
           borderRadius: BorderRadius.circular(AppRadii.lg.r),
         ),
         child: Text(
@@ -488,10 +576,19 @@ class _QuickMessageButton extends StatelessWidget {
 }
 
 class _ChatBubble extends StatelessWidget {
-  const _ChatBubble({required this.message, required this.isMine});
+  const _ChatBubble({
+    required this.message,
+    required this.isMine,
+    required this.isSelected,
+    required this.onLongPress,
+    required this.onTap,
+  });
 
   final ChatMessageEntity message;
   final bool isMine;
+  final bool isSelected;
+  final VoidCallback onLongPress;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -503,48 +600,57 @@ class _ChatBubble extends StatelessWidget {
 
     return Align(
       alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: REdgeInsets.only(bottom: AppSpacing.sm),
-        padding: REdgeInsets.all(AppSpacing.sm),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.sizeOf(context).width * 0.72,
-        ),
-        decoration: BoxDecoration(
-          color: bubbleColor,
-          borderRadius: BorderRadius.circular(AppRadii.lg.r),
-        ),
-        child: Column(
-          crossAxisAlignment:
-              isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: [
-            if (message.photoUrl != null && message.photoUrl!.isNotEmpty)
-              Padding(
-                padding: REdgeInsets.only(bottom: AppSpacing.xs),
-                child: AppImageViewer.network(
-                  message.photoUrl!,
-                  // CachedNetworkImage bypasses the Dio client, so it must send
-                  // the ngrok skip header itself or the free tunnel returns its
-                  // HTML warning page instead of the image. No-op in production.
-                  headers: const {'ngrok-skip-browser-warning': '69420'},
-                  width: 180,
-                  height: 180,
-                  borderRadius: AppRadii.md.r,
-                  enableFullScreen: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onLongPress: onLongPress,
+        onTap: onTap,
+        child: Container(
+          margin: REdgeInsets.only(bottom: AppSpacing.sm),
+          padding: REdgeInsets.all(AppSpacing.sm),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.sizeOf(context).width * 0.72,
+          ),
+          decoration: BoxDecoration(
+            color: bubbleColor,
+            borderRadius: BorderRadius.circular(AppRadii.lg.r),
+            border: isSelected
+                ? Border.all(color: colors.onSurface, width: 2)
+                : null,
+          ),
+          child: Column(
+            crossAxisAlignment: isMine
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
+            children: [
+              if (message.photoUrl != null && message.photoUrl!.isNotEmpty)
+                Padding(
+                  padding: REdgeInsets.only(bottom: AppSpacing.xs),
+                  child: AppImageViewer.network(
+                    message.photoUrl!,
+                    // CachedNetworkImage bypasses the Dio client, so it must send
+                    // the ngrok skip header itself or the free tunnel returns its
+                    // HTML warning page instead of the image. No-op in production.
+                    headers: const {'ngrok-skip-browser-warning': '69420'},
+                    width: 180,
+                    height: 180,
+                    borderRadius: AppRadii.md.r,
+                    enableFullScreen: true,
+                  ),
+                ),
+              if (message.content != null && message.content!.isNotEmpty)
+                Text(
+                  message.content!,
+                  style: AppTextStyles.s14w400.copyWith(color: textColor),
+                ),
+              AppSpacing.xs.verticalSpace,
+              Text(
+                _formatTime(message.sentAtUtc.toLocal()),
+                style: AppTextStyles.s11w500.copyWith(
+                  color: textColor.withValues(alpha: 0.7),
                 ),
               ),
-            if (message.content != null && message.content!.isNotEmpty)
-              Text(
-                message.content!,
-                style: AppTextStyles.s14w400.copyWith(color: textColor),
-              ),
-            AppSpacing.xs.verticalSpace,
-            Text(
-              _formatTime(message.sentAtUtc.toLocal()),
-              style: AppTextStyles.s11w500.copyWith(
-                color: textColor.withValues(alpha: 0.7),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

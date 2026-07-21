@@ -150,6 +150,21 @@ sealed class RealtimeEvent with _$RealtimeEvent {
     required double newDropoffLongitude,
     String? newDropoffLabel,
   }) = RealtimeTripDestinationChanged;
+
+  /// A re-priced customer edit was committed — new route, party size, vehicle or all
+  /// three, with the fare difference already settled. Broader than
+  /// [RealtimeTripDestinationChanged], which only fires when the drop-off itself moved
+  /// and carries no fare, so passenger-count and van upgrades never reached the admin.
+  const factory RealtimeEvent.tripEditApplied({
+    required String tripId,
+    required String passengerId,
+    required double newFare,
+    required String currency,
+    required double delta,
+    required int passengerCount,
+    String? vehicleTypeName,
+    String? dropoffLabel,
+  }) = RealtimeTripEditApplied;
 }
 
 /// Stable list of every SignalR method name the hub will push to clients.
@@ -175,6 +190,7 @@ abstract final class RealtimeMethodNames {
   static const chatClosed = 'ChatClosed';
   static const customerIncidentRaised = 'CustomerIncidentRaised';
   static const tripDestinationChanged = 'TripDestinationChanged';
+  static const tripEditApplied = 'TripEditApplied';
 
   static const all = <String>[
     tripRequested,
@@ -197,6 +213,7 @@ abstract final class RealtimeMethodNames {
     chatClosed,
     customerIncidentRaised,
     tripDestinationChanged,
+    tripEditApplied,
   ];
 }
 
@@ -223,5 +240,6 @@ extension RealtimeEventTripId on RealtimeEvent {
     RealtimeChatClosed(:final tripId) => tripId,
     RealtimeCustomerIncidentRaised(:final tripId) => tripId,
     RealtimeTripDestinationChanged(:final tripId) => tripId,
+    RealtimeTripEditApplied(:final tripId) => tripId,
   };
 }

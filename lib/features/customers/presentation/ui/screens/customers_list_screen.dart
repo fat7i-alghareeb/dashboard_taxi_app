@@ -214,7 +214,7 @@ class _CustomerCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CustomerAvatar(customer: customer, size: 48),
+            CustomerAvatar(customer: customer),
             AppSpacing.md.horizontalSpace,
             Expanded(
               child: Column(
