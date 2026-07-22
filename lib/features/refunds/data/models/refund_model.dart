@@ -19,6 +19,7 @@ class RefundModel {
     this.paymentMethod,
     this.requestedAtUtc,
     this.lastAttemptAtUtc,
+    this.lastReconciledAtUtc,
     this.completedAtUtc,
     this.failedAtUtc,
     this.stripeRefundId,
@@ -52,6 +53,7 @@ class RefundModel {
   final String? paymentMethod;
   final DateTime? requestedAtUtc;
   final DateTime? lastAttemptAtUtc;
+  final DateTime? lastReconciledAtUtc;
   final DateTime? completedAtUtc;
   final DateTime? failedAtUtc;
   final String? stripeRefundId;
@@ -94,6 +96,7 @@ class RefundModel {
       paymentMethod: _readString(json, 'paymentMethod'),
       requestedAtUtc: _readDate(json, 'requestedAtUtc'),
       lastAttemptAtUtc: _readDate(json, 'lastAttemptAtUtc'),
+      lastReconciledAtUtc: _readDate(json, 'lastReconciledAtUtc'),
       completedAtUtc: _readDate(json, 'completedAtUtc'),
       failedAtUtc: _readDate(json, 'failedAtUtc'),
       stripeRefundId: _readString(json, 'stripeRefundId'),
@@ -133,6 +136,7 @@ class RefundModel {
       'paymentMethod': paymentMethod,
       'requestedAtUtc': requestedAtUtc?.toIso8601String(),
       'lastAttemptAtUtc': lastAttemptAtUtc?.toIso8601String(),
+      'lastReconciledAtUtc': lastReconciledAtUtc?.toIso8601String(),
       'completedAtUtc': completedAtUtc?.toIso8601String(),
       'failedAtUtc': failedAtUtc?.toIso8601String(),
       'stripeRefundId': stripeRefundId,

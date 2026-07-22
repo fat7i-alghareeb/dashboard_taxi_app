@@ -21,6 +21,7 @@ class RefundEntity {
     this.paymentMethod,
     this.requestedAtUtc,
     this.lastAttemptAtUtc,
+    this.lastReconciledAtUtc,
     this.completedAtUtc,
     this.failedAtUtc,
     this.stripeRefundId,
@@ -54,6 +55,7 @@ class RefundEntity {
   final String? paymentMethod;
   final DateTime? requestedAtUtc;
   final DateTime? lastAttemptAtUtc;
+  final DateTime? lastReconciledAtUtc;
   final DateTime? completedAtUtc;
   final DateTime? failedAtUtc;
   final String? stripeRefundId;

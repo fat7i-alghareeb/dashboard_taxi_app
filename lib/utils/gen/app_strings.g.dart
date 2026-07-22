@@ -109,6 +109,10 @@ class AppStrings {
   static String get chatChooseGallery => 'chatChooseGallery'.tr();
   /// This chat has ended. - انتهت هذه الدردشة. - Deze chat is beëindigd. - Dieser Chat ist beendet. - Ten czat został zakończony. - Цей чат завершено. - Cette conversation est terminée. - Este chat ha finalizado. - Acest chat s-a încheiat.
   static String get chatClosedNotice => 'chatClosedNotice'.tr();
+  /// Copied - تم النسخ - Gekopieerd - Kopiert - Skopiowano - Скопійовано - Copié - Copiado - Copiat
+  static String get chatCopied => 'chatCopied'.tr();
+  /// Copy - نسخ - Kopiëren - Kopieren - Kopiuj - Копіювати - Copier - Copiar - Copiază
+  static String get chatCopy => 'chatCopy'.tr();
   /// customer name - اسم العميل - klant naam - Kundenname - imię klienta - ім'я клієнта - nom du client - nombre del cliente - numele clientului
   static String get chatCustomerLabel => 'chatCustomerLabel'.tr();
   /// No messages yet. Say hello! - لا توجد رسائل بعد. ابدأ بالتحية! - Nog geen berichten. Zeg hallo! - Noch keine Nachrichten. Sag Hallo! - Brak wiadomości. Przywitaj się! - Повідомлень ще немає. Привітайтеся! - Aucun message pour l'instant. Dites bonjour ! - Aún no hay mensajes. ¡Saluda! - Niciun mesaj încă. Salută!
@@ -125,6 +129,8 @@ class AppStrings {
   static String get chatQuickSendPhoto => 'chatQuickSendPhoto'.tr();
   /// 👋 - 👋 - 👋 - 👋 - 👋 - 👋 - 👋 - 👋 - 👋
   static String get chatQuickWave => 'chatQuickWave'.tr();
+  /// {count} selected - تم تحديد {count} - {count} geselecteerd - {count} ausgewählt - Wybrano: {count} - Вибрано: {count} - {count} sélectionné(s) - {count} seleccionado(s) - {count} selectate
+  static String get chatSelectedCount => 'chatSelectedCount'.tr();
   /// Couldn't send message. Please try again. - تعذّر إرسال الرسالة. حاول مرة أخرى. - Bericht kon niet worden verzonden. Probeer het opnieuw. - Nachricht konnte nicht gesendet werden. Bitte erneut versuchen. - Nie udało się wysłać wiadomości. Spróbuj ponownie. - Не вдалося надіслати повідомлення. Спробуйте ще раз. - Échec de l'envoi du message. Veuillez réessayer. - No se pudo enviar el mensaje. Inténtalo de nuevo. - Mesajul nu a putut fi trimis. Încearcă din nou.
   static String get chatSendFailed => 'chatSendFailed'.tr();
   /// Chat - الدردشة - Chat - Chat - Czat - Чат - Chat - Chat - Chat
@@ -1149,6 +1155,10 @@ class AppStrings {
   static String get refundsRetryBlockedFallback => 'refundsRetryBlockedFallback'.tr();
   /// The backend will recheck eligibility before calling Stripe. Continue? - سيتحقق الخادم من الأهلية قبل استدعاء Stripe. هل تريد المتابعة؟ - De backend controleert opnieuw de geschiktheid voordat Stripe wordt aangeroepen. Doorgaan? - Das Backend prüft die Berechtigung erneut, bevor Stripe aufgerufen wird. Fortfahren? - Backend ponownie sprawdzi kwalifikację przed wywołaniem Stripe. Kontynuować? - Backend повторно перевірить право перед викликом Stripe. Продовжити? - Le backend revérifiera l'éligibilité avant d'appeler Stripe. Continuer ? - El backend volverá a validar la elegibilidad antes de llamar a Stripe. ¿Continuar? - Backend-ul va reverifica eligibilitatea înainte de a apela Stripe. Continui?
   static String get refundsRetryConfirm => 'refundsRetryConfirm'.tr();
+  /// The refund is still being processed by Stripe. This is normal and no action is needed yet. - لا يزال الرد قيد المعالجة من قبل Stripe. هذا أمر طبيعي ولا حاجة لاتخاذ أي إجراء الآن. - De terugbetaling wordt nog steeds door Stripe verwerkt. Dit is normaal, er is nog geen actie nodig. - Die Erstattung wird noch von Stripe bearbeitet. Das ist normal, es ist noch keine Aktion erforderlich. - Zwrot jest nadal przetwarzany przez Stripe. To normalne, nie jest jeszcze wymagane żadne działanie. - Повернення коштів досі обробляється Stripe. Це нормально, дій поки не потрібно. - Le remboursement est toujours en cours de traitement par Stripe. C'est normal, aucune action n'est requise pour l'instant. - El reembolso todavía está siendo procesado por Stripe. Esto es normal y no se requiere ninguna acción todavía. - Rambursarea este încă procesată de Stripe. Este normal, nu este necesară nicio acțiune deocamdată.
+  static String get refundsRetryPendingNormal => 'refundsRetryPendingNormal'.tr();
+  /// This refund is taking longer than expected. Last checked with Stripe at {time}. - استغرق هذا الرد وقتاً أطول من المتوقع. آخر تحقق مع Stripe كان في {time}. - Deze terugbetaling duurt langer dan verwacht. Laatst gecontroleerd bij Stripe om {time}. - Diese Erstattung dauert länger als erwartet. Zuletzt bei Stripe geprüft um {time}. - Ten zwrot trwa dłużej niż oczekiwano. Ostatnio sprawdzono w Stripe o {time}. - Це повернення коштів триває довше, ніж очікувалося. Востаннє перевірено в Stripe о {time}. - Ce remboursement prend plus de temps que prévu. Dernière vérification auprès de Stripe à {time}. - Este reembolso está tardando más de lo esperado. Última comprobación con Stripe: {time}. - Această rambursare durează mai mult decât era de așteptat. Ultima verificare la Stripe a fost la {time}.
+  static String get refundsRetryPendingStuck => 'refundsRetryPendingStuck'.tr();
   /// Refund retry submitted - تم إرسال إعادة محاولة رد المبلغ - Retry voor terugbetaling verzonden - Erstattungswiederholung gesendet - Ponowienie zwrotu wysłane - Повтор повернення надіслано - Relance du remboursement envoyée - Reintento de reembolso enviado - Reîncercarea rambursării a fost trimisă
   static String get refundsRetrySubmitted => 'refundsRetrySubmitted'.tr();
   /// Retry refund - إعادة محاولة رد المبلغ - Terugbetaling opnieuw proberen - Erstattung erneut versuchen - Ponów zwrot - Повторити повернення - Relancer le remboursement - Reintentar reembolso - Reîncearcă rambursarea

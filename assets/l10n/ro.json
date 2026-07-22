@@ -756,6 +756,8 @@
   "refundsRetryUnavailable": "Reîncercare indisponibilă",
   "refundsRetryBackendApproval": "Reîncercarea este aprobată de backend în momentul trimiterii.",
   "refundsRetryBlockedFallback": "Backend-ul a blocat reîncercarea pentru această rambursare.",
+  "refundsRetryPendingNormal": "Rambursarea este încă procesată de Stripe. Este normal, nu este necesară nicio acțiune deocamdată.",
+  "refundsRetryPendingStuck": "Această rambursare durează mai mult decât era de așteptat. Ultima verificare la Stripe a fost la {time}.",
   "refundsFailureStripeDisabled": "Procesarea rambursării a eșuat. Reîncearcă rambursarea când este disponibilă.",
   "refundsFailureRefundUnavailable": "Nu există o plată online capturată disponibilă pentru rambursare automată.",
   "refundsFailureRetryBlocked": "Reîncercarea este momentan blocată de eligibilitatea backend.",

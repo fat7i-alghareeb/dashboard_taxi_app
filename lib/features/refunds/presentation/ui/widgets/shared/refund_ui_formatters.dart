@@ -32,4 +32,18 @@ class RefundUiFormatters {
     }
     return code.title(fallback: fallback);
   }
+
+  // A Pending/Requested/Retrying refund only counts as "stuck" once it has been
+  // sitting that way at least this long. Mirrors the backend's
+  // RefundReconciliation:StuckPendingThresholdMinutes config (Taxi_Server
+  // appsettings.json) — keep the two loosely in sync if that value changes.
+  static const int pendingReconciliationThresholdMinutes = 15;
+
+  static bool isPendingStuck(RefundEntity refund) {
+    if (!refund.status.isPendingLike) return false;
+    final since = refund.lastAttemptAtUtc ?? refund.requestedAtUtc;
+    if (since == null) return false;
+    return DateTime.now().difference(since) >
+        const Duration(minutes: pendingReconciliationThresholdMinutes);
+  }
 }

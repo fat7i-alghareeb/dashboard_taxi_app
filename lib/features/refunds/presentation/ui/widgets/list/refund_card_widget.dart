@@ -84,16 +84,6 @@ class RefundCardWidget extends StatelessWidget {
               ),
               AppSpacing.lg.verticalSpace,
               AppCardInfoRow(
-                label: AppStrings.refundsTrip,
-                value: refund.tripId ?? AppStrings.refundsNotAvailable,
-              ),
-              AppSpacing.sm.verticalSpace,
-              AppCardInfoRow(
-                label: AppStrings.refundsPassenger,
-                value: refund.passengerId ?? AppStrings.refundsNotAvailable,
-              ),
-              AppSpacing.sm.verticalSpace,
-              AppCardInfoRow(
                 label: AppStrings.refundsPaymentMethod,
                 value: refund.paymentMethod ?? AppStrings.refundsNotAvailable,
               ),

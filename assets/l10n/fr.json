@@ -756,6 +756,8 @@
   "refundsRetryUnavailable": "Relance indisponible",
   "refundsRetryBackendApproval": "La relance reste approuvée par le backend au moment de l'envoi.",
   "refundsRetryBlockedFallback": "Le backend a bloqué la relance pour ce remboursement.",
+  "refundsRetryPendingNormal": "Le remboursement est toujours en cours de traitement par Stripe. C'est normal, aucune action n'est requise pour l'instant.",
+  "refundsRetryPendingStuck": "Ce remboursement prend plus de temps que prévu. Dernière vérification auprès de Stripe à {time}.",
   "refundsFailureStripeDisabled": "Le traitement du remboursement a échoué. Relancez le remboursement lorsqu’il est disponible.",
   "refundsFailureRefundUnavailable": "Aucun paiement en ligne capturé n’est disponible pour un remboursement automatique.",
   "refundsFailureRetryBlocked": "La relance est actuellement bloquée par l’éligibilité backend.",

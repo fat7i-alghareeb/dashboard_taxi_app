@@ -756,6 +756,8 @@
   "refundsRetryUnavailable": "Retry unavailable",
   "refundsRetryBackendApproval": "Retry is still approved by the backend at submission time.",
   "refundsRetryBlockedFallback": "The backend has blocked retry for this refund.",
+  "refundsRetryPendingNormal": "The refund is still being processed by Stripe. This is normal and no action is needed yet.",
+  "refundsRetryPendingStuck": "This refund is taking longer than expected. Last checked with Stripe at {time}.",
   "refundsFailureStripeDisabled": "Refund processing failed. Retry the refund when it is available.",
   "refundsFailureRefundUnavailable": "No captured online payment is available for an automatic refund.",
   "refundsFailureRetryBlocked": "Retry is currently blocked by backend eligibility.",

@@ -756,6 +756,8 @@
   "refundsRetryUnavailable": "Wiederholung nicht verfügbar",
   "refundsRetryBackendApproval": "Die Wiederholung wird beim Absenden weiterhin vom Backend genehmigt.",
   "refundsRetryBlockedFallback": "Das Backend hat die Wiederholung für diese Erstattung blockiert.",
+  "refundsRetryPendingNormal": "Die Erstattung wird noch von Stripe bearbeitet. Das ist normal, es ist noch keine Aktion erforderlich.",
+  "refundsRetryPendingStuck": "Diese Erstattung dauert länger als erwartet. Zuletzt bei Stripe geprüft um {time}.",
   "refundsFailureStripeDisabled": "Die Erstattungsverarbeitung ist fehlgeschlagen. Wiederholen Sie die Erstattung, sobald sie verfügbar ist.",
   "refundsFailureRefundUnavailable": "Es ist keine eingezogene Online-Zahlung für eine automatische Erstattung verfügbar.",
   "refundsFailureRetryBlocked": "Die Wiederholung ist derzeit durch die Backend-Berechtigung blockiert.",

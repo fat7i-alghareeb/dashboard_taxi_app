@@ -756,6 +756,8 @@
   "refundsRetryUnavailable": "إعادة المحاولة غير متاحة",
   "refundsRetryBackendApproval": "سيعاد التحقق من الأهلية من الخادم عند الإرسال.",
   "refundsRetryBlockedFallback": "منع الخادم إعادة المحاولة لهذا الرد.",
+  "refundsRetryPendingNormal": "لا يزال الرد قيد المعالجة من قبل Stripe. هذا أمر طبيعي ولا حاجة لاتخاذ أي إجراء الآن.",
+  "refundsRetryPendingStuck": "استغرق هذا الرد وقتاً أطول من المتوقع. آخر تحقق مع Stripe كان في {time}.",
   "refundsFailureStripeDisabled": "فشلت معالجة الاسترداد. أعد محاولة الاسترداد عندما تكون متاحة.",
   "refundsFailureRefundUnavailable": "لا توجد دفعة إلكترونية محصلة متاحة للاسترداد التلقائي.",
   "refundsFailureRetryBlocked": "إعادة المحاولة محظورة حاليا حسب أهلية الخادم.",

@@ -756,6 +756,8 @@
   "refundsRetryUnavailable": "Reintento no disponible",
   "refundsRetryBackendApproval": "El backend sigue aprobando el reintento en el momento del envío.",
   "refundsRetryBlockedFallback": "El backend bloqueó el reintento para este reembolso.",
+  "refundsRetryPendingNormal": "El reembolso todavía está siendo procesado por Stripe. Esto es normal y no se requiere ninguna acción todavía.",
+  "refundsRetryPendingStuck": "Este reembolso está tardando más de lo esperado. Última comprobación con Stripe: {time}.",
   "refundsFailureStripeDisabled": "El procesamiento del reembolso falló. Reintenta el reembolso cuando esté disponible.",
   "refundsFailureRefundUnavailable": "No hay un pago en línea capturado disponible para un reembolso automático.",
   "refundsFailureRetryBlocked": "El reintento está bloqueado actualmente por la elegibilidad del backend.",

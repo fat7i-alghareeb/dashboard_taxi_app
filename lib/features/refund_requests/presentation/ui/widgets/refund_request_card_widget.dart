@@ -82,7 +82,7 @@ class RefundRequestCardWidget extends StatelessWidget {
             label: AppStrings.refundsTrip,
             value: issue.tripReferenceCode?.isNotEmpty == true
                 ? issue.tripReferenceCode!
-                : issue.tripId,
+                : AppStrings.refundsNotAvailable,
             labelWidth: 118,
             valueMaxLines: 2,
           ),
@@ -91,7 +91,7 @@ class RefundRequestCardWidget extends StatelessWidget {
             label: AppStrings.refundsPassenger,
             value: issue.passengerName?.isNotEmpty == true
                 ? issue.passengerName!
-                : issue.passengerId,
+                : AppStrings.refundsNotAvailable,
             labelWidth: 118,
             valueMaxLines: 2,
           ),

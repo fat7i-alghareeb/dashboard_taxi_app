@@ -756,6 +756,8 @@
   "refundsRetryUnavailable": "Ponowienie niedostępne",
   "refundsRetryBackendApproval": "Ponowienie jest nadal zatwierdzane przez backend przy wysyłaniu.",
   "refundsRetryBlockedFallback": "Backend zablokował ponowienie tego zwrotu.",
+  "refundsRetryPendingNormal": "Zwrot jest nadal przetwarzany przez Stripe. To normalne, nie jest jeszcze wymagane żadne działanie.",
+  "refundsRetryPendingStuck": "Ten zwrot trwa dłużej niż oczekiwano. Ostatnio sprawdzono w Stripe o {time}.",
   "refundsFailureStripeDisabled": "Przetwarzanie zwrotu nie powiodło się. Ponów zwrot, gdy będzie dostępny.",
   "refundsFailureRefundUnavailable": "Brak pobranej płatności online dostępnej do automatycznego zwrotu.",
   "refundsFailureRetryBlocked": "Ponowienie jest obecnie zablokowane przez uprawnienia backendu.",

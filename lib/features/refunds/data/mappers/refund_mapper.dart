@@ -20,6 +20,7 @@ extension RefundModelMapper on RefundModel {
     paymentMethod: paymentMethod,
     requestedAtUtc: requestedAtUtc,
     lastAttemptAtUtc: lastAttemptAtUtc,
+    lastReconciledAtUtc: lastReconciledAtUtc,
     completedAtUtc: completedAtUtc,
     failedAtUtc: failedAtUtc,
     stripeRefundId: stripeRefundId,

@@ -93,11 +93,6 @@ class RefundDetailBody extends StatelessWidget {
                           refund.paymentMethod ??
                               AppStrings.refundsNotAvailable,
                         ),
-                        RefundInfoRowData(
-                          AppStrings.refundsPaymentId,
-                          refund.paymentId ?? AppStrings.refundsNotAvailable,
-                          copyable: refund.paymentId?.isNotEmpty == true,
-                        ),
                       ],
                     ),
                     AppSpacing.lg.verticalSpace,
@@ -145,6 +140,10 @@ class RefundDetailBody extends StatelessWidget {
                           AppStrings.refundsAttemptCount,
                           refund.attemptCount.toString(),
                         ),
+                        RefundInfoRowData(
+                          AppStrings.refundsAdminNote,
+                          refund.adminNote ?? AppStrings.refundsNotAvailable,
+                        ),
                       ],
                     ),
                     AppSpacing.lg.verticalSpace,
@@ -166,44 +165,6 @@ class RefundDetailBody extends StatelessWidget {
                         RefundInfoRowData(
                           AppStrings.refundsFailedAt,
                           RefundUiFormatters.date(refund.failedAtUtc),
-                        ),
-                      ],
-                    ),
-                    AppSpacing.lg.verticalSpace,
-                    RefundDetailInfoSection(
-                      title: AppStrings.refundsLinksSection,
-                      rows: [
-                        RefundInfoRowData(
-                          AppStrings.refundsTrip,
-                          refund.tripId ?? AppStrings.refundsNotAvailable,
-                        ),
-                        RefundInfoRowData(
-                          AppStrings.refundsPassenger,
-                          refund.passengerId ?? AppStrings.refundsNotAvailable,
-                        ),
-                        RefundInfoRowData(
-                          AppStrings.refundsCancellation,
-                          refund.tripCancellationId ??
-                              AppStrings.refundsNotAvailable,
-                        ),
-                        RefundInfoRowData(
-                          AppStrings.refundsIncident,
-                          refund.customerIncidentId ??
-                              AppStrings.refundsNotAvailable,
-                        ),
-                        RefundInfoRowData(
-                          AppStrings.refundsCompensation,
-                          refund.tripCompensationClaimId ??
-                              AppStrings.refundsNotAvailable,
-                        ),
-                        RefundInfoRowData(
-                          AppStrings.refundsRequestedByAdmin,
-                          refund.requestedByAdminId ??
-                              AppStrings.refundsNotAvailable,
-                        ),
-                        RefundInfoRowData(
-                          AppStrings.refundsAdminNote,
-                          refund.adminNote ?? AppStrings.refundsNotAvailable,
                         ),
                       ],
                     ),

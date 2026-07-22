@@ -756,6 +756,8 @@
   "refundsRetryUnavailable": "Retry niet beschikbaar",
   "refundsRetryBackendApproval": "De retry wordt bij verzending opnieuw door de backend goedgekeurd.",
   "refundsRetryBlockedFallback": "De backend heeft retry voor deze terugbetaling geblokkeerd.",
+  "refundsRetryPendingNormal": "De terugbetaling wordt nog steeds door Stripe verwerkt. Dit is normaal, er is nog geen actie nodig.",
+  "refundsRetryPendingStuck": "Deze terugbetaling duurt langer dan verwacht. Laatst gecontroleerd bij Stripe om {time}.",
   "refundsFailureStripeDisabled": "De terugbetaling is mislukt. Probeer de terugbetaling opnieuw zodra deze beschikbaar is.",
   "refundsFailureRefundUnavailable": "Er is geen geïnde online betaling beschikbaar voor een automatische terugbetaling.",
   "refundsFailureRetryBlocked": "Opnieuw proberen is momenteel geblokkeerd door backendgeschiktheid.",

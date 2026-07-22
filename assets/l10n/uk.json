@@ -756,6 +756,8 @@
   "refundsRetryUnavailable": "Повтор недоступний",
   "refundsRetryBackendApproval": "Backend знову підтвердить повтор під час надсилання.",
   "refundsRetryBlockedFallback": "Backend заблокував повтор для цього повернення.",
+  "refundsRetryPendingNormal": "Повернення коштів досі обробляється Stripe. Це нормально, дій поки не потрібно.",
+  "refundsRetryPendingStuck": "Це повернення коштів триває довше, ніж очікувалося. Востаннє перевірено в Stripe о {time}.",
   "refundsFailureStripeDisabled": "Обробка повернення не вдалася. Повторіть повернення, коли воно буде доступне.",
   "refundsFailureRefundUnavailable": "Немає захопленого онлайн-платежу для автоматичного повернення.",
   "refundsFailureRetryBlocked": "Повтор зараз заблоковано правилами backend.",
