@@ -29,6 +29,13 @@ class SignalRRealtimeService implements RealtimeService {
   static const Duration _retryDelay = Duration(seconds: 3);
   static const Duration _maxRetryDelay = Duration(seconds: 30);
 
+  /// Ceiling on a single hub `invoke`. A socket can go half-dead without
+  /// `onclose` firing, and an un-timed `invoke` then never completes — which
+  /// used to hang whatever awaited it (trip selection, group rejoin) until the
+  /// app was killed. Group membership is tracked locally and replayed by
+  /// [_rejoinTripGroups], so timing one out is safe and self-healing.
+  static const Duration _invokeTimeout = Duration(seconds: 10);
+
   final JwtTokenStorage _tokenStorage;
 
   HubConnection? _connection;
@@ -144,7 +151,9 @@ class SignalRRealtimeService implements RealtimeService {
       return;
     }
     try {
-      await hub.invoke('JoinTripGroup', args: <Object>[tripId]);
+      await hub
+          .invoke('JoinTripGroup', args: <Object>[tripId])
+          .timeout(_invokeTimeout);
       printG('$_logTag joined Trip_$tripId');
     } catch (error) {
       printY('$_logTag joinTripGroup($tripId) failed: $error');
@@ -157,7 +166,9 @@ class SignalRRealtimeService implements RealtimeService {
     final hub = _connection;
     if (hub == null || _state != RealtimeConnectionState.connected) return;
     try {
-      await hub.invoke('LeaveTripGroup', args: <Object>[tripId]);
+      await hub
+          .invoke('LeaveTripGroup', args: <Object>[tripId])
+          .timeout(_invokeTimeout);
       printC('$_logTag left Trip_$tripId');
     } catch (error) {
       printY('$_logTag leaveTripGroup($tripId) failed: $error');
@@ -173,7 +184,9 @@ class SignalRRealtimeService implements RealtimeService {
       return;
     }
     try {
-      await hub.invoke('JoinVehicleTypeGroup', args: <Object>[vehicleTypeId]);
+      await hub
+          .invoke('JoinVehicleTypeGroup', args: <Object>[vehicleTypeId])
+          .timeout(_invokeTimeout);
       printG('$_logTag joined VehicleType_$vehicleTypeId');
     } catch (error) {
       printY('$_logTag joinVehicleTypeGroup($vehicleTypeId) failed: $error');
@@ -186,7 +199,9 @@ class SignalRRealtimeService implements RealtimeService {
     final hub = _connection;
     if (hub == null || _state != RealtimeConnectionState.connected) return;
     try {
-      await hub.invoke('LeaveVehicleTypeGroup', args: <Object>[vehicleTypeId]);
+      await hub
+          .invoke('LeaveVehicleTypeGroup', args: <Object>[vehicleTypeId])
+          .timeout(_invokeTimeout);
       printC('$_logTag left VehicleType_$vehicleTypeId');
     } catch (error) {
       printY('$_logTag leaveVehicleTypeGroup($vehicleTypeId) failed: $error');
@@ -302,7 +317,9 @@ class SignalRRealtimeService implements RealtimeService {
     if (hub == null || _state != RealtimeConnectionState.connected) return;
     for (final tripId in _joinedTripGroups) {
       try {
-        await hub.invoke('JoinTripGroup', args: <Object>[tripId]);
+        await hub
+            .invoke('JoinTripGroup', args: <Object>[tripId])
+            .timeout(_invokeTimeout);
         printC('$_logTag re-joined Trip_$tripId');
       } catch (error) {
         printY('$_logTag re-join Trip_$tripId failed: $error');
@@ -310,7 +327,9 @@ class SignalRRealtimeService implements RealtimeService {
     }
     for (final vehicleTypeId in _joinedVehicleTypeGroups) {
       try {
-        await hub.invoke('JoinVehicleTypeGroup', args: <Object>[vehicleTypeId]);
+        await hub
+            .invoke('JoinVehicleTypeGroup', args: <Object>[vehicleTypeId])
+            .timeout(_invokeTimeout);
         printC('$_logTag re-joined VehicleType_$vehicleTypeId');
       } catch (error) {
         printY('$_logTag re-join VehicleType_$vehicleTypeId failed: $error');

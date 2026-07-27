@@ -26,8 +26,13 @@ class DashboardEvent with _$DashboardEvent {
     required double latitude,
     required double longitude,
   }) = _DriverLocationReceived;
-  const factory DashboardEvent.adminTripsRequested({String? status}) =
-      _AdminTripsRequested;
+  /// Reloads the records list. Set [preservePagination] for background
+  /// reloads (realtime, reconnect) so an operator scrolled deep into the list
+  /// does not get snapped back to the first page under their finger.
+  const factory DashboardEvent.adminTripsRequested({
+    String? status,
+    @Default(false) bool preservePagination,
+  }) = _AdminTripsRequested;
   const factory DashboardEvent.adminTripsNextPageRequested() =
       _AdminTripsNextPageRequested;
   const factory DashboardEvent.adminTripsSearchChanged(String query) =

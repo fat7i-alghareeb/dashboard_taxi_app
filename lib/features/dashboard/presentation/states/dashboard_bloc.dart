@@ -132,7 +132,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       if (connectionState != RealtimeConnectionState.connected || isClosed) {
         return;
       }
-      add(const DashboardEvent.adminTripsRequested());
+      add(const DashboardEvent.adminTripsRequested(preservePagination: true));
       add(const DashboardEvent.overviewRequested());
       final selectedTripId = state.selectedTripId;
       if (selectedTripId != null) {
@@ -146,7 +146,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _adminTripsRefreshTimer = Timer(const Duration(milliseconds: 600), () {
       if (isClosed) return;
       printC('[DashboardBloc] realtime trip event → admin trips refresh');
-      add(const DashboardEvent.adminTripsRequested());
+      add(const DashboardEvent.adminTripsRequested(preservePagination: true));
     });
   }
 
@@ -409,10 +409,16 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     Emitter<DashboardState> emit,
   ) async {
     printM('[DashboardBloc] admin trips requested status=${event.status}');
+    // A background reload refetches everything already on screen in one call
+    // and keeps the loaded rows visible; only an explicit reload resets to the
+    // first page and shows the shimmer.
+    final pagesLoaded = event.preservePagination ? state.adminTripsPage : 1;
     emit(
       state.copyWith(
-        adminTripsState: const BlocStatus.loading(),
-        adminTripsPage: 1,
+        adminTripsState: event.preservePagination
+            ? state.adminTripsState
+            : const BlocStatus.loading(),
+        adminTripsPage: pagesLoaded,
         adminTripsHasMore: true,
         adminTripsLoadingMore: false,
       ),
@@ -420,7 +426,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
     final search = state.adminTripsSearch.trim();
     final result = await _facade.getAdminTrips(
-      pageSize: _adminTripsPageSize,
+      pageSize: _adminTripsPageSize * pagesLoaded,
       status: event.status,
       search: search.isEmpty ? null : search,
       passengerId: state.adminTripsPassengerId.isEmpty
@@ -435,7 +441,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         emit(
           state.copyWith(
             adminTripsState: BlocStatus.success(paged.items),
-            adminTripsPage: 1,
+            adminTripsPage: pagesLoaded,
             adminTripsHasMore: paged.items.length < paged.totalCount,
           ),
         );

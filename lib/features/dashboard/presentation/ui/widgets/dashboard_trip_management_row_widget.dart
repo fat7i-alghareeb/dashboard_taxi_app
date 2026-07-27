@@ -19,15 +19,28 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(AppRadii.lg.r);
+
     return Material(
       color: isSelected
           ? context.primary.withValues(alpha: 0.06)
           : Colors.transparent,
+      borderRadius: radius,
       child: InkWell(
+        // Clip the ripple to the card so the press reads as a button press.
+        borderRadius: radius,
         // Selecting a trip loads it into the Home bottom sheet and jumps to the
         // Home map tab where the status-specific actions live.
         onTap: () {
-          getIt<TripBloc>().add(TripEvent.tripSelected(trip.id));
+          final tripBloc = getIt<TripBloc>();
+          // Ignore a repeat tap on the trip already being opened, so an
+          // impatient double-tap can't restart the fetch it is waiting on.
+          if (tripBloc.state.selectedTripId == trip.id &&
+              tripBloc.state.activeTripState.isLoading) {
+            getIt<RootTabController>().goToHome();
+            return;
+          }
+          tripBloc.add(TripEvent.tripSelected(trip.id));
           getIt<RootTabController>().goToHome();
         },
         child: Padding(

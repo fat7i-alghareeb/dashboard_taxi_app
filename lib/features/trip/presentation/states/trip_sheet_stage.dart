@@ -1,3 +1,4 @@
+import '../../../../core/utils/bloc_status.dart';
 import '../../domain/entities/trip_entity.dart';
 import 'trip_bloc.dart';
 
@@ -9,6 +10,14 @@ import 'trip_bloc.dart';
 enum TripSheetStage {
   /// No selected trip and no recent completion — idle map.
   idle,
+
+  /// A trip was just picked and is still being fetched — skeleton sheet. Exists
+  /// so a tap produces visible feedback on the next frame instead of looking
+  /// like nothing happened.
+  loading,
+
+  /// The pick could not be loaded — error sheet with a retry.
+  error,
 
   /// Paid trip waiting for an admin to take ownership.
   pendingAssignment,
@@ -41,6 +50,14 @@ extension TripSheetStageX on TripState {
     // Pending/new admin trips no longer auto-open the sheet; they surface via
     // the Trips-tab badge + notification. The sheet only shows a selected trip.
     final trip = activeTrip;
+
+    // An explicit pick that has not resolved yet: show progress or the failure
+    // rather than falling through to `idle`, which renders nothing at all.
+    if (trip == null && selectedTripId != null) {
+      if (activeTripState.isLoading) return TripSheetStage.loading;
+      if (activeTripState.isFailed) return TripSheetStage.error;
+    }
+
     if (trip == null) return TripSheetStage.idle;
 
     return switch (trip.status) {

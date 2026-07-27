@@ -188,7 +188,7 @@ return currencyUpdateRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  overviewRequested,TResult Function( String driverId)?  driverDocumentsRequested,TResult Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult Function( String driverId)?  driverApprovalRequested,TResult Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult Function()?  driverLocationsRequested,TResult Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult Function( String? status)?  adminTripsRequested,TResult Function()?  adminTripsNextPageRequested,TResult Function( String query)?  adminTripsSearchChanged,TResult Function( String? passengerId,  String? name)?  adminTripsCustomerChanged,TResult Function( String tripId,  String newStatus)?  adminTripStatusPatched,TResult Function( String tripId)?  tripDetailsRequested,TResult Function( String tripId)?  tripFinancialsRequested,TResult Function( String userId)?  userWalletRequested,TResult Function()?  adminConfigRequested,TResult Function()?  adminVehicleTypesRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)?  vehicleTypeCreateRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeUpdateRequested,TResult Function( num discountPercent)?  tripDiscountUpdateRequested,TResult Function( String currencyCode)?  currencyUpdateRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  overviewRequested,TResult Function( String driverId)?  driverDocumentsRequested,TResult Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult Function( String driverId)?  driverApprovalRequested,TResult Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult Function()?  driverLocationsRequested,TResult Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult Function( String? status,  bool preservePagination)?  adminTripsRequested,TResult Function()?  adminTripsNextPageRequested,TResult Function( String query)?  adminTripsSearchChanged,TResult Function( String? passengerId,  String? name)?  adminTripsCustomerChanged,TResult Function( String tripId,  String newStatus)?  adminTripStatusPatched,TResult Function( String tripId)?  tripDetailsRequested,TResult Function( String tripId)?  tripFinancialsRequested,TResult Function( String userId)?  userWalletRequested,TResult Function()?  adminConfigRequested,TResult Function()?  adminVehicleTypesRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)?  vehicleTypeCreateRequested,TResult Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeUpdateRequested,TResult Function( num discountPercent)?  tripDiscountUpdateRequested,TResult Function( String currencyCode)?  currencyUpdateRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _OverviewRequested() when overviewRequested != null:
@@ -199,7 +199,7 @@ return driverApprovalRequested(_that.driverId);case _TripAssignmentRequested() w
 return tripAssignmentRequested(_that.tripId,_that.driverId,_that.enterDriverMode);case _DriverLocationsRequested() when driverLocationsRequested != null:
 return driverLocationsRequested();case _DriverLocationReceived() when driverLocationReceived != null:
 return driverLocationReceived(_that.driverId,_that.latitude,_that.longitude);case _AdminTripsRequested() when adminTripsRequested != null:
-return adminTripsRequested(_that.status);case _AdminTripsNextPageRequested() when adminTripsNextPageRequested != null:
+return adminTripsRequested(_that.status,_that.preservePagination);case _AdminTripsNextPageRequested() when adminTripsNextPageRequested != null:
 return adminTripsNextPageRequested();case _AdminTripsSearchChanged() when adminTripsSearchChanged != null:
 return adminTripsSearchChanged(_that.query);case _AdminTripsCustomerChanged() when adminTripsCustomerChanged != null:
 return adminTripsCustomerChanged(_that.passengerId,_that.name);case _AdminTripStatusPatched() when adminTripStatusPatched != null:
@@ -232,7 +232,7 @@ return currencyUpdateRequested(_that.currencyCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  overviewRequested,required TResult Function( String driverId)  driverDocumentsRequested,required TResult Function( String driverId,  String documentId,  bool approved,  String? notes)  documentReviewRequested,required TResult Function( String driverId)  driverApprovalRequested,required TResult Function( String tripId,  String driverId,  bool enterDriverMode)  tripAssignmentRequested,required TResult Function()  driverLocationsRequested,required TResult Function( String driverId,  double latitude,  double longitude)  driverLocationReceived,required TResult Function( String? status)  adminTripsRequested,required TResult Function()  adminTripsNextPageRequested,required TResult Function( String query)  adminTripsSearchChanged,required TResult Function( String? passengerId,  String? name)  adminTripsCustomerChanged,required TResult Function( String tripId,  String newStatus)  adminTripStatusPatched,required TResult Function( String tripId)  tripDetailsRequested,required TResult Function( String tripId)  tripFinancialsRequested,required TResult Function( String userId)  userWalletRequested,required TResult Function()  adminConfigRequested,required TResult Function()  adminVehicleTypesRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeStatusToggleRequested,required TResult Function( String vehicleTypeId)  vehicleTypeRemovalRequested,required TResult Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)  vehicleTypeCreateRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeUpdateRequested,required TResult Function( num discountPercent)  tripDiscountUpdateRequested,required TResult Function( String currencyCode)  currencyUpdateRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  overviewRequested,required TResult Function( String driverId)  driverDocumentsRequested,required TResult Function( String driverId,  String documentId,  bool approved,  String? notes)  documentReviewRequested,required TResult Function( String driverId)  driverApprovalRequested,required TResult Function( String tripId,  String driverId,  bool enterDriverMode)  tripAssignmentRequested,required TResult Function()  driverLocationsRequested,required TResult Function( String driverId,  double latitude,  double longitude)  driverLocationReceived,required TResult Function( String? status,  bool preservePagination)  adminTripsRequested,required TResult Function()  adminTripsNextPageRequested,required TResult Function( String query)  adminTripsSearchChanged,required TResult Function( String? passengerId,  String? name)  adminTripsCustomerChanged,required TResult Function( String tripId,  String newStatus)  adminTripStatusPatched,required TResult Function( String tripId)  tripDetailsRequested,required TResult Function( String tripId)  tripFinancialsRequested,required TResult Function( String userId)  userWalletRequested,required TResult Function()  adminConfigRequested,required TResult Function()  adminVehicleTypesRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeStatusToggleRequested,required TResult Function( String vehicleTypeId)  vehicleTypeRemovalRequested,required TResult Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)  vehicleTypeCreateRequested,required TResult Function( DashboardVehicleTypeEntity vehicleType)  vehicleTypeUpdateRequested,required TResult Function( num discountPercent)  tripDiscountUpdateRequested,required TResult Function( String currencyCode)  currencyUpdateRequested,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case _OverviewRequested():
@@ -243,7 +243,7 @@ return driverApprovalRequested(_that.driverId);case _TripAssignmentRequested():
 return tripAssignmentRequested(_that.tripId,_that.driverId,_that.enterDriverMode);case _DriverLocationsRequested():
 return driverLocationsRequested();case _DriverLocationReceived():
 return driverLocationReceived(_that.driverId,_that.latitude,_that.longitude);case _AdminTripsRequested():
-return adminTripsRequested(_that.status);case _AdminTripsNextPageRequested():
+return adminTripsRequested(_that.status,_that.preservePagination);case _AdminTripsNextPageRequested():
 return adminTripsNextPageRequested();case _AdminTripsSearchChanged():
 return adminTripsSearchChanged(_that.query);case _AdminTripsCustomerChanged():
 return adminTripsCustomerChanged(_that.passengerId,_that.name);case _AdminTripStatusPatched():
@@ -275,7 +275,7 @@ return currencyUpdateRequested(_that.currencyCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  overviewRequested,TResult? Function( String driverId)?  driverDocumentsRequested,TResult? Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult? Function( String driverId)?  driverApprovalRequested,TResult? Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult? Function()?  driverLocationsRequested,TResult? Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult? Function( String? status)?  adminTripsRequested,TResult? Function()?  adminTripsNextPageRequested,TResult? Function( String query)?  adminTripsSearchChanged,TResult? Function( String? passengerId,  String? name)?  adminTripsCustomerChanged,TResult? Function( String tripId,  String newStatus)?  adminTripStatusPatched,TResult? Function( String tripId)?  tripDetailsRequested,TResult? Function( String tripId)?  tripFinancialsRequested,TResult? Function( String userId)?  userWalletRequested,TResult? Function()?  adminConfigRequested,TResult? Function()?  adminVehicleTypesRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult? Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult? Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)?  vehicleTypeCreateRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeUpdateRequested,TResult? Function( num discountPercent)?  tripDiscountUpdateRequested,TResult? Function( String currencyCode)?  currencyUpdateRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  overviewRequested,TResult? Function( String driverId)?  driverDocumentsRequested,TResult? Function( String driverId,  String documentId,  bool approved,  String? notes)?  documentReviewRequested,TResult? Function( String driverId)?  driverApprovalRequested,TResult? Function( String tripId,  String driverId,  bool enterDriverMode)?  tripAssignmentRequested,TResult? Function()?  driverLocationsRequested,TResult? Function( String driverId,  double latitude,  double longitude)?  driverLocationReceived,TResult? Function( String? status,  bool preservePagination)?  adminTripsRequested,TResult? Function()?  adminTripsNextPageRequested,TResult? Function( String query)?  adminTripsSearchChanged,TResult? Function( String? passengerId,  String? name)?  adminTripsCustomerChanged,TResult? Function( String tripId,  String newStatus)?  adminTripStatusPatched,TResult? Function( String tripId)?  tripDetailsRequested,TResult? Function( String tripId)?  tripFinancialsRequested,TResult? Function( String userId)?  userWalletRequested,TResult? Function()?  adminConfigRequested,TResult? Function()?  adminVehicleTypesRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeStatusToggleRequested,TResult? Function( String vehicleTypeId)?  vehicleTypeRemovalRequested,TResult? Function( String code,  String name,  int capacity,  num ratePerKm,  num ratePerMin,  num minFare,  int sortOrder)?  vehicleTypeCreateRequested,TResult? Function( DashboardVehicleTypeEntity vehicleType)?  vehicleTypeUpdateRequested,TResult? Function( num discountPercent)?  tripDiscountUpdateRequested,TResult? Function( String currencyCode)?  currencyUpdateRequested,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _OverviewRequested() when overviewRequested != null:
@@ -286,7 +286,7 @@ return driverApprovalRequested(_that.driverId);case _TripAssignmentRequested() w
 return tripAssignmentRequested(_that.tripId,_that.driverId,_that.enterDriverMode);case _DriverLocationsRequested() when driverLocationsRequested != null:
 return driverLocationsRequested();case _DriverLocationReceived() when driverLocationReceived != null:
 return driverLocationReceived(_that.driverId,_that.latitude,_that.longitude);case _AdminTripsRequested() when adminTripsRequested != null:
-return adminTripsRequested(_that.status);case _AdminTripsNextPageRequested() when adminTripsNextPageRequested != null:
+return adminTripsRequested(_that.status,_that.preservePagination);case _AdminTripsNextPageRequested() when adminTripsNextPageRequested != null:
 return adminTripsNextPageRequested();case _AdminTripsSearchChanged() when adminTripsSearchChanged != null:
 return adminTripsSearchChanged(_that.query);case _AdminTripsCustomerChanged() when adminTripsCustomerChanged != null:
 return adminTripsCustomerChanged(_that.passengerId,_that.name);case _AdminTripStatusPatched() when adminTripStatusPatched != null:
@@ -753,10 +753,11 @@ as double,
 
 
 class _AdminTripsRequested implements DashboardEvent {
-  const _AdminTripsRequested({this.status});
+  const _AdminTripsRequested({this.status, this.preservePagination = false});
   
 
  final  String? status;
+@JsonKey() final  bool preservePagination;
 
 /// Create a copy of DashboardEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -768,16 +769,16 @@ _$AdminTripsRequestedCopyWith<_AdminTripsRequested> get copyWith => __$AdminTrip
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminTripsRequested&&(identical(other.status, status) || other.status == status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminTripsRequested&&(identical(other.status, status) || other.status == status)&&(identical(other.preservePagination, preservePagination) || other.preservePagination == preservePagination));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status);
+int get hashCode => Object.hash(runtimeType,status,preservePagination);
 
 @override
 String toString() {
-  return 'DashboardEvent.adminTripsRequested(status: $status)';
+  return 'DashboardEvent.adminTripsRequested(status: $status, preservePagination: $preservePagination)';
 }
 
 
@@ -788,7 +789,7 @@ abstract mixin class _$AdminTripsRequestedCopyWith<$Res> implements $DashboardEv
   factory _$AdminTripsRequestedCopyWith(_AdminTripsRequested value, $Res Function(_AdminTripsRequested) _then) = __$AdminTripsRequestedCopyWithImpl;
 @useResult
 $Res call({
- String? status
+ String? status, bool preservePagination
 });
 
 
@@ -805,10 +806,11 @@ class __$AdminTripsRequestedCopyWithImpl<$Res>
 
 /// Create a copy of DashboardEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? status = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? status = freezed,Object? preservePagination = null,}) {
   return _then(_AdminTripsRequested(
 status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,preservePagination: null == preservePagination ? _self.preservePagination : preservePagination // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

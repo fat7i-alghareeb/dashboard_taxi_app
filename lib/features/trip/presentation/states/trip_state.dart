@@ -18,6 +18,11 @@ abstract class TripState with _$TripState {
     @Default(BlocStatus<void>.initial()) BlocStatus<void> completeStopState,
     TripEntity? activeTrip,
     TripEntity? completedTrip,
+
+    /// Trip the operator explicitly picked (e.g. tapped in the Trips tab).
+    /// An explicit pick outranks the automatic active-trip resolve, so a
+    /// background resolve can never silently replace what the user opened.
+    String? selectedTripId,
     @Default(<TripEntity>[]) List<TripEntity> pendingTrips,
     DateTime? arrivedAt,
     @Default(<int>{}) Set<int> completedStops,

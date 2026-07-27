@@ -182,7 +182,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
           await _loadActiveTrip(tripId, emit, joinGroup: true);
         } else if (state.activeTrip?.id == tripId) {
           await _realtimeService.leaveTripGroup(tripId);
-          emit(state.copyWith(activeTrip: null));
+          emit(state.copyWith(activeTrip: null, selectedTripId: null));
         }
       case RealtimeDriverAssigned(:final tripId):
         printC('[TripBloc] realtime DriverAssigned trip=$tripId');
@@ -284,6 +284,13 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     _ActiveTripResolveRequested event,
     Emitter<TripState> emit,
   ) async {
+    // An explicit pick (Trips tab tap) outranks the automatic resolve. Without
+    // this the Home-tab open that follows a tap would race the selection and
+    // replace it with the operator's own assigned trip — or with nothing.
+    if (state.selectedTripId != null) {
+      printC('[TripBloc] resolve skipped, explicit selection in effect');
+      return;
+    }
     printM('[TripBloc] resolve active trip requested');
     final result = await _facade.getActiveTrip();
     result.when(
@@ -310,10 +317,29 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     Emitter<TripState> emit,
   ) async {
     printM('[TripBloc] trip selected trip=${event.tripId}');
-    emit(state.copyWith(activeTripState: const BlocStatus.loading()));
-    await _realtimeService.joinTripGroup(event.tripId);
+    // Claim the selection *before* any await so the sheet can render its
+    // loading stage on the very next frame and so a concurrent
+    // activeTripResolveRequested knows to stand down.
+    final isDifferentTrip = state.activeTrip?.id != event.tripId;
+    emit(
+      state.copyWith(
+        selectedTripId: event.tripId,
+        activeTripState: const BlocStatus.loading(),
+        // Switching to another trip drops the previous one so the sheet shows
+        // the skeleton instead of lingering on the trip that is on its way out.
+        activeTrip: isDifferentTrip ? null : state.activeTrip,
+      ),
+    );
+    // Realtime membership is best-effort and must never gate the UI — a
+    // half-dead socket would otherwise hang this handler forever.
+    unawaited(_realtimeService.joinTripGroup(event.tripId));
 
     final result = await _facade.getTripById(event.tripId);
+    // A newer tap landed while this one was in flight: drop the stale response.
+    if (state.selectedTripId != event.tripId) {
+      printC('[TripBloc] stale selection response ignored trip=${event.tripId}');
+      return;
+    }
     result.when(
       success: (trip) {
         printG(
@@ -344,12 +370,18 @@ class TripBloc extends Bloc<TripEvent, TripState> {
     _SelectionCleared event,
     Emitter<TripState> emit,
   ) async {
-    final tripId = state.activeTrip?.id;
+    final tripId = state.activeTrip?.id ?? state.selectedTripId;
     if (tripId != null) {
       await _realtimeService.leaveTripGroup(tripId);
     }
     emit(
-      state.copyWith(activeTrip: null, completedTrip: null, arrivedAt: null),
+      state.copyWith(
+        activeTrip: null,
+        completedTrip: null,
+        arrivedAt: null,
+        selectedTripId: null,
+        activeTripState: const BlocStatus.initial(),
+      ),
     );
   }
 
@@ -497,6 +529,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
             activeTrip: null,
             completedTrip: completedTrip,
             arrivedAt: null,
+            selectedTripId: null,
           ),
         );
       },
@@ -544,6 +577,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
             activeTrip: null,
             completedTrip: cancelledTrip,
             arrivedAt: null,
+            selectedTripId: null,
           ),
         );
       },
@@ -592,11 +626,17 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         printG(
           '[TripBloc] active trip loaded trip=$tripId status=${trip.status}',
         );
+        // A terminal trip normally clears the sheet — unless the operator
+        // explicitly opened it, in which case it stays as the read-only stage.
+        final isExplicitSelection = trip.id == state.selectedTripId;
         emit(
           state.copyWith(
             activeTripState: BlocStatus.success(trip),
-            activeTrip: trip.status.isTerminal ? null : trip,
-            completedTrip: trip.status == TripStatus.completed
+            activeTrip: trip.status.isTerminal && !isExplicitSelection
+                ? null
+                : trip,
+            completedTrip:
+                trip.status == TripStatus.completed && !isExplicitSelection
                 ? trip
                 : state.completedTrip,
           ),
@@ -652,6 +692,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
         emit(
           state.copyWith(
             adminSelfAssignState: const BlocStatus.success(null),
+            selectedTripId: event.tripId,
             pendingTrips: state.pendingTrips
                 .where((t) => t.id != event.tripId)
                 .toList(),
@@ -685,6 +726,7 @@ class TripBloc extends Bloc<TripEvent, TripState> {
             activeTrip: null,
             completedTrip: null,
             arrivedAt: null,
+            selectedTripId: null,
           ),
         );
       },

@@ -1,5 +1,4 @@
-import 'package:dashboardtaxi/common/imports/imports.dart';
-import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trips_body.dart';
 
 class RootTripTabSection extends StatelessWidget {
@@ -7,15 +6,13 @@ class RootTripTabSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    // No BlocProvider here on purpose: DashboardTripsBody owns its own
+    // DashboardBloc. Wrapping it in a second one spawned an unread bloc that
+    // still subscribed to realtime, so every trip event refetched the list
+    // twice.
+    return const SafeArea(
       bottom: false,
-      child: BlocProvider(
-        create: (_) =>
-            getIt<DashboardBloc>()..add(const DashboardEvent.adminTripsRequested()),
-        child: const DashboardTripsBody(
-          showBackButton: false,
-        ),
-      ),
+      child: DashboardTripsBody(showBackButton: false),
     );
   }
 }

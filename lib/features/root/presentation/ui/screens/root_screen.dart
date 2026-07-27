@@ -18,6 +18,20 @@ class RootScreen extends StatefulWidget {
 }
 
 class _RootScreenState extends State<RootScreen> {
+  // TripBloc is a lazySingleton, so its bootstrap events must fire once on
+  // mount — not from build(). Cascading them inside BlocProvider.value re-ran
+  // getAllTrips + the active-trip resolve on every rebuild, and that resolve
+  // races (and overwrites) whatever trip the operator has open.
+  late final TripBloc _tripBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _tripBloc = getIt<TripBloc>()
+      ..add(const TripEvent.started())
+      ..add(const TripEvent.activeTripResolveRequested());
+  }
+
   @override
   Widget build(BuildContext context) {
     printM('[RootScreen] build');
@@ -26,11 +40,7 @@ class _RootScreenState extends State<RootScreen> {
         BlocProvider(
           create: (_) => getIt<RootBloc>()..add(const RootEvent.started()),
         ),
-        BlocProvider<TripBloc>.value(
-          value: getIt<TripBloc>()
-            ..add(const TripEvent.started())
-            ..add(const TripEvent.activeTripResolveRequested()),
-        ),
+        BlocProvider<TripBloc>.value(value: _tripBloc),
       ],
       child: const RootBody(),
     );

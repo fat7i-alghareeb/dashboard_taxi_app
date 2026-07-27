@@ -36,6 +36,9 @@ class TripSheetSection extends StatelessWidget {
         _failureOverlayListener((s) => s.completeTripState),
         _failureOverlayListener((s) => s.completeStopState),
         _failureOverlayListener((s) => s.driverCancelState),
+        // Loading the picked trip itself can fail too — without this the tap
+        // just looked like nothing happened.
+        _failureOverlayListener((s) => s.activeTripState),
       ],
       child: _buildSheet(context),
     );
@@ -43,8 +46,8 @@ class TripSheetSection extends StatelessWidget {
 
   /// Builds a listener that shows an error overlay whenever the selected
   /// action state transitions into a failure.
-  BlocListener<TripBloc, TripState>   _failureOverlayListener(
-    BlocStatus<void> Function(TripState state) select,
+  BlocListener<TripBloc, TripState> _failureOverlayListener(
+    BlocStatus<dynamic> Function(TripState state) select,
   ) {
     return BlocListener<TripBloc, TripState>(
       listenWhen: (prev, curr) => select(prev) != select(curr),
@@ -58,6 +61,7 @@ class TripSheetSection extends StatelessWidget {
     return BlocBuilder<TripBloc, TripState>(
       buildWhen: (a, b) =>
           a.sheetStage != b.sheetStage ||
+          a.activeTripState != b.activeTripState ||
           a.activeTrip != b.activeTrip ||
           a.completedTrip != b.completedTrip ||
           a.pendingTrips != b.pendingTrips ||
@@ -75,8 +79,14 @@ class TripSheetSection extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
+        // Collapsing only makes sense once there is a trip to collapse into.
+        final canCollapse =
+            stage != TripSheetStage.idle &&
+            stage != TripSheetStage.loading &&
+            stage != TripSheetStage.error;
+
         return _TripSheetChrome(
-          onCollapse: stage == TripSheetStage.idle ? null : onCollapse,
+          onCollapse: canCollapse ? onCollapse : null,
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 280),
             switchInCurve: Curves.easeOut,
@@ -119,6 +129,19 @@ class TripSheetSection extends StatelessWidget {
     switch (stage) {
       case TripSheetStage.idle:
         return idleBuilder?.call(context) ?? const SizedBox.shrink();
+      case TripSheetStage.loading:
+        return const _TripSheetLoading();
+      case TripSheetStage.error:
+        final tripId = state.selectedTripId;
+        return FailedStateWidget(
+          message: state.activeTripState.errorMessage,
+          iconSize: 56,
+          onRetrying: tripId == null
+              ? null
+              : () => context.read<TripBloc>().add(
+                  TripEvent.tripSelected(tripId),
+                ),
+        );
       case TripSheetStage.pendingAssignment:
         final trip = state.activeTrip;
         if (trip == null) return const SizedBox.shrink();
@@ -148,6 +171,49 @@ class TripSheetSection extends StatelessWidget {
         if (trip == null) return const SizedBox.shrink();
         return TripSummarySheet(trip: trip);
     }
+  }
+}
+
+/// Skeleton shown between the tap and the trip arriving. Its whole job is to
+/// make the sheet slide up on the next frame so a tap is never silent.
+class _TripSheetLoading extends StatelessWidget {
+  const _TripSheetLoading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: AppShimmer.box(
+                width: 140,
+                height: 18,
+                borderRadius: AppRadii.sm,
+              ),
+            ),
+            AppSpacing.sm.horizontalSpace,
+            AppShimmer.box(width: 64, height: 18, borderRadius: AppRadii.sm),
+          ],
+        ),
+        AppSpacing.md.verticalSpace,
+        AppShimmer.box(
+          width: double.infinity,
+          height: 14,
+          borderRadius: AppRadii.sm,
+        ),
+        AppSpacing.sm.verticalSpace,
+        AppShimmer.box(width: 200, height: 14, borderRadius: AppRadii.sm),
+        AppSpacing.lg.verticalSpace,
+        AppShimmer.box(
+          width: double.infinity,
+          height: 48,
+          borderRadius: AppRadii.lg,
+        ),
+      ],
+    );
   }
 }
 

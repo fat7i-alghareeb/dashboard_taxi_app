@@ -153,6 +153,7 @@ class _HomeBottomSheetState extends State<_HomeBottomSheet> {
               previous.activeTrip?.id != current.activeTrip?.id ||
               previous.activeTrip?.status != current.activeTrip?.status ||
               previous.completedTrip?.id != current.completedTrip?.id ||
+              previous.activeTripState != current.activeTripState ||
               previous.sheetStage != current.sheetStage,
           builder: (context, tripState) {
             final stage = tripState.sheetStage;
