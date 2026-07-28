@@ -188,6 +188,7 @@ class TripCancellationEntity {
     required this.refundPercent,
     required this.refundAmount,
     required this.currencyCode,
+    this.cancellationFeeAmount = 0,
     this.note,
   });
 
@@ -196,6 +197,12 @@ class TripCancellationEntity {
   final double refundPercent;
   final double refundAmount;
   final String currencyCode;
+
+  /// Flat fee withheld from the fare ("annuleringskosten"), 0 when none applied.
+  /// Non-zero only for a passenger cancellation inside the 5-minute window, where
+  /// [refundPercent] stays 100 and the deduction lives here instead — so an admin
+  /// can explain the amount without it looking like a mis-priced refund.
+  final double cancellationFeeAmount;
   final String? note;
 }
 

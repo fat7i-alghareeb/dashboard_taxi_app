@@ -314,6 +314,13 @@ void _configureJwtFlow({
 bool _isDefinitiveAuthRejection(DioException e) {
   final status = e.response?.statusCode;
   if (status == 401 || status == 403) return true;
+  if (status == 404) {
+    final data = e.response?.data;
+    final code = data is Map ? data['errorCode']?.toString() : null;
+    // The refresh endpoint only ever returns 404 when the user behind the
+    // token's claims no longer exists — there is no transient case here.
+    return code == 'User.NotFound';
+  }
   if (status == 409) {
     final data = e.response?.data;
     final code = data is Map ? data['errorCode']?.toString() : null;

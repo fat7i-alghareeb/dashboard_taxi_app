@@ -201,6 +201,7 @@ extension DashboardTripDetailsModelMapper on DashboardTripDetailsModel {
               refundPercent: cancellation!.refundPercent,
               refundAmount: cancellation!.refundAmount,
               currencyCode: cancellation!.currencyCode,
+              cancellationFeeAmount: cancellation!.cancellationFeeAmount,
               note: cancellation!.note,
               createdAt: cancellation!.createdAt,
             ),

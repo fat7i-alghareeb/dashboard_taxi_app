@@ -300,6 +300,7 @@ class DashboardCancellationModel {
     required this.refundPercent,
     required this.refundAmount,
     required this.currencyCode,
+    this.cancellationFeeAmount = 0,
     this.note,
     this.createdAt,
   });
@@ -309,6 +310,7 @@ class DashboardCancellationModel {
   final double refundPercent;
   final double refundAmount;
   final String currencyCode;
+  final double cancellationFeeAmount;
   final String? note;
   final DateTime? createdAt;
 
@@ -319,6 +321,8 @@ class DashboardCancellationModel {
       refundPercent: (json['refundPercent'] as num?)?.toDouble() ?? 0,
       refundAmount: (json['refundAmount'] as num?)?.toDouble() ?? 0,
       currencyCode: _readString(json, 'currencyCode', fallback: 'EUR'),
+      cancellationFeeAmount:
+          (json['cancellationFeeAmount'] as num?)?.toDouble() ?? 0,
       note: _readNullableString(json, 'note'),
       createdAt: DateTime.tryParse(_readString(json, 'createdAtUtc')),
     );

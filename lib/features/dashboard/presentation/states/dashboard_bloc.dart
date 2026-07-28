@@ -49,6 +49,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
     _realtimeSub = _realtimeService.events.listen((final event) {
       switch (event) {
+        // TRACKING DISABLED: never emitted while the location subscription in
+        // SignalRRealtimeService is commented out. The case stays so the switch
+        // remains exhaustive over the sealed event type.
         case RealtimeDriverLocationUpdated(
           :final driverId,
           :final latitude,

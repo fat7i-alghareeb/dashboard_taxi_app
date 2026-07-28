@@ -6,6 +6,8 @@ import 'package:signalr_netcore/http_connection_options.dart';
 import 'package:signalr_netcore/hub_connection.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
 
+// TRACKING DISABLED: still imported by the commented-out REST fallback below.
+// ignore: unused_import
 import 'package:dashboardtaxi/core/utils/result.dart';
 import '../../../utils/helpers/colored_print.dart';
 import '../../network/api_config.dart';
@@ -51,15 +53,19 @@ class DriverLocationStreamer {
 
   /// Heartbeat that re-sends the last position while the driver is stationary
   /// (the GPS stream goes quiet) and keeps the hub connection warm.
+  // ignore: unused_field
   static const Duration _heartbeatInterval = Duration(seconds: 4);
 
+  // ignore: unused_field
   final LocationService _locationService;
   final JwtTokenStorage _tokenStorage;
+  // ignore: unused_field
   final DriverFacade _driverFacade;
 
   HubConnection? _connection;
   StreamSubscription<Position>? _positionSub;
   Timer? _streamTimer;
+  // ignore: unused_field
   Position? _lastPosition;
   DateTime? _lastSentAt;
   final Set<LocationTrackingReason> _reasons = <LocationTrackingReason>{};
@@ -76,6 +82,14 @@ class DriverLocationStreamer {
   /// 10-second streaming timer. Idempotent per reason. Adding the [activeTrip] reason
   /// (re)configures the position stream to survive backgrounding.
   Future<void> startTracking({required LocationTrackingReason reason}) async {
+    // TRACKING DISABLED: driver location tracking is switched off product-wide.
+    // The reason bookkeeping is kept so `isTracking` / `isOnlineTracking` still
+    // reflect the Online toggle, but nothing is sampled or transmitted. Delete the
+    // early return to restore the streaming body below.
+    _reasons.add(reason);
+    printY('$_logTag tracking disabled — ignoring start (reasons=$_reasons)');
+
+    /*
     final alreadyTracking = _reasons.isNotEmpty;
     _reasons.add(reason);
 
@@ -142,10 +156,14 @@ class DriverLocationStreamer {
       }
       await _maybeSend(pos.latitude, pos.longitude);
     });
+    */
   }
 
   /// Sends the coordinate unless one was sent within [_minSendInterval] — keeps
   /// updates near-continuous while moving without overwhelming the hub.
+  ///
+  /// TRACKING DISABLED: no caller while tracking is off.
+  // ignore: unused_element
   Future<void> _maybeSend(double lat, double lng) async {
     final now = DateTime.now();
     final last = _lastSentAt;
@@ -197,6 +215,8 @@ class DriverLocationStreamer {
     }
   }
 
+  /// TRACKING DISABLED: no caller while tracking is off.
+  // ignore: unused_element
   Future<void> _connectHub() async {
     final url = '${ApiConfig.baseUrl}$_hubPath';
 
@@ -233,7 +253,13 @@ class DriverLocationStreamer {
     }
   }
 
+  /// TRACKING DISABLED: unreachable while [startTracking] is a no-op. Both the hub
+  /// method and the REST endpoint are also commented out server-side.
+  // ignore: unused_element
   Future<void> _sendLocation(double lat, double lng) async {
+    printY('$_logTag tracking disabled — dropping coordinate ($lat, $lng)');
+
+    /*
     final hub = _connection;
 
     // A. Preferred Option: Stream via SignalR Hub if connected
@@ -258,5 +284,6 @@ class DriverLocationStreamer {
         printR('$_logTag REST fallback failed: $message');
       },
     );
+    */
   }
 }

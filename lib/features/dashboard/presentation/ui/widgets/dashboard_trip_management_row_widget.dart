@@ -5,6 +5,7 @@ import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboa
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_trip_card_timeline_widget.dart';
 import 'package:dashboardtaxi/features/recordings/presentation/ui/widgets/trip_recordings_sheet.dart';
 import 'package:dashboardtaxi/features/root/domain/services/root_tab_controller.dart';
+import 'package:dashboardtaxi/features/root/presentation/ui/screens/root_screen.dart';
 import 'package:dashboardtaxi/features/trip/presentation/states/trip_bloc.dart';
 
 class DashboardTripManagementRowWidget extends StatelessWidget {
@@ -37,11 +38,11 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
           // impatient double-tap can't restart the fetch it is waiting on.
           if (tripBloc.state.selectedTripId == trip.id &&
               tripBloc.state.activeTripState.isLoading) {
-            getIt<RootTabController>().goToHome();
+            _returnToHomeWithTrip(context);
             return;
           }
           tripBloc.add(TripEvent.tripSelected(trip.id));
-          getIt<RootTabController>().goToHome();
+          _returnToHomeWithTrip(context);
         },
         child: Padding(
           padding: REdgeInsets.symmetric(
@@ -181,6 +182,19 @@ class DashboardTripManagementRowWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // This card is reused both inside RootBody's own "Trips" tab (part of the
+  // root shell's PageView) and inside the drawer-pushed DashboardTripsScreen
+  // (`/dashboard_trips`), which sits on top of the root shell. Switching the
+  // tab controller alone only works in the former case; when pushed, the
+  // root shell is hidden underneath, so we collapse back to it instead.
+  void _returnToHomeWithTrip(BuildContext context) {
+    if (context.canPop()) {
+      context.go(RootScreen.pagePath);
+    } else {
+      getIt<RootTabController>().goToHome();
+    }
   }
 
   String _countdownLabel(DateTime scheduledUtc) {

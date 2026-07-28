@@ -28,13 +28,19 @@ class DriverRemoteDataSource {
     });
   }
 
+  /// TRACKING DISABLED: the server endpoint is commented out too, so calling this
+  /// would only produce 404s. Kept as a no-op for the (also disabled) REST fallback
+  /// in DriverLocationStreamer.
   Future<void> updateLocation(double lat, double lng) {
     return rethrowAsAppException(() async {
-      printY('[DriverRemoteDataSource] updateLocation lat=$lat lng=$lng');
+      printY('[DriverRemoteDataSource] tracking disabled — skipping $lat,$lng');
+
+      /*
       await _dio.post<dynamic>(
         '/api/v1/drivers/me/location',
         data: {'latitude': lat, 'longitude': lng},
       );
+      */
     });
   }
 

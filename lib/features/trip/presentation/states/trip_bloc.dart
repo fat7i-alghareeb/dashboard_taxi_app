@@ -76,6 +76,10 @@ class TripBloc extends Bloc<TripEvent, TripState> {
   /// Streaming begins once the driver is moving toward the customer (EnRoute) and
   /// continues through Arrived/InProgress; any other state clears the trip reason.
   /// Reference-counted in the streamer so this never disturbs the Online radar.
+  ///
+  /// TRACKING DISABLED: [DriverLocationStreamer.startTracking] is a no-op, so this
+  /// only keeps the reason bookkeeping honest. Left wired up so re-enabling tracking
+  /// needs no change here.
   void _syncTripTracking(TripStatus status) {
     final shouldStream =
         status == TripStatus.enRoute ||

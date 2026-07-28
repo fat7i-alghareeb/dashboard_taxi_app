@@ -73,10 +73,16 @@ class LocationService {
     required String foregroundNotificationTitle,
     required String foregroundNotificationText,
   }) {
+    // TRACKING DISABLED: background survival is off product-wide. The remaining
+    // callers only need the driver's own position while the app is in the
+    // foreground, so the foreground service and iOS background updates are not
+    // requested any more — [keepAliveInBackground] is honoured only by the
+    // commented-out branches, which restore the old behaviour when uncommented.
     if (defaultTargetPlatform == TargetPlatform.android) {
       return AndroidSettings(
         accuracy: accuracy,
         distanceFilter: distanceFilter,
+        /*
         foregroundNotificationConfig: keepAliveInBackground
             ? ForegroundNotificationConfig(
                 notificationTitle: foregroundNotificationTitle,
@@ -85,6 +91,7 @@ class LocationService {
                 setOngoing: true,
               )
             : null,
+        */
       );
     }
 
@@ -93,8 +100,10 @@ class LocationService {
       return AppleSettings(
         accuracy: accuracy,
         distanceFilter: distanceFilter,
+        /*
         allowBackgroundLocationUpdates: keepAliveInBackground,
         showBackgroundLocationIndicator: keepAliveInBackground,
+        */
       );
     }
 

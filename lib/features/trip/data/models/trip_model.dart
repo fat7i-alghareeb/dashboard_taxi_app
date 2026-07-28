@@ -180,6 +180,7 @@ class TripCancellationModel {
     required this.refundPercent,
     required this.refundAmount,
     required this.currencyCode,
+    this.cancellationFeeAmount = 0,
     this.note,
   });
 
@@ -188,6 +189,9 @@ class TripCancellationModel {
   final double refundPercent;
   final double refundAmount;
   final String currencyCode;
+
+  /// Flat fee withheld from the fare; 0 for cancellations the policy charges none for.
+  final double cancellationFeeAmount;
   final String? note;
 
   factory TripCancellationModel.fromJson(Map<String, dynamic> json) {
@@ -197,6 +201,7 @@ class TripCancellationModel {
       refundPercent: _readDouble(json, 'refundPercent'),
       refundAmount: _readDouble(json, 'refundAmount'),
       currencyCode: _readString(json, 'currencyCode', fallback: 'EUR'),
+      cancellationFeeAmount: _readDouble(json, 'cancellationFeeAmount'),
       note: _readNullableString(json, 'note'),
     );
   }

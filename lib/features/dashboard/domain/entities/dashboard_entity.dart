@@ -312,6 +312,7 @@ class DashboardCancellationEntity {
     required this.refundPercent,
     required this.refundAmount,
     required this.currencyCode,
+    this.cancellationFeeAmount = 0,
     this.note,
     this.createdAt,
   });
@@ -321,12 +322,20 @@ class DashboardCancellationEntity {
   final double refundPercent;
   final double refundAmount;
   final String currencyCode;
+
+  /// Flat fee withheld from the fare ("annuleringskosten"), 0 when none applied.
+  final double cancellationFeeAmount;
   final String? note;
   final DateTime? createdAt;
 
-  String get refundLabel =>
-      '${refundAmount.toStringAsFixed(2)} $currencyCode '
-      '(${refundPercent.toStringAsFixed(0)}%)';
+  /// When a fee was charged the percent is always 100 and would read as a
+  /// contradiction next to the smaller amount, so the deduction is shown instead —
+  /// this is the line an admin quotes back to a caller asking "where is my money".
+  String get refundLabel => cancellationFeeAmount > 0
+      ? '${refundAmount.toStringAsFixed(2)} $currencyCode '
+            '(-${cancellationFeeAmount.toStringAsFixed(2)} $currencyCode)'
+      : '${refundAmount.toStringAsFixed(2)} $currencyCode '
+            '(${refundPercent.toStringAsFixed(0)}%)';
 }
 
 class DashboardTripStopEntity {

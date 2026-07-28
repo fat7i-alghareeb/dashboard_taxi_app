@@ -1,6 +1,8 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/control_center/presentation/ui/screens/control_center_screen.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart';
+// TRACKING DISABLED: still referenced by the commented-out live-map quick link.
+// ignore: unused_import
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/widgets/dashboard_header_quick_link_widget.dart';
@@ -93,6 +95,10 @@ class DashboardHeaderSection extends StatelessWidget {
                 onTap: () => context.push(DashboardTripsScreen.pagePath),
               ),
             ),
+            // TRACKING DISABLED: with driver positions no longer being reported the
+            // live fleet map can only ever render an empty map, so its entry point is
+            // hidden. The route itself is still registered — uncomment to restore.
+            /*
             AppSpacing.sm.horizontalSpace,
             Expanded(
               child: DashboardHeaderQuickLinkWidget(
@@ -101,6 +107,7 @@ class DashboardHeaderSection extends StatelessWidget {
                 onTap: () => context.push(DashboardLiveMapScreen.pagePath),
               ),
             ),
+            */
             AppSpacing.sm.horizontalSpace,
             Expanded(
               child: DashboardHeaderQuickLinkWidget(

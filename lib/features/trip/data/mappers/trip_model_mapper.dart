@@ -56,6 +56,7 @@ extension TripCancellationModelMapper on TripCancellationModel {
     refundPercent: refundPercent,
     refundAmount: refundAmount,
     currencyCode: currencyCode,
+    cancellationFeeAmount: cancellationFeeAmount,
     note: note,
   );
 }
