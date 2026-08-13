@@ -6,6 +6,7 @@ import '../../utils/helpers/colored_print.dart';
 import '../../utils/helpers/jwt_token_utils.dart';
 import '../network/api_config.dart';
 import '../network/api_endpoints.dart';
+import '../network/certificate_pinning.dart';
 import '../network/interceptors/custom_dio_interceptor.dart';
 import '../network/interceptors/error_interceptor.dart';
 import '../network/interceptors/localization_interceptor.dart';
@@ -96,11 +97,13 @@ Dio _initDio({
     headers: <String, Object?>{
       'Content-Type': 'application/json; charset=utf-8',
       'Accept': 'application/json',
-      'ngrok-skip-browser-warning': '69420',
     },
   );
 
   final dio = Dio(options);
+
+  //! 0) TLS pinning – must be applied before any request is issued.
+  CertificatePinning.apply(dio);
 
   //! 1) Memory guard – always first
   dio.interceptors.add(memoryAwareInterceptor);
@@ -152,8 +155,11 @@ void _configureJwtFlow({
 }) {
   // Lightweight Dio instance dedicated to the refresh token call to avoid
   // recursion and noisy logs.
+  // Pinning applies here too — the refresh call carries the refresh token, so
+  // leaving this adapter unpinned would defeat the pin on the main client.
   final tokenDio = Dio(dio.options)
     ..interceptors.addAll(<Interceptor>[if (kDebugMode) logInterceptor]);
+  CertificatePinning.apply(tokenDio);
 
   // Attach RefreshTokenInterceptor from dio_refresh_bot.
   dio.interceptors.add(

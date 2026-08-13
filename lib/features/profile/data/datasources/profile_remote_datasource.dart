@@ -12,6 +12,13 @@ class ProfileRemoteDataSource {
 
   final Dio _dio;
 
+  Future<void> deleteAccount() {
+    return rethrowAsAppException(() async {
+      printY('[ProfileRemoteDataSource] deleteAccount');
+      await _dio.delete<dynamic>(ApiEndpoints.deleteAccount);
+    });
+  }
+
   Future<ProfileModel> getAdminProfile() {
     return rethrowAsAppException(() async {
       printY('[ProfileRemoteDataSource] GET admin profile');

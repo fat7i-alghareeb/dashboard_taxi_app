@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../core/injection/injectable.dart';
+import '../../../../core/services/session/auth_manager.dart';
 import '../../../../core/utils/bloc_status.dart';
 import '../../../../core/utils/result.dart';
 import '../../../../utils/helpers/colored_print.dart';
@@ -40,6 +42,8 @@ final class ProfileDriverUpdateRequested extends ProfileEvent {
 
 final class ProfileUpdateAcknowledged extends ProfileEvent {}
 
+final class ProfileDeleteAccountRequested extends ProfileEvent {}
+
 // ---------------------------------------------------------------------------
 // State
 // ---------------------------------------------------------------------------
@@ -48,21 +52,25 @@ class ProfileState {
   const ProfileState({
     this.loadStatus = const BlocStatus.initial(),
     this.updateStatus = const BlocStatus.initial(),
+    this.deleteAccountStatus = const BlocStatus.initial(),
     this.profile,
   });
 
   final BlocStatus<ProfileEntity> loadStatus;
   final BlocStatus<void> updateStatus;
+  final BlocStatus<void> deleteAccountStatus;
   final ProfileEntity? profile;
 
   ProfileState copyWith({
     BlocStatus<ProfileEntity>? loadStatus,
     BlocStatus<void>? updateStatus,
+    BlocStatus<void>? deleteAccountStatus,
     ProfileEntity? profile,
   }) {
     return ProfileState(
       loadStatus: loadStatus ?? this.loadStatus,
       updateStatus: updateStatus ?? this.updateStatus,
+      deleteAccountStatus: deleteAccountStatus ?? this.deleteAccountStatus,
       profile: profile ?? this.profile,
     );
   }
@@ -79,6 +87,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ProfileAdminUpdateRequested>(_onAdminUpdateRequested);
     on<ProfileDriverUpdateRequested>(_onDriverUpdateRequested);
     on<ProfileUpdateAcknowledged>(_onUpdateAcknowledged);
+    on<ProfileDeleteAccountRequested>(_onDeleteAccountRequested);
   }
 
   final ProfileFacade _facade;
@@ -176,5 +185,35 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     Emitter<ProfileState> emit,
   ) {
     emit(state.copyWith(updateStatus: const BlocStatus.initial()));
+  }
+
+  Future<void> _onDeleteAccountRequested(
+    ProfileDeleteAccountRequested event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emit(state.copyWith(deleteAccountStatus: const BlocStatus.loading()));
+
+    final result = await _facade.deleteAccount();
+
+    await result.when(
+      success: (_) async {
+        printG('[ProfileBloc] deleteAccount success');
+        emit(
+          state.copyWith(
+            deleteAccountStatus: const BlocStatus<void>.success(null),
+          ),
+        );
+        // Drop session so the router guard routes back to login.
+        await getIt<AuthManager>().logout();
+      },
+      failure: (message) async {
+        printY('[ProfileBloc] deleteAccount failed: $message');
+        emit(
+          state.copyWith(
+            deleteAccountStatus: BlocStatus<void>.failure(message),
+          ),
+        );
+      },
+    );
   }
 }

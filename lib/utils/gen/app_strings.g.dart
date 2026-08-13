@@ -623,6 +623,8 @@ class AppStrings {
   static String get drawerPayments => 'drawerPayments'.tr();
   /// Planning - التخطيط - Planning - Planung - Planowanie - Планування - Planning - Planificación - Planificare
   static String get drawerPlanning => 'drawerPlanning'.tr();
+  /// Privacy Policy - سياسة الخصوصية - Privacybeleid - Datenschutzerklärung - Polityka prywatności - Політика конфіденційності - Politique de confidentialité - Política de privacidad - Politica de confidențialitate
+  static String get drawerPrivacyPolicy => 'drawerPrivacyPolicy'.tr();
   /// Promotions - العروض - Promoties - Aktionen - Promocje - Акції - Promotions - Promociones - Promoții
   static String get drawerPromotions => 'drawerPromotions'.tr();
   /// Admin - المسؤول - Beheer - Admin - Administrator - Адміністратор - Admin - Administración - Administrator
@@ -631,6 +633,8 @@ class AppStrings {
   static String get drawerSectionSettings => 'drawerSectionSettings'.tr();
   /// Send Notification - إرسال إشعار - Melding verzenden - Benachrichtigung senden - Wyślij powiadomienie - Надіслати сповіщення - Envoyer une notification - Enviar notificación - Trimite notificare
   static String get drawerSendNotification => 'drawerSendNotification'.tr();
+  /// Terms and Conditions - الشروط والأحكام - Algemene Voorwaarden - Allgemeine Geschäftsbedingungen - Regulamin - Умови та положення - Conditions générales - Términos y Condiciones - Termeni și condiții
+  static String get drawerTermsAndConditions => 'drawerTermsAndConditions'.tr();
   /// Total Trips - إجمالي الرحلات - Totaal aantal ritten - Gesamte Fahrten - Suma przejazdów - Всього поїздок - Total des trajets - Total de viajes - Total curse
   static String get drawerTotalTrips => 'drawerTotalTrips'.tr();
   /// Trips - الرحلات - Ritten - Fahrten - Przejazdy - Поїздки - Trajets - Viajes - Curse
@@ -957,6 +961,20 @@ class AppStrings {
   static String get permissionGateTryAgain => 'permissionGateTryAgain'.tr();
   /// Phone Number - رقم الهاتف - Telefoonnummer - Telefonnummer - Numer telefonu - Номер телефону - Numéro de téléphone - Número de teléfono - Număr de telefon
   static String get phoneNumber => 'phoneNumber'.tr();
+  /// Privacy Policy - سياسة الخصوصية - Privacybeleid - Datenschutzerklärung - Polityka Prywatności - Політика конфіденційності - Politique de confidentialité - Política de Privacidad - Politica de confidențialitate
+  static String get privacyPolicyTitle => 'privacyPolicyTitle'.tr();
+  /// Delete account - حذف الحساب - Account verwijderen - Konto löschen - Usuń konto - Видалити обліковий запис - Supprimer le compte - Eliminar cuenta - Ștergere cont
+  static String get profileDeleteAccount => 'profileDeleteAccount'.tr();
+  /// Delete - حذف - Verwijderen - Löschen - Usuń - Видалити - Supprimer - Eliminar - Șterge
+  static String get profileDeleteAccountConfirm => 'profileDeleteAccountConfirm'.tr();
+  /// Are you sure you want to delete your account? This action cannot be undone. - هل أنت متأكد أنك تريد حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء. - Weet u zeker dat u uw account wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt. - Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden. - Czy na pewno chcesz usunąć swoje konto? Tej operacji nie można cofnąć. - Ви впевнені, що хочете видалити свій обліковий запис? Цю дію не можна скасувати. - Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible. - ¿Está seguro de que desea eliminar su cuenta? Esta acción no se puede deshacer. - Ești sigur că vrei să-ți ștergi contul? Această acțiune nu poate fi anulată.
+  static String get profileDeleteAccountDialogMessage => 'profileDeleteAccountDialogMessage'.tr();
+  /// Delete account - حذف الحساب - Account verwijderen - Konto löschen - Usuń konto - Видалити обліковий запис - Supprimer le compte - Eliminar cuenta - Ștergere cont
+  static String get profileDeleteAccountDialogTitle => 'profileDeleteAccountDialogTitle'.tr();
+  /// Failed to delete account. Please try again. - فشل حذف الحساب. يرجى المحاولة مرة أخرى. - Verwijderen van het account is mislukt. Probeer het opnieuw. - Kontolöschung fehlgeschlagen. Bitte versuchen Sie es erneut. - Usunięcie konta nie powiodło się. Spróbuj ponownie. - Не вдалося видалити обліковий запис. Спробуйте ще раз. - Échec de la suppression du compte. Veuillez réessayer. - No se pudo eliminar la cuenta. Inténtelo de nuevo. - Ștergerea contului a eșuat. Încearcă din nou.
+  static String get profileDeleteAccountFailure => 'profileDeleteAccountFailure'.tr();
+  /// Your account has been deleted. - تم حذف حسابك. - Uw account is verwijderd. - Ihr Konto wurde gelöscht. - Twoje konto zostało usunięte. - Ваш обліковий запис видалено. - Votre compte a été supprimé. - Su cuenta ha sido eliminada. - Contul tău a fost șters.
+  static String get profileDeleteAccountSuccess => 'profileDeleteAccountSuccess'.tr();
   /// Edit Profile - تعديل الملف الشخصي - Profiel bewerken - Profil bearbeiten - Edytuj profil - Редагувати профіль - Modifier le profil - Editar perfil - Editează profilul
   static String get profileEditTitle => 'profileEditTitle'.tr();
   /// Approval Status - حالة الموافقة - Goedkeuringsstatus - Genehmigungsstatus - Status zatwierdzenia - Статус схвалення - Statut d'approbation - Estado de aprobación - Stare aprobare
@@ -1383,6 +1401,8 @@ class AppStrings {
   static String get tabHome => 'tabHome'.tr();
   /// Tap to upload - انقر للتحميل - Tap to upload - Tap to upload - Tap to upload - Tap to upload - Tap to upload - Tap to upload - Tap to upload
   static String get tapToUpload => 'tapToUpload'.tr();
+  /// Terms and Conditions - الشروط والأحكام العامة - Algemene Voorwaarden - Allgemeine Geschäftsbedingungen - Regulamin - Загальні умови - Conditions générales - Términos y Condiciones Generales - Termeni și condiții
+  static String get termsTitle => 'termsTitle'.tr();
   /// Theme - المظهر - Thema - Design - Motyw - Тема - Thème - Tema - Temă
   static String get theme => 'theme'.tr();
   /// Thu - خمي - Do - Do - Czw - Чт - Jeu - Jue - Joi

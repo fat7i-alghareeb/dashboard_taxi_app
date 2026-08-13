@@ -63,10 +63,12 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       await appMediaPickerService.initialize();
 
       // Select the active flavor (stage / production) based on the
-      // compile-time value provided by the native layer.
+      // compile-time value provided by the native layer. Defaults to
+      // production so a build made without --flavor never ships the stage
+      // dev-tools overlay.
       F.appFlavor = Flavor.values.firstWhere(
         (element) => element.name == appFlavor,
-        orElse: () => Flavor.stage,
+        orElse: () => Flavor.production,
       );
 
       await Firebase.initializeApp(

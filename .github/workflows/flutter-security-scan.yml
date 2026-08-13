@@ -1,0 +1,54 @@
+name: Flutter security scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze + dependency check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+
+      - name: Static analysis
+        run: flutter analyze
+
+      - name: Outdated / vulnerable dependencies (non-blocking)
+        continue-on-error: true
+        run: flutter pub outdated
+
+      - name: Guard — iOS App Transport Security must stay enabled
+        # NSAllowsArbitraryLoads disables TLS enforcement app-wide. It was set once;
+        # this makes a reintroduction fail the build rather than ship.
+        run: |
+          if grep -q "NSAllowsArbitraryLoads" ios/Runner/Info.plist; then
+            echo "::error file=ios/Runner/Info.plist::NSAllowsArbitraryLoads is set — App Transport Security must not be disabled."
+            exit 1
+          fi
+
+      - name: Guard — no cleartext HTTP base URL
+        run: |
+          if grep -rnE "const url = 'http://" lib/core/network/api_config.dart; then
+            echo "::error::Cleartext HTTP base URL is active."
+            exit 1
+          fi
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

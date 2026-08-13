@@ -93,7 +93,9 @@ class CustomDioInterceptor extends Interceptor {
         if ((trimmed.startsWith('{') && trimmed.endsWith('}')) ||
             (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
           final decoded = json.decode(trimmed);
-          return _jsonEncoder.convert(decoded);
+          // Redact here too: response bodies arrive as raw JSON strings, and this is
+          // the branch that carries the access/refresh token pair.
+          return _jsonEncoder.convert(_redactValue(decoded));
         }
         return data;
       }

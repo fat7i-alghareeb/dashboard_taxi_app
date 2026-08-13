@@ -13,6 +13,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
   final ProfileRemoteDataSource _remote;
 
   @override
+  Future<Result<void>> deleteAccount() {
+    return runAsResult(() => _remote.deleteAccount());
+  }
+
+  @override
   Future<Result<ProfileEntity>> getAdminProfile() {
     return runAsResult(() async {
       final model = await _remote.getAdminProfile();

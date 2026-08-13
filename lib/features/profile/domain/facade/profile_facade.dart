@@ -10,6 +10,8 @@ class ProfileFacade {
 
   final ProfileRepository _repository;
 
+  Future<Result<void>> deleteAccount() => _repository.deleteAccount();
+
   Future<Result<ProfileEntity>> getAdminProfile() =>
       _repository.getAdminProfile();
 

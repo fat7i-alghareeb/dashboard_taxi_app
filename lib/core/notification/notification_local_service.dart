@@ -173,7 +173,7 @@ class NotificationLocalService {
       notificationDetails: details,
       payload: payload.toJsonString(),
       matchDateTimeComponents: matchDateTimeComponents,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
   }
 

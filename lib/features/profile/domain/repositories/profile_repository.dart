@@ -2,6 +2,8 @@ import '../../../../core/utils/result.dart';
 import '../entities/profile_entity.dart';
 
 abstract class ProfileRepository {
+  Future<Result<void>> deleteAccount();
+
   Future<Result<ProfileEntity>> getAdminProfile();
   Future<Result<ProfileEntity>> updateAdminProfile({
     required String name,

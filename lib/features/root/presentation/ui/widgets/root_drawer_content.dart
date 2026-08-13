@@ -18,6 +18,8 @@ import 'package:dashboardtaxi/features/recordings/presentation/ui/screens/record
 import 'package:dashboardtaxi/features/refunds/presentation/ui/screens/refunds_screen.dart';
 import 'package:dashboardtaxi/features/support_contact/presentation/ui/screens/support_contact_screen.dart';
 import 'package:dashboardtaxi/features/notifications/presentation/ui/screens/send_notification_screen.dart';
+import 'package:dashboardtaxi/features/root/presentation/ui/screens/privacy_policy_screen.dart';
+import 'package:dashboardtaxi/features/root/presentation/ui/screens/terms_and_conditions_screen.dart';
 // import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_live_map_screen.dart';
 // import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_screen.dart';
 // import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
@@ -54,6 +56,22 @@ class RootDrawerContent extends StatelessWidget {
                     ),
                     _buildLanguageSelector(context),
                     _buildThemeSelector(context),
+                    DrawerMenuItem(
+                      icon: FontAwesomeIcons.shieldHalved,
+                      label: AppStrings.drawerPrivacyPolicy,
+                      onTap: () {
+                        Navigator.maybePop(context);
+                        context.pushNamed(PrivacyPolicyScreen.pageName);
+                      },
+                    ),
+                    DrawerMenuItem(
+                      icon: FontAwesomeIcons.fileContract,
+                      label: AppStrings.drawerTermsAndConditions,
+                      onTap: () {
+                        Navigator.maybePop(context);
+                        context.pushNamed(TermsAndConditionsScreen.pageName);
+                      },
+                    ),
                   ],
                 );
               },

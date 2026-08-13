@@ -1,5 +1,6 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
+import 'package:dashboardtaxi/core/network/media_headers.dart';
 import 'package:dashboardtaxi/core/services/media/media_picker_service.dart';
 import 'package:dashboardtaxi/features/kyc/presentation/states/kyc_bloc.dart';
 import 'package:dashboardtaxi/features/kyc/presentation/ui/widgets/kyc_image_source_sheet.dart';
@@ -68,6 +69,10 @@ class _KycUploadSlotWidgetState extends State<KycUploadSlotWidget> {
                     borderRadius: BorderRadius.circular(AppRadii.lg.r),
                     child: AppImageViewer.network(
                       widget.fileUrl!,
+                      // KYC documents are the one authorized upload area, so this
+                      // request must carry the bearer token — CachedNetworkImage
+                      // does not go through the Dio client.
+                      headers: mediaAuthHeaders(),
                       height: 120.h,
                     ),
                   )

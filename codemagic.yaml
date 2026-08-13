@@ -6,6 +6,10 @@ workflows:
 
     environment:
       flutter: 3.44.1
+
+      android_signing:
+        - dashboardtaxi_release
+
       groups:
         - production
       vars:
@@ -47,6 +51,41 @@ workflows:
 
           # Run build_runner
           dart run build_runner build --delete-conflicting-outputs
+
+      - name: Set up signing key properties
+        script: |
+          set -e
+
+          echo "--- Code Signing Environment Validation ---"
+
+          if [ -z "$CM_KEYSTORE_PATH" ]; then
+            echo "ERROR: CM_KEYSTORE_PATH is empty. Make sure Android keystore is configured in Codemagic."
+            exit 1
+          fi
+
+          if [ -z "$CM_KEYSTORE_PASSWORD" ]; then
+            echo "ERROR: CM_KEYSTORE_PASSWORD is empty."
+            exit 1
+          fi
+
+          if [ -z "$CM_KEY_ALIAS" ]; then
+            echo "ERROR: CM_KEY_ALIAS is empty."
+            exit 1
+          fi
+
+          if [ -z "$CM_KEY_PASSWORD" ]; then
+            echo "ERROR: CM_KEY_PASSWORD is empty."
+            exit 1
+          fi
+
+          echo "Key parameters are present."
+
+          echo "storePassword=$CM_KEYSTORE_PASSWORD" > android/key.properties
+          echo "keyPassword=$CM_KEY_PASSWORD" >> android/key.properties
+          echo "keyAlias=$CM_KEY_ALIAS" >> android/key.properties
+          echo "storeFile=$CM_KEYSTORE_PATH" >> android/key.properties
+
+          echo "Generated android/key.properties for CI build."
 
       - name: Build APK (Production)
         # flutter build apk --release --obfuscate --split-debug-info=build/debug-info

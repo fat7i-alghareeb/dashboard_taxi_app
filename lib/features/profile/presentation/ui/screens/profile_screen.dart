@@ -2,6 +2,7 @@ import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/features/profile/domain/entities/profile_entity.dart';
 import 'package:dashboardtaxi/features/profile/presentation/states/profile_bloc.dart';
+import 'package:dashboardtaxi/features/profile/presentation/ui/widgets/profile_delete_account_button.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key, required this.isAdmin});
@@ -253,6 +254,8 @@ class _ProfileFormState extends State<_ProfileForm> {
                   );
                 },
               ),
+              AppSpacing.xl.verticalSpace,
+              const ProfileDeleteAccountButton(),
             ],
           ),
         ),
