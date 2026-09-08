@@ -62,6 +62,7 @@ class ApiEndpoints {
   static const String clientConfig = '/api/v1/app-config/client';
   static const String companyContact = '/api/v1/app-config/company-contact';
   static const String supportContact = '/api/v1/app-config/support-contact';
+  static const String appVersionConfig = '/api/v1/app-config/app-version';
 
   static String driverDocuments(String driverId) =>
       '/api/v1/drivers/$driverId/documents';

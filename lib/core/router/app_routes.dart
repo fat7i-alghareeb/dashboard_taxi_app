@@ -119,6 +119,14 @@ class AppRouteRegistry {
       ),
     ),
     GoRoute(
+      path: AppVersionConfigScreen.pagePath,
+      name: AppVersionConfigScreen.pageName,
+      pageBuilder: (context, state) => AppPageTransitions.build(
+        state: state,
+        child: const AppVersionConfigScreen(),
+      ),
+    ),
+    GoRoute(
       path: CreateAdminScreen.pagePath,
       name: CreateAdminScreen.pageName,
       pageBuilder: (context, state) => AppPageTransitions.build(

@@ -16,6 +16,7 @@ import 'package:dashboardtaxi/features/control_center/presentation/ui/screens/co
 import 'package:dashboardtaxi/features/dashboard/presentation/ui/screens/dashboard_trips_screen.dart';
 import 'package:dashboardtaxi/features/recordings/presentation/ui/screens/recordings_list_screen.dart';
 import 'package:dashboardtaxi/features/refunds/presentation/ui/screens/refunds_screen.dart';
+import 'package:dashboardtaxi/features/app_version_config/presentation/ui/screens/app_version_config_screen.dart';
 import 'package:dashboardtaxi/features/support_contact/presentation/ui/screens/support_contact_screen.dart';
 import 'package:dashboardtaxi/features/notifications/presentation/ui/screens/send_notification_screen.dart';
 import 'package:dashboardtaxi/features/root/presentation/ui/screens/privacy_policy_screen.dart';
@@ -152,6 +153,14 @@ class RootDrawerContent extends StatelessWidget {
         onTap: () {
           Navigator.maybePop(context);
           context.pushNamed(SupportContactScreen.pageName);
+        },
+      ),
+      DrawerMenuItem(
+        icon: FontAwesomeIcons.cloudArrowDown,
+        label: AppStrings.appVersionConfigTitle,
+        onTap: () {
+          Navigator.maybePop(context);
+          context.pushNamed(AppVersionConfigScreen.pageName);
         },
       ),
       DrawerMenuItem(

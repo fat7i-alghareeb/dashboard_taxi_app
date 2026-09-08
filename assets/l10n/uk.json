@@ -801,5 +801,22 @@
   "dashboardNoteLabel": "Примітка",
   "cancellationActorPassenger": "Пасажир",
   "cancellationActorDriver": "Водій",
-  "cancellationActorAdmin": "Адміністратор"
+  "cancellationActorAdmin": "Адміністратор",
+  "appVersionConfigTitle": "Контроль версії застосунку",
+  "appVersionConfigSubtitle": "Правила оновлення застосунку пасажира",
+  "appVersionConfigDescription": "Визначте, які версії застосунку пасажира дозволені. Пасажирів із версією, нижчою за мінімальну, буде заблоковано до оновлення; ті, хто нижче найновішої версії, побачать необов'язкове повідомлення. Залиште поле порожнім, щоб не перевіряти цю платформу.",
+  "appVersionConfigEnabledTitle": "Перевірку версії увімкнено",
+  "appVersionConfigEnabledSubtitle": "Вимкніть, щоб прибрати всі повідомлення про оновлення в застосунку пасажира.",
+  "appVersionConfigAndroidTitle": "Android",
+  "appVersionConfigAndroidSubtitle": "Правила Google Play",
+  "appVersionConfigIosTitle": "iOS",
+  "appVersionConfigIosSubtitle": "Правила App Store",
+  "appVersionConfigFieldLatestVersion": "Найновіша версія",
+  "appVersionConfigFieldMinimumVersion": "Мінімальна необхідна версія",
+  "appVersionConfigFieldStoreUrl": "URL магазину",
+  "appVersionConfigSaveButton": "Зберегти зміни",
+  "appVersionConfigSavedSuccess": "Налаштування версії збережено",
+  "appVersionConfigLoadFailed": "Не вдалося завантажити налаштування версії застосунку.",
+  "appVersionConfigVersionInvalid": "Використайте числову версію, як-от 1.2.3",
+  "appVersionConfigStoreUrlInvalid": "Введіть повне https:// посилання на магазин"
 }

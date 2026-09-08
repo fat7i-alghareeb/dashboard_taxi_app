@@ -231,36 +231,9 @@ class _ActiveToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactiveFormConsumer(
-      builder: (context, form, child) {
-        final control = form.control(formControlName) as FormControl<bool>;
-        return Container(
-          padding: REdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
-          ),
-          decoration: BoxDecoration(
-            color: context.surface,
-            borderRadius: BorderRadius.circular(AppRadii.md.r),
-            border: Border.all(color: context.onSurface.withValues(alpha: 0.08)),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  AppStrings.settingsVehicleTypeActive,
-                  style: AppTextStyles.s14w500.copyWith(color: context.onSurface),
-                ),
-              ),
-              Switch.adaptive(
-                value: control.value ?? true,
-                activeThumbColor: context.primary,
-                onChanged: (v) => control.value = v,
-              ),
-            ],
-          ),
-        );
-      },
+    return AppReactiveSwitchTile(
+      formControlName: formControlName,
+      title: AppStrings.settingsVehicleTypeActive,
     );
   }
 }

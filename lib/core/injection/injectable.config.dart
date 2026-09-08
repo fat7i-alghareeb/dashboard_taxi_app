@@ -75,6 +75,16 @@ import 'package:dashboardtaxi/features/admin_management/domain/facade/admin_mana
     as _i625;
 import 'package:dashboardtaxi/features/admin_management/domain/repositories/admin_management_repository.dart'
     as _i392;
+import 'package:dashboardtaxi/features/app_version_config/data/datasources/app_version_config_remote_datasource.dart'
+    as _i895;
+import 'package:dashboardtaxi/features/app_version_config/data/repositories/app_version_config_repository_impl.dart'
+    as _i645;
+import 'package:dashboardtaxi/features/app_version_config/domain/facade/app_version_config_facade.dart'
+    as _i434;
+import 'package:dashboardtaxi/features/app_version_config/domain/repositories/app_version_config_repository.dart'
+    as _i878;
+import 'package:dashboardtaxi/features/app_version_config/presentation/states/app_version_config_bloc.dart'
+    as _i191;
 import 'package:dashboardtaxi/features/auth/data/datasources/auth_firebase_datasource.dart'
     as _i538;
 import 'package:dashboardtaxi/features/auth/data/datasources/auth_remote_datasource.dart'
@@ -361,6 +371,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i193.AdminManagementRemoteDataSource>(
       () => _i193.AdminManagementRemoteDataSource(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i895.AppVersionConfigRemoteDataSource>(
+      () => _i895.AppVersionConfigRemoteDataSource(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i1012.AuthRemoteDataSource>(
       () => _i1012.AuthRemoteDataSource(gh<_i361.Dio>()),
     );
@@ -496,8 +509,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i356.ProfileBloc>(
       () => _i356.ProfileBloc(gh<_i512.ProfileFacade>()),
     );
+    gh.lazySingleton<_i878.AppVersionConfigRepository>(
+      () => _i645.AppVersionConfigRepositoryImpl(
+        gh<_i895.AppVersionConfigRemoteDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i471.AuthFacade>(
       () => _i471.AuthFacade(gh<_i706.AuthRepository>()),
+    );
+    gh.lazySingleton<_i434.AppVersionConfigFacade>(
+      () =>
+          _i434.AppVersionConfigFacade(gh<_i878.AppVersionConfigRepository>()),
     );
     gh.lazySingleton<_i397.RootFacade>(
       () => _i397.RootFacade(gh<_i825.RootRepository>()),
@@ -507,6 +529,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i724.KycFacade>(
       () => _i724.KycFacade(gh<_i986.KycRepository>()),
+    );
+    gh.factory<_i191.AppVersionConfigBloc>(
+      () => _i191.AppVersionConfigBloc(gh<_i434.AppVersionConfigFacade>()),
     );
     gh.factory<_i907.CustomerIncidentsCubit>(
       () => _i907.CustomerIncidentsCubit(

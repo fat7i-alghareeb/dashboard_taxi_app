@@ -2,7 +2,6 @@ import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/common/widgets/show_overlay.dart';
 import 'package:dashboardtaxi/features/control_center/presentation/ui/widgets/control_center_inline_field.dart';
 import 'package:dashboardtaxi/features/control_center/presentation/ui/widgets/control_center_section_error.dart';
-import 'package:dashboardtaxi/features/control_center/presentation/ui/widgets/control_center_section_shell.dart';
 import 'package:dashboardtaxi/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart';
 
@@ -16,7 +15,7 @@ class ControlCenterPricingSection extends StatelessWidget {
           prev.adminConfigState != curr.adminConfigState ||
           prev.configActionState != curr.configActionState,
       builder: (context, state) {
-        return ControlCenterSectionShell(
+        return AppSectionShell(
           title: AppStrings.controlCenterPricingTitle,
           subtitle: AppStrings.controlCenterPricingSubtitle,
           icon: FontAwesomeIcons.creditCard,

@@ -801,5 +801,22 @@
   "dashboardNoteLabel": "ملاحظة",
   "cancellationActorPassenger": "الراكب",
   "cancellationActorDriver": "السائق",
-  "cancellationActorAdmin": "المسؤول"
+  "cancellationActorAdmin": "المسؤول",
+  "appVersionConfigTitle": "التحكم في إصدار التطبيق",
+  "appVersionConfigSubtitle": "قواعد تحديث تطبيق الركاب",
+  "appVersionConfigDescription": "تحكّم في إصدارات تطبيق الركاب المسموح بها. يُحظر على الركاب الأقدم من الحد الأدنى استخدام التطبيق حتى يحدّثوه، ويظهر للأقدم من أحدث إصدار تنبيه اختياري. اترك الحقل فارغًا لتعطيل الفحص لتلك المنصة.",
+  "appVersionConfigEnabledTitle": "فحص الإصدار مفعّل",
+  "appVersionConfigEnabledSubtitle": "أوقفه لتعطيل جميع تنبيهات التحديث في تطبيق الركاب.",
+  "appVersionConfigAndroidTitle": "أندرويد",
+  "appVersionConfigAndroidSubtitle": "قواعد Google Play",
+  "appVersionConfigIosTitle": "iOS",
+  "appVersionConfigIosSubtitle": "قواعد App Store",
+  "appVersionConfigFieldLatestVersion": "أحدث إصدار",
+  "appVersionConfigFieldMinimumVersion": "الحد الأدنى للإصدار",
+  "appVersionConfigFieldStoreUrl": "رابط المتجر",
+  "appVersionConfigSaveButton": "حفظ التغييرات",
+  "appVersionConfigSavedSuccess": "تم حفظ إعدادات إصدار التطبيق",
+  "appVersionConfigLoadFailed": "تعذّر تحميل إعدادات إصدار التطبيق.",
+  "appVersionConfigVersionInvalid": "استخدم إصدارًا رقميًا مثل 1.2.3",
+  "appVersionConfigStoreUrlInvalid": "أدخل رابط متجر كامل يبدأ بـ https://"
 }

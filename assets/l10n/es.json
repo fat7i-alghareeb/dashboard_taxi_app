@@ -801,5 +801,22 @@
   "dashboardNoteLabel": "Nota",
   "cancellationActorPassenger": "Pasajero",
   "cancellationActorDriver": "Conductor",
-  "cancellationActorAdmin": "Administrador"
+  "cancellationActorAdmin": "Administrador",
+  "appVersionConfigTitle": "Control de versiones",
+  "appVersionConfigSubtitle": "Reglas de actualización de la app",
+  "appVersionConfigDescription": "Controla qué versiones de la app de pasajeros están permitidas. Los pasajeros por debajo de la versión mínima quedan bloqueados hasta actualizar; los que están por debajo de la última versión ven un aviso opcional. Deja un campo vacío para no comprobar esa plataforma.",
+  "appVersionConfigEnabledTitle": "Comprobación de versión activada",
+  "appVersionConfigEnabledSubtitle": "Desactívalo para quitar todos los avisos de actualización en la app de pasajeros.",
+  "appVersionConfigAndroidTitle": "Android",
+  "appVersionConfigAndroidSubtitle": "Reglas de Google Play",
+  "appVersionConfigIosTitle": "iOS",
+  "appVersionConfigIosSubtitle": "Reglas de App Store",
+  "appVersionConfigFieldLatestVersion": "Última versión",
+  "appVersionConfigFieldMinimumVersion": "Versión mínima requerida",
+  "appVersionConfigFieldStoreUrl": "URL de la tienda",
+  "appVersionConfigSaveButton": "Guardar cambios",
+  "appVersionConfigSavedSuccess": "Ajustes de versión guardados",
+  "appVersionConfigLoadFailed": "No se pudieron cargar los ajustes de versión.",
+  "appVersionConfigVersionInvalid": "Usa una versión numérica como 1.2.3",
+  "appVersionConfigStoreUrlInvalid": "Introduce un enlace https:// completo"
 }

@@ -801,5 +801,22 @@
   "dashboardNoteLabel": "Notatka",
   "cancellationActorPassenger": "Pasażer",
   "cancellationActorDriver": "Kierowca",
-  "cancellationActorAdmin": "Administrator"
+  "cancellationActorAdmin": "Administrator",
+  "appVersionConfigTitle": "Kontrola wersji aplikacji",
+  "appVersionConfigSubtitle": "Zasady aktualizacji aplikacji pasażera",
+  "appVersionConfigDescription": "Określ, które wersje aplikacji pasażera są dozwolone. Pasażerowie poniżej wersji minimalnej są blokowani do czasu aktualizacji; poniżej najnowszej wersji widzą opcjonalny komunikat. Puste pole wyłącza sprawdzanie dla tej platformy.",
+  "appVersionConfigEnabledTitle": "Sprawdzanie wersji włączone",
+  "appVersionConfigEnabledSubtitle": "Wyłącz, aby usunąć wszystkie komunikaty o aktualizacji w aplikacji pasażera.",
+  "appVersionConfigAndroidTitle": "Android",
+  "appVersionConfigAndroidSubtitle": "Zasady Google Play",
+  "appVersionConfigIosTitle": "iOS",
+  "appVersionConfigIosSubtitle": "Zasady App Store",
+  "appVersionConfigFieldLatestVersion": "Najnowsza wersja",
+  "appVersionConfigFieldMinimumVersion": "Minimalna wymagana wersja",
+  "appVersionConfigFieldStoreUrl": "Adres URL sklepu",
+  "appVersionConfigSaveButton": "Zapisz zmiany",
+  "appVersionConfigSavedSuccess": "Zapisano ustawienia wersji aplikacji",
+  "appVersionConfigLoadFailed": "Nie można załadować ustawień wersji aplikacji.",
+  "appVersionConfigVersionInvalid": "Użyj wersji liczbowej, np. 1.2.3",
+  "appVersionConfigStoreUrlInvalid": "Wprowadź pełny link https:// do sklepu"
 }

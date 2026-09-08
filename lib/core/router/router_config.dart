@@ -12,6 +12,7 @@ import '../../features/auth/presentation/ui/screens/force_password_reset_screen.
 import '../../features/auth/presentation/ui/screens/login_screen.dart';
 import '../../features/chat/presentation/ui/screens/trip_chat_screen.dart';
 import '../../features/admin_management/presentation/ui/screens/create_admin_screen.dart';
+import '../../features/app_version_config/presentation/ui/screens/app_version_config_screen.dart';
 import '../../features/company_contact/presentation/ui/screens/company_contact_screen.dart';
 import '../../features/compensation/presentation/ui/screens/compensation_claims_screen.dart';
 import '../../features/customer_incidents/presentation/ui/screens/incidents_list_screen.dart';

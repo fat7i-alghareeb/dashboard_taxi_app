@@ -109,6 +109,18 @@ Padding(
 - **Responsibility**: Skeleton loading effect.
 - **Details**: A flexible `AppShimmer` widget that creates a moving linear gradient. It can be shaped as a circle or rectangle to mimic different UI components during loading.
 
+### `app_section_shell.dart`
+
+- **Path**: `lib/common/widgets/app_section_shell.dart`
+- **Responsibility**: Settings-section container.
+- **Details**: Exports `AppSectionShell` — icon badge + title/subtitle, an optional trailing action, a thin `isBusy` progress bar, then a bordered body card, with a fade/slide entrance. Promoted out of `features/control_center/` (was `ControlCenterSectionShell`) once `features/app_version_config/` became the second consumer.
+
+### `form/app_reactive_switch_tile.dart`
+
+- **Path**: `lib/common/widgets/form/app_reactive_switch_tile.dart`
+- **Responsibility**: Labelled boolean toggle for reactive forms.
+- **Details**: Exports `AppReactiveSwitchTile` — a bordered row pairing a title (and optional subtitle) with `Switch.adaptive`, bound to a `FormControl<bool>`. Promoted out of `control_center_vehicle_type_form_sheet.dart`, which now delegates to it.
+
 ### `empty_state_widget.dart`
 
 - **Path**: `lib/common/widgets/empty_state_widget.dart`

@@ -801,5 +801,22 @@
   "dashboardNoteLabel": "Notiz",
   "cancellationActorPassenger": "Fahrgast",
   "cancellationActorDriver": "Fahrer",
-  "cancellationActorAdmin": "Administrator"
+  "cancellationActorAdmin": "Administrator",
+  "appVersionConfigTitle": "App-Versionskontrolle",
+  "appVersionConfigSubtitle": "Update-Regeln der Fahrgast-App",
+  "appVersionConfigDescription": "Legen Sie fest, welche Versionen der Fahrgast-App zulässig sind. Fahrgäste unterhalb der Mindestversion werden bis zum Update blockiert; Fahrgäste unterhalb der neuesten Version sehen einen optionalen Hinweis. Lassen Sie ein Feld leer, um diese Plattform nicht zu prüfen.",
+  "appVersionConfigEnabledTitle": "Versionsprüfung aktiviert",
+  "appVersionConfigEnabledSubtitle": "Deaktivieren, um alle Update-Hinweise in der Fahrgast-App auszuschalten.",
+  "appVersionConfigAndroidTitle": "Android",
+  "appVersionConfigAndroidSubtitle": "Google-Play-Regeln",
+  "appVersionConfigIosTitle": "iOS",
+  "appVersionConfigIosSubtitle": "App-Store-Regeln",
+  "appVersionConfigFieldLatestVersion": "Neueste Version",
+  "appVersionConfigFieldMinimumVersion": "Mindestens erforderliche Version",
+  "appVersionConfigFieldStoreUrl": "Store-URL",
+  "appVersionConfigSaveButton": "Änderungen speichern",
+  "appVersionConfigSavedSuccess": "App-Versionseinstellungen gespeichert",
+  "appVersionConfigLoadFailed": "Die App-Versionseinstellungen konnten nicht geladen werden.",
+  "appVersionConfigVersionInvalid": "Numerische Version wie 1.2.3 verwenden",
+  "appVersionConfigStoreUrlInvalid": "Vollständigen https://-Store-Link eingeben"
 }

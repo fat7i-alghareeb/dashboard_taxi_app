@@ -1,10 +1,12 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 
-/// Section container for the Control Center, distinct from the legacy dashboard
-/// section shell: a gradient icon badge + title/subtitle, an optional trailing
-/// action, a thin in-section progress bar, then the body card.
-class ControlCenterSectionShell extends StatelessWidget {
-  const ControlCenterSectionShell({
+/// Shared settings-section container: an icon badge + title/subtitle, an optional
+/// trailing action, a thin in-section progress bar, then the bordered body card.
+///
+/// Promoted out of the control_center feature when app_version_config became the
+/// second consumer (project rules S20, Global Promotion Rule).
+class AppSectionShell extends StatelessWidget {
+  const AppSectionShell({
     super.key,
     required this.title,
     required this.subtitle,

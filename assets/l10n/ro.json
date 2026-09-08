@@ -801,5 +801,22 @@
   "dashboardNoteLabel": "Notă",
   "cancellationActorPassenger": "Pasager",
   "cancellationActorDriver": "Șofer",
-  "cancellationActorAdmin": "Administrator"
+  "cancellationActorAdmin": "Administrator",
+  "appVersionConfigTitle": "Controlul versiunii aplicației",
+  "appVersionConfigSubtitle": "Reguli de actualizare pentru pasageri",
+  "appVersionConfigDescription": "Stabiliți ce versiuni ale aplicației pentru pasageri sunt permise. Pasagerii sub versiunea minimă sunt blocați până la actualizare; cei sub cea mai recentă versiune văd o notificare opțională. Lăsați un câmp gol pentru a nu verifica acea platformă.",
+  "appVersionConfigEnabledTitle": "Verificarea versiunii activată",
+  "appVersionConfigEnabledSubtitle": "Dezactivați pentru a elimina toate notificările de actualizare din aplicația pentru pasageri.",
+  "appVersionConfigAndroidTitle": "Android",
+  "appVersionConfigAndroidSubtitle": "Reguli Google Play",
+  "appVersionConfigIosTitle": "iOS",
+  "appVersionConfigIosSubtitle": "Reguli App Store",
+  "appVersionConfigFieldLatestVersion": "Cea mai recentă versiune",
+  "appVersionConfigFieldMinimumVersion": "Versiunea minimă necesară",
+  "appVersionConfigFieldStoreUrl": "URL magazin",
+  "appVersionConfigSaveButton": "Salvați modificările",
+  "appVersionConfigSavedSuccess": "Setările de versiune au fost salvate",
+  "appVersionConfigLoadFailed": "Setările de versiune nu au putut fi încărcate.",
+  "appVersionConfigVersionInvalid": "Folosiți o versiune numerică, precum 1.2.3",
+  "appVersionConfigStoreUrlInvalid": "Introduceți un link https:// complet"
 }

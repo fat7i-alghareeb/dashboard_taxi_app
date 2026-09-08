@@ -1,6 +1,5 @@
 import 'package:dashboardtaxi/common/imports/imports.dart';
 import 'package:dashboardtaxi/features/control_center/presentation/ui/widgets/control_center_section_error.dart';
-import 'package:dashboardtaxi/features/control_center/presentation/ui/widgets/control_center_section_shell.dart';
 import 'package:dashboardtaxi/features/control_center/presentation/ui/widgets/control_center_vehicle_type_card.dart';
 import 'package:dashboardtaxi/features/control_center/presentation/ui/widgets/control_center_vehicle_type_form_sheet.dart';
 import 'package:dashboardtaxi/features/dashboard/presentation/states/dashboard_bloc.dart';
@@ -16,7 +15,7 @@ class ControlCenterFleetSection extends StatelessWidget {
           prev.vehicleTypeActionState != curr.vehicleTypeActionState,
       builder: (context, state) {
         final isBusy = state.vehicleTypeActionState.isLoading;
-        return ControlCenterSectionShell(
+        return AppSectionShell(
           title: AppStrings.controlCenterFleetTitle,
           subtitle: AppStrings.controlCenterFleetSubtitle,
           icon: FontAwesomeIcons.carSide,

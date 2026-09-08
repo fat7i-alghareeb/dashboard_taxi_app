@@ -801,5 +801,22 @@
   "dashboardNoteLabel": "Notitie",
   "cancellationActorPassenger": "Passagier",
   "cancellationActorDriver": "Chauffeur",
-  "cancellationActorAdmin": "Beheerder"
+  "cancellationActorAdmin": "Beheerder",
+  "appVersionConfigTitle": "Versiebeheer app",
+  "appVersionConfigSubtitle": "Updateregels passagiersapp",
+  "appVersionConfigDescription": "Bepaal welke versies van de passagiersapp zijn toegestaan. Passagiers onder de minimaal vereiste versie worden geblokkeerd tot ze updaten; passagiers onder de nieuwste versie zien een optionele melding. Laat een veld leeg om dat platform niet te controleren.",
+  "appVersionConfigEnabledTitle": "Versiecontrole ingeschakeld",
+  "appVersionConfigEnabledSubtitle": "Zet uit om alle updatemeldingen in de passagiersapp uit te schakelen.",
+  "appVersionConfigAndroidTitle": "Android",
+  "appVersionConfigAndroidSubtitle": "Google Play-regels",
+  "appVersionConfigIosTitle": "iOS",
+  "appVersionConfigIosSubtitle": "App Store-regels",
+  "appVersionConfigFieldLatestVersion": "Nieuwste versie",
+  "appVersionConfigFieldMinimumVersion": "Minimaal vereiste versie",
+  "appVersionConfigFieldStoreUrl": "Winkel-URL",
+  "appVersionConfigSaveButton": "Wijzigingen opslaan",
+  "appVersionConfigSavedSuccess": "App-versie-instellingen opgeslagen",
+  "appVersionConfigLoadFailed": "Kan de app-versie-instellingen niet laden.",
+  "appVersionConfigVersionInvalid": "Gebruik een numerieke versie zoals 1.2.3",
+  "appVersionConfigStoreUrlInvalid": "Voer een volledige https://-winkellink in"
 }

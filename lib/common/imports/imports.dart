@@ -48,6 +48,7 @@ export "../widgets/app_card_info_row.dart";
 export "../widgets/app_dialog.dart";
 export "../widgets/app_icon_source.dart";
 export "../widgets/app_image_viewer.dart";
+export "../widgets/app_section_shell.dart";
 export "../widgets/app_shimmer.dart";
 // widgets
 export "../widgets/button/app_button.dart";
@@ -60,6 +61,7 @@ export "../widgets/failed_state_widget.dart";
 export "../widgets/headers/app_screen_header.dart";
 export "../widgets/shimmer/app_list_shimmer.dart";
 export "../widgets/status_badge/app_status_badge.dart";
+export "../widgets/form/app_reactive_switch_tile.dart";
 export "../widgets/form/app_reactive_text_field.dart";
 export "../widgets/form/app_reactive_validation_messages.dart";
 export "../widgets/full_screen_image_screen.dart";

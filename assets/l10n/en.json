@@ -801,5 +801,22 @@
   "dashboardNoteLabel": "Note",
   "cancellationActorPassenger": "Passenger",
   "cancellationActorDriver": "Driver",
-  "cancellationActorAdmin": "Admin"
+  "cancellationActorAdmin": "Admin",
+  "appVersionConfigTitle": "App version control",
+  "appVersionConfigSubtitle": "Customer app update rules",
+  "appVersionConfigDescription": "Control which versions of the customer app are allowed. Passengers below the minimum required version are blocked until they update; passengers below the latest version see an optional prompt. Leave a field empty to leave that platform unchecked.",
+  "appVersionConfigEnabledTitle": "Version check enabled",
+  "appVersionConfigEnabledSubtitle": "Turn off to disable all update prompts in the customer app.",
+  "appVersionConfigAndroidTitle": "Android",
+  "appVersionConfigAndroidSubtitle": "Google Play rules",
+  "appVersionConfigIosTitle": "iOS",
+  "appVersionConfigIosSubtitle": "App Store rules",
+  "appVersionConfigFieldLatestVersion": "Latest version",
+  "appVersionConfigFieldMinimumVersion": "Minimum required version",
+  "appVersionConfigFieldStoreUrl": "Store URL",
+  "appVersionConfigSaveButton": "Save changes",
+  "appVersionConfigSavedSuccess": "App version settings saved",
+  "appVersionConfigLoadFailed": "Couldn't load the app version settings.",
+  "appVersionConfigVersionInvalid": "Use a numeric version like 1.2.3",
+  "appVersionConfigStoreUrlInvalid": "Enter a full https:// store link"
 }

@@ -801,5 +801,22 @@
   "dashboardNoteLabel": "Note",
   "cancellationActorPassenger": "Passager",
   "cancellationActorDriver": "Chauffeur",
-  "cancellationActorAdmin": "Administrateur"
+  "cancellationActorAdmin": "Administrateur",
+  "appVersionConfigTitle": "Contrôle des versions",
+  "appVersionConfigSubtitle": "Règles de mise à jour passagers",
+  "appVersionConfigDescription": "Choisissez les versions autorisées de l'application passagers. Les passagers sous la version minimale sont bloqués jusqu'à la mise à jour ; ceux sous la dernière version voient une invite facultative. Laissez un champ vide pour ne pas vérifier cette plateforme.",
+  "appVersionConfigEnabledTitle": "Vérification de version activée",
+  "appVersionConfigEnabledSubtitle": "Désactivez pour supprimer toutes les invites de mise à jour dans l'application passagers.",
+  "appVersionConfigAndroidTitle": "Android",
+  "appVersionConfigAndroidSubtitle": "Règles Google Play",
+  "appVersionConfigIosTitle": "iOS",
+  "appVersionConfigIosSubtitle": "Règles App Store",
+  "appVersionConfigFieldLatestVersion": "Dernière version",
+  "appVersionConfigFieldMinimumVersion": "Version minimale requise",
+  "appVersionConfigFieldStoreUrl": "URL du store",
+  "appVersionConfigSaveButton": "Enregistrer",
+  "appVersionConfigSavedSuccess": "Paramètres de version enregistrés",
+  "appVersionConfigLoadFailed": "Impossible de charger les paramètres de version.",
+  "appVersionConfigVersionInvalid": "Utilisez une version numérique comme 1.2.3",
+  "appVersionConfigStoreUrlInvalid": "Saisissez un lien https:// complet"
 }
