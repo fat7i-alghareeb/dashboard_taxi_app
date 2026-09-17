@@ -20,12 +20,16 @@
 </div>
 
 <div align="center">
+  <img src=".github/assets/stats.png" alt="Project highlights" width="100%">
+</div>
 
-**[Overview](#overview) · [Features](#features) · [Tech Stack](#tech-stack) · [Architecture](#architecture) · [Project Structure](#project-structure) · [Getting Started](#getting-started) · [Languages](#supported-languages) · [CI/CD](#cicd)**
+<div align="center">
+
+**[Overview](#overview) · [How It Works](#how-it-works) · [Engineering Highlights](#engineering-highlights) · [Features](#features) · [Tech Stack](#tech-stack) · [Architecture](#architecture) · [Project Structure](#project-structure) · [Getting Started](#getting-started) · [Languages](#supported-languages) · [CI/CD](#cicd)**
 
 </div>
 
----
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
 
 ## Overview
 
@@ -38,7 +42,28 @@ The app determines the active role after login and renders a role-aware shell �
 
 It talks to a **.NET backend** over a REST API for CRUD/business operations and **SignalR** for realtime events (trip lifecycle, live driver locations, refund status changes, chat).
 
----
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
+
+## How It Works
+
+<div align="center">
+  <img src=".github/assets/how-it-works.png" alt="Go online, dispatch and track, manage and complete" width="100%">
+</div>
+
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
+
+## Engineering Highlights
+
+What makes this codebase worth a closer look:
+
+- 🔀 **Single app, dual-role architecture** — one Flutter codebase renders a completely different UX for drivers vs. admins based on post-login role, including an admin-with-driver-profile hand-off that switches into driver mode mid-session without a restart.
+- 📡 **Real-time fleet operations over SignalR** — live driver-location streaming and instant dispatch/refund-status events, not polling.
+- 💾 **Offline-first local persistence (ObjectBox)** — an embedded local database backs the app, not just an HTTP cache, for resilience on unreliable connections.
+- 🔁 **Resilient auth** — a `dio` interceptor (`dio_refresh_bot`) transparently refreshes expired JWTs and replays in-flight requests, with TLS certificate pinning on top.
+- 🏗️ **CI-checked Clean Architecture** — every feature enforces the same `data` / `domain` / `presentation` layering, kept honest by tooling rather than convention alone.
+- 🌍 **Production-grade i18n** — 9 languages including right-to-left (Arabic) support, driven end-to-end from generated localization code.
+
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
 
 ## Features
 
@@ -86,7 +111,7 @@ It talks to a **.NET backend** over a REST API for CRUD/business operations and 
 </tr>
 </table>
 
----
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
 
 ## Tech Stack
 
@@ -106,7 +131,7 @@ It talks to a **.NET backend** over a REST API for CRUD/business operations and 
 | **Codegen** | `build_runner`, `freezed`, `injectable_generator`, `objectbox_generator`, `flutter_gen_runner` |
 | **Media** | `image_picker`, `audioplayers`, `cached_network_image` |
 
----
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
 
 ## Architecture
 
@@ -152,7 +177,30 @@ flowchart TD
 | **`data`** | Repository implementations, remote datasources (`dio`), and models/mappers that convert API payloads into domain entities. |
 | **`core`** | Cross-cutting concerns shared by every feature: DI setup (`injectable`/`get_it`), `go_router` route guards, the `dio` network client (with certificate pinning and token refresh), theming, and services such as location tracking, the SignalR realtime client, session/auth management, and local storage. |
 
----
+**Dispatch & trip completion**, end to end:
+
+```mermaid
+sequenceDiagram
+    participant Rider as customertaxi
+    participant API as Backend API
+    participant Hub as SignalR Hub
+    participant Dash as dashboardtaxi (Driver)
+    participant Admin as dashboardtaxi (Admin)
+
+    API->>Hub: Broadcast new trip request
+    Hub->>Dash: Incoming trip notification
+    Admin->>API: (optional) Manually assign trip
+    Dash->>API: Accept trip
+    API->>Hub: Driver assigned
+    Hub-->>Rider: Live driver location stream
+    Dash->>Hub: Location updates (to-pickup → in-progress)
+    Hub-->>Admin: Live fleet map updates
+    Dash->>API: Complete trip
+    API-->>Dash: Trip summary, earnings updated
+    API-->>Admin: Trip closed, KPIs refreshed
+```
+
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
 
 ## Project Structure
 
@@ -197,7 +245,7 @@ lib/
 
 </details>
 
----
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
 
 ## Getting Started
 
@@ -246,7 +294,7 @@ flutter run --flavor production -t lib/main.dart
 | Full codegen (DI, freezed, ObjectBox, assets) | `dart run build_runner build --delete-conflicting-outputs` |
 | Regenerate localized app strings | `dart run tool/generate_app_strings.dart` |
 
----
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
 
 ## Supported Languages
 
@@ -254,13 +302,13 @@ The app ships with 9 in-app locales:
 
 🇬🇧 English · 🇸🇦 Arabic · 🇩🇪 German · 🇪🇸 Spanish · 🇫🇷 French · 🇳🇱 Dutch · 🇵🇱 Polish · 🇷🇴 Romanian · 🇺🇦 Ukrainian
 
----
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
 
 ## CI/CD
 
 Android production builds (signed, obfuscated APK) are automated via **Codemagic** (`codemagic.yaml`).
 
----
+<div align="center"><img src=".github/assets/divider.png" alt="" width="100%" height="6"></div>
 
 ## Contributing
 
