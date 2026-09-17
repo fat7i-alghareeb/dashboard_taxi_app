@@ -9,13 +9,12 @@
 **A hybrid driver &amp; admin operations app for taxi/ride-hailing fleets, built with Flutter.**
 
 <p>
-  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.44-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter"></a>
-  <a href="https://dart.dev"><img src="https://img.shields.io/badge/Dart-3.10-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart"></a>
-  <a href="#getting-started"><img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Platform"></a>
+  <img src="https://skillicons.dev/icons?i=flutter,dart,firebase,androidstudio,git,github&theme=dark" alt="Tech stack">
 </p>
 <p>
-  <a href="#architecture"><img src="https://img.shields.io/badge/Architecture-Clean%20Architecture-d79c5c?style=for-the-badge" alt="Architecture"></a>
-  <a href="#license"><img src="https://img.shields.io/badge/License-Unlicensed-2D3142?style=for-the-badge" alt="License"></a>
+  <img src="https://img.shields.io/badge/Architecture-Clean%20Architecture-d79c5c?style=for-the-badge" alt="Architecture">
+  <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Platform">
+  <img src="https://img.shields.io/badge/License-Unlicensed-2D3142?style=for-the-badge" alt="License">
 </p>
 
 </div>
