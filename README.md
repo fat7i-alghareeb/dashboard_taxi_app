@@ -1,6 +1,6 @@
-# dashboardtaxi/Admin App
+# dashboardtaxi
 
-Flutter app for driver execution and admin operations in the Fat7i taxi platform.
+Flutter app for driver execution and admin operations in the dashboardtaxi platform.
 
 ## Admin Operations
 

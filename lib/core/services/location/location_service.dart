@@ -52,7 +52,7 @@ class LocationService {
     LocationAccuracy accuracy = LocationAccuracy.high,
     int distanceFilter = 0,
     bool keepAliveInBackground = false,
-    String foregroundNotificationTitle = 'Fat7i',
+    String foregroundNotificationTitle = 'dashboardtaxi',
     String foregroundNotificationText = 'Sharing your live location',
   }) {
     final LocationSettings settings = _buildSettings(

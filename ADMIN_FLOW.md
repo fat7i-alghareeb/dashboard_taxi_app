@@ -1,4 +1,4 @@
-# Admin Flow — dashboardtaxi App
+# Admin Flow — dashboardtaxi
 
 ## 1. Entry Point: Splash
 
