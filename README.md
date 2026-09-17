@@ -1,14 +1,28 @@
 <div align="center">
+  <img src=".github/assets/banner.png" alt="dashboardtaxi" width="100%">
+</div>
+
+<div align="center">
 
 # dashboardtaxi
 
 **A hybrid driver &amp; admin operations app for taxi/ride-hailing fleets, built with Flutter.**
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.44-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.10-0175C2?logo=dart&logoColor=white)](https://dart.dev)
-[![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS-3DDC84?logo=android&logoColor=white)](#getting-started)
-[![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange)](#architecture)
-[![License](https://img.shields.io/badge/License-Unlicensed-lightgrey)](#license)
+<p>
+  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.44-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter"></a>
+  <a href="https://dart.dev"><img src="https://img.shields.io/badge/Dart-3.10-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart"></a>
+  <a href="#getting-started"><img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Platform"></a>
+</p>
+<p>
+  <a href="#architecture"><img src="https://img.shields.io/badge/Architecture-Clean%20Architecture-d79c5c?style=for-the-badge" alt="Architecture"></a>
+  <a href="#license"><img src="https://img.shields.io/badge/License-Unlicensed-2D3142?style=for-the-badge" alt="License"></a>
+</p>
+
+</div>
+
+<div align="center">
+
+**[Overview](#overview) · [Features](#features) · [Tech Stack](#tech-stack) · [Architecture](#architecture) · [Project Structure](#project-structure) · [Getting Started](#getting-started) · [Languages](#supported-languages) · [CI/CD](#cicd)**
 
 </div>
 
@@ -16,40 +30,64 @@
 
 ## Overview
 
-**dashboardtaxi** is a single Flutter codebase that serves two roles in a taxi/ride-hailing platform: **drivers**, who go online, receive dispatches, and execute trips end-to-end, and **admins/dispatchers**, who monitor the live fleet, manually or automatically assign trips, review driver KYC documents, manage refunds and compensation claims, and configure platform-wide settings.
+**dashboardtaxi** is a single Flutter codebase that serves two roles in a taxi/ride-hailing platform:
 
-The app determines the active role after login and renders a role-aware shell — drivers get a trip-execution workspace with online/offline controls, while admins get a dashboard shell with fleet map, dispatch tools, and operations screens. An admin with a linked driver profile can even self-assign a trip and the app hands off from admin mode into the driver trip-execution flow in place.
+- **Drivers** — go online, receive dispatches, and execute trips end-to-end.
+- **Admins / dispatchers** — monitor the live fleet, assign trips (manually or automatically), review driver KYC documents, manage refunds and compensation claims, and configure platform-wide settings.
 
-It talks to a .NET backend over a REST API for CRUD/business operations and **SignalR** for realtime events (trip lifecycle, live driver locations, refund status changes, chat).
+The app determines the active role after login and renders a role-aware shell — drivers get a trip-execution workspace with online/offline controls, while admins get a dashboard shell with a fleet map, dispatch tools, and operations screens. An admin with a linked driver profile can even self-assign a trip, and the app hands off from admin mode into the driver trip-execution flow in place.
+
+It talks to a **.NET backend** over a REST API for CRUD/business operations and **SignalR** for realtime events (trip lifecycle, live driver locations, refund status changes, chat).
+
+---
 
 ## Features
 
-### Driver
-- 🧭 **Live map & trip execution** — full-screen map with cinematic camera recentering, online/offline toggle, and a staged trip sheet (incoming → to-pickup → at-pickup → in-progress → summary)
-- 💬 **In-trip chat** with the passenger
-- 🪪 **KYC document submission** for driver approval
-- 💰 **Compensation claims** for eligible trip issues
-- 🔔 **Push & local notifications** for dispatch and account events
+<table>
+<tr>
+<td width="34%" valign="top">
 
-### Admin / Dispatch
-- 🗺️ **Live Fleet map** — realtime driver locations streamed over SignalR, color-coded by status
-- 🚦 **Control Center** — fleet and pricing configuration (vehicle types, trip pricing)
-- 📊 **Dashboard overview** — KPIs (trips, active drivers, revenue) with pull-to-refresh
-- 🚕 **Trip management** — filterable trip list, manual driver assignment, admin self-assignment ("take trip")
-- 👤 **Driver management** — approve/suspend drivers, review & approve/reject KYC documents, assign vehicle types
-- 🧑‍🤝‍🧑 **Customer records** and **customer incident** tracking with detail views
-- 🎙️ **In-trip safety recordings** playback
-- 💳 **Refund lifecycle management** — backend-tracked refunds with Stripe-backed retry, live-updated via SignalR (`RefundLifecycleChanged`, `RefundIssueCreated`)
-- 🧾 **Refund request review** queue
-- 🛠️ **Admin management** — create additional admin accounts
-- ⚙️ **App version config** — remotely configure minimum/latest supported app versions per platform
-- 📜 **Audit logs**, system settings (trip discount %, currency), and role-gated navigation drawer
+### 🚖 Driver
 
-### Shared
-- 🔐 Auth with JWT session handling, forced password reset flow, and role-based routing guards
-- 🌐 9-language localization with in-app language switcher
-- 🎨 Light/dark theming
-- 📄 In-app Privacy Policy & Terms of Service
+- **Live map & trip execution** — full-screen map, cinematic camera recentering, online/offline toggle, and a staged trip sheet (incoming → to-pickup → at-pickup → in-progress → summary)
+- **In-trip chat** with the passenger
+- **KYC document submission** for driver approval
+- **Compensation claims** for eligible trip issues
+- **Push & local notifications** for dispatch and account events
+
+</td>
+<td width="34%" valign="top">
+
+### 🧭 Admin / Dispatch
+
+- **Live fleet map** — realtime driver locations over SignalR, color-coded by status
+- **Control Center** — fleet & pricing configuration (vehicle types, trip pricing)
+- **Dashboard overview** — KPIs (trips, active drivers, revenue) with pull-to-refresh
+- **Trip management** — filterable list, manual assignment, admin self-assignment ("take trip")
+- **Driver management** — approve/suspend, review & approve/reject KYC, assign vehicle types
+- **Customer records** & **incident tracking** with detail views
+- **In-trip safety recordings** playback
+- **Refund lifecycle management** — Stripe-backed retry, live-updated via SignalR (`RefundLifecycleChanged`, `RefundIssueCreated`)
+- **Refund request review** queue
+- **Admin management** — create additional admin accounts
+- **App version config** — remotely configure min/latest supported app versions per platform
+- **Audit logs**, system settings (trip discount %, currency), role-gated navigation drawer
+
+</td>
+<td width="32%" valign="top">
+
+### 🔗 Shared
+
+- **Auth** — JWT session handling, forced password reset, role-based routing guards
+- **9-language localization** with in-app switcher
+- **Light / dark theming**
+- **In-app** Privacy Policy & Terms of Service
+
+</td>
+</tr>
+</table>
+
+---
 
 ## Tech Stack
 
@@ -68,6 +106,8 @@ It talks to a .NET backend over a REST API for CRUD/business operations and **Si
 | **Localization** | `easy_localization` (9 locales) |
 | **Codegen** | `build_runner`, `freezed`, `injectable_generator`, `objectbox_generator`, `flutter_gen_runner` |
 | **Media** | `image_picker`, `audioplayers`, `cached_network_image` |
+
+---
 
 ## Architecture
 
@@ -106,12 +146,19 @@ flowchart TD
     Core -.shared by all features.-> Data
 ```
 
-- **`presentation`** — Blocs (`flutter_bloc`), screens, and widgets. Blocs depend only on domain facades, never on data-layer types.
-- **`domain`** — framework-agnostic entities, repository interfaces, and a facade that the presentation layer calls into.
-- **`data`** — repository implementations, remote datasources (`dio`), and models/mappers that convert API payloads into domain entities.
-- **`core`** — cross-cutting concerns shared by every feature: DI setup (`injectable`/`get_it`), `go_router` route guards, the `dio` network client (with certificate pinning and token refresh), theming, and services such as location tracking, the SignalR realtime client, session/auth management, and local storage.
+| Layer | Responsibility |
+|---|---|
+| **`presentation`** | Blocs (`flutter_bloc`), screens, and widgets. Blocs depend only on domain facades, never on data-layer types. |
+| **`domain`** | Framework-agnostic entities, repository interfaces, and a facade that the presentation layer calls into. |
+| **`data`** | Repository implementations, remote datasources (`dio`), and models/mappers that convert API payloads into domain entities. |
+| **`core`** | Cross-cutting concerns shared by every feature: DI setup (`injectable`/`get_it`), `go_router` route guards, the `dio` network client (with certificate pinning and token refresh), theming, and services such as location tracking, the SignalR realtime client, session/auth management, and local storage. |
+
+---
 
 ## Project Structure
+
+<details>
+<summary><b>Expand full <code>lib/</code> tree</b></summary>
 
 ```text
 lib/
@@ -148,6 +195,10 @@ lib/
 │   ├── profile/, company_contact/, support_contact/, permissions/, splash/
 └── utils/                    # Generated assets (flutter_gen), helpers
 ```
+
+</details>
+
+---
 
 ## Getting Started
 
@@ -196,15 +247,21 @@ flutter run --flavor production -t lib/main.dart
 | Full codegen (DI, freezed, ObjectBox, assets) | `dart run build_runner build --delete-conflicting-outputs` |
 | Regenerate localized app strings | `dart run tool/generate_app_strings.dart` |
 
+---
+
 ## Supported Languages
 
 The app ships with 9 in-app locales:
 
 🇬🇧 English · 🇸🇦 Arabic · 🇩🇪 German · 🇪🇸 Spanish · 🇫🇷 French · 🇳🇱 Dutch · 🇵🇱 Polish · 🇷🇴 Romanian · 🇺🇦 Ukrainian
 
+---
+
 ## CI/CD
 
 Android production builds (signed, obfuscated APK) are automated via **Codemagic** (`codemagic.yaml`).
+
+---
 
 ## Contributing
 
@@ -213,3 +270,13 @@ This is currently a closed-source, single-maintainer project. Issues and pull re
 ## License
 
 No license file is currently published in this repository — all rights reserved by default. Contact the maintainer if you need usage terms clarified.
+
+---
+
+<div align="center">
+
+Built by [Fat7i](https://github.com/fat7i-alghareeb)
+
+[⬆ Back to top](#dashboardtaxi)
+
+</div>
